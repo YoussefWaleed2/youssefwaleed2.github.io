@@ -1,9 +1,9 @@
 @import "./fonts.css";
 
 :root {
-  --bg: #e3e3db;
+  --bg: #000000;
   --bg200: rgba(227, 227, 219, 0.25);
-  --fg: #0f0f0f;
+  --fg: #ffffff;
   --fg200: #1f1f1f;
 }
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import "./Menu.css";
-import gsap from "gsap";
+import { Link } from "react-router-dom";
 
 const Menu = () => {
   const navLinksRef = useRef([]);
@@ -9,51 +9,37 @@ const Menu = () => {
     // Initialize navLinksRef array
     navLinksRef.current = navLinksRef.current.slice(0, 5); // For the 5 main links
 
-    // Create hover animations
+    // Add hover effect for random text animation
     navLinksRef.current.forEach((link) => {
       if (!link) return;
 
-      // Split text into spans
-      const text = link.textContent;
-      link.innerHTML = '';
-      const chars = text.split('').map(char => `<span>${char}</span>`).join('');
-      link.innerHTML = chars;
+      const originalText = link.textContent;
 
-      const charsSpans = link.querySelectorAll('span');
-      
-      // Create a timeline for each link
-      const tl = gsap.timeline({ paused: true });
-      
-      // Create the animation
-      tl.to(charsSpans, {
-        duration: 0.4,
-        y: -10,
-        opacity: 0,
-        stagger: 0.02,
-        ease: "circ.out"
-      })
-      .to(charsSpans, {
-        duration: 0.4,
-        y: 0,
-        opacity: 1,
-        stagger: 0.02,
-        ease: "circ.out"
-      }, "-=0.2");
-      
-      // Add hover events
-      link.addEventListener('mouseenter', () => {
-        tl.restart();
-      });
+      const handleMouseEnter = () => {
+        let randomText = "";
+        const interval = setInterval(() => {
+          randomText = originalText
+            .split("")
+            .map((char) =>
+              char === " " ? " " : Math.random().toString(36).charAt(2) // Keep spaces unchanged
+            )
+            .join("");
+          link.textContent = randomText;
+        }, 50);
+
+        setTimeout(() => {
+          clearInterval(interval);
+          link.textContent = originalText; // Restore original text
+        }, 500); // Duration of the animation
+      };
+
+      link.addEventListener("mouseenter", handleMouseEnter);
+
+      // Cleanup event listener
+      return () => {
+        link.removeEventListener("mouseenter", handleMouseEnter);
+      };
     });
-
-    return () => {
-      // Cleanup
-      navLinksRef.current.forEach((link) => {
-        if (link) {
-          link.removeEventListener('mouseenter', () => {});
-        }
-      });
-    };
   }, []);
 
   return (
@@ -82,12 +68,12 @@ const Menu = () => {
           </svg>
         </div>
         <div className="nav-links">
-          <a href="#" ref={el => navLinksRef.current[0] = el}>About Us</a>
-          <a href="#" ref={el => navLinksRef.current[1] = el}>Services</a>
-          <a href="#" ref={el => navLinksRef.current[2] = el}>Projects</a>
-          <a href="#" ref={el => navLinksRef.current[3] = el}>Clients</a>
-          <a href="#" ref={el => navLinksRef.current[4] = el}>Join Us</a>
-          <a className="line" href="#">|</a>
+          <Link to="/" ref={(el) => (navLinksRef.current[0] = el)}>About Us</Link>
+          <Link to="/services" ref={(el) => (navLinksRef.current[1] = el)}>Services</Link>
+          <Link to="/projects" ref={(el) => (navLinksRef.current[2] = el)}>Projects</Link>
+          <Link to="/clients" ref={(el) => (navLinksRef.current[3] = el)}>Clients</Link>
+          <Link to="/join-us" ref={(el) => (navLinksRef.current[4] = el)}>Join Us</Link>
+          <span className="line">|</span>
           <button className="contact-button">Get in Touch</button>
         </div>
       </nav>

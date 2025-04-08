@@ -7,17 +7,10 @@
 }
 
 body {
-    font-family: "Aboreto", cursive;
+    font-family: "TT Norms Light", cursive;
     
 }
 
-/* Hero Section */
-.hero-container {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-}
 
 /* Navbar */
 .navbar {
@@ -42,30 +35,22 @@ body {
 .nav-links a {
     position: relative;
     color: #ffffff;
-    text-decoration: none;
+    text-decoration: none; /* Ensure no underline */
     font-size: 16px;
     text-transform: uppercase;
     font-weight: 600;
     padding: 8px 8px;
     display: inline-block;
+    overflow: hidden;
 }
 
+/* Remove the underline effect */
 .nav-links a::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: #fff;
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.3s ease-in-out;
+    content: none; /* Disable the underline effect */
 }
 
-.nav-links a:hover::before {
-    transform: scaleX(1);
-    transform-origin: left;
+.nav-links a:hover {
+    color: #fff; /* Keep the hover color effect */
 }
 
 /* Divider */
@@ -95,6 +80,7 @@ body {
 .contact-button:hover {
     background: #fff;
     color: #000;
+    opacity: 1;
 }
 
 /* Responsive Design */
@@ -198,5 +184,23 @@ body {
   
   .subtitle {
     font-size: 0.9rem;
+  }
+}
+
+/* Logo Animation */
+.img-logo {
+  opacity: 0; /* Start fully transparent */
+  transform: scale(0.8); /* Start slightly smaller */
+  animation: fadeInScale 1.5s ease-in-out forwards; /* Animation */
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }

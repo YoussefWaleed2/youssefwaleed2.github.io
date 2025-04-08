@@ -137,92 +137,16 @@ const Home = () => {
     <ReactLenis root>
       <div className="page home">
         <section className="hero">
-          <div className="hero-img">
-            <img src="/home/hero.jpg" alt="" />
+          <div className="hero-video">
+            <video autoPlay muted loop playsInline>
+              <source src="/home/vid.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
 
-          <div className="hero-header">
-            <AnimatedCopy tag="h1" animateOnScroll={false} delay={0.7}>
-              Nico
-            </AnimatedCopy>
-            <AnimatedCopy tag="h1" animateOnScroll={false} delay={0.8}>
-              Palmer
-            </AnimatedCopy>
-          </div>
         </section>
 
-        <section ref={stickyTitlesRef} className="sticky-titles">
-          <div className="sticky-titles-nav">
-            <p className="primary sm">About Me</p>
-            <p className="primary sm">Let’s Connect</p>
-          </div>
-          <div className="sticky-titles-footer">
-            <p className="primary sm">Storytelling Through Film</p>
-            <p className="primary sm">Open to Collaborations</p>
-          </div>
-          <h2 ref={(el) => (titlesRef.current[0] = el)}>
-            I craft films that tell human stories with cinematic depth.
-          </h2>
-          <h2 ref={(el) => (titlesRef.current[1] = el)}>
-            Each project is driven by emotion, clarity, and vision.
-          </h2>
-          <h2 ref={(el) => (titlesRef.current[2] = el)}>
-            This portfolio is a glimpse into the frames that move me.
-          </h2>
-        </section>
-
-        <section ref={stickyWorkHeaderRef} className="sticky-work-header">
-          <AnimatedCopy tag="h1" animateOnScroll="true">
-            Palmer selects
-          </AnimatedCopy>
-        </section>
-
-        <section ref={homeWorkRef} className="home-work">
-          <div className="home-work-list">
-            {workItems.map((work, index) => (
-              <Link
-                to="/sample-project"
-                key={work.id}
-                className="home-work-item"
-              >
-                <p className="primary sm">{`${String(index + 1).padStart(
-                  2,
-                  "0"
-                )} - ${String(workItems.length).padStart(2, "0")}`}</p>
-                <h3>{work.title}</h3>
-                <div className="work-item-img">
-                  <img src={work.image} alt={work.title} />
-                </div>
-                <h4>{work.category}</h4>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        <Reviews />
-
-        <section className="hobbies">
-          <div className="hobby">
-            <AnimatedCopy tag="h4" animateOnScroll={true}>
-              Camera
-            </AnimatedCopy>
-          </div>
-          <div className="hobby">
-            <AnimatedCopy tag="h4" animateOnScroll={true}>
-              Editing
-            </AnimatedCopy>
-          </div>
-          <div className="hobby">
-            <AnimatedCopy tag="h4" animateOnScroll={true}>
-              Story
-            </AnimatedCopy>
-          </div>
-          <div className="hobby">
-            <AnimatedCopy tag="h4" animateOnScroll={true}>
-              Sound
-            </AnimatedCopy>
-          </div>
-        </section>
+    
 
         <ContactForm />
         <Footer />

@@ -81,7 +81,9 @@ const Menu = () => {
             <span>Join Us</span>
           </Link>
           <span className="line">|</span>
-          <button className="contact-button">Get in Touch</button>
+          <Link to="/contact">
+            <button className="contact-button">Get in Touch</button>
+          </Link>
         </div>
       </nav>
     </div>

@@ -1,0 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Aboreto", cursive;
+    
+}
+
+
+/* Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 30px 50px;
+    z-index: 50;
+}
+
+/* Navigation Links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1000;
+}
+
+.nav-links a {
+    position: relative;
+    color: #ffffff;
+    text-decoration: none; /* Ensure no underline */
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 8px 8px;
+    display: inline-block;
+    overflow: hidden;
+}
+
+/* Remove the underline effect */
+.nav-links a::before {
+    content: none; /* Disable the underline effect */
+}
+
+.nav-links a:hover {
+    color: #fff; /* Keep the hover color effect */
+}
+
+/* Divider */
+.nav-links a.line {
+    width: auto !important;
+    display: inline !important;
+    text-align: center;
+    color: #fff;
+    font-size: 18px;
+    pointer-events: none;
+}
+
+/* Contact Button */
+.contact-button {
+    font-family: "Aboreto", cursive;
+    border: 1.2px solid #fff;
+    background: transparent;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-transform: uppercase;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.contact-button:hover {
+    background: #fff;
+    color: #000;
+    opacity: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .navbar {
+        padding: 15px 30px;
+    }
+
+    .nav-links {
+        gap: 10px;
+    }
+
+    .nav-links a {
+        font-size: 13px;
+        padding: 5px 8px;
+    }
+
+    .contact-button {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 10px 20px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .logo img {
+        width: 70px;
+    }
+
+    .contact-button {
+        padding: 6px 10px;
+    }
+}
+
+.animated-text-container {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+  z-index: 10;
+}
+
+.title {
+  font-size: 4rem;
+  color: #E3DAC5;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  will-change: transform;
+}
+
+.title span {
+  color: #fff;
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: #E3DAC5;
+  opacity: 0;
+  will-change: opacity;
+}
+
+@media (max-width: 768px) {
+  .animated-text-container {
+    width: 90%;
+  }
+  
+  .title {
+    font-size: 2.5rem;
+  }
+  
+  .subtitle {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2rem;
+  }
+  
+  .subtitle {
+    font-size: 0.9rem;
+  }
+}
+
+/* Logo Animation */
+.img-logo {
+  opacity: 0; /* Start fully transparent */
+  transform: scale(0.8); /* Start slightly smaller */
+  animation: fadeInScale 1.5s ease-in-out forwards; /* Animation */
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

@@ -2,7 +2,7 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
-import Menu from "./components/Menu/Menu";
+import Menu from "./components/Header/Header";
 
 import Home from "./pages/Home/Home";
 import Work from "./pages/Work/Work";
@@ -31,7 +31,6 @@ function App() {
   return (
     <>
       <ScrollToTop />
-      <Menu />
       <AnimatePresence mode="wait" initial={false}>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />

@@ -1,0 +1,387 @@
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Aboreto", sans-serif;
+  background-color: #000;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+p {
+  text-transform: uppercase;
+  font-family: "Aboreto", sans-serif;
+  font-size: 0.7rem;
+}
+
+a {
+  text-decoration: none;
+  text-transform: uppercase;
+  font-family: "Aboreto", sans-serif;
+  font-size: 0.7rem;
+  color: #000;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100svh;
+  padding: 2em;
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  gap: 2em;
+}
+
+.projects,
+.loader,
+.locations {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1em;
+}
+
+.loader {
+  align-items: center;
+  gap: 0;
+}
+.logo-svg{
+  width: 200px;
+  height: 100px;
+}
+
+.mask-rect {
+  transform-origin: top;
+  animation: reveal 1.5s ease-out forwards;
+}
+
+@keyframes reveal {
+  0% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0);
+  }
+}
+
+.loader h1 {
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Aboreto", sans-serif;
+  font-size: 3.5rem;
+  font-style: italic;
+  line-height: 1.25;
+  font-weight: 900;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-image: linear-gradient(0deg, #3a3a3a, #3a3a3a 50%, #fff 0);
+  background-size: 100% 200%;
+  background-position: 0% 100%;
+  color: #3a3a3a;
+}
+
+.projects-header,
+.project-item,
+.locations-header,
+.location-item {
+  display: flex;
+  gap: 2em;
+  opacity: 0;
+}
+
+.projects-header > *,
+.project-item > * {
+  flex: 1;
+}
+
+.locations {
+  align-items: center;
+}
+
+.locations-header,
+.location-item {
+  width: 50%;
+}
+
+.project-item,
+.location-item {
+  color: #4f4f4f;
+}
+
+.image-grid {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  z-index: 2;
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.background-pattern {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.background-pattern span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: italic;
+  font-size: clamp(3rem, 8vw, 6rem);
+  color: #fff;
+  opacity: 0.1;
+  font-weight: 900;
+  white-space: nowrap;
+  user-select: none;
+  transform: translate3d(0, 0, 0) rotate(var(--rotation));
+  will-change: transform;
+  backface-visibility: hidden;
+  position: relative;
+  transition: transform 0.3s ease-out;
+  margin-left: var(--offset-left);
+  margin-right: var(--offset-right);
+}
+
+.background-pattern span:nth-child(odd) {
+  --offset-left: -40px;
+  --offset-right: 40px;
+}
+
+.background-pattern span:nth-child(even) {
+  --offset-left: 30px;
+  --offset-right: -30px;
+}
+
+.background-pattern span:nth-child(3n) {
+  --offset-left: 20px;
+  --offset-right: -20px;
+}
+
+.background-pattern span:nth-child(3n+1) {
+  --offset-left: -10px; 
+  --offset-right: 10px;
+}
+
+.grid-row {
+  width: 100%;
+  display: flex;
+  gap: 1em;
+}
+
+.img {
+  position: relative;
+  flex: 1;
+  aspect-ratio: 1;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+}
+
+.image-grid {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.hero-video {
+  position: relative;
+  flex: 1;
+  aspect-ratio: 1;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+  z-index: 10;
+  transform-origin: center;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-video.expanded {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  flex: none;
+  z-index: 50;
+  clip-path: none;
+}
+
+nav {
+  position: fixed;
+  width: 100vw;
+  padding: 1em;
+  display: flex;
+  gap: 2em;
+}
+
+nav > * {
+  flex: 1;
+}
+
+.links {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.nav-logo {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-logo a {
+  font-family: "Aboreto", sans-serif;
+  font-size: 1.75rem;
+  font-weight: bolder;
+  font-style: italic;
+  line-height: 0.9;
+}
+
+.banner-img {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 20%;
+  aspect-ratio: 4/5;
+}
+
+.intro-copy {
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 100%;
+  padding: 0 8em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.intro-copy h3,
+.title h1 {
+  position: relative;
+  text-transform: uppercase;
+  color: #000;
+  font-family: "Aboreto", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 0.9;
+}
+
+.title h1 {
+  font-size: 3.5rem;
+}
+
+.intro-copy h3 {
+  font-size: 1.5rem;
+}
+
+.intro-copy h3,
+.title h1 {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.intro-copy h3 .word,
+.title h1 .word {
+  display: inline-block;
+  position: relative;
+  will-change: transform;
+  margin-right: 0.1rem;
+}
+
+@media (max-width: 900px) {
+  .loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .projects,
+  .locations,
+  .intro-copy,
+  .banner-img {
+    display: none;
+  }
+
+  .title {
+    width: 100%;
+    bottom: 20%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .title h1 {
+    font-size: 2.5rem;
+  }
+
+  .image-grid {
+    width: 75%;
+    gap: 0.5em;
+  }
+
+  .grid-row {
+    width: 95%;
+    justify-content: space-around;
+    gap: 0.5em;
+  }
+}

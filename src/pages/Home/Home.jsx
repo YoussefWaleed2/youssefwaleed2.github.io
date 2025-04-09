@@ -1,20 +1,14 @@
 import workList from "../../data/workList";
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import "./Home.css";
-
-import AnimatedCopy from "../../components/AnimatedCopy/AnimatedCopy";
-import Reviews from "../../components/Reviews/Reviews";
-import ContactForm from "../../components/ContactForm/ContactForm";
-import Footer from "../../components/Footer/Footer";
-
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import "./Home.css";
 import ReactLenis from "lenis/react";
-
-gsap.registerPlugin(ScrollTrigger);
-
+import Header from "../../components/Header/Header";
+import SplashScreen from "../../components/SplashScreen/SplashScreen";
 import Transition from "../../components/Transition/Transition";
+gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
   const workItems = Array.isArray(workList) ? workList : [];
@@ -136,20 +130,9 @@ const Home = () => {
   return (
     <ReactLenis root>
       <div className="page home">
-        <section className="hero">
-          <div className="hero-video">
-            <video autoPlay muted loop playsInline>
-              <source src="/home/vid.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-
-        </section>
-
-    
-
-        <ContactForm />
-        <Footer />
+        <SplashScreen />
+        {/* <ContactForm />
+        <Footer /> */}
       </div>
     </ReactLenis>
   );

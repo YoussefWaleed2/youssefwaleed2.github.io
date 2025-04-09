@@ -31,6 +31,7 @@ body {
     background: rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
     border-radius: 20px;
+    
 }
 
 /* Navigation Links */
@@ -44,6 +45,7 @@ body {
 }
 
 .nav-links a {
+  
     position: relative;
     color: #ffffff;
     text-decoration: none;
@@ -55,15 +57,39 @@ body {
     overflow: hidden;
     min-width: 100px;
     text-align: center;
+
+    
+    transition: color 0.3s ease;
 }
 
-/* Remove the underline effect */
 .nav-links a::before {
-    content: none; /* Disable the underline effect */
+    content: attr(data-text); /* Duplicate the text */
+    position: absolute;
+    top: 100%; /* Start below the original text */
+    left: 0;
+    width: 100%;
+    color: #f0f0f0; /* Optional hover color for the duplicate */
+    transform: translateY(30);
+    transition: transform 0.3s ease;
+}
+
+.nav-links a:hover::before {
+    transform: translateY(-100%); /* Move the duplicate up */
 }
 
 .nav-links a:hover {
-    color: #fff; /* Keep the hover color effect */
+    color: transparent; /* Hide the original text as it moves up */
+}
+
+.nav-links a span {
+    display: inline-block;
+    position: relative;
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+
+.nav-links a:hover span {
+    transform: translateY(-100%); /* Move the original text up */
 }
 
 /* Divider */

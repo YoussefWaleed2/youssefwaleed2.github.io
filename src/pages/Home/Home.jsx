@@ -3,17 +3,14 @@ import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
 
-import AnimatedCopy from "../../components/AnimatedCopy/AnimatedCopy";
-import Reviews from "../../components/Reviews/Reviews";
 import ContactForm from "../../components/ContactForm/ContactForm";
 import Footer from "../../components/Footer/Footer";
-
+import Menu from "../../components/Menu/Menu";
+import SplashScreen from "../../components/SplashScreen/SplashScreen";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./Home.css";
 import ReactLenis from "lenis/react";
-import Header from "../../components/Header/Header";
-import SplashScreen from "../../components/SplashScreen/SplashScreen";
 import Transition from "../../components/Transition/Transition";
 gsap.registerPlugin(ScrollTrigger);
 

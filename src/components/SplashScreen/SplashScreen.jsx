@@ -4,10 +4,10 @@ import { CustomEase } from "gsap/CustomEase";
 import { Flip } from "gsap/Flip";
 import SplitType from "split-type";
 import './SplashScreen.css';
-
+import '../Menu/Menu.jsx'
+import '../Menu/Menu.css'
 gsap.registerPlugin(CustomEase, Flip);
 CustomEase.create("hop", "0.9, 0, 0.1, 1");
-
 
 function SplashScreen() {
   const patternContainerRef = useRef(null);
@@ -82,7 +82,8 @@ function SplashScreen() {
 
     function setupInitialStates() {
       gsap.set("nav", {
-        y: "-125%",
+        opacity: 0,
+        y: "-100%"
       });
 
       gsap.set(introCopy.words, {
@@ -102,11 +103,25 @@ function SplashScreen() {
       heroVideo.classList.add("expanded");
       
       Flip.from(state, {
-        duration: 2.2525,
-        stagger: 0.07,
-        ease: "expo.inOut",
+        duration: 1.5,
+        stagger: 0.08,
+        ease: "power4.inOut",
         scale: true,
-        absolute: true
+        absolute: true,
+        onComplete: () => {
+          gsap.set(heroVideo, {
+            scale: 1,
+            clearProps: "all",
+            duration: 0.1,
+          });
+        }
+      });
+      
+      gsap.to("nav", {
+        opacity: 1,
+        y: "10%",
+        duration: 1.2,
+        ease: "power3.in"
       });
     }
 
@@ -299,4 +314,4 @@ function SplashScreen() {
   );
 }
 
-export default SplashScreen; 
+export default SplashScreen;

@@ -2,7 +2,7 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
-import Menu from "./components/Header/Header";
+import Menu from "./components/Menu/Menu";
 
 import Home from "./pages/Home/Home";
 import Work from "./pages/Work/Work";
@@ -10,7 +10,6 @@ import Project from "./pages/Project/Project";
 import About from "./pages/About/About";
 import FAQ from "./pages/FAQ/FAQ";
 import Contact from "./pages/Contact/Contact";
-
 import { AnimatePresence } from "framer-motion";
 
 function ScrollToTop() {

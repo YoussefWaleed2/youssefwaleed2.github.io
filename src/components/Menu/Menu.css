@@ -37,13 +37,10 @@ body {
 .nav-links {
     display: flex;
     align-items: center;
-<<<<<<< Updated upstream:src/components/Header/Header.css
     gap: 15px;
     z-index: 1000;
-=======
     mix-blend-mode: difference;
     z-index: 1;
->>>>>>> Stashed changes:src/components/Menu/Menu.css
 }
 
 .nav-links a {

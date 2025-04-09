@@ -30,6 +30,7 @@ function App() {
 
   return (
     <>
+      <Menu />
       <ScrollToTop />
       <AnimatePresence mode="wait" initial={false}>
         <Routes location={location} key={location.pathname}>

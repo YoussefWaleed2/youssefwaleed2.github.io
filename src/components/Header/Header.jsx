@@ -13,7 +13,11 @@ const Header = () => {
     navLinksRef.current.forEach((link) => {
       if (!link) return;
 
-      const originalText = link.textContent;
+      // Get the span element inside the link
+      const textSpan = link.querySelector('span');
+      if (!textSpan) return;
+      
+      const originalText = textSpan.textContent;
 
       const handleMouseEnter = () => {
         let randomText = "";
@@ -24,12 +28,12 @@ const Header = () => {
               char === " " ? " " : Math.random().toString(36).charAt(2) // Keep spaces unchanged
             )
             .join("");
-          link.textContent = randomText;
+          textSpan.textContent = randomText;
         }, 50);
 
         setTimeout(() => {
           clearInterval(interval);
-          link.textContent = originalText; // Restore original text
+          textSpan.textContent = originalText; // Restore original text
         }, 500); // Duration of the animation
       };
 
@@ -70,11 +74,11 @@ const Header = () => {
           </Link>
         </div>
         <div className="nav-links">
-          <Link to="/" ref={(el) => (navLinksRef.current[0] = el)}>About Us</Link>
-          <Link to="/services" ref={(el) => (navLinksRef.current[1] = el)}>Services</Link>
-          <Link to="/projects" ref={(el) => (navLinksRef.current[2] = el)}>Projects</Link>
-          <Link to="/clients" ref={(el) => (navLinksRef.current[3] = el)}>Clients</Link>
-          <Link to="/join-us" ref={(el) => (navLinksRef.current[4] = el)}>Join Us</Link>
+          <Link to="/" ref={(el) => (navLinksRef.current[0] = el)}><span>About Us</span></Link>
+          <Link to="/services" ref={(el) => (navLinksRef.current[1] = el)}><span>Services</span></Link>
+          <Link to="/projects" ref={(el) => (navLinksRef.current[2] = el)}><span>Projects</span></Link>
+          <Link to="/clients" ref={(el) => (navLinksRef.current[3] = el)}><span>Clients</span></Link>
+          <Link to="/join-us" ref={(el) => (navLinksRef.current[4] = el)}><span>Join Us</span></Link>
           <span className="line">|</span>
           <button className="contact-button">Get in Touch</button>
         </div>

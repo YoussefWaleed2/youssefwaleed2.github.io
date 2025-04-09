@@ -65,7 +65,7 @@ a {
 
 .mask-rect {
   transform-origin: top;
-  animation: reveal 1.5s ease-out forwards;
+  animation: reveal 1.5s cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards;
 }
 
 @keyframes reveal {
@@ -250,8 +250,6 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
   flex: none;
   z-index: 50;
   clip-path: none;

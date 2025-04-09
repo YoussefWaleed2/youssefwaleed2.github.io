@@ -102,8 +102,8 @@ function SplashScreen() {
       heroVideo.classList.add("expanded");
       
       Flip.from(state, {
-        duration: 1,
-        stagger: 0.08,
+        duration: 2.2525,
+        stagger: 0.07,
         ease: "expo.inOut",
         scale: true,
         absolute: true

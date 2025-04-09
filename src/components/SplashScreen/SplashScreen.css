@@ -194,9 +194,9 @@ a {
 }
 
 .grid-row {
-  width: 100%;
+  width: 90%;
   display: flex;
-  gap: 1em;
+  gap: 1.2em;
 }
 
 .img {

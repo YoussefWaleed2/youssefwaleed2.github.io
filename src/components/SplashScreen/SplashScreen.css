@@ -257,13 +257,6 @@ a {
   clip-path: none;
 }
 
-nav {
-  position: fixed;
-  width: 100vw;
-  padding: 1em;
-  display: flex;
-  gap: 2em;
-}
 
 nav > * {
   flex: 1;

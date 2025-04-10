@@ -1,20 +1,26 @@
-import React, { useRef } from 'react';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { usePageTransition } from '../../hooks/usePageTransition';
 import './Transition.css';
 
 const Transition = (WrappedComponent) => {
   return function WithTransition(props) {
-    const pageRef = useRef(null);
-    
     // Use our custom hook for page transitions
-    usePageTransition(pageRef);
+    const { pageVariants, pageTransition } = usePageTransition();
 
     return (
-      <div className="transition-wrapper">
-        <div className="page-container" ref={pageRef}>
+      <motion.div 
+        className="transition-wrapper"
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageVariants}
+        transition={pageTransition}
+      >
+        <div className="page-container">
           <WrappedComponent {...props} />
         </div>
-      </div>
+      </motion.div>
     );
   };
 };

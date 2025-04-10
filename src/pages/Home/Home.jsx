@@ -135,6 +135,7 @@ const Home = () => {
 
   return (
     <ReactLenis root>
+<<<<<<< Updated upstream
       <div className="page home">
         <section className="hero">
           <div className="hero-video">
@@ -151,6 +152,22 @@ const Home = () => {
         <ContactForm />
         <Footer />
       </div>
+=======
+      <Transition>
+        <div className="page home">
+          <SplashScreen />
+          <div className="video-wrapper">
+            <video 
+              src="/home/vid.mp4" 
+              autoPlay 
+              muted 
+              loop 
+              playsInline
+            />
+          </div>
+        </div>
+      </Transition>
+>>>>>>> Stashed changes
     </ReactLenis>
   );
 };

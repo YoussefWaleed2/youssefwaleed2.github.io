@@ -190,3 +190,22 @@ body, html {
     aspect-ratio: 5/3;
   }
 }
+<<<<<<< Updated upstream
+=======
+
+.video-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.video-wrapper video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+>>>>>>> Stashed changes

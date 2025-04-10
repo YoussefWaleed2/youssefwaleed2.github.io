@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { motion } from "framer-motion";
 import "./Transition.css";
 
@@ -54,6 +55,29 @@ const Transition = (Page) => {
         ))}
       </div>
     </>
+=======
+import React from 'react';
+import { motion } from 'framer-motion';
+import './Transition.css';
+
+const Transition = ({ children }) => {
+  return (
+    <motion.div
+      className="transition-wrapper"
+      initial={{x: "100vw" }}
+      animate={{x: 0 }}
+      exit={{x: "-100vw" }}
+      transition={{
+        duration: 0.5,
+        ease: "easeInOut",
+        type: "tween"
+      }}
+    >
+      <div className="page-container">
+        {children}
+      </div>
+    </motion.div>
+>>>>>>> Stashed changes
   );
 };
 

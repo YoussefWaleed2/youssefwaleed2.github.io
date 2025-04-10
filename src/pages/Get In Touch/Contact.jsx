@@ -11,12 +11,14 @@ import Transition from "../../components/Transition/Transition";
 const Contact = () => {
   return (
     <ReactLenis root>
-      <div className="page contact">
-        <ContactForm />
-        <Footer />
-      </div>
+      <Transition>
+        <div className="page contact">
+          <ContactForm />
+          <Footer />
+        </div>
+      </Transition>
     </ReactLenis>
   );
 };
 
-export default Transition(Contact);
+export default Contact;

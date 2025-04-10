@@ -149,4 +149,4 @@ const Home = () => {
   );
 };
 
-export default Transition(Home);
+export default Home;

@@ -1,266 +1,36 @@
 import { useEffect, useRef } from 'react';
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
-import { Flip } from "gsap/Flip";
-import SplitType from "split-type";
 import './SplashScreen.css';
 import '../Menu/Menu.jsx'
 import '../Menu/Menu.css'
-gsap.registerPlugin(CustomEase, Flip);
+gsap.registerPlugin(CustomEase);
 CustomEase.create("hop", "0.9, 0, 0.1, 1");
 
 function SplashScreen() {
-  const patternContainerRef = useRef(null);
-  const heroVideoRef = useRef(null);
-  const videoElementRef = useRef(null);
-  const gridImagesRef = useRef([]);
-
   useEffect(() => {
-    // Create background pattern
-    const patternContainer = patternContainerRef.current;
-    const textToRepeat = 'VZBL®';
-    const numberOfRows = 5;
-    const numberOfCols = 5;
-    for (let i = 0; i < numberOfRows * numberOfCols; i++) {
-      const span = document.createElement('span');
-      span.textContent = textToRepeat;
-      patternContainer.appendChild(span);
-    }
-
-    const gridImages = gsap.utils.toArray(".img");
-    gridImagesRef.current = gridImages;
-    const heroVideo = heroVideoRef.current;
-    const videoElement = videoElementRef.current;
-
-    const introCopy = new SplitType(".intro-copy h3", {
-      types: "words",
-      absolute: false,
-    });
-
-    const titleHeading = new SplitType(".title h1", {
-      types: "words",
-      absolute: false,
-    });
-
-    const allImageSources = Array.from(
-      { length: 35 },
-      (_, i) => `/SplashScreen/img${i + 1}.jpeg`
-    );
-
-    const getRandomImageSet = () => {
-      const shuffled = [...allImageSources].sort(() => 0.5 - Math.random());
-      return shuffled.slice(0, 9);
-    };
-
-    function startImageRotation() {
-      const totalCycles = 20;
-
-      for (let cycle = 0; cycle < totalCycles; cycle++) {
-        const randomImages = getRandomImageSet();
-
-        gsap.to(
-          {},
-          {
-            duration: 0,
-            delay: cycle * 0.15,
-            onComplete: () => {
-              gridImages.forEach((img, index) => {
-                if (cycle === totalCycles - 1 && img === heroVideo) {
-                  heroVideo.src = "/vid.mp4";
-                } else {
-                  const imgElement = img.querySelector("img");
-                  if (imgElement) {
-                    imgElement.src = randomImages[index];
-                  }
-                }
-              });
-            },
-          }
-        );
-      }
-    }
-
-    function setupInitialStates() {
-      gsap.set("nav", {
+    function createAnimationTimelines() {
+      const overlayTimeline = gsap.timeline();
+      overlayTimeline.to(".overlay", {
         opacity: 0,
-        y: "-100%"
-      });
-
-      gsap.set(introCopy.words, {
-        y: "110%",
-      });
-
-      gsap.set(titleHeading.words, {
-        y: "110%",
-      });
-    }
-
-    function expandVideo() {
-      gsap.set(".img-row", { display: "none" });
-
-      const state = Flip.getState(heroVideo);
-
-      heroVideo.classList.add("expanded");
-      
-      Flip.from(state, {
         duration: 1.5,
-        stagger: 0.08,
-        ease: "power4.inOut",
-        scale: true,
-        absolute: true,
+        delay: 1,
         onComplete: () => {
-          gsap.set(heroVideo, {
-            scale: 1,
-            clearProps: "all",
-            duration: 0.1,
+          gsap.to("nav", {
+            opacity: 1,
+            y: "10%",
+            duration: 0,
+            ease: "power3.in"
           });
         }
       });
-      
-      gsap.to("nav", {
-        opacity: 1,
-        y: "10%",
-        duration: 1.2,
-        ease: "power3.in"
-      });
     }
 
-    function createAnimationTimelines() {
-      const overlayTimeline = gsap.timeline();
-      const imagesTimeline = gsap.timeline();
-      const textTimeline = gsap.timeline();
-
-      overlayTimeline.to(".logo-line-1", {
-        backgroundPosition: "0% 0%",
-        color: "#fff",
-        duration: 1,
-        ease: "none",
-        delay: 0.5,
-        onComplete: () => {
-          gsap.to(".logo-line-2", {
-            backgroundPosition: "0% 0%",
-            color: "#fff",
-            duration: 1,
-            ease: "none",
-          });
-        },
-      });
-
-      overlayTimeline.to([".projects-header", ".project-item"], {
-        opacity: 1,
-        duration: 0.15,
-        stagger: 0.075,
-        delay: 1,
-      });
-
-      overlayTimeline.to(
-        [".locations-header", ".location-item"],
-        {
-          opacity: 1,
-          duration: 0.15,
-          stagger: 0.075,
-        },
-        "<"
-      );
-
-      overlayTimeline.to(".project-item", {
-        color: "#fff",
-        duration: 0.15,
-        stagger: 0.075,
-      });
-
-      overlayTimeline.to(
-        ".location-item",
-        {
-          color: "#fff",
-          duration: 0.15,
-          stagger: 0.075,
-        },
-        "<"
-      );
-
-      overlayTimeline.to([".projects-header", ".project-item"], {
-        opacity: 0,
-        duration: 0.15,
-        stagger: 0.075,
-      });
-
-      overlayTimeline.to(
-        [".locations-header", ".location-item"],
-        {
-          opacity: 0,
-          duration: 0.15,
-          stagger: 0.075,
-        },
-        "<"
-      );
-
-      overlayTimeline.to(".overlay", {
-        opacity: 0,
-        duration: 0.5,
-        delay: 1.5,
-      });
-
-      imagesTimeline.to([".img", ".hero-video"], {
-        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-        duration: 1,
-        delay: 2.5,
-        stagger: 0.05,
-        ease: "hop",
-        onStart: () => {
-          setTimeout(() => {
-            videoElement.play();
-            startImageRotation();
-            gsap.to(".loader", { opacity: 0, duration: 0.2 });
-          }, 500);
-        },
-      });
-
-      imagesTimeline.to(gridImages, {
-        clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-        duration: 1,
-        delay: 2,
-        stagger: 0.05,
-        ease: "hop",
-      });
-
-      imagesTimeline.to(".img", {
-        opacity: 0,
-        duration: 0.3,
-        ease: "power2.inOut",     
-         onComplete: () => {
-          expandVideo();
-        },
-      });
-
-      textTimeline.to(titleHeading.words, {
-        y: "0%",
-        duration: 1,
-        stagger: 0.1,
-        delay: 9.5,
-        ease: "power3.out",
-      });
-
-      textTimeline.to(
-        introCopy.words,
-        {
-          y: "0%",
-          duration: 1,
-          stagger: 0.1,
-          delay: 0.25,
-          ease: "power3.out",
-        },
-        "<"
-      );
-    }
-
-    setupInitialStates();
     createAnimationTimelines();
   }, []);
 
   return (
     <>
-      <div className="background-pattern" ref={patternContainerRef}></div>
       <div className="overlay">
         <div className="loader">
           <svg className="logo-svg" width="92" height="32" viewBox="0 0 92 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -288,26 +58,6 @@ function SplashScreen() {
               </clipPath>
             </defs>
           </svg>          
-        </div>
-      </div>
-
-      <div className="image-grid">
-        <div className="grid-row img-row">
-          <div className="img"><img src="/SplashScreen/img1.jpeg" alt="" /></div>
-          <div className="img"><img src="/SplashScreen/img2.jpeg" alt="" /></div>
-          <div className="img"><img src="/SplashScreen/img3.jpeg" alt="" /></div>
-        </div>
-        <div className="grid-row video-row">
-          <div className="img img-vid-row"><img src="/SplashScreen/img4.jpeg" alt="" /></div>
-          <div className="video hero-video" ref={heroVideoRef}>
-            <video className="video-vid" src="/SplashScreen/vid.mp4" loop muted ref={videoElementRef}></video>
-          </div>
-          <div className="img img-vid-row"><img src="/SplashScreen/img6.jpeg" alt="" /></div>
-        </div>
-        <div className="grid-row img-row">
-          <div className="img"><img src="/SplashScreen/img7.jpeg" alt="" /></div>
-          <div className="img"><img src="/SplashScreen/img8.jpeg" alt="" /></div>
-          <div className="img"><img src="/SplashScreen/img9.jpeg" alt="" /></div>
         </div>
       </div>
     </>

@@ -12,15 +12,16 @@ function SplashScreen() {
     function createAnimationTimelines() {
       const overlayTimeline = gsap.timeline();
       overlayTimeline.to(".overlay", {
-        opacity: 0,
-        duration: 1.5,
+        yPercent: -100,
+        duration: 1.2,
         delay: 1,
+        ease: "power3.inOut",
         onComplete: () => {
           gsap.to("nav", {
             opacity: 1,
             y: "10%",
             duration: 0,
-            ease: "power3.in"
+            ease: "power3.out"
           });
         }
       });

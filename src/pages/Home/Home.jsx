@@ -1,5 +1,5 @@
 import workList from "../../data/workList";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
 
@@ -20,25 +20,6 @@ const Home = () => {
   const titlesRef = useRef([]);
   const stickyWorkHeaderRef = useRef(null);
   const homeWorkRef = useRef(null);
-  const videoRef = useRef(null);
-  const [splashComplete, setSplashComplete] = useState(false);
-
-  useEffect(() => {
-    // Set a timeout to mark splash screen as complete after animation
-    const timer = setTimeout(() => {
-      setSplashComplete(true);
-      // Add a small delay before playing the video to ensure it's loaded
-      setTimeout(() => {
-        if (videoRef.current) {
-          videoRef.current.play().catch(err => {
-            console.error("Error playing video:", err);
-          });
-        }
-      }, 100);
-    }, 5000); // Adjust this time based on your splash screen animation duration
-
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -154,19 +135,15 @@ const Home = () => {
     <ReactLenis root>
       <div className="page home">
         <SplashScreen />
-        
-            <video 
-              ref={videoRef}
-              className="hero-video"
-              src="/vid.mp4" 
-              loop 
-              muted
-              playsInline
-              preload="auto"
-            ></video>
-        
-        {/* <ContactForm />
-        <Footer /> */}
+        <div className="video-wrapper">
+          <video 
+            src="/home/vid.mp4" 
+            autoPlay 
+            muted 
+            loop 
+            playsInline
+          />
+        </div>
       </div>
     </ReactLenis>
   );

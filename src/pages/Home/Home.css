@@ -9,32 +9,11 @@ body, html {
   overflow-x: hidden; /* Ensure no horizontal overflow on the home page */
 }
 
-.hero {
-  position: relative;
-  width: 100%;
-  height: 100vh; /* Full viewport height */
-  overflow: hidden;
-}
-
-.hero-video-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: 10; /* Lower z-index to ensure it's below the splash screen */
-  background-color: #000;
-  opacity: 0;
-  animation: fadeIn 1s ease forwards;
-  pointer-events: none; /* Allow clicks to pass through to elements below */
-}
-
-.hero-video {
+/* .hero-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block; /* Ensure no extra space */
-}
+} */
 
 @keyframes fadeIn {
   from {
@@ -203,4 +182,20 @@ body, html {
   .hobby {
     aspect-ratio: 5/3;
   }
+}
+
+.video-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.video-wrapper video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

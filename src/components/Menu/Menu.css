@@ -309,6 +309,110 @@ nav a,
     }
 }
 
+@media (min-width: 900px) and (max-width: 1024px) {
+    .nav-links {
+        width: 70%;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+    
+    .nav-links span {
+        font-size: 12px;
+        padding: 0 !important;
+    }
 
+    .nav-links a {
+        min-width: 60px;
+    }
+
+    .contact-button {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+    .line {
+        margin: 0 10px;
+    }
+}
+
+@media (min-width: 821px) and (max-width: 912px) {
+    .navbar {
+        min-width: 90%;
+        width: 90vw;
+        left: 5%;
+        padding: 12px 25px;
+        justify-content: space-between;
+    }
+    
+    .nav-links {
+        width: 75%;
+        gap: 15px;
+        justify-content: center;
+        margin-right: 15px;
+    }
+    
+    .nav-links span {
+        font-size: 11px;
+        padding: 0 !important;
+    }
+
+    .nav-links a {
+        min-width: 58px;
+        text-align: center;
+    }
+
+    .contact-button {
+        padding: 7px 14px;
+        font-size: 11px;
+        white-space: nowrap;
+        margin-left: 5px;
+    }
+
+    .line {
+        margin: 0 15px;
+    }
+
+    .img-logo {
+        width: 80px;
+    }
+}
+
+@media (max-width: 820px) {
+    .navbar {
+        min-width: 90%;
+        width: 90vw;
+        left: 5%;
+        padding: 10px 20px;
+        justify-content: space-between;
+    }
+    
+    .nav-links {
+        width: 75%;
+        gap: 15px;
+        justify-content: center;
+        margin-right: 15px;
+    }
+    
+    .nav-links span {
+        font-size: 11px;
+        padding: 0 !important;
+    }
+
+    .nav-links a {
+        min-width: 55px;
+        text-align: center;
+    }
+
+    .contact-button {
+        padding: 6px 12px;
+        font-size: 11px;
+        white-space: nowrap;
+        margin-left: 5px;
+    }
+
+    .line {
+        margin: 0 15px;
+    }
+}
 
 

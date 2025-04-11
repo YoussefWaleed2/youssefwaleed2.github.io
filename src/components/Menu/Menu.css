@@ -19,7 +19,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 80vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -45,7 +45,14 @@ body {
 }
 
 /* Logo and Menu Toggle Styles */
-.logo,
+.logo {
+    position: relative;
+    width: max-content;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    cursor: pointer;
+    margin-left: 50px; /* Add this line to shift the logo right */
+}
+
 .menu-toggle-open,
 .menu-toggle-close{
     position: relative;

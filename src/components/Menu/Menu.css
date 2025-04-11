@@ -144,6 +144,87 @@ body {
     }
 }
 
+/* Hamburger Icon */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px; /* Adjusted size */
+  height: 18px; /* Adjusted size */
+  cursor: pointer;
+  z-index: 1000;
+  position: absolute; /* Position it relative to the navbar */
+  top: 20px; /* Adjust vertical position */
+  right: 20px; /* Move it to the far right */
+}
+
+.hamburger .line {
+  width: 25px; /* Explicitly set width */
+  height: 3px; /* Adjusted thickness */
+  background-color: white;
+  border-radius: 2px;
+  transition: all 0.3s ease; /* Add smooth animation */
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%; /* Full width for mobile view */
+  height: 100%; /* Full height */
+  background-color: rgba(0, 0, 0, 0.9); /* Black with slight transparency */
+  backdrop-filter: blur(10px); /* Add blur effect */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly; /* Distribute links evenly */
+  align-items: center; /* Center the links horizontally */
+  z-index: 999;
+  transform: translateX(100%); /* Start off-screen to the right */
+  transition: transform 0.5s ease; /* Smooth transition */
+  padding: 20px; /* Add padding for spacing */
+}
+
+.mobile-menu a {
+  color: white; /* Ensure the text is visible */
+  text-decoration: none;
+  font-size: 20px; /* Slightly larger font size */
+  text-transform: uppercase;
+  font-weight: bold;
+  text-align: center; /* Center-align the text */
+  width: 100%; /* Ensure links span the full width */
+  padding: 10px 0; /* Add padding for better spacing */
+  display: block; /* Ensure links are block-level elements */
+}
+
+.mobile-menu .contact-button {
+  font-size: 18px; /* Slightly larger font size */
+  margin-top: 20px; /* Add spacing above the button */
+  padding: 15px 30px; /* Add padding for better visibility */
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu .contact-button:hover {
+  background-color: white;
+  color: black;
+}
+
+/* Show hamburger icon in mobile view */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    display: none;
+  }
+}
+
 .animated-text-container {
   position: relative;
   top: 50%;
@@ -209,6 +290,9 @@ body {
   opacity: 0; /* Start fully transparent */
   transform: scale(0.8); /* Start slightly smaller */
   animation: fadeInScale 1.5s ease-in-out forwards; /* Animation */
+  width: 92px;
+  height: auto;
+  display: block;
 }
 
 @keyframes fadeInScale {
@@ -220,4 +304,9 @@ body {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+.logo-link {
+  display: inline-block; /* Ensure it only wraps the logo */
+  
 }

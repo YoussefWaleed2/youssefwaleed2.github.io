@@ -1,9 +1,23 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import "./Menu.css";
 import { Link } from "react-router-dom";
+import MobileMenu from "./MobileMenu";
 
 const Menu = () => {
   const navLinksRef = useRef([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Check screen size to toggle between desktop and mobile menu
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div className="hero-container">
@@ -44,47 +58,53 @@ const Menu = () => {
             </svg>
           </Link>
         </div>
-        <div className="nav-links">
-          <Link
-            to="/"
-            ref={(el) => (navLinksRef.current[0] = el)}
-            data-text="About Us"
-          >
-            <span>About Us</span>
-          </Link>
-          <Link
-            to="/services"
-            ref={(el) => (navLinksRef.current[1] = el)}
-            data-text="Services"
-          >
-            <span>Services</span>
-          </Link>
-          <Link
-            to="/projects"
-            ref={(el) => (navLinksRef.current[2] = el)}
-            data-text="Projects"
-          >
-            <span>Projects</span>
-          </Link>
-          <Link
-            to="/clients"
-            ref={(el) => (navLinksRef.current[3] = el)}
-            data-text="Clients"
-          >
-            <span>Clients</span>
-          </Link>
-          <Link
-            to="/join-us"
-            ref={(el) => (navLinksRef.current[4] = el)}
-            data-text="Join Us"
-          >
-            <span>Join Us</span>
-          </Link>
-          <span className="line">|</span>
-          <Link to="/contact">
-            <button className="contact-button">Get in Touch</button>
-          </Link>
-        </div>
+
+        {/* Render MobileMenu or Desktop Links */}
+        {isMobile ? (
+          <MobileMenu />
+        ) : (
+          <div className="nav-links">
+            <Link
+              to="/"
+              ref={(el) => (navLinksRef.current[0] = el)}
+              data-text="About Us"
+            >
+              <span>About Us</span>
+            </Link>
+            <Link
+              to="/services"
+              ref={(el) => (navLinksRef.current[1] = el)}
+              data-text="Services"
+            >
+              <span>Services</span>
+            </Link>
+            <Link
+              to="/projects"
+              ref={(el) => (navLinksRef.current[2] = el)}
+              data-text="Projects"
+            >
+              <span>Projects</span>
+            </Link>
+            <Link
+              to="/clients"
+              ref={(el) => (navLinksRef.current[3] = el)}
+              data-text="Clients"
+            >
+              <span>Clients</span>
+            </Link>
+            <Link
+              to="/join-us"
+              ref={(el) => (navLinksRef.current[4] = el)}
+              data-text="Join Us"
+            >
+              <span>Join Us</span>
+            </Link>
+            <span className="line">|</span>
+            <Link to="/contact">
+              <button className="contact-button">Get in Touch</button>
+            </Link>
+          </div>
+        )}
       </nav>
     </div>
   );

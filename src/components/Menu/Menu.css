@@ -98,6 +98,8 @@ body {
 .nav-links {
     display: flex;
     align-items: center;
+    justify-content: center; /* Center the links horizontally */
+    gap: 30px; /* Add spacing between links */
     z-index: 1000;
     mix-blend-mode: difference;
 }
@@ -117,6 +119,57 @@ body {
     display: block;
     will-change: transform;
     user-select: none;
+}
+
+.nav-links a {
+    position: relative;
+    color: #ffffff; /* Ensure the text is visible */
+    text-decoration: none;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 4px 0;
+    display: inline-block;
+    overflow: hidden;
+    min-width: 100px; /* Ensure consistent width for links */
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+.nav-links a::before {
+    content: attr(data-text); /* Duplicate the text */
+    position: absolute;
+    top: 100%; /* Start below the original text */
+    left: 0;
+    width: 100%;
+    color: #f0f0f0; /* Optional hover color for the duplicate */
+    transform: translateY(0);
+    transition: transform 0.28s ease;
+}
+
+.nav-links a:hover::before {
+    transform: translateY(-125%); /* Move the duplicate up */
+}
+
+.nav-links a:hover {
+    color: transparent; /* Hide the original text as it moves up */
+}
+
+.nav-links a span {
+    display: inline-block;
+    position: relative;
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+
+.nav-links a:hover span {
+    transform: translateY(-100%); /* Move the original text up */
+}
+
+.nav-links .line {
+    margin: 0 20px; /* Add spacing around the separator line */
+    color: #ffffff;
+    font-size: 18px;
 }
 
 /* Menu Links Animation */
@@ -175,13 +228,13 @@ nav a,
 /* Contact Button */
 .contact-button {
     font-family: "Aboreto", cursive;
-    border: 1.2px solid var(--copy);
+    border: 2px solid #ffffff;
     background: transparent;
-    color: var(--copy);
-    padding: 6px 8px;
-    border-radius: 5px;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     text-transform: uppercase;
     transition: background 0.3s ease, color 0.3s ease;
     mix-blend-mode: difference;
@@ -189,8 +242,8 @@ nav a,
 }
 
 .contact-button:hover {
-    background: var(--copy);
-    color: #000;
+    background-color: #ffffff;
+    color: #000000;
 }
 
 .close-btn {

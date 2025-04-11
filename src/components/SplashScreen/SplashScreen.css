@@ -257,31 +257,6 @@ a {
   clip-path: none;
 }
 
-
-nav > * {
-  flex: 1;
-}
-
-.links {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.nav-logo {
-  text-align: center;
-  display: flex;
-  justify-content: center;
-}
-
-.nav-logo a {
-  font-family: "Aboreto", sans-serif;
-  font-size: 1.75rem;
-  font-weight: bolder;
-  font-style: italic;
-  line-height: 0.9;
-}
-
 .banner-img {
   position: absolute;
   top: 45%;

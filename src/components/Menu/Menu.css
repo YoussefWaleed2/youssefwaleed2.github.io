@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Aboreto&display=swap');
 
+:root {
+  --copy: #ffffff;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -8,30 +12,86 @@
 
 body {
     font-family: "Aboreto", cursive;
-    
 }
-
 
 /* Navbar */
 .navbar {
     position: fixed;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%) translateY(-100%);
-    width: auto;
-    min-width: 1000px;
+    left: 0;
+    width: 100vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 40px;
-    z-index: 99999;
+    padding: 20px;
+    z-index: 999;
     will-change: transform;
-    opacity: 0;
-    transition: transform 0.5s ease;
     background: rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
-    
+    border-radius: 50px;
+    opacity: 1;
+    transform: translateY(-100%);
+    animation: slideDown 1s cubic-bezier(.76,0,.2,1) forwards;
+    animation-delay: 2.5s;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(10%);
+    }
+}
+
+/* Logo and Menu Toggle Styles */
+.logo,
+.menu-toggle-open,
+.menu-toggle-close{
+    position: relative;
+    width: max-content;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    cursor: pointer;
+}
+
+/* Menu Overlay */
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    width: 90vw;
+    height: 100svh;
+    display: flex;
+    background: #000;
+    justify-content: center;
+    align-items: center;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+    will-change: clip-path;
+    pointer-events: none;
+    z-index: 999;
+    border-radius: 25px;
+}
+
+.menu-overlay-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+
+.menu-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 /* Navigation Links */
@@ -40,69 +100,84 @@ body {
     align-items: center;
     z-index: 1000;
     mix-blend-mode: difference;
-    z-index: 1;
 }
 
-.nav-links a {
-  
+.nav-links a,
+.menu-overlay-bar a,
+.menu-overlay-bar p,
+.showreel a,
+.media-link a {
     position: relative;
-    color: #ffffff;
+    color: var(--copy);
     text-decoration: none;
     font-size: 14px;
     text-transform: uppercase;
     font-weight: 600;
     padding: 4px 0;
-    display: inline-block;
-    overflow: hidden;
-    min-width: 100px;
-    text-align: center;
-    transition: color 0.3s ease;
+    display: block;
+    will-change: transform;
+    user-select: none;
 }
 
-.nav-links a::before {
-    content: attr(data-text); /* Duplicate the text */
-    position: absolute;
-    top: 100%; /* Start below the original text */
-    left: 0;
+/* Menu Links Animation */
+.menu-links {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    color: #f0f0f0; /* Optional hover color for the duplicate */
-    transform: translateY(0);
-    transition: transform 0.28s ease;
+    height: 100%;
+    gap: 2rem;
 }
 
-.nav-links a:hover::before {
-    transform: translateY(-125%); /* Move the duplicate up */
-}
-
-.nav-links a:hover {
-    color: transparent; /* Hide the original text as it moves up */
-}
-
-.nav-links a span {
-    display: inline-block;
+.menu-link {
     position: relative;
-    transform: translateY(0);
-    transition: transform 0.3s ease;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
 }
 
-.nav-links a:hover span {
-    transform: translateY(-100%); /* Move the original text up */
+.menu-link a {
+    position: relative;
+    display: inline-block;
+    transform: translateY(100%);
+    will-change: transform;
+    color: var(--copy);
+    text-decoration: none;
 }
 
-/* Divider */
-.nav-links .line {
-    color: white;
-    font-size: 34px;
-    margin: 0px 20px;
-    font-weight: 100;
+.menu-overlay h1 {
+    text-transform: uppercase;
+    font-weight: lighter;
+    font-size: 8vw;
+    line-height: 0.85;
+    color: var(--copy);
+    margin: 0;
+}
+
+/* Transform States */
+nav a,
+.menu-toggle-open p {
+    transform: translateY(0px);
+}
+
+.menu-overlay-bar a,
+.menu-toggle-close p,
+.showreel a,
+.media-link a {
+    transform: translateY(20px);
+}
+
+/* Socials */
+.socials {
+    display: flex;
+    gap: 1em;
 }
 
 /* Contact Button */
 .contact-button {
     font-family: "Aboreto", cursive;
-    border: 1.2px solid #fff;
+    border: 1.2px solid var(--copy);
     background: transparent;
-    color: #fff;
+    color: var(--copy);
     padding: 6px 8px;
     border-radius: 5px;
     cursor: pointer;
@@ -114,199 +189,61 @@ body {
 }
 
 .contact-button:hover {
-    background: #fff;
+    background: var(--copy);
     color: #000;
-    opacity: 1;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .navbar {
-        min-width: 600px;
-        padding: 12px 30px;
-    }
+.close-btn {
+  width: 36px;
+  height: 36px;
 }
 
-@media (max-width: 768px) {
-    .navbar {
-        min-width: 90%;
-        flex-direction: row;
-        padding: 10px 20px;
-    }
-
-    .nav-links {
-        gap: 8px;
-    }
-
-    .nav-links a {
-        min-width: 80px;
-        font-size: 13px;
-    }
-}
-
-/* Hamburger Icon */
-.hamburger {
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 25px; /* Adjusted size */
-  height: 18px; /* Adjusted size */
-  cursor: pointer;
-  z-index: 1000;
-  position: absolute; /* Position it relative to the navbar */
-  top: 20px; /* Adjust vertical position */
-  right: 20px; /* Move it to the far right */
-}
-
-.hamburger .line {
-  width: 25px; /* Explicitly set width */
-  height: 3px; /* Adjusted thickness */
-  background-color: white;
-  border-radius: 2px;
-  transition: all 0.3s ease; /* Add smooth animation */
-}
-
-/* Mobile Menu */
-.mobile-menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 100%; /* Full width for mobile view */
-  height: 100%; /* Full height */
-  background-color: rgba(0, 0, 0, 0.9); /* Black with slight transparency */
-  backdrop-filter: blur(10px); /* Add blur effect */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly; /* Distribute links evenly */
-  align-items: center; /* Center the links horizontally */
-  z-index: 999;
-  transform: translateX(100%); /* Start off-screen to the right */
-  transition: transform 0.5s ease; /* Smooth transition */
-  padding: 20px; /* Add padding for spacing */
-}
-
-.mobile-menu a {
-  color: white; /* Ensure the text is visible */
-  text-decoration: none;
-  font-size: 20px; /* Slightly larger font size */
-  text-transform: uppercase;
-  font-weight: bold;
-  text-align: center; /* Center-align the text */
-  width: 100%; /* Ensure links span the full width */
-  padding: 10px 0; /* Add padding for better spacing */
-  display: block; /* Ensure links are block-level elements */
-}
-
-.mobile-menu .contact-button {
-  font-size: 18px; /* Slightly larger font size */
-  margin-top: 20px; /* Add spacing above the button */
-  padding: 15px 30px; /* Add padding for better visibility */
-  background-color: transparent;
-  border: 2px solid white;
-  color: white;
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: all 0.3s ease;
-}
-
-.mobile-menu .contact-button:hover {
-  background-color: white;
-  color: black;
-}
-
-/* Show hamburger icon in mobile view */
-@media (max-width: 768px) {
-  .hamburger {
-    display: flex;
-  }
-
-  .nav-links {
-    display: none;
-  }
-}
-
-.animated-text-container {
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  width: 100%;
-  max-width: 1200px;
-  padding: 0 20px;
-  opacity: 0;
-  pointer-events: none;
-  will-change: opacity;
-  z-index: 51;
-}
-
-.title {
-  font-size: 4rem;
-  color: #E3DAC5;
-  margin-bottom: 1rem;
-  line-height: 1.2;
-  will-change: transform;
-}
-
-.title span {
-  color: #fff;
-  display: inline-block;
-  will-change: transform, opacity;
-}
-
-.subtitle {
-  font-size: 1.5rem;
-  color: #E3DAC5;
-  opacity: 0;
-  will-change: opacity;
-}
-
-@media (max-width: 768px) {
-  .animated-text-container {
-    width: 90%;
-  }
-  
-  .title {
-    font-size: 2.5rem;
-  }
-  
-  .subtitle {
-    font-size: 1.2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .title {
-    font-size: 2rem;
-  }
-  
-  .subtitle {
-    font-size: 0.9rem;
-  }
+.open-btn {
+    width: 34px;
+    height: 34px;
 }
 
 /* Logo Animation */
 .img-logo {
-  opacity: 0; /* Start fully transparent */
-  transform: scale(0.8); /* Start slightly smaller */
-  animation: fadeInScale 1.5s ease-in-out forwards; /* Animation */
-  width: 92px;
-  height: auto;
-  display: block;
+    opacity: 0;
+    transform: scale(0.8);
+    animation: fadeInScale 1.5s ease-in-out forwards;
+    width: 92px;
+    height: auto;
+    display: block;
 }
 
 @keyframes fadeInScale {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+@media (max-width: 768px) {
+    .navbar {
+      padding: 15px 30px;
+      width: 90vw;
+      left: 5%;
+    }
+
+    .menu-overlay h1 {
+        font-size: 15vw;
+    }
+}
+/* Responsive Design */
+@media (max-width: 900px) {
+    .navbar {
+      padding: 15px 30px;
+      width: 90vw;
+      left: 5%;
+    }
+    .menu-overlay h1 {
+        font-size: 16vw;
+    }
 }
 
-.logo-link {
-  display: inline-block; /* Ensure it only wraps the logo */
-  
-}
+

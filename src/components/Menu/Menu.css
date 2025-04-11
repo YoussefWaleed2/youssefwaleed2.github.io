@@ -18,8 +18,8 @@ body {
 .navbar {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 80vw;
+    left: 6%;
+    width: 85vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -50,7 +50,7 @@ body {
     width: max-content;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
     cursor: pointer;
-    margin-left: 50px; /* Add this line to shift the logo right */
+    
 }
 
 .menu-toggle-open,
@@ -106,7 +106,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center; /* Center the links horizontally */
-    gap: 30px; /* Add spacing between links */
+    
     z-index: 1000;
     mix-blend-mode: difference;
 }
@@ -288,6 +288,8 @@ nav a,
       padding: 15px 30px;
       width: 90vw;
       left: 5%;
+      justify-content: space-between;
+      
     }
 
     .menu-overlay h1 {
@@ -300,10 +302,13 @@ nav a,
       padding: 15px 30px;
       width: 90vw;
       left: 5%;
+      justify-content: space-between;
     }
     .menu-overlay h1 {
         font-size: 16vw;
     }
 }
+
+
 
 

@@ -32,12 +32,12 @@ function App() {
       <ScrollToTop />
       <AnimatePresence mode="wait" initial={false}>
         <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/work" element={<Work />} />
-          <Route path="/sample-project" element={<Project />} />
+          <Route path="" element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="faq" element={<FAQ />} />
+          <Route path="work" element={<Work />} />
+          <Route path="sample-project" element={<Project />} />
         </Routes>
       </AnimatePresence>
     </>

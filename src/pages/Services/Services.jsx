@@ -6,6 +6,7 @@ import Lenis from '@studio-freight/lenis';
 import * as THREE from 'three';
 import './Services.css';
 import { Environment, SpotLight, Points, PointMaterial } from '@react-three/drei';
+import Transition from '../../components/Transition/Transition';
 
 function Stars({ count = 2000 }) {
   const pointsRef = useRef();
@@ -263,4 +264,4 @@ const Services = () => {
   );
 };
 
-export default Services;
+export default Transition(Services);

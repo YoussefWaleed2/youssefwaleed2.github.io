@@ -3,7 +3,19 @@
     min-height: 100vh;
     padding: 2rem;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
+    padding-top: 120px;
+    background-color: #000000;
+    scrollbar-width: thin;
+    scrollbar-color: white ;
+}
+
+/* Ensure the body has proper overflow */
+html, body {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: white ;
+    height: 100%;
 }
 
 .services-container::before {
@@ -12,21 +24,35 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 100vh;
-    background: linear-gradient(to bottom, rgba(140, 122, 50, 0) 0%, rgba(140, 122, 50, 0.2) 100%);
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(140, 122, 50, 0) 0%, rgba(196, 169, 61, 0.05) 100%);
     pointer-events: none;
+    z-index: 1;
 }
 
 .services-content {
     text-align: center;
     margin-bottom: 4rem;
+    position: relative;
+    font-weight: 900;
+    z-index: 2;
+    margin-top: 0.5rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+.services-content.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .services-content h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    font-weight: 300;
-    letter-spacing: 0.2em;
+    font-size: 5rem;
+    color: white;
+    text-align: center;
+    margin-top: 40px;
+    will-change: transform, opacity;
 }
 
 .services-content p {
@@ -40,7 +66,7 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    z-index: 1;
+    z-index: 0;
     pointer-events: none;
 }
 
@@ -48,46 +74,53 @@
 .services-sections {
     position: relative;
     z-index: 2;
-    max-width: 800px;
+    max-width: 1300px;
     margin: 0 auto;
     padding: 2rem;
+    margin-top: -2rem;
 }
 
 .service-section {
-    margin-bottom: 8rem;
-    opacity: 0.9;
+    opacity: 0;
+    transform: translateX(-30px);
+    will-change: transform, opacity;
+    padding: 4rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.service-section.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Left-aligned sections (odd-numbered) */
+.service-section:nth-child(odd) {
+    padding-right: 50%;
+}
+
+/* Right-aligned sections (even-numbered) */
+.service-section:nth-child(even) {
+    padding-left: 50%;
 }
 
 .service-number {
-    font-size: 0.9rem;
-    color: #fff;
+    font-size: 1.5rem;
+    color: #8C7A32;
     margin-bottom: 1rem;
-    font-weight: 300;
 }
 
 .service-title {
-    font-size: 2rem;
+    font-size: 2.5rem;
+    color: white;
     margin-bottom: 2rem;
-    font-weight: 300;
-    letter-spacing: 0.1em;
 }
 
 .service-description {
-    font-size: 1rem;
-    line-height: 1.8;
-    color: #fff;
-    margin-bottom: 2rem;
-    font-weight: 300;
-}
-
-.service-section:nth-child(odd) {
-    margin-left: 0;
-    text-align: left;
-}
-
-.service-section:nth-child(even) {
-    margin-right: 0;
-    text-align: right;
+    color: #ffffff99;
+    line-height: 1.6;
+    margin-bottom: 1rem;
 }
 
 /* Responsive Design */
@@ -102,6 +135,16 @@
     
     .service-section {
         padding: 1.5rem;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    .service-section:nth-child(odd),
+    .service-section:nth-child(even) {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        align-items: flex-start;
+        text-align: left;
     }
     
     .service-section h2 {
@@ -111,6 +154,62 @@
     .service-section p {
         font-size: 1rem;
     }
+}
+
+/* Clean black loader */
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    z-index: 1000;
+}
+
+.loader-content {
+    text-align: center;
+    color: #8C7A32;
+}
+
+.loader-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(140, 122, 50, 0.3);
+    border-radius: 50%;
+    border-top-color: #8C7A32;
+    animation: spin 1s ease-in-out infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Custom scrollbar styling for Webkit browsers */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.services-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+.services-container::-webkit-scrollbar-track {
+    background: #000000;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+.services-container::-webkit-scrollbar-thumb {
+    background-color: black;
+    border-radius: 4px;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+.services-container::-webkit-scrollbar-thumb:hover {
+    background-color: black;
 }
 
 

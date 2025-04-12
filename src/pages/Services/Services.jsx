@@ -63,9 +63,13 @@ function Stars({ count = 2000 }) {
   );
 }
 
-function Model({ modelRef, scrollProgress }) {
+function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete }) {
   const { scene } = useGLTF('/services/Vzbl hand.glb');
   const [entranceComplete, setEntranceComplete] = useState(false);
+  const initialRotation = useRef(isLeftHand ? Math.PI * 0.5 : Math.PI * 1.5);
+  const currentPosition = useRef({ x: 0, y: 0, z: 0 });
+  const currentRotation = useRef({ x: 0, y: 0 });
+  const animationInProgress = useRef(false);
   
   // Set the model color and material properties
   useEffect(() => {
@@ -86,24 +90,65 @@ function Model({ modelRef, scrollProgress }) {
     
     // Initial position and scale
     scene.scale.set(0.3, 0.3, 0.3);
-    scene.position.set(0, -100, 0); // Start much lower
+    
+    // Set initial position based on which hand it is
+    const startX = isLeftHand ? -50 : 50; // Start from left or right
+    scene.position.set(startX, -100, 0);
     scene.rotation.y = Math.PI * 2; // Start with a full rotation
+    
+    // Store initial position for smooth transition
+    currentPosition.current = {
+      x: startX,
+      y: -100,
+      z: 0
+    };
+    
+    currentRotation.current = {
+      x: 0,
+      y: Math.PI * 2
+    };
     
     // Create a timeline for coordinated animations
     const tl = gsap.timeline({
       delay: 0.5,
       ease: "power3.out",
-      onComplete: () => setEntranceComplete(true)
+      onComplete: () => {
+        setEntranceComplete(true);
+        // Store the final rotation after entrance animation
+        initialRotation.current = scene.rotation.y;
+        
+        // Update current position and rotation to match the final entrance position
+        currentPosition.current = {
+          x: scene.position.x,
+          y: scene.position.y,
+          z: scene.position.z
+        };
+        
+        currentRotation.current = {
+          x: scene.rotation.x,
+          y: scene.rotation.y
+        };
+        
+        // Mark that entrance animation is complete
+        animationInProgress.current = false;
+        
+        // Notify parent component that entrance animation is complete
+        if (onEntranceComplete) {
+          onEntranceComplete();
+        }
+      }
     });
 
     // Add animations to timeline
     tl.to(scene.position, {
-      y: -20,
+      x: isLeftHand ? -30 : 30, // Final x position beside first section
+      y: -35, // Lowered position further down
+      z: 0,
       duration: 2.5,
       ease: "power4.out"
     })
     .to(scene.rotation, {
-      y: Math.PI * 4,
+      y: isLeftHand ? Math.PI * 0.5 : Math.PI * 1.5, // Rotate to face the section
       duration: 3,
       ease: "power2.out"
     }, "<"); // Start at the same time as position animation
@@ -116,37 +161,103 @@ function Model({ modelRef, scrollProgress }) {
       duration: 2,
       ease: "elastic.out(1, 0.3)"
     }, "<0.2"); // Start slightly after the main animation
-  }, [scene]);
+  }, [scene, isLeftHand]);
 
   // Update rotation and position based on scroll progress
   useEffect(() => {
     if (modelRef.current && entranceComplete) {
-      // Rotation
-      modelRef.current.rotation.y = scrollProgress * Math.PI * 4;
-      modelRef.current.rotation.x = Math.sin(scrollProgress * Math.PI) * 0.2;
+      // Calculate section progress (0-1 for each section)
+      const sectionCount = 3; // Total number of sections
+      const sectionProgress = (scrollProgress * sectionCount) % 1;
+      const currentSection = Math.floor(scrollProgress * sectionCount);
       
-      // Position - move down as we scroll
-      const startY = -20;
-      const endY = -35;
-      modelRef.current.position.y = startY + (endY - startY) * scrollProgress;
+      // Determine if we're in an even or odd section
+      const isEvenSection = currentSection % 2 === 0;
       
-      // Z-axis movement - move closer and further
+      // Calculate horizontal movement (zigzag pattern)
+      let targetX;
+      if (isLeftHand) {
+        // Left hand moves from left to right in odd sections, right to left in even sections
+        targetX = isEvenSection 
+          ? -30 + (sectionProgress * 60) // Move from left to right
+          : 30 - (sectionProgress * 60); // Move from right to left
+      } else {
+        // Right hand moves from right to left in odd sections, left to right in even sections
+        targetX = isEvenSection 
+          ? 30 - (sectionProgress * 60) // Move from right to left
+          : -30 + (sectionProgress * 60); // Move from left to right
+      }
+      
+      // Calculate target positions
+      const startY = -35; // Match the entrance position
+      const endY = -30; // Reduced from -50 to -45 to make the hand end higher
+      const targetY = startY + (endY - startY) * scrollProgress;
+      
+      // Z-axis movement (move closer and further)
       const startZ = 0;
       const endZ = -30;
-      modelRef.current.position.z = startZ + (endZ - startZ) * Math.sin(scrollProgress * Math.PI);
+      const targetZ = startZ + (endZ - startZ) * Math.sin(scrollProgress * Math.PI);
+
+      // Calculate target rotations - SLOWED DOWN ROTATION
+      const rotationDirection = isLeftHand ? 1 : -1;
+      // Reduced from Math.PI * 8 to Math.PI * 4 for slower rotation
+      const targetRotationY = initialRotation.current + (scrollProgress * Math.PI * 4 * rotationDirection);
+      const targetRotationX = Math.sin(scrollProgress * Math.PI) * 0.2;
+
+      // Apply smooth easing - INCREASED SMOOTHNESS
+      const easing = 0.05; // Reduced from 0.08 to 0.05 for smoother movement
+
+      // Position easing
+      currentPosition.current.x += (targetX - currentPosition.current.x) * easing;
+      currentPosition.current.y += (targetY - currentPosition.current.y) * easing;
+      currentPosition.current.z += (targetZ - currentPosition.current.z) * easing;
+
+      // Apply smoothed positions
+      modelRef.current.position.x = currentPosition.current.x;
+      modelRef.current.position.y = currentPosition.current.y;
+      modelRef.current.position.z = currentPosition.current.z;
+
+      // Rotation easing
+      let rotationDiffY = targetRotationY - currentRotation.current.y;
+      // Normalize rotation difference
+      if (Math.abs(rotationDiffY) > Math.PI) {
+        rotationDiffY = rotationDiffY > 0 
+          ? rotationDiffY - Math.PI * 2 
+          : rotationDiffY + Math.PI * 2;
+      }
+      currentRotation.current.y += rotationDiffY * easing;
+      currentRotation.current.x += (targetRotationX - currentRotation.current.x) * easing;
+
+      // Apply smoothed rotations
+      modelRef.current.rotation.y = currentRotation.current.y;
+      modelRef.current.rotation.x = currentRotation.current.x;
     }
-  }, [scrollProgress, modelRef, entranceComplete]);
+  }, [scrollProgress, modelRef, entranceComplete, isLeftHand]);
 
   return <primitive object={scene} ref={modelRef} />;
 }
 
 const Services = () => {
   const containerRef = useRef(null);
-  const modelRef = useRef(null);
+  const leftHandRef = useRef(null);
+  const rightHandRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [canvasLoaded, setCanvasLoaded] = useState(false);
+  const [entranceComplete, setEntranceComplete] = useState(false);
+  const titleRef = useRef(null);
+  const sectionsRef = useRef(null);
+  const navRef = useRef(null);
+  const lenisRef = useRef(null);
 
+  // Handle entrance animation completion
+  const handleEntranceComplete = () => {
+    console.log("Entrance animation complete, enabling scrolling");
+    setEntranceComplete(true);
+  };
+
+  // Initialize Lenis for smooth scrolling
   useEffect(() => {
-    // Initialize Lenis for smooth scrolling
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -156,16 +267,24 @@ const Services = () => {
       smoothTouch: false,
       touchMultiplier: 2,
     });
-
+    
+    lenisRef.current = lenis;
+    
+    // Initially stop scrolling until entrance animation completes
+    lenis.stop();
+    
     // Scroll handler
     function raf(time) {
       lenis.raf(time);
       
-      // Calculate scroll progress (0 to 1)
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const currentScroll = window.scrollY;
-      const progress = Math.min(currentScroll / scrollHeight, 1);
-      setScrollProgress(progress);
+      // Only calculate scroll progress if entrance animation is complete
+      if (entranceComplete) {
+        // Calculate scroll progress (0 to 1)
+        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const currentScroll = window.scrollY;
+        const progress = Math.min(currentScroll / scrollHeight, 1);
+        setScrollProgress(progress);
+      }
       
       requestAnimationFrame(raf);
     }
@@ -175,18 +294,75 @@ const Services = () => {
     return () => {
       lenis.destroy();
     };
-  }, []);
+  }, [entranceComplete]);
+
+  // Enable scrolling when entrance animation completes
+  useEffect(() => {
+    if (entranceComplete && lenisRef.current) {
+      console.log("Starting Lenis scroll");
+      lenisRef.current.start();
+    }
+  }, [entranceComplete]);
+
+  // Animation sequence
+  useEffect(() => {
+    if (canvasLoaded) {
+      const timeline = gsap.timeline();
+      
+      // Hide loader
+      timeline.to('.loader', {
+        opacity: 0,
+        duration: 0.5,
+        onComplete: () => setIsLoading(false)
+      });
+
+      // Reveal navigation
+      const nav = document.querySelector('nav');
+      if (nav) {
+        nav.classList.add('nav-reveal');
+        timeline.add(() => {
+          nav.classList.add('visible');
+        }, "+=0.3");
+      }
+
+      // Reveal services title
+      timeline.add(() => {
+        const servicesContent = document.querySelector('.services-content');
+        if (servicesContent) {
+          servicesContent.classList.add('visible');
+        }
+      }, "+=0.5");
+
+      // Start hand entrance animation
+      timeline.add(() => {
+        // Hand animation is already set up in the Model component
+        // It will start automatically when the component mounts
+      }, "+=0.3");
+
+      // Reveal sections one by one
+      const sections = document.querySelectorAll('.service-section');
+      sections.forEach((section, index) => {
+        timeline.add(() => {
+          section.classList.add('visible');
+        }, `+=0.2`);
+      });
+    }
+  }, [canvasLoaded]);
 
   return (
     <div className="services-container" ref={containerRef}>
+      {isLoading && <div className="loader" />}
+      
       <div className="services-content">
         <h1>SERVICES</h1>
       </div>
+
       <div className="model-container">
         <Canvas
           camera={{ position: [0, 0, 75], fov: 45 }}
           style={{ width: '100%', height: '100%' }}
           gl={{ alpha: true }}
+          onCreated={() => setCanvasLoaded(true)}
         >
           <color attach="background" args={['#000000']} />
           
@@ -211,11 +387,29 @@ const Services = () => {
           {/* Background stars */}
           <Stars />
           
-          <Model modelRef={modelRef} scrollProgress={scrollProgress} />
+          {/* Left hand */}
+          {canvasLoaded && (
+            <Model 
+              modelRef={leftHandRef} 
+              scrollProgress={scrollProgress} 
+              isLeftHand={true}
+              onEntranceComplete={handleEntranceComplete}
+            />
+          )}
+          
+          {/* Right hand */}
+          {canvasLoaded && (
+            <Model 
+              modelRef={rightHandRef} 
+              scrollProgress={scrollProgress} 
+              isLeftHand={false}
+              onEntranceComplete={handleEntranceComplete}
+            />
+          )}
         </Canvas>
       </div>
       
-      <div className="services-sections">
+      <div className="services-sections" ref={sectionsRef}>
         <section className="service-section">
           <div className="service-number">01.</div>
           <h2 className="service-title">BRANDING</h2>

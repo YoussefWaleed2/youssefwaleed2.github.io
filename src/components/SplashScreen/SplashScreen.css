@@ -41,6 +41,8 @@ a {
   background-color: #000;
   color: #fff;
   display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 2em;
 }
 
@@ -317,11 +319,22 @@ a {
 }
 
 @media (max-width: 900px) {
+  .overlay {
+    padding: 1em;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
   .loader {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .logo-svg {
+    width: 150px;
+    height: auto;
   }
 
   .projects,

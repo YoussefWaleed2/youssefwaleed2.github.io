@@ -1,0 +1,116 @@
+.services-container {
+    color: #fff;
+    min-height: 100vh;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.services-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    background: linear-gradient(to bottom, rgba(140, 122, 50, 0) 0%, rgba(140, 122, 50, 0.2) 100%);
+    pointer-events: none;
+}
+
+.services-content {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.services-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+}
+
+.services-content p {
+    font-size: 1.5rem;
+    opacity: 0.8;
+}
+
+.model-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Service Sections */
+.services-sections {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.service-section {
+    margin-bottom: 8rem;
+    opacity: 0.9;
+}
+
+.service-number {
+    font-size: 0.9rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    font-weight: 300;
+}
+
+.service-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+}
+
+.service-description {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #fff;
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+.service-section:nth-child(odd) {
+    margin-left: 0;
+    text-align: left;
+}
+
+.service-section:nth-child(even) {
+    margin-right: 0;
+    text-align: right;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .services-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .services-content p {
+        font-size: 1rem;
+    }
+    
+    .service-section {
+        padding: 1.5rem;
+    }
+    
+    .service-section h2 {
+        font-size: 1.5rem;
+    }
+    
+    .service-section p {
+        font-size: 1rem;
+    }
+}
+
+

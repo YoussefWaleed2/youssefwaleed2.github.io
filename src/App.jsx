@@ -9,6 +9,7 @@ import Project from "./pages/Project/Project";
 import About from "./pages/About Us/About";
 import FAQ from "./pages/Clients/FAQ";
 import Contact from "./pages/Get In Touch/Contact";
+import Services from "./pages/Services/Services";
 import { AnimatePresence } from "framer-motion";
 
 function ScrollToTop() {
@@ -37,6 +38,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/work" element={<Work />} />
+          <Route path="/services" element={<Services />} />
           <Route path="/sample-project" element={<Project />} />
         </Routes>
       </AnimatePresence>

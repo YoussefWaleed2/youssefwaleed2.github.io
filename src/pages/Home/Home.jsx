@@ -137,7 +137,7 @@ const Home = () => {
         <SplashScreen />
         <div className="video-wrapper">
           <video 
-            src="/home/vid.mp4" 
+            src="home/vid.mp4" 
             autoPlay 
             muted 
             loop 

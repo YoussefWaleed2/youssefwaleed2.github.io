@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import gsap from "gsap";
 import CustomEase from "gsap/dist/CustomEase";
+import { Link } from "react-router-dom";
 
 const MobileMenu = () => {
   const navigate = useNavigate();
@@ -251,11 +252,8 @@ const MobileMenu = () => {
     }
 
     handleCloseMenu();
-
-    setTimeout(() => {
-      navigate(path);
-      slideInOut();
-    }, 200);
+    navigate(path);
+    slideInOut();
   };
 
   return (
@@ -287,29 +285,29 @@ const MobileMenu = () => {
 
         <div className="menu-links">
           <div className="menu-link">
-            <a href="/" onClick={(e) => handleNavigation(e, "/")}>
+            <Link to="/" onClick={(e) => handleNavigation(e, "/")}>
               <h1>Index</h1>
-            </a>
+            </Link>
           </div>
           <div className="menu-link">
-            <a href="/about" onClick={(e) => handleNavigation(e, "/about")}>
+            <Link to="/about" onClick={(e) => handleNavigation(e, "/about")}>
               <h1>About Us</h1>
-            </a>
+            </Link>
           </div>
           <div className="menu-link">
-            <a href="/services" onClick={(e) => handleNavigation(e, "/services")}>
+            <Link href="/services" onClick={(e) => handleNavigation(e, "/services")}>
               <h1>Services</h1>
-            </a>
+            </Link>
           </div>
           <div className="menu-link">
-            <a href="/work" onClick={(e) => handleNavigation(e, "/work")}>
+            <Link href="/work" onClick={(e) => handleNavigation(e, "/work")}>
               <h1>Work</h1>
-            </a>
+            </Link>
           </div>
           <div className="menu-link">
-            <a href="/contact" onClick={(e) => handleNavigation(e, "/contact")}>
+            <Link to="/contact" onClick={(e) => handleNavigation(e, "/contact")}>
               <h1>Contact</h1>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

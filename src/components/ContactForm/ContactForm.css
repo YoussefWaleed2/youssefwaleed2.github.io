@@ -18,6 +18,25 @@
 .contact-form input,
 .contact-form textarea {
   background-color: var(--fg200);
+  color: white;
+  border: none;
+  padding: 1em;
+  border-radius: 0.5em;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  background-color: var(--fg200);
+  color: white;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
 .contact-form .btn {
@@ -133,4 +152,31 @@
     text-align: center;
     gap: 0.25em;
   }
+}
+
+/* Add these styles for form messages */
+.form-message {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.form-message.success {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.form-message.error {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+  border: 1px solid rgba(244, 67, 54, 0.2);
+}
+
+/* Style for disabled button */
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }

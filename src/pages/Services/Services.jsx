@@ -8,7 +8,7 @@ import './Services.css';
 import { Environment, SpotLight, Points, PointMaterial } from '@react-three/drei';
 import Transition from '../../components/Transition/Transition';
 
-function Stars({ count = 2000 }) {
+function Stars({ count = 1500 }) {
   const pointsRef = useRef();
   const [positions] = useState(() => {
     const positions = [];

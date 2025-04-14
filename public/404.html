@@ -4,9 +4,17 @@
     <meta charset="utf-8">
     <title>VZBL Co.</title>
     <script type="text/javascript">
-      const path = window.location.pathname;
-      const cleanPath = path.endsWith('/') ? path.slice(0, -1) : path;
-      window.location.replace(window.location.origin + '/#' + cleanPath);
+      const l = window.location;
+      if (l.hash && l.hash.includes('/')) {
+        // Already has the correct hash format, do nothing
+        window.location.replace(l.origin + l.hash);
+      } else if (l.pathname !== '/') {
+        const path = l.pathname === '/services' ? '/services' : l.pathname;
+        const cleanPath = path.endsWith('/') ? path.slice(0, -1) : path;
+        window.location.replace(l.origin + '/#' + cleanPath);
+      } else {
+        window.location.replace(l.origin);
+      }
     </script>
   </head>
   <body></body>

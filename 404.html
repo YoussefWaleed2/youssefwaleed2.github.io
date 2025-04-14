@@ -5,7 +5,8 @@
     <title>VZBL Co.</title>
     <script type="text/javascript">
       const path = window.location.pathname;
-      window.location.href = window.location.origin + '/#' + path;
+      const cleanPath = path.endsWith('/') ? path.slice(0, -1) : path;
+      window.location.replace(window.location.origin + '/#' + cleanPath);
     </script>
   </head>
   <body></body>

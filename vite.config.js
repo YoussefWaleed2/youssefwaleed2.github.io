@@ -16,4 +16,12 @@ export default defineConfig({
       },
     },
   },
+  resolve: {
+    extensions: ['.js', '.jsx', '.json']
+  },
+  server: {
+    headers: {
+      'Content-Type': 'application/javascript'
+    }
+  }
 });

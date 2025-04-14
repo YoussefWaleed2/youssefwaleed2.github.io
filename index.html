@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="./site-icon.png" />
+    <link rel="icon" type="image/png" href="/site-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
       VZBL Co.
@@ -10,20 +10,9 @@
     <!-- Start Single Page Apps for GitHub Pages -->
     <script type="text/javascript">
       (function(l) {
-        // Don't redirect if we're already on a valid path
-        if (l.pathname === '/services' || l.pathname === '/contact' || l.pathname === '/about') {
-          return;
-        }
-        
-        // If URL has a hash, keep it as is
-        if (l.hash && l.hash.includes('/')) {
-          return;
-        }
-        
-        // Only convert to hash format if coming from a different page
-        if (l.pathname !== '/' && !document.referrer.includes(l.host)) {
+        if (l.pathname !== '/' && !l.hash) {
           const path = l.pathname;
-          history.replaceState(null, null, l.origin + '/#' + path);
+          window.location.replace(l.origin + '/#' + path);
         }
       }(window.location))
     </script>
@@ -31,6 +20,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="./src/main.jsx"></script>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

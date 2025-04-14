@@ -5,22 +5,8 @@
     <title>VZBL Co.</title>
     <script type="text/javascript">
       const l = window.location;
-      
-      // Keep the same format if it's a valid path
-      if (l.pathname === '/services' || l.pathname === '/contact' || l.pathname === '/about') {
-        window.location.replace(l.href);
-        return;
-      }
-      
-      // If URL has a hash, keep it
-      if (l.hash && l.hash.includes('/')) {
-        window.location.replace(l.href);
-        return;
-      }
-      
-      // If it's a direct path access, keep the path format
-      if (l.pathname !== '/') {
-        window.location.replace(l.origin + l.pathname);
+      if (l.pathname !== '/' && !l.hash) {
+        window.location.replace(l.origin + '/#' + l.pathname);
       } else {
         window.location.replace(l.origin);
       }

@@ -6,18 +6,22 @@
     <script type="text/javascript">
       const l = window.location;
       
-      // If URL already has a hash with a path, preserve it
+      // Keep the same format if it's a valid path
+      if (l.pathname === '/services' || l.pathname === '/contact' || l.pathname === '/about') {
+        window.location.replace(l.href);
+        return;
+      }
+      
+      // If URL has a hash, keep it
       if (l.hash && l.hash.includes('/')) {
-        const currentPath = l.hash.substring(1);
-        window.location.replace(l.origin + '/#' + currentPath);
-      } 
-      // If accessing a route directly, convert it to hash format
-      else if (l.pathname !== '/') {
-        const path = l.pathname;
-        window.location.replace(l.origin + '/#' + path);
-      } 
-      // If no specific route, go to homepage
-      else {
+        window.location.replace(l.href);
+        return;
+      }
+      
+      // If it's a direct path access, keep the path format
+      if (l.pathname !== '/') {
+        window.location.replace(l.origin + l.pathname);
+      } else {
         window.location.replace(l.origin);
       }
     </script>

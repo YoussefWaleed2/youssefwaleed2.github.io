@@ -10,15 +10,18 @@
     <!-- Start Single Page Apps for GitHub Pages -->
     <script type="text/javascript">
       (function(l) {
-        // If URL already has a hash with a path, preserve it
-        if (l.hash && l.hash.includes('/')) {
-          const currentPath = l.hash.substring(1); // Remove the # symbol
-          history.replaceState(null, null, l.origin + '/#' + currentPath);
+        // Don't redirect if we're already on a valid path
+        if (l.pathname === '/services' || l.pathname === '/contact' || l.pathname === '/about') {
           return;
         }
         
-        // If accessing a route directly, convert it to hash format
-        if (l.pathname !== '/') {
+        // If URL has a hash, keep it as is
+        if (l.hash && l.hash.includes('/')) {
+          return;
+        }
+        
+        // Only convert to hash format if coming from a different page
+        if (l.pathname !== '/' && !document.referrer.includes(l.host)) {
           const path = l.pathname;
           history.replaceState(null, null, l.origin + '/#' + path);
         }

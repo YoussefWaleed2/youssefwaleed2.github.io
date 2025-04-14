@@ -5,14 +5,19 @@
     <title>VZBL Co.</title>
     <script type="text/javascript">
       const l = window.location;
+      
+      // If URL already has a hash with a path, preserve it
       if (l.hash && l.hash.includes('/')) {
-        // Already has the correct hash format, do nothing
-        window.location.replace(l.origin + l.hash);
-      } else if (l.pathname !== '/') {
-        const path = l.pathname === '/services' ? '/services' : l.pathname;
-        const cleanPath = path.endsWith('/') ? path.slice(0, -1) : path;
-        window.location.replace(l.origin + '/#' + cleanPath);
-      } else {
+        const currentPath = l.hash.substring(1);
+        window.location.replace(l.origin + '/#' + currentPath);
+      } 
+      // If accessing a route directly, convert it to hash format
+      else if (l.pathname !== '/') {
+        const path = l.pathname;
+        window.location.replace(l.origin + '/#' + path);
+      } 
+      // If no specific route, go to homepage
+      else {
         window.location.replace(l.origin);
       }
     </script>

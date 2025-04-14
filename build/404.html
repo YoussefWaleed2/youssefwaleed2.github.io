@@ -5,7 +5,22 @@
     <title>VZBL Co.</title>
     <script type="text/javascript">
       const l = window.location;
-      if (l.pathname !== '/' && !l.hash) {
+      const validPaths = ['/services', '/contact', '/about'];
+      
+      // If it's a valid direct path, keep it
+      if (validPaths.includes(l.pathname)) {
+        window.location.replace(l.href);
+        return;
+      }
+      
+      // If we have a hash route, keep it
+      if (l.hash && l.hash.includes('/')) {
+        window.location.replace(l.href);
+        return;
+      }
+      
+      // For other paths, convert to hash route
+      if (l.pathname !== '/') {
         window.location.replace(l.origin + '/#' + l.pathname);
       } else {
         window.location.replace(l.origin);

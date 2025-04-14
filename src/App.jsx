@@ -1,8 +1,9 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-
+import { AnimatePresence } from "framer-motion";
 import Menu from "./components/Menu/Menu";
 
+// Direct imports instead of lazy loading
 import Home from "./pages/Home/Home";
 import Work from "./pages/Join Us/Work";
 import Project from "./pages/Project/Project";
@@ -10,7 +11,6 @@ import About from "./pages/About Us/About";
 import FAQ from "./pages/Clients/FAQ";
 import Contact from "./pages/Get In Touch/Contact";
 import Services from "./pages/Services/Services";
-import { AnimatePresence } from "framer-motion";
 
 function ScrollToTop() {
   const { pathname } = useLocation();

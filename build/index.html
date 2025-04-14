@@ -10,14 +10,17 @@
     <!-- Start Single Page Apps for GitHub Pages -->
     <script type="text/javascript">
       (function(l) {
+        // If URL already has a hash with a path, preserve it
         if (l.hash && l.hash.includes('/')) {
-          // Already has the correct hash format, do nothing
+          const currentPath = l.hash.substring(1); // Remove the # symbol
+          history.replaceState(null, null, l.origin + '/#' + currentPath);
           return;
         }
+        
+        // If accessing a route directly, convert it to hash format
         if (l.pathname !== '/') {
-          const path = l.pathname === '/services' ? '/services' : l.pathname;
-          const cleanPath = path.endsWith('/') ? path.slice(0, -1) : path;
-          window.location.replace(l.origin + '/#' + cleanPath);
+          const path = l.pathname;
+          history.replaceState(null, null, l.origin + '/#' + path);
         }
       }(window.location))
     </script>

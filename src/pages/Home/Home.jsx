@@ -1,5 +1,5 @@
 import workList from "../../data/workList";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
 
@@ -20,6 +20,8 @@ const Home = () => {
   const titlesRef = useRef([]);
   const stickyWorkHeaderRef = useRef(null);
   const homeWorkRef = useRef(null);
+  const videoRef = useRef(null);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -131,17 +133,47 @@ const Home = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleCanPlay = () => {
+      setIsVideoLoaded(true);
+      video.play().catch(console.error);
+    };
+
+    video.addEventListener('canplay', handleCanPlay);
+    
+    // Preload video
+    if (video.readyState >= 3) {
+      handleCanPlay();
+    }
+
+    return () => {
+      video.removeEventListener('canplay', handleCanPlay);
+    };
+  }, []);
+
   return (
     <ReactLenis root>
       <div className="page home">
         <SplashScreen />
         <div className="video-wrapper">
+          {!isVideoLoaded && (
+            <div className="video-placeholder">
+              <img src="home/poster.jpg" alt="Video Poster" />
+            </div>
+          )}
           <video 
-            src="home/vid.mp4" 
+            ref={videoRef}
+            src="home/vid.mp4"
+            poster="home/poster.jpg"
             autoPlay 
             muted 
             loop 
             playsInline
+            preload="auto"
+            style={{ opacity: isVideoLoaded ? 1 : 0 }}
           />
         </div>
       </div>

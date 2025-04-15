@@ -21,9 +21,17 @@
   to = "/index.html"
   status = 200
 
+[functions]
+  node_bundler = "esbuild"
+
 [dev]
-  framework = "vite"
+  framework = "#custom"
+  command = "npm run dev"
   targetPort = 5173
-  command = "vite --port 5173"
+  port = 8888
   publish = "dist"
-  autoLaunch = true 
+  autoLaunch = true
+
+[functions.dev]
+  command = "npm run dev"
+  devCommand = "npm run dev" 

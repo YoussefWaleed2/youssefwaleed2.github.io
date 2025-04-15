@@ -1,13 +1,13 @@
 .transition-wrapper {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
   overflow: hidden;
 }
 
 .page-container {
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
 }
 
 html.lenis {

@@ -1,3 +1,5 @@
+@import url('../../fonts.css');
+
 .contact-form {
   padding: 2em;
   display: flex;
@@ -6,6 +8,7 @@
   margin: 2em;
   background-color: var(--fg);
   border-radius: 1em;
+  font-family: "TT Norms", sans-serif;
 }
 
 .contact-form h3,
@@ -13,6 +16,7 @@
 .contact-form input,
 .contact-form textarea {
   color: var(--bg);
+  font-family: "TT Norms", sans-serif;
 }
 
 .contact-form input,
@@ -24,6 +28,7 @@
   border-radius: 0.5em;
   width: 100%;
   font-size: 1rem;
+  font-family: "TT Norms", sans-serif;
 }
 
 .contact-form input::placeholder,
@@ -42,6 +47,7 @@
 .contact-form .btn {
   background-color: var(--bg);
   color: var(--fg);
+  font-family: "TT Norms", sans-serif;
 }
 
 .contact-form-row:nth-child(1) {
@@ -161,6 +167,7 @@
   border-radius: 4px;
   font-size: 0.9rem;
   transition: all 0.3s ease;
+  font-family: "TT Norms", sans-serif;
 }
 
 .form-message.success {

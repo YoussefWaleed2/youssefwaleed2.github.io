@@ -10,7 +10,7 @@ const Menu = () => {
   useEffect(() => {
     // Check screen size to toggle between desktop and mobile menu
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth < 1024); // Show normal menu on laptops (1024px and above)
     };
 
     handleResize(); // Initial check

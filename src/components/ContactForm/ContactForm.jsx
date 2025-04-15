@@ -96,12 +96,8 @@ const ContactForm = () => {
         <div className="contact-form-row-copy-item">
           <p className="primary sm">Let's create together</p>
         </div>
-        <div className="contact-form-row-copy-item">
-          <p className="primary sm">(Scene — 07)</p>
-        </div>
-        <div className="contact-form-row-copy-item">
-          <p className="primary sm">&copy; 2025</p>
-        </div>
+        
+        
       </div>
 
       <form ref={formRef} onSubmit={handleSubmit} className="contact-form-row">

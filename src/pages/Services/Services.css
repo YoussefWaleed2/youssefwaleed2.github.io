@@ -1,3 +1,5 @@
+@import url('../../fonts.css');
+
 .services-container {
     color: #fff;
     min-height: 100vh;
@@ -7,7 +9,8 @@
     padding-top: 120px;
     background-color: #000000;
     scrollbar-width: thin;
-    scrollbar-color: white ;
+    scrollbar-color: white;
+    font-family: "TT Norms", sans-serif;
 }
 
 /* Ensure the body has proper overflow */
@@ -53,11 +56,13 @@ html, body {
     text-align: center;
     margin-top: 40px;
     will-change: transform, opacity;
+    font-family: "TT Norms Light", sans-serif;
 }
 
 .services-content p {
     font-size: 1.5rem;
     opacity: 0.8;
+    font-family: "TT Norms Light", sans-serif;
 }
 
 .model-container {
@@ -109,18 +114,21 @@ html, body {
     font-size: 1.5rem;
     color: #8C7A32;
     margin-bottom: 1rem;
+    font-family: "TT Norms Light", sans-serif;
 }
 
 .service-title {
     font-size: 2.5rem;
     color: white;
     margin-bottom: 2rem;
+    font-family: "TT Norms Light", sans-serif;
 }
 
 .service-description {
     color: #ffffff99;
     line-height: 1.6;
     margin-bottom: 1rem;
+    font-family: "TT Norms Light", sans-serif;
 }
 
 /* Responsive Design */
@@ -170,6 +178,7 @@ html, body {
 .loader-content {
     text-align: center;
     color: #8C7A32;
+    font-family: "TT Norms Light", sans-serif;
 }
 
 .loader-spinner {

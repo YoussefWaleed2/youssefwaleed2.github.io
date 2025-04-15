@@ -16,7 +16,7 @@
 .contact-form input,
 .contact-form textarea {
   color: var(--bg);
-  font-family: "TT Norms", sans-serif;
+  font-family: "TT Norms Light", sans-serif;
 }
 
 .contact-form input,
@@ -28,12 +28,15 @@
   border-radius: 0.5em;
   width: 100%;
   font-size: 1rem;
-  font-family: "TT Norms", sans-serif;
+  font-family: "TT Norms Light", sans-serif;
 }
 
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
   color: rgba(255, 255, 255, 0.7);
+  font-family: "TT Norms Light", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .contact-form input:focus,
@@ -47,7 +50,11 @@
 .contact-form .btn {
   background-color: var(--bg);
   color: var(--fg);
-  font-family: "TT Norms", sans-serif;
+  font-family: "TT Norms Light", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1em 2em;
+  font-size: 0.9rem;
 }
 
 .contact-form-row:nth-child(1) {
@@ -80,9 +87,20 @@
   gap: 1.5em;
 }
 
+.contact-form-header h3 {
+  font-family: "TT Norms Light", sans-serif;
+  text-transform: uppercase;
+  font-size: 3.5rem;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
 .contact-form-header p {
   margin-bottom: 0.5em;
   width: 75%;
+  font-family: "TT Norms Light", sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
 }
 
 .contact-form-row:nth-child(2) {
@@ -186,4 +204,11 @@
 .btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+.contact-form-row-copy-item p.primary.sm,
+.contact-form-availability p.primary.sm {
+  font-family: "TT Norms Light", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }

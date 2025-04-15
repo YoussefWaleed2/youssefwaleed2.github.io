@@ -105,7 +105,8 @@ body {
 .nav-links {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* Center the links horizontally */
+    
     z-index: 1000;
     mix-blend-mode: difference;
 }
@@ -237,7 +238,7 @@ nav a,
     border: 2px solid #ffffff;
     background: transparent;
     color: #ffffff;
-    padding: 8px 20px;
+    padding: 10px 20px;
     border-radius: 10px;
     cursor: pointer;
     font-size: 14px;
@@ -245,7 +246,6 @@ nav a,
     transition: background 0.3s ease, color 0.3s ease;
     mix-blend-mode: difference;
     white-space: nowrap;
-    margin-left: 10px;
 }
 
 .contact-button:hover {
@@ -283,60 +283,101 @@ nav a,
         transform: scale(1);
     }
 }
-
-/* Responsive Design */
-@media (min-width: 1024px) {
+@media (max-width: 768px) {
     .navbar {
-        padding: 15px 30px;
-        width: 90vw;
-        left: 5%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      padding: 15px 30px;
+      width: 90vw;
+      left: 5%;
+      justify-content: space-between;
+      
     }
 
+    .menu-overlay h1 {
+        font-size: 15vw;
+    }
+}
+/* Responsive Design */
+@media (max-width: 900px) {
+    .navbar {
+      padding: 15px 30px;
+      width: 90vw;
+      left: 5%;
+      justify-content: space-between;
+    }
+    .menu-overlay h1 {
+        font-size: 16vw;
+    }
+}
+
+@media (min-width: 900px) and (max-width: 1024px) {
     .nav-links {
-        display: flex !important;
-        width: auto;
-        gap: 20px;
+        width: 70%;
+        gap: 10px;
         justify-content: flex-end;
-        align-items: center;
-        margin-right: 10px;
     }
     
     .nav-links span {
-        font-size: 14px;
+        font-size: 12px;
         padding: 0 !important;
     }
 
     .nav-links a {
-        min-width: 80px;
-        opacity: 1;
-        visibility: visible;
+        min-width: 60px;
+    }
+
+    .contact-button {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+
+    .line {
+        margin: 0 10px;
+    }
+}
+
+@media (min-width: 821px) and (max-width: 912px) {
+    .navbar {
+        min-width: 90%;
+        width: 90vw;
+        left: 5%;
+        padding: 12px 25px;
+        justify-content: space-between;
+    }
+    
+    .nav-links {
+        width: 75%;
+        gap: 15px;
+        justify-content: center;
+        margin-right: 15px;
+    }
+    
+    .nav-links span {
+        font-size: 11px;
+        padding: 0 !important;
+    }
+
+    .nav-links a {
+        min-width: 58px;
         text-align: center;
     }
 
     .contact-button {
-        padding: 8px 20px;
-        font-size: 14px;
-        opacity: 1;
-        visibility: visible;
-        margin-left: 15px;
+        padding: 7px 14px;
+        font-size: 11px;
+        white-space: nowrap;
+        margin-left: 5px;
     }
 
     .line {
         margin: 0 15px;
-        opacity: 1;
-        visibility: visible;
     }
 
-    /* Hide mobile menu elements */
-    .menu-toggle-open {
-        display: none;
+    .img-logo {
+        width: 80px;
     }
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 820px) {
     .navbar {
         min-width: 90%;
         width: 90vw;
@@ -345,28 +386,32 @@ nav a,
         justify-content: space-between;
     }
     
-    .menu-overlay {
-        width: 100vw;
-        border-radius: 0;
-        left: 0;
-    }
-
-    .menu-overlay h1 {
-        font-size: 15vw;
-    }
-
-    .img-logo {
-        width: 80px;
-    }
-
-    /* Hide desktop navigation elements */
     .nav-links {
-        display: none;
+        width: 75%;
+        gap: 15px;
+        justify-content: center;
+        margin-right: 15px;
+    }
+    
+    .nav-links span {
+        font-size: 11px;
+        padding: 0 !important;
     }
 
-    /* Show mobile menu toggle */
-    .menu-toggle-open {
-        display: block;
+    .nav-links a {
+        min-width: 55px;
+        text-align: center;
+    }
+
+    .contact-button {
+        padding: 6px 12px;
+        font-size: 11px;
+        white-space: nowrap;
+        margin-left: 5px;
+    }
+
+    .line {
+        margin: 0 15px;
     }
 }
 

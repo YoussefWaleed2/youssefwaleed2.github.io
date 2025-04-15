@@ -9,6 +9,8 @@
   background-color: var(--fg);
   border-radius: 1em;
   font-family: "TT Norms", sans-serif;
+  overflow: hidden;
+  width: calc(100% - 4em);
 }
 
 .contact-form h3,
@@ -93,6 +95,8 @@
   font-size: 3.5rem;
   letter-spacing: 0.02em;
   line-height: 1;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .contact-form-header p {
@@ -140,8 +144,16 @@
 
 @media (max-width: 900px) {
   .contact-form {
-    margin: 1.25em;
+    margin: 1em;
+    padding: 1.5em;
+    width: calc(100% - 2em);
   }
+
+  .contact-form-header h3 {
+    font-size: 2.5rem;
+    text-align: center;
+  }
+
   .contact-form-row:nth-child(1) {
     flex-direction: column;
     gap: 0.25em;
@@ -159,12 +171,13 @@
 
   .contact-form-row:nth-child(2) {
     flex-direction: column;
-    gap: 4em;
+    gap: 2em;
   }
 
   .contact-form-header p,
   .contact-form-availability {
     width: 100%;
+    text-align: center;
   }
 
   .contact-form-col:nth-child(1) {

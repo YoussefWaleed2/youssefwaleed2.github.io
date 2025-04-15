@@ -10,6 +10,11 @@
 [context.production]
   command = "npm run build"
 
+[context.preview]
+  command = "npm run build"
+  publish = "dist"
+  base = "/"
+
 [context.deploy-preview]
   command = "npm run build"
 
@@ -34,4 +39,8 @@
 
 [functions.dev]
   command = "npm run dev"
-  devCommand = "npm run dev" 
+  devCommand = "npm run dev"
+
+[context.preview.environment]
+  NODE_VERSION = "18"
+  BRANCH = "preview" 

@@ -5,67 +5,13 @@ import gsap from 'gsap';
 import Lenis from '@studio-freight/lenis';
 import * as THREE from 'three';
 import './Services.css';
-import { Environment, SpotLight, Points, PointMaterial } from '@react-three/drei';
+import { Environment, SpotLight } from '@react-three/drei';
 import Transition from '../../components/Transition/Transition';
-
-function Stars({ count = 1500 }) {
-  const pointsRef = useRef();
-  const [positions] = useState(() => {
-    const positions = [];
-    for (let i = 0; i < count; i++) {
-      positions.push(
-        (Math.random() - 0.5) * 100, 
-        Math.random() * 100 - 25,    
-        (Math.random() - 0.3) * 100  
-      );
-    }
-    return new Float32Array(positions);
-  });
-
-  // Animation for random movement and glow
-  useFrame((state) => {
-    const time = state.clock.getElapsedTime();
-    
-    // Animate points
-    if (pointsRef.current) {
-      const positions = pointsRef.current.geometry.attributes.position.array;
-      
-      for (let i = 0; i < positions.length; i += 3) {
-        // Add subtle random movement
-        positions[i] += Math.sin(time + positions[i] * 0.1) * 0.02;
-        positions[i + 1] += Math.cos(time + positions[i + 1] * 0.1) * 0.02;
-        positions[i + 2] += Math.sin(time + positions[i + 2] * 0.1) * 0.02;
-      }
-      
-      pointsRef.current.geometry.attributes.position.needsUpdate = true;
-      
-      pointsRef.current.material.size = 0.15 + Math.sin(time * 2) * 0.05;
-    }
-  });
-
-  return (
-    <group>
-      <Points ref={pointsRef} positions={positions} stride={3}>
-        <PointMaterial
-          transparent
-          color="#8C7A32"
-          size={0.15}
-          sizeAttenuation={true}
-          depthWrite={false}
-          opacity={0.8}
-          blending={THREE.AdditiveBlending}
-          vertexColors={false}
-        />
-      </Points>
-      {/* Add a subtle ambient light for extra glow */}
-      <pointLight color="#8C7A32" intensity={0.2} distance={100} decay={2} />
-    </group>
-  );
-}
 
 function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete }) {
   const { scene } = useGLTF('/services/Vzbl hand.glb');
   const [entranceComplete, setEntranceComplete] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const initialRotation = useRef(isLeftHand ? Math.PI * 0.5 : Math.PI * 1.5);
   const currentPosition = useRef({ x: 0, y: 0, z: 0 });
   const currentRotation = useRef({ x: 0, y: 0 });
@@ -73,6 +19,9 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
   
   // Set the model color and material properties
   useEffect(() => {
+    // Make the model invisible initially
+    scene.visible = false;
+    
     scene.traverse((child) => {
       if (child.isMesh) {
         const shinyMaterial = new THREE.MeshPhysicalMaterial({
@@ -107,11 +56,18 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
       x: 0,
       y: Math.PI * 2
     };
+
+    // Mark the model as ready
+    setIsReady(true);
     
     // Create a timeline for coordinated animations
     const tl = gsap.timeline({
       delay: 0.5,
-      ease: "power3.out",
+      ease: "power1.out",
+      onStart: () => {
+        // Make the model visible when animation starts
+        scene.visible = true;
+      },
       onComplete: () => {
         setEntranceComplete(true);
         // Store the final rotation after entrance animation
@@ -144,13 +100,13 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
       x: isLeftHand ? -30 : 30, // Final x position beside first section
       y: -35, // Lowered position further down
       z: 0,
-      duration: 2.5,
-      ease: "power4.out"
+      duration: 3.5,
+      ease: "power2.out"
     })
     .to(scene.rotation, {
       y: isLeftHand ? Math.PI * 0.5 : Math.PI * 1.5, // Rotate to face the section
-      duration: 3,
-      ease: "power2.out"
+      duration: 4,
+      ease: "power1.out"
     }, "<"); // Start at the same time as position animation
 
     // Add a scale bounce effect
@@ -158,9 +114,9 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
       x: 0.25,
       y: 0.25,
       z: 0.25,
-      duration: 2,
-      ease: "elastic.out(1, 0.3)"
-    }, "<0.2"); // Start slightly after the main animation
+      duration: 3,
+      ease: "elastic.out(1, 0.2)"
+    }, "<0.3"); // Start slightly after the main animation
   }, [scene, isLeftHand]);
 
   // Update rotation and position based on scroll progress
@@ -200,12 +156,12 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
 
       // Calculate target rotations - SLOWED DOWN ROTATION
       const rotationDirection = isLeftHand ? 1 : -1;
-      // Reduced from Math.PI * 8 to Math.PI * 4 for slower rotation
-      const targetRotationY = initialRotation.current + (scrollProgress * Math.PI * 4 * rotationDirection);
-      const targetRotationX = Math.sin(scrollProgress * Math.PI) * 0.2;
+      // Reduced from Math.PI * 4 to Math.PI * 2 for slower rotation
+      const targetRotationY = initialRotation.current + (scrollProgress * Math.PI * 2 * rotationDirection);
+      const targetRotationX = Math.sin(scrollProgress * Math.PI) * 0.1;
 
       // Apply smooth easing - INCREASED SMOOTHNESS
-      const easing = 0.05; // Reduced from 0.08 to 0.05 for smoother movement
+      const easing = 0.03; // Reduced from 0.05 to 0.03 for slower movement
 
       // Position easing
       currentPosition.current.x += (targetX - currentPosition.current.x) * easing;
@@ -234,7 +190,7 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
     }
   }, [scrollProgress, modelRef, entranceComplete, isLeftHand]);
 
-  return <primitive object={scene} ref={modelRef} />;
+  return isReady ? <primitive object={scene} ref={modelRef} /> : null;
 }
 
 const Services = () => {
@@ -384,11 +340,8 @@ const Services = () => {
             anglePower={3}
           />
           
-          {/* Background stars */}
-          <Stars />
-          
           {/* Left hand */}
-          {canvasLoaded && (
+          {canvasLoaded && !isLoading && (
             <Model 
               modelRef={leftHandRef} 
               scrollProgress={scrollProgress} 
@@ -398,7 +351,7 @@ const Services = () => {
           )}
           
           {/* Right hand */}
-          {canvasLoaded && (
+          {canvasLoaded && !isLoading && (
             <Model 
               modelRef={rightHandRef} 
               scrollProgress={scrollProgress} 

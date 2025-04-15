@@ -220,3 +220,11 @@ body::-webkit-scrollbar-thumb:hover,
 .services-container::-webkit-scrollbar-thumb:hover {
     background-color: black;
 }
+.services-container.loading {
+    visibility: hidden;
+}
+
+.services-container.loaded {
+    visibility: visible;
+    opacity: 1;
+}

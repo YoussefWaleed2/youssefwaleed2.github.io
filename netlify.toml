@@ -22,7 +22,8 @@
   status = 200
 
 [dev]
-  command = "npm run dev"
-  port = 3000
+  framework = "vite"
+  targetPort = 5173
+  command = "vite --port 5173"
   publish = "dist"
-  framework = "#custom" 
+  autoLaunch = true 

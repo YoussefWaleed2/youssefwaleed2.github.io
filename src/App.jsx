@@ -6,7 +6,7 @@ import Menu from "./components/Menu/Menu";
 // Direct imports instead of lazy loading
 import Home from "./pages/Home/Home";
 import Work from "./pages/Join Us/Work";
-import Project from "./pages/Project/Project";
+import Project from "./pages/Project/Projects";
 import About from "./pages/About Us/About";
 import FAQ from "./pages/Clients/FAQ";
 import Contact from "./pages/Get In Touch/Contact";
@@ -39,7 +39,7 @@ function App() {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/work" element={<Work />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/sample-project" element={<Project />} />
+          <Route path="/projects" element={<Project />} />
         </Routes>
       </AnimatePresence>
     </>

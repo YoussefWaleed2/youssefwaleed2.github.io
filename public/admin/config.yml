@@ -1,0 +1,52 @@
+backend:
+  name: github
+  repo: youssefwaleed2/vzbl
+  branch: main
+  base_url: https://api.netlify.com
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "services"
+    label: "Services"
+    folder: "content/services"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Image", name: "image", widget: "image"}
+      - {label: "Order", name: "order", widget: "number"}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "projects"
+    label: "Projects"
+    folder: "content/projects"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Thumbnail", name: "thumbnail", widget: "image"}
+      - {label: "Category", name: "category", widget: "select", options: ["Web", "Mobile", "Design", "Animation"]}
+      - {label: "Client", name: "client", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "settings"
+    label: "Settings"
+    files:
+      - name: "general"
+        label: "Site Settings"
+        file: "content/settings/general.json"
+        fields:
+          - {label: "Site Title", name: "siteTitle", widget: "string"}
+          - {label: "Site Description", name: "siteDescription", widget: "text"}
+          - {label: "Logo", name: "logo", widget: "image"}
+          - label: "Social Media"
+            name: "socialMedia"
+            widget: "list"
+            fields:
+              - {label: "Platform", name: "platform", widget: "string"}
+              - {label: "URL", name: "url", widget: "string"} 

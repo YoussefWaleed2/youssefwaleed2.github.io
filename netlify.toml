@@ -1,11 +1,28 @@
 [build]
   command = "npm run build"
   publish = "dist"
+  base = "/"
 
 [build.environment]
   NODE_VERSION = "18"
+  NETLIFY_USE_YARN = "false"
+
+[context.production]
+  command = "npm run build"
+
+[context.deploy-preview]
+  command = "npm run build"
+
+[context.branch-deploy]
+  command = "npm run build"
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
-  status = 200 
+  status = 200
+
+[dev]
+  command = "npm run dev"
+  port = 3000
+  publish = "dist"
+  framework = "#custom" 

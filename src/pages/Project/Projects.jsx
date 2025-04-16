@@ -17,9 +17,9 @@ const Projects = () => {
   const videoRef = useRef(null);
 
   const images = [
-    "/project/Service-img-1.png",
-    "/project/Service-img-2.jpg",
-    "/project/Service-img-3.jpg"
+    "/project/Service-img-1.webp",
+    "/project/Service-img-2.webp",
+    "/project/Service-img-3.webp"
   ];
 
   const titles = ["BRANDING", "SOCIAL MEDIA", "MEDIA PRODUCTION"];
@@ -28,36 +28,36 @@ const Projects = () => {
     "BRANDING": [
       {
         title: "Vzbl Brand",
-        image: "/project/Service-img-1.png",
+        image: "/project/Service-img-1.webp",
         description: "Complete brand identity and guidelines"
       },
       {
         title: "Nike Rebranding",
-        image: "/project/branding-2.jpg",
+        image: "/project/branding-2.webp",
         description: "Modern take on iconic brand"
       }
     ],
     "SOCIAL MEDIA": [
       {
         title: "Instagram Growth",
-        image: "/project/Service-img-2.jpg",
+        image: "/project/Service-img-2.webp",
         description: "Social media strategy and content"
       },
       {
         title: "TikTok Campaign",
-        image: "/project/social-2.jpg",
+        image: "/project/social-2.webp",
         description: "Viral marketing campaign"
       }
     ],
     "MEDIA PRODUCTION": [
       {
         title: "Commercial Shoot",
-        image: "/project/Service-img-3.jpg",
+        image: "/project/Service-img-3.webp",
         description: "High-end video production"
       },
       {
         title: "Brand Documentary",
-        image: "/project/media-2.jpg",
+        image: "/project/media-2.webp",
         description: "Behind the scenes story"
       }
     ]

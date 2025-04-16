@@ -11,6 +11,7 @@ import About from "./pages/About Us/About";
 import FAQ from "./pages/Clients/FAQ";
 import Contact from "./pages/Get In Touch/Contact";
 import Services from "./pages/Services/Services";
+import AllProjects from "./pages/All-Projects/All-Projects";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -40,6 +41,7 @@ function App() {
           <Route path="/work" element={<Work />} />
           <Route path="/services" element={<Services />} />
           <Route path="/projects" element={<Project />} />
+          <Route path="/all-projects/:category" element={<AllProjects />} />
         </Routes>
       </AnimatePresence>
     </>

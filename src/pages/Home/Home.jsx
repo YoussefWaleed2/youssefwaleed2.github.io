@@ -169,7 +169,7 @@ const Home = () => {
             src="home/vid.mp4"
             poster="home/poster.jpg"
             autoPlay 
-            muted 
+            muted
             loop 
             playsInline
             preload="auto"

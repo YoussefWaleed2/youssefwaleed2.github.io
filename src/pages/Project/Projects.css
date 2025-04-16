@@ -186,7 +186,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10rem;
+  gap: clamp(10vw, 4vw, 12rem);
   height: 100%;
   max-height: calc(100vh - 200px);
 }
@@ -197,6 +197,7 @@
   position: relative;
   overflow: visible;
   perspective: 1000px;
+  flex-shrink: 0;
 }
 
 .image-wrapper {
@@ -310,6 +311,18 @@
 
   .project-img {
     height: 65svh;
+  }
+}
+
+@media (max-width: 768px) {
+  .project-content {
+    gap: 1.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .nav-button {
+    width: 60px;
+    height: 60px;
   }
 }
 

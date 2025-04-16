@@ -137,8 +137,6 @@ const Projects = () => {
         scale: 1,
         zIndex: 2
       });
-
-      // Bring new image from bottom with rotation
       gsap.to(toImage, {
         y: 0,
         scale: 1,

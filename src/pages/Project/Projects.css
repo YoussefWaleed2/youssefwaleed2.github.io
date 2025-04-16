@@ -182,11 +182,11 @@
 .project-content {
   position: relative;
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(10vw, 4vw, 12rem);
+  gap: 10rem;
   height: 100%;
   max-height: calc(100vh - 200px);
 }
@@ -280,6 +280,46 @@
   height: 100%;
   object-fit: cover;
 }
+@media (max-width: 1025px) {
+  .project-header {
+    padding: 1.25em 1.25em 3em 1.25em;
+  }
+  .project-title {
+    
+    font-size: 5rem;
+  }
+
+  .project-details {
+    width: 100%;
+    padding: 6em 1.25em;
+    gap: 3em;
+  }
+
+  .project-images {
+    padding: 4em 1.25em;
+  }
+
+  .project-images-container {
+    width: 100%;
+    gap: 1.25em;
+  }
+
+  .next-project {
+    padding: 1.25em;
+  }
+
+  .next-project-img {
+    width: 75%;
+  }
+
+  .project-img {
+    height: 65svh;
+  }
+  .project-content{
+    gap: 2rem;
+    height: 50%;
+  }
+}
 
 @media (max-width: 1000px) {
   .project-header {
@@ -319,10 +359,118 @@
     gap: 1.5rem;
     padding: 0 0.5rem;
   }
+  .project-image{
+    width: 170px;
+    height: 267px;
+  }
+  .project-title{
+    font-size: 2rem;
+    margin-top: 4rem;
+  }
 
   .nav-button {
     width: 60px;
     height: 60px;
+  }
+
+}
+
+@media (max-width: 425px) {
+  .project-image {
+    width: 200px;
+    height: 265px;
+  }
+  .project-content {
+    gap: 1rem;
+    padding: 0 0.5rem;
+  }
+}
+
+@media (min-width: 426px) and (max-width: 768px) {
+  .project-image {
+    width: 300px;
+    height: 398px;
+  }
+  .project-content {
+    gap: 2.5rem;
+    padding: 0 1rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .project-image {
+    width: 350px;
+    height: 464px;
+  }
+  .project-content {
+    gap: 4rem;
+  }
+}
+
+/* Surface Duo Specific */
+@media screen and (max-width: 540px) {
+  .project-header {
+    height: 20vh;
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+  }
+
+  .project-title {
+    font-size: 2.5rem;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .project-banner-img {
+    height: 60vh;
+    margin-top: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .project-content {
+    margin-top: 2rem;
+  }
+  .project-image {
+    width: 200px;
+    height: 265px;
+  }
+}
+
+/* Nest Hub Specific */
+@media screen and (min-width: 1024px) and (max-height: 600px) {
+  .project-header {
+    height: 25vh;
+    padding-bottom: 1em;
+    margin-top: 6rem; /* Add space below navbar */
+  }
+
+  .project-title {
+    font-size: 3.5rem;
+    margin: 2rem 0;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    text-align: center;
+    padding-top: 2rem;
+  }
+
+  .project-banner-img {
+    position: relative;
+    height: 65vh;
+    z-index: 1;
+    margin-top: 1rem;
+  }
+
+  .project-content {
+    height: auto;
+    padding: 1rem 0;
+  }
+
+  .project-image {
+    transform: scale(0.8);
   }
 }
 

@@ -33,6 +33,20 @@ const Work = () => {
     }
   }, []);
 
+  useEffect(() => {
+    // Add or remove form-open class on body when form opens/closes
+    if (isFormOpen) {
+      document.body.classList.add('form-open');
+    } else {
+      document.body.classList.remove('form-open');
+    }
+
+    // Cleanup function to remove class when component unmounts
+    return () => {
+      document.body.classList.remove('form-open');
+    };
+  }, [isFormOpen]);
+
   const positions = [
     {
       title: "Account Manager",

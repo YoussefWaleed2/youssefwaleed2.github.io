@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import { emailConfig } from "../../config/emailConfig";
 import Popup from "../Popup/Popup";
@@ -147,6 +147,18 @@ const JoinUsForm = ({ isOpen, onClose, position = {} }) => {
     }
   };
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('form-open');
+    } else {
+      document.body.classList.remove('form-open');
+    }
+    
+    return () => {
+      document.body.classList.remove('form-open');
+    };
+  }, [isOpen]);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -195,8 +207,8 @@ const JoinUsForm = ({ isOpen, onClose, position = {} }) => {
               </div>
 
               <div className="form-row">
-                <div className="form-group">
-                  <label>YOUR FIRST NAME</label>
+                <div className="form-group-joinus">
+                  <label>FIRST NAME</label>
                   <input
                     type="text"
                     name="firstName"
@@ -207,8 +219,8 @@ const JoinUsForm = ({ isOpen, onClose, position = {} }) => {
                   />
                 </div>
 
-                <div className="form-group">
-                  <label>YOUR LAST NAME</label>
+                <div className="form-group-joinus">
+                  <label>LAST NAME</label>
                   <input
                     type="text"
                     name="lastName"
@@ -221,8 +233,8 @@ const JoinUsForm = ({ isOpen, onClose, position = {} }) => {
               </div>
 
               <div className="form-row">
-                <div className="form-group">
-                  <label>YOUR EMAIL</label>
+                <div className="form-group-joinus">
+                  <label>EMAIL</label>
                   <input
                     type="email"
                     name="email"
@@ -233,8 +245,8 @@ const JoinUsForm = ({ isOpen, onClose, position = {} }) => {
                   />
                 </div>
 
-                <div className="form-group">
-                  <label>YOUR PHONE NUMBER</label>
+                <div className="form-group-joinus">
+                  <label>PHONE NUMBER</label>
                   <input
                     type="tel"
                     name="phone"
@@ -245,20 +257,8 @@ const JoinUsForm = ({ isOpen, onClose, position = {} }) => {
                   />
                 </div>
               </div>
-
-              <div className="form-group">
-                <label>TELL US MORE ABOUT YOU</label>
-                <textarea
-                  name="aboutYou"
-                  value={form.aboutYou}
-                  onChange={handleChange}
-                  placeholder="Tell us"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label>YOUR RESUME</label>
+              <div className="form-group-joinus">
+                <label>CV / Protofolio</label>
                 <div 
                   className="file-input-label"
                   onClick={() => fileInputRef.current.click()}

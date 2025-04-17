@@ -136,6 +136,7 @@
   align-items: center;
   justify-content: center;
   gap: 1rem;
+  flex-shrink: 0;
 }
 
 .nav-button {
@@ -231,6 +232,7 @@
   justify-content: center;
   gap: 0.5rem;
   font-family: "TT Norms Light", sans-serif;
+  flex-shrink: 0;
 }
 
 .project-counter span {
@@ -316,8 +318,7 @@
     height: 65svh;
   }
   .project-content{
-    gap: 2rem;
-    height: 50%;
+    gap: 4rem;
   }
 }
 
@@ -356,8 +357,8 @@
 
 @media (max-width: 768px) {
   .project-content {
-    gap: 1.5rem;
-    padding: 0 0.5rem;
+    gap: 2.5rem;
+    padding: 0 1rem;
   }
   .project-image{
     width: 170px;

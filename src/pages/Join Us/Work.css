@@ -265,22 +265,34 @@
 }
 
 .work-header {
-  text-align: left;
-  margin-bottom: 8rem;
-  padding-top: 4rem;
   position: relative;
+  top: 80px;
+  left: 100px;
   z-index: 2;
 }
 
 .join-title {
   font-family: "Audrey", serif;
-  font-size: 16rem;
-  font-weight: 500;
-  line-height: 0.8;
+  font-size: 128px;
+  font-weight: 400;
+  line-height: 0.6;
   margin: 0;
   letter-spacing: -0.02em;
   text-transform: uppercase;
   color: white;
+}
+
+.join-subtitle .the {
+  position: relative;
+  margin-left: 55px;
+  right: 8px;
+  bottom: 30px;
+  font-family: "Golden Plains", serif;
+  font-size: 4rem;
+  font-weight: normal;
+  font-style: normal;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1;
 }
 
 .join-subtitle {
@@ -288,16 +300,6 @@
   align-items: baseline;
   margin-top: 2rem;
   margin-left: 0.5rem;
-}
-
-.join-subtitle .the {
-  font-family: "Golden Plains", serif;
-  font-size: 4rem;
-  font-weight: normal;
-  font-style: normal;
-  color: rgba(255, 255, 255, 0.9);
-  margin-right: 1rem;
-  line-height: 1;
 }
 
 .join-subtitle .bold-creatives {
@@ -312,25 +314,23 @@
 .positions-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8rem 4rem;
+  gap: 0rem 4rem;
   max-width: 1800px;
   margin: 0 auto;
-  padding: 0 5vw;
+  padding: 5rem 5vw;
   position: relative;
 }
 
 .position-card {
   display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: 2rem;
-  align-items: start;
+  grid-template-columns: 320px 1fr;
 }
-
 .position-image {
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: 24px;
-  width: 100%;
+  width: 295px;
+  height: 350px;
   max-width: 400px;
 }
 
@@ -347,21 +347,20 @@
 
 /* Staggered positioning for cards */
 .position-card:nth-child(1) {
-  margin-top: 12rem;
+  margin-top: 14rem;
+}
+.position-card:nth-child(3) {
+  margin-top: 14rem;
 }
 
 .position-card:nth-child(2) {
+  margin-top: -8rem;
   margin-left: auto;
-  margin-top: 0;
-}
-
-.position-card:nth-child(3) {
-  margin-top: -4rem;
 }
 
 .position-card:nth-child(4) {
-  margin-left: auto;
   margin-top: -8rem;
+  margin-left: auto;
 }
 
 .join-label {

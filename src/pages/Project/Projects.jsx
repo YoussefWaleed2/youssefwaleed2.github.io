@@ -11,7 +11,7 @@ const Projects = () => {
   const titleRef = useRef(null);
   const prevBtnRef = useRef(null);
   const nextBtnRef = useRef(null);
-  const imageRefs = useRef([useRef(null), useRef(null), useRef(null)]);
+  const imageRefs = useRef([useRef(null), useRef(0), useRef(null)]);
   const counterRef = useRef(null);
   const previewRef = useRef(null);
   const videoRef = useRef(null);
@@ -57,7 +57,7 @@ const Projects = () => {
       },
       {
         title: "Brand Documentary",
-        image: "/project/media-2.webp",
+        image: "/project/media-2.jpg",
         description: "Behind the scenes story"
       }
     ]
@@ -79,9 +79,9 @@ const Projects = () => {
     }
   };
 
+  // Animate the title
   const animateTitle = (newTitle) => {
     const timeline = gsap.timeline();
-    
     timeline
       .from(titleRef.current, {
         y: 30,
@@ -118,9 +118,6 @@ const Projects = () => {
     animateTitle(titles[toIndex]);
 
     if (direction === 'next') {
-      // For first image, always keep rotation at 0
-      const initialRotation = fromIndex === 0 ? 0 : config.rotations[toIndex];
-      
       // Stack the current image without changing its rotation
       gsap.to(fromImage, {
         y: config.stackOffset,
@@ -137,6 +134,8 @@ const Projects = () => {
         scale: 1,
         zIndex: 2
       });
+
+      // Bring new image from bottom with rotation
       gsap.to(toImage, {
         y: 0,
         scale: 1,
@@ -234,7 +233,7 @@ const Projects = () => {
 
   useEffect(() => {
     // Set initial states for UI elements
-    gsap.set([titleRef.current, nextBtnRef.current, counterRef.current, previewRef.current], {
+    gsap.set([counterRef.current], {
       opacity: 0
     });
 
@@ -272,7 +271,7 @@ const Projects = () => {
           visibility: "visible",
           zIndex: 2,
           scale: 1,
-          rotation: 0
+          rotation: 0,
         });
       } else {
         gsap.set(ref.current, { 

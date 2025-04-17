@@ -7,6 +7,14 @@
   background-color: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(5px);
   z-index: 99998;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+body.form-open {
+  overflow: hidden;
+  height: 100vh;
 }
 
 .join-us-form {
@@ -15,22 +23,42 @@
   margin: auto;
   width: 90%;
   max-width: 600px;
-  height: fit-content;
+  height: 90vh;
   background-color: rgb(18, 18, 18);
   border-radius: 24px;
   padding: 2.5em;
   z-index: 99999;
-  max-height: 90vh;
-  overflow-y: scroll;
   color: white;
   font-family: "TT Norms Light", sans-serif;
-  -webkit-overflow-scrolling: touch;
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.join-us-form::-webkit-scrollbar {
-  display: none;
+.join-us-form-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 1em;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
+}
+
+.join-us-form-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.join-us-form-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.join-us-form-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
+}
+
+.join-us-form-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.7);
 }
 
 .join-us-form h2 {
@@ -82,7 +110,7 @@
   margin-bottom: 1em;
 }
 
-.form-group {
+.form-group-joinus {
   flex: 1;
   margin-bottom: 2em;
   position: relative;
@@ -91,7 +119,7 @@
   justify-content: flex-end;
 }
 
-.form-group label {
+.form-group-joinus label {
   display: block;
   margin-bottom: 0.25em;
   color: white;
@@ -100,11 +128,10 @@
   text-transform: uppercase;
 }
 
-.form-group input,
-.form-group textarea {
+.form-group-joinus input,
+.form-group-joinus textarea {
   width: 100%;
   background: transparent;
-  border: none;
   border-bottom: 1px solid rgba(255, 255, 255, 1);
   color: white;
   font-size: 1rem;
@@ -113,24 +140,26 @@
   padding-bottom: 0.25em;
   line-height: 1.5;
   transition: all 0.3s ease;
+  border-radius: 0;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.form-group-joinus input:focus,
+.form-group-joinus textarea:focus {
   outline: none;
   border: none;
   border-bottom: 1px solid rgba(255, 255, 255, 1);
   box-shadow: none;
+  border-radius: 0;
 }
 
-.form-group input::placeholder,
-.form-group textarea::placeholder {
+.form-group-joinus input::placeholder,
+.form-group-joinus textarea::placeholder {
   color: rgba(255, 255, 255, 0.5);
   font-family: "TT Norms Light", sans-serif;
   font-size: 1rem;
 }
 
-.form-group textarea {
+.form-group-joinus textarea {
   min-height: 40px;
   resize: none;
 }
@@ -240,7 +269,7 @@
     gap: 1.5em;
   }
 
-  .form-group {
+  .form-group-joinus {
     margin-bottom: 1em;
   }
 } 

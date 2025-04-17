@@ -1,176 +1,116 @@
-import projects from "../../data/projects";
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import "./Work.css";
-
-import { gsap } from "gsap";
-
 import Transition from "../../components/Transition/Transition";
+import JoinUsForm from "../../components/JoinUsForm/JoinUsForm";
+import Footer from "../../components/Footer/Footer";
+import gsap from "gsap";
+import ReactLenis from "lenis/react";
 
 const Work = () => {
-  const [activeProject, setActiveProject] = useState(projects[0]);
-  const carouselDescriptionRef = useRef(null);
-  const carouselTitleRef = useRef(null);
-  const workSliderImgRef = useRef(null);
-  const descriptionTextRef = useRef(null);
-  const titleTextRef = useRef(null);
-  const imageRef = useRef(null);
-  const navigate = useNavigate();
-
-  const animateCarouselInfo = (newProject) => {
-    const tl = gsap.timeline();
-
-    tl.to([descriptionTextRef.current, titleTextRef.current], {
-      yPercent: -100,
-      duration: 0.75,
-      stagger: 0.25,
-      ease: "power4.in",
-    });
-
-    tl.to(
-      imageRef.current,
-      {
-        opacity: 0,
-        duration: 0.5,
-        ease: "power2.in",
-        onComplete: () => {
-          if (descriptionTextRef.current) descriptionTextRef.current.remove();
-          if (titleTextRef.current && titleTextRef.current.parentNode) {
-            titleTextRef.current.parentNode.remove();
-          }
-          if (imageRef.current) imageRef.current.remove();
-
-          const newDescriptionEl = document.createElement("p");
-          newDescriptionEl.className = "primary sm";
-          newDescriptionEl.textContent = newProject.description;
-
-          const titleContainer = document.createElement("div");
-          titleContainer.className = "project-title-container";
-          titleContainer.style.cursor = "pointer";
-
-          const newTitleEl = document.createElement("h1");
-          newTitleEl.textContent = newProject.title;
-
-          titleContainer.onclick = () => navigate("/sample-project");
-
-          titleContainer.appendChild(newTitleEl);
-
-          const newImageEl = document.createElement("img");
-          newImageEl.src = newProject.image;
-          newImageEl.alt = newProject.title;
-
-          gsap.set(newDescriptionEl, { yPercent: 100 });
-          gsap.set(newTitleEl, { yPercent: 100 });
-          gsap.set(newImageEl, { opacity: 0 });
-
-          carouselDescriptionRef.current.appendChild(newDescriptionEl);
-          carouselTitleRef.current.appendChild(titleContainer);
-          workSliderImgRef.current.appendChild(newImageEl);
-
-          descriptionTextRef.current = newDescriptionEl;
-          titleTextRef.current = newTitleEl;
-          imageRef.current = newImageEl;
-
-          const inTl = gsap.timeline();
-
-          inTl.to(newImageEl, {
-            opacity: 1,
-            duration: 0.75,
-            ease: "power2.out",
-          });
-
-          inTl.to(
-            [newDescriptionEl, newTitleEl],
-            {
-              yPercent: 0,
-              duration: 0.75,
-              stagger: 0.25,
-              ease: "power4.out",
-            },
-            "-=0.5"
-          );
-          setActiveProject(newProject);
-        },
-      },
-      "-=0.5"
-    );
-  };
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState("");
+  const videoRef = useRef(null);
 
   useEffect(() => {
-    if (
-      carouselDescriptionRef.current &&
-      carouselTitleRef.current &&
-      workSliderImgRef.current
-    ) {
-      descriptionTextRef.current =
-        carouselDescriptionRef.current.querySelector("p");
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
+        console.log("Video autoplay failed:", error);
+      });
 
-      const initialTitleLink = carouselTitleRef.current.querySelector("a");
-      if (initialTitleLink) {
-        const initialTitle = initialTitleLink.querySelector("h1");
+      // Set constant blur
+      gsap.set(videoRef.current, {
+        filter: "blur(100px)",
+        opacity: 0
+      });
 
-        const titleContainer = document.createElement("div");
-        titleContainer.className = "project-title-container";
-        titleContainer.style.cursor = "pointer";
-
-        const newTitle = initialTitle.cloneNode(true);
-        titleContainer.appendChild(newTitle);
-
-        titleContainer.onclick = () => navigate("/sample-project");
-
-        initialTitleLink.parentNode.replaceChild(
-          titleContainer,
-          initialTitleLink
-        );
-
-        titleTextRef.current = newTitle;
-      } else {
-        titleTextRef.current = carouselTitleRef.current.querySelector("h1");
-      }
-
-      imageRef.current = workSliderImgRef.current.querySelector("img");
+      // Only animate the opacity
+      gsap.to(videoRef.current, {
+        opacity: 0.3,
+        duration: 1.5,
+        delay: 0.5,
+        ease: "power2.out"
+      });
     }
-  }, [navigate]);
+  }, []);
 
-  const handleWorkItemClick = (project) => {
-    if (project.id !== activeProject.id) {
-      animateCarouselInfo(project);
+  const positions = [
+    {
+      title: "Account Manager",
+      description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod.",
+    },
+    {
+      title: "Graphic Designer",
+      description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod.",
+    },
+    {
+      title: "Graphic Designer",
+      description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod.",
+    },
+    {
+      title: "Graphic Designer",
+      description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod.",
     }
+  ];
+
+  const handleApplyClick = (jobTitle) => {
+    setSelectedJob(jobTitle);
+    setIsFormOpen(true);
   };
 
   return (
-    <div className="page work">
-      <div className="work-carousel">
-        <div className="work-slider-img" ref={workSliderImgRef}>
-          <img src={activeProject.image} alt={activeProject.title} />
+    <ReactLenis root>
+      <div className="page work">
+        <div className="video-background">
+          <video
+            ref={videoRef}
+            className="background-video"
+            muted
+            loop
+            playsInline
+            src="/home/vid.webm"
+          />
         </div>
-
-        <div className="work-items-preview-container">
-          {projects.map((project) => (
-            <div
-              key={project.id}
-              className={`work-item ${
-                activeProject.id === project.id ? "active" : ""
-              }`}
-              onClick={() => handleWorkItemClick(project)}
-            >
-              <img src={project.image} alt={project.title} />
+        
+        <div className="work-content">
+          <div className="work-header">
+            <h1 className="join-title">JOIN</h1>
+            <div className="join-subtitle">
+              <span className="the">The</span>
+              <span className="bold-creatives">BOLD CREATIVES</span>
             </div>
-          ))}
+          </div>
+
+          <div className="positions-grid">
+            {positions.map((position, index) => (
+              <div className="position-card" key={index}>
+                <div className="position-image">
+                  <div className="image-placeholder"></div>
+                </div>
+                <div className="position-content">
+                  <span className="join-label">Join us now</span>
+                  <h2 className="position-title">{position.title}</h2>
+                  <p className="position-description">{position.description}</p>
+                  <button 
+                    className="apply-button"
+                    onClick={() => handleApplyClick(position.title)}
+                  >
+                    APPLY NOW
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="carousel-info">
-          <div className="carousel-description" ref={carouselDescriptionRef}>
-            <p className="primary sm">{activeProject.description}</p>
-          </div>
-          <div className="carousel-title" ref={carouselTitleRef}>
-            <Link to="/sample-project">
-              <h1>{activeProject.title}</h1>
-            </Link>
-          </div>
-        </div>
+        <Footer />
+
+        <JoinUsForm 
+          isOpen={isFormOpen} 
+          onClose={() => setIsFormOpen(false)}
+          selectedJob={selectedJob}
+        />
       </div>
-    </div>
+    </ReactLenis>
   );
 };
 

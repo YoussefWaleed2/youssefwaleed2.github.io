@@ -166,7 +166,7 @@ const Home = () => {
           )}
           <video 
             ref={videoRef}
-            src="home/vid.mp4"
+            src="home/vid.webm"
             poster="home/poster.jpg"
             autoPlay 
             muted

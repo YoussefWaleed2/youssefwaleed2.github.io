@@ -1,23 +1,25 @@
 @import url('../../fonts.css');
 
 .contact-form {
-  padding: 2em;
+  padding: 3em;
   display: flex;
   flex-direction: column;
-  gap: 4em;
-  margin: 2em;
-  background-color: var(--fg);
-  border-radius: 1em;
-  font-family: "TT Norms", sans-serif;
-  overflow: hidden;
+  gap: 2em;
+  margin: 2em auto;
+  background-color: rgb(18, 18, 18);
+  border-radius: 24px;
+  font-family: "TT Norms Light", sans-serif;
+  max-width: 800px;
   width: calc(100% - 4em);
 }
 
+.contact-form h2,
 .contact-form h3,
 .contact-form p,
 .contact-form input,
-.contact-form textarea {
-  color: var(--bg);
+.contact-form select,
+.contact-form textarea,
+.contact-form button {
   font-family: "TT Norms Light", sans-serif;
 }
 
@@ -84,112 +86,197 @@
 }
 
 .contact-form-header {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+.contact-form-header h2 {
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: 0.5em;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.contact-form-header p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.contact-form-content {
   display: flex;
   flex-direction: column;
   gap: 1.5em;
 }
 
-.contact-form-header h3 {
+.form-group {
+  flex: 1;
+  margin-bottom: 1.5em;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.25em;
+  color: white;
+  font-size: 0.85rem;
   font-family: "TT Norms Light", sans-serif;
   text-transform: uppercase;
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  letter-spacing: 0.02em;
-  line-height: 1;
-  white-space: nowrap;
 }
 
-.contact-form-header p {
-  margin-bottom: 0.5em;
-  width: 75%;
-  font-family: "TT Norms Light", sans-serif;
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
-}
-
-.contact-form-row:nth-child(2) {
-  display: flex;
-  gap: 1em;
-}
-
-.contact-form-col {
-  flex: 1;
-}
-
-.contact-form-col:nth-child(1) {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 4em;
-}
-
-.contact-form-availability {
-  width: 75%;
-  display: flex;
-  justify-content: space-between;
-  gap: 1em;
-  border-top: 1px dashed var(--bg);
-  padding: 0.5em 0;
-}
-
-.contact-form-col:nth-child(2) {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75em;
-}
-
-.form-item .btn {
+.form-group input,
+.form-group select,
+.form-group textarea {
   width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 1rem;
+  padding: 0.5em 0;
+  transition: all 0.3s ease;
 }
 
-@media (max-width: 900px) {
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 1);
+}
+
+.form-group input::placeholder,
+.form-group select::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: "TT Norms Light", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='white'%3E%3Cpath d='M2 4L6 8L10 4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5em center;
+  background-size: 12px;
+  padding-right: 2em;
+}
+
+.form-group select option {
+  background-color: rgb(18, 18, 18);
+  color: white;
+  font-family: "TT Norms Light", sans-serif;
+  padding: 0.5em;
+}
+
+.platforms-group {
+  margin-top: 1em;
+}
+
+.platforms-group label {
+  display: block;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.5em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.9rem;
+}
+
+.platforms-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.platform-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  color: white;
+  cursor: pointer;
+}
+
+.platform-checkbox input[type="checkbox"] {
+  width: auto;
+  margin-right: 0.5em;
+  cursor: pointer;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 1em;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 1em;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
   .contact-form {
+    padding: 2em;
     margin: 1em;
-    padding: 1.5em;
     width: calc(100% - 2em);
   }
 
-  .contact-form-header h3 {
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-    text-align: center;
-    white-space: normal;
-    word-break: normal;
-    hyphens: none;
+  .contact-form-header h2 {
+    font-size: 2rem;
   }
 
-  .contact-form-row:nth-child(1) {
+  .platforms-checkboxes {
     flex-direction: column;
-    gap: 0.25em;
+    gap: 0.5em;
   }
+}
 
-  .contact-form-row-copy-item {
-    text-align: center;
+/* Popup styles */
+.popup {
+  position: fixed;
+  top: 2em;
+  right: 2em;
+  padding: 1em 2em;
+  border-radius: 0.5em;
+  background-color: var(--bg);
+  color: var(--fg);
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+}
+
+.popup.success {
+  background-color: #4caf50;
+  color: white;
+}
+
+.popup.error {
+  background-color: #f44336;
+  color: white;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
   }
-
-  .contact-form-row-copy-item:nth-child(3),
-  .contact-form h3,
-  .contact-form p {
-    text-align: center;
-  }
-
-  .contact-form-row:nth-child(2) {
-    flex-direction: column;
-    gap: 2em;
-  }
-
-  .contact-form-header p,
-  .contact-form-availability {
-    width: 100%;
-    text-align: center;
-  }
-
-  .contact-form-col:nth-child(1) {
-    gap: 2em;
-  }
-
-  .contact-form-availability {
-    flex-direction: column;
-    text-align: center;
-    gap: 0.25em;
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 

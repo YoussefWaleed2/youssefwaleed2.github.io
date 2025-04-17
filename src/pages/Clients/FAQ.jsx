@@ -14,7 +14,7 @@ const FAQ = () => {
     <ReactLenis root>
       <div className="page faq">
         <FAQContainer />
-        <ContactForm />
+        
         <Footer />
       </div>
     </ReactLenis>

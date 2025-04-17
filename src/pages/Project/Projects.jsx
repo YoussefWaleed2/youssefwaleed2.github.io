@@ -382,7 +382,7 @@ const Projects = () => {
           muted
           loop
           playsInline
-          src="/home/vid.mp4"
+          src="/home/vid.webm"
         />
       </div>
       <div className="project-container">

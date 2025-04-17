@@ -1,0 +1,246 @@
+.join-us-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(5px);
+  z-index: 99998;
+}
+
+.join-us-form {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: 90%;
+  max-width: 600px;
+  height: fit-content;
+  background-color: rgb(18, 18, 18);
+  border-radius: 24px;
+  padding: 2.5em;
+  z-index: 99999;
+  max-height: 90vh;
+  overflow-y: scroll;
+  color: white;
+  font-family: "TT Norms Light", sans-serif;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.join-us-form::-webkit-scrollbar {
+  display: none;
+}
+
+.join-us-form h2 {
+  font-size: 1.25rem;
+  margin-bottom: 2em;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  font-family: "TT Norms Light", sans-serif;
+}
+
+.interest-section {
+  margin-bottom: 3em;
+}
+
+.interest-section p {
+  margin-bottom: 1em;
+  color: #fff;
+  font-size: 0.9rem;
+  font-family: "TT Norms Light", sans-serif;
+}
+
+.interest-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8em;
+}
+
+.interest-option {
+  padding: 0.6em 1.2em;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+  color: white;
+  font-size: 0.9rem;
+  font-family: "TT Norms Light", sans-serif;
+}
+
+.interest-option:hover,
+.interest-option.selected {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.form-row {
+  display: flex;
+  gap: 3em;
+  margin-bottom: 1em;
+}
+
+.form-group {
+  flex: 1;
+  margin-bottom: 2em;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.25em;
+  color: white;
+  font-size: 0.85rem;
+  font-family: "TT Norms Light", sans-serif;
+  text-transform: uppercase;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 1);
+  color: white;
+  font-size: 1rem;
+  font-family: "TT Norms Light", sans-serif;
+  padding: 0;
+  padding-bottom: 0.25em;
+  line-height: 1.5;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 1);
+  box-shadow: none;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-family: "TT Norms Light", sans-serif;
+  font-size: 1rem;
+}
+
+.form-group textarea {
+  min-height: 40px;
+  resize: none;
+}
+
+.file-input-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1rem;
+  padding: 0.5em 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  font-family: "TT Norms Light", sans-serif;
+}
+
+.file-input-label:hover {
+  border-bottom-color: rgba(255, 255, 255, 0.6);
+}
+
+.file-input-label svg {
+  width: 1.2em;
+  height: 1.2em;
+  stroke: currentColor;
+}
+
+.file-input-label input[type="file"] {
+  display: none;
+}
+
+.file-input-label span.file-name {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 1.25em;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 2em;
+  font-family: "TT Norms Light", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.close-button {
+  position: absolute;
+  top: 1.5em;
+  right: 1.5em;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  width: 24px;
+  height: 24px;
+  opacity: 0.8;
+  font-family: "TT Norms Light", sans-serif;
+}
+
+.close-button:hover {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .join-us-form {
+    padding: 2em;
+    width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 1.5em;
+  }
+
+  .form-group {
+    margin-bottom: 1em;
+  }
+} 

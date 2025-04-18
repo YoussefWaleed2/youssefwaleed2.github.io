@@ -312,7 +312,7 @@ const Projects = () => {
     }, "-=0.5")
     .fromTo(imageRefs.current[0].current,
       {
-        y: 500,
+        y: 1000,
         scale: 1
       },
       {
@@ -321,7 +321,7 @@ const Projects = () => {
         opacity: 1,
         duration: 1,
         ease: "power3.out"
-      }, "-=0.3")
+      }, "-=0.2")
     .to(counterRef.current, {
       opacity: 1,
       y: 0,

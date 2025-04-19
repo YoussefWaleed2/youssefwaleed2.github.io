@@ -27,24 +27,74 @@ const Projects = () => {
   const projectsData = {
     "BRANDING": [
       {
-        title: "Vzbl Brand",
+        title: "Epos",
         image: "/project/Service-img-1.webp",
         description: "Complete brand identity and guidelines"
       },
       {
-        title: "Nike Rebranding",
+        title: "Kemet",
+        image: "/project/branding-2.webp",
+        description: "Modern take on iconic brand"
+      },
+      {
+        title: "Venti",
+        image: "/project/branding-2.webp",
+        description: "Modern take on iconic brand"
+      },
+      {
+        title: "L'azurde",
+        image: "/project/branding-2.webp",
+        description: "Modern take on iconic brand"
+      },
+      {
+        title: "Telofill",
+        image: "/project/branding-2.webp",
+        description: "Modern take on iconic brand"
+      },
+      {
+        title: "NotFound",
+        image: "/project/branding-2.webp",
+        description: "Modern take on iconic brand"
+      },
+      {
+        title: "Dippy’s",
+        image: "/project/branding-2.webp",
+        description: "Modern take on iconic brand"
+      },
+      {
+        title: "NotFound",
+        image: "/project/branding-2.webp",
+        description: "Modern take on iconic brand"
+      },
+      {
+        title: "Hlep",
+        image: "/project/branding-2.webp",
+        description: "Modern take on iconic brand"
+      },
+      {
+        title: "Merkur",
         image: "/project/branding-2.webp",
         description: "Modern take on iconic brand"
       }
     ],
     "SOCIAL MEDIA": [
       {
-        title: "Instagram Growth",
+        title: "Bunker",
         image: "/project/Service-img-2.webp",
         description: "Social media strategy and content"
       },
       {
-        title: "TikTok Campaign",
+        title: "Bouchée",
+        image: "/project/social-2.webp",
+        description: "Viral marketing campaign"
+      },
+      {
+        title: "Momochi",
+        image: "/project/Service-img-2.webp",
+        description: "Social media strategy and content"
+      },
+      {
+        title: "Nev",
         image: "/project/social-2.webp",
         description: "Viral marketing campaign"
       }

@@ -3,6 +3,7 @@ import "./Projects.css";
 import Transition from "../../components/Transition/Transition";
 import gsap from "gsap";
 import { useNavigate } from "react-router-dom";
+import projectsData from "../../data/projectsData.json";
 
 const Projects = () => {
   const navigate = useNavigate();
@@ -22,97 +23,7 @@ const Projects = () => {
     "/project/Service-img-3.webp"
   ];
 
-  const titles = ["BRANDING", "SOCIAL MEDIA", "MEDIA PRODUCTION"];
-
-  const projectsData = {
-    "BRANDING": [
-      {
-        title: "Epos",
-        image: "/project/Service-img-1.webp",
-        description: "Complete brand identity and guidelines"
-      },
-      {
-        title: "Kemet",
-        image: "/project/branding-2.webp",
-        description: "Modern take on iconic brand"
-      },
-      {
-        title: "Venti",
-        image: "/project/branding-2.webp",
-        description: "Modern take on iconic brand"
-      },
-      {
-        title: "L'azurde",
-        image: "/project/branding-2.webp",
-        description: "Modern take on iconic brand"
-      },
-      {
-        title: "Telofill",
-        image: "/project/branding-2.webp",
-        description: "Modern take on iconic brand"
-      },
-      {
-        title: "NotFound",
-        image: "/project/branding-2.webp",
-        description: "Modern take on iconic brand"
-      },
-      {
-        title: "Dippy’s",
-        image: "/project/branding-2.webp",
-        description: "Modern take on iconic brand"
-      },
-      {
-        title: "NotFound",
-        image: "/project/branding-2.webp",
-        description: "Modern take on iconic brand"
-      },
-      {
-        title: "Hlep",
-        image: "/project/branding-2.webp",
-        description: "Modern take on iconic brand"
-      },
-      {
-        title: "Merkur",
-        image: "/project/branding-2.webp",
-        description: "Modern take on iconic brand"
-      }
-    ],
-    "SOCIAL MEDIA": [
-      {
-        title: "Bunker",
-        image: "/project/Service-img-2.webp",
-        description: "Social media strategy and content"
-      },
-      {
-        title: "Bouchée",
-        image: "/project/social-2.webp",
-        description: "Viral marketing campaign"
-      },
-      {
-        title: "Momochi",
-        image: "/project/Service-img-2.webp",
-        description: "Social media strategy and content"
-      },
-      {
-        title: "Nev",
-        image: "/project/social-2.webp",
-        description: "Viral marketing campaign"
-      }
-    ],
-    "MEDIA PRODUCTION": [
-      {
-        title: "Commercial Shoot",
-        image: "/project/Service-img-3.webp",
-        description: "High-end video production"
-      },
-      {
-        title: "Brand Documentary",
-        image: "/project/media-2.jpg",
-        description: "Behind the scenes story"
-      }
-    ]
-  };
-
+  const titles = ["BRANDING", "Marketing", "Advertising"];
   const handleNext = () => {
     if (currentIndex < images.length - 1 && !isAnimating) {
       setIsAnimating(true);
@@ -472,6 +383,8 @@ const Projects = () => {
                 onMouseMove={e => handleCardMouseMove(e, index)}
                 onMouseLeave={() => handleCardMouseLeave(index)}
                 onMouseEnter={e => handleCardMouseEnter(e, index)}
+                onClick={handlePreviewClick}
+                style={{ cursor: 'pointer' }}
               >
                 <img src={image} alt={`Project ${index + 1}`} />
               </div>

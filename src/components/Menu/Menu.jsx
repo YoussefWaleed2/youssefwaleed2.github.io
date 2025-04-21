@@ -65,7 +65,7 @@ const Menu = () => {
         ) : (
           <div className="nav-links">
             <Link
-              to="/"
+              to="/about"
               ref={(el) => (navLinksRef.current[0] = el)}
               data-text="About Us"
             >

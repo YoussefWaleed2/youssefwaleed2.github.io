@@ -7,21 +7,24 @@ export const usePageTransition = () => {
 
   const pageVariants = {
     initial: {
+      opacity: 0,
       x: '100vw',
     },
     animate: {
+      opacity: 1,
       x: 0,
     },
     exit: {
+      opacity: 0,
       x: '-100vw',
     }
   };
 
   // Define the transition properties
   const pageTransition = {
-    ease: 'easeInOut',
     type: 'tween',
-    duration: 0.5
+    ease: [0.76, 0, 0.24, 1],
+    duration: 1
   };
 
   useEffect(() => {
@@ -30,7 +33,11 @@ export const usePageTransition = () => {
       if (link && link.getAttribute('href')?.startsWith('/')) {
         e.preventDefault();
         const target = link.getAttribute('href');
-        navigate(target);
+        
+        // Don't navigate if we're already on the target page
+        if (location.pathname !== target) {
+          navigate(target);
+        }
       }
     };
 
@@ -41,7 +48,7 @@ export const usePageTransition = () => {
     return () => {
       document.removeEventListener('click', handleLinkClick);
     };
-  }, [navigate]);
+  }, [navigate, location]);
 
   return { pageVariants, pageTransition };
 }; 

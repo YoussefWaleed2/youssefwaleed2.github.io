@@ -35,22 +35,37 @@ body {
     animation-delay: 2.5s;
 }
 
-@keyframes slideDown {
-    from {
-        transform: translateY(-100%);
-    }
-    to {
-        transform: translateY(10%);
-    }
+/* About page specific styles */
+body:has(.horizontal-scroll-wrapper) .navbar {
+    backdrop-filter: none !important;
+    background: transparent !important;
+    mix-blend-mode: difference !important;
 }
 
-/* Logo and Menu Toggle Styles */
+body:has(.horizontal-scroll-wrapper) .nav-links {
+    mix-blend-mode: difference !important;
+}
+
+body:has(.horizontal-scroll-wrapper) .contact-button {
+    mix-blend-mode: difference !important;
+}
+
+/* Special handling for logo on About page */
+body:has(.horizontal-scroll-wrapper) .logo {
+    position: relative;
+    z-index: 1001 !important;
+}
+
+body:has(.horizontal-scroll-wrapper) .img-logo {
+    filter: invert(1) !important;
+}
+
+/* Logo styles */
 .logo {
     position: relative;
     width: max-content;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
     cursor: pointer;
-    
 }
 
 .menu-toggle-open,
@@ -105,10 +120,8 @@ body {
 .nav-links {
     display: flex;
     align-items: center;
-    justify-content: center; /* Center the links horizontally */
-    
+    justify-content: center;
     z-index: 1000;
-    mix-blend-mode: difference;
 }
 
 .nav-links a,
@@ -130,7 +143,7 @@ body {
 
 .nav-links a {
     position: relative;
-    color: #ffffff; /* Ensure the text is visible */
+    color: #ffffff;
     text-decoration: none;
     font-size: 14px;
     text-transform: uppercase;
@@ -138,7 +151,7 @@ body {
     padding: 4px 0;
     display: inline-block;
     overflow: hidden;
-    min-width: 100px; /* Ensure consistent width for links */
+    min-width: 100px;
     text-align: center;
     transition: color 0.3s ease;
 }
@@ -174,7 +187,7 @@ body {
 }
 
 .nav-links .line {
-    margin: 0 20px; /* Add spacing around the separator line */
+    margin: 0 20px;
     color: #ffffff;
     font-size: 18px;
 }
@@ -244,7 +257,6 @@ nav a,
     font-size: 14px;
     text-transform: uppercase;
     transition: background 0.3s ease, color 0.3s ease;
-    mix-blend-mode: difference;
     white-space: nowrap;
 }
 
@@ -283,6 +295,21 @@ nav a,
         transform: scale(1);
     }
 }
+
+/* Default white logo */
+.img-logo path,
+.img-logo rect,
+.img-logo circle {
+    fill: #ffffff;
+}
+
+/* Black logo on About page */
+body:has(.horizontal-scroll-wrapper) .img-logo path,
+body:has(.horizontal-scroll-wrapper) .img-logo rect,
+body:has(.horizontal-scroll-wrapper) .img-logo circle {
+    fill: #000000 !important;
+}
+
 @media (max-width: 768px) {
     .navbar {
       padding: 15px 30px;
@@ -412,6 +439,15 @@ nav a,
 
     .line {
         margin: 0 15px;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(10%);
     }
 }
 

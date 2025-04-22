@@ -5,6 +5,9 @@ import gsap from "gsap";
 import { useNavigate } from "react-router-dom";
 import projectsData from "../../data/projectsData.json";
 
+// Debug log to check if this file is being loaded correctly
+console.log("Projects.jsx loaded, projectsData:", Object.keys(projectsData));
+
 const Projects = () => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -24,6 +27,9 @@ const Projects = () => {
   ];
 
   const titles = ["BRANDING", "Marketing", "Advertising"];
+  // Debug log to check if titles array is defined
+  console.log("Titles in Projects.jsx:", titles);
+  
   const handleNext = () => {
     if (currentIndex < images.length - 1 && !isAnimating) {
       setIsAnimating(true);
@@ -186,10 +192,21 @@ const Projects = () => {
 
   const handlePreviewClick = () => {
     const currentTitle = titles[currentIndex];
-    // Store the projects data in sessionStorage for the All-Projects page
-    sessionStorage.setItem('currentProjects', JSON.stringify(projectsData[currentTitle]));
-    // Navigate to all-projects with current category
-    navigate(`/all-projects/${currentTitle.toLowerCase().replace(" ", "-")}`);
+    console.log("handlePreviewClick - currentTitle:", currentTitle, "projectsData:", projectsData);
+    
+    // Add safety checks
+    if (currentTitle && projectsData && projectsData[currentTitle]) {
+      // Store the projects data in sessionStorage for the All-Projects page
+      sessionStorage.setItem('currentProjects', JSON.stringify(projectsData[currentTitle]));
+      // Navigate to all-projects with current category
+      navigate(`/all-projects/${currentTitle.toLowerCase().replace(" ", "-")}`);
+    } else {
+      console.error("Cannot navigate - missing data:", { 
+        currentTitle, 
+        hasProjectsData: !!projectsData,
+        hasCurrentData: projectsData && !!projectsData[currentTitle]
+      });
+    }
   };
 
   useEffect(() => {

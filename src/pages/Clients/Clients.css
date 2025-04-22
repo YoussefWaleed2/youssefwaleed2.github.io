@@ -218,18 +218,20 @@
 }
 
 .contact-button {
-  display: inline-block;
-  padding: 1rem 2.5rem;
-  background-color: transparent;
-  border: 2px solid #fff;
-  color: #fff;
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  transition: all 0.3s ease;
-  text-decoration: none;
+  font-family: "Aboreto", cursive;
+  border: 2px solid #ffffff;
+  background: transparent;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 10px;
   cursor: pointer;
+  font-size: 14px;
+  text-transform: uppercase;
+  transition: background 0.3s ease, color 0.3s ease;
+  mix-blend-mode: difference;
+  white-space: nowrap;
 }
+
 
 .contact-button:hover {
   background-color: #fff;

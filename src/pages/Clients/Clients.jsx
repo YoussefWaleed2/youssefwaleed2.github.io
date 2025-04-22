@@ -233,7 +233,7 @@ const Clients = () => {
           <a href="/contact" className="contact-button">Get In Touch</a>
         </div>
       </div>
-      {/* <Footer /> */}
+       <Footer /> 
     </ReactLenis>
   );
 };

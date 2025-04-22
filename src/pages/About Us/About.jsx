@@ -1,191 +1,406 @@
-import React from "react";
-import "./About.css";
-
-import AnimatedCopy from "../../components/AnimatedCopy/AnimatedCopy";
-import ContactForm from "../../components/ContactForm/ContactForm";
-import Footer from "../../components/Footer/Footer";
-
-import ReactLenis from "lenis/react";
-
-import Transition from "../../components/Transition/Transition";
+import React, { useState, useEffect, useRef } from 'react';
+import Lenis from 'lenis';
+import Transition from '../../components/Transition/Transition';
+import gsap from "gsap";
+import CustomEase from "gsap/CustomEase";
+import SplitType from 'split-type';
+import './About.css';
 
 const About = () => {
+  const [isReady, setIsReady] = useState(false);
+  const containerRef = useRef(null);
+  const pageRef = useRef(null);
+  const lenisRef = useRef(null);
+  const titleRef = useRef(null);
+  const asteriskRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const descriptionRef = useRef(null);
+  
+  // Refs for About section text
+  const aboutLeftRef = useRef(null);
+  const aboutRightRef = useRef(null);
+  const aboutTextContainerRef = useRef(null);
+  const aboutTextsRef = useRef([]);
+  
+  // Refs for images and skeleton loaders
+  const imageRefs = useRef([]);
+  const [imagesLoaded, setImagesLoaded] = useState([]);
+
+  // Track scroll position to trigger animations
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(0);
+  
+  const images = Array.from({ length: 13 }, (_, i) => `/about/${i + 1}.webp`);
+
+  // Initialize image refs arrays
+  useEffect(() => {
+    imageRefs.current = Array(images.length).fill().map(() => React.createRef());
+    setImagesLoaded(Array(images.length).fill(false));
+  }, [images.length]);
+
+  useEffect(() => {
+    // Register GSAP plugins
+    gsap.registerPlugin(CustomEase);
+    const customEase = CustomEase.create("custom", ".87,0,.13,1");
+
+    // Initialize text animation
+    if (titleRef.current && subtitleRef.current && descriptionRef.current && asteriskRef.current) {
+      // Split text for animation
+      const titleSplit = new SplitType(titleRef.current, { types: 'chars' });
+      const subtitleSplit = new SplitType(subtitleRef.current, { types: 'chars' });
+      const descriptionSplit = new SplitType(descriptionRef.current, { types: 'lines' });
+      
+      // Set initial states
+      gsap.set([titleSplit.chars, subtitleSplit.chars, descriptionSplit.lines], {
+        y: '100%',
+        opacity: 0
+      });
+      
+      gsap.set(asteriskRef.current, {
+        y: '100%',
+        opacity: 0
+      });
+
+      // Set initial state for first image
+      if (imageRefs.current[0]?.current) {
+        gsap.set(imageRefs.current[0].current, {
+          scale: 1.2,
+          opacity: 0.5,
+          filter: "blur(10px)"
+        });
+      }
+
+      // Animate title
+      gsap.to(titleSplit.chars, {
+        y: '0%',
+        opacity: 1,
+        duration: 1,
+        stagger: 0.03,
+        ease: customEase,
+        delay: 1
+      });
+      
+      // Animate the asterisk along with the last chars of the title
+      gsap.to(asteriskRef.current, {
+        y: '0%',
+        opacity: 1,
+        duration: 1,
+        ease: customEase,
+        delay: 0.5 
+      });
+
+      // Animate first image with title
+      if (imageRefs.current[0]?.current) {
+        gsap.to(imageRefs.current[0].current, {
+          scale: 1,
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 1.5,
+          ease: customEase,
+          delay: 0.5 // Start with title animation
+        });
+      }
+
+      // Animate subtitle
+      gsap.to(subtitleSplit.chars, {
+        y: '0%',
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.02,
+        ease: customEase,
+        delay: 1.2
+      });
+
+      // Animate description
+      gsap.to(descriptionSplit.lines, {
+        y: '0%',
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: customEase,
+        delay: 1.5
+      });
+    }
+    
+    // Initialize about section text elements
+    if (aboutLeftRef.current && aboutRightRef.current && aboutTextContainerRef.current) {
+      // Set initial states for About section elements
+      gsap.set([aboutLeftRef.current, aboutRightRef.current], {
+        opacity: 0,
+        x: (index) => index === 0 ? -50 : 50 // Left heading moves from left, right heading from right
+      });
+      
+      // Handle text paragraphs
+      if (aboutTextsRef.current.length > 0) {
+        gsap.set(aboutTextsRef.current, {
+          opacity: 0,
+          y: 30
+        });
+      }
+    }
+    
+    // Set initial state for images (except first one)
+    imageRefs.current.forEach((ref, index) => {
+      if (ref.current && index > 0) {
+        gsap.set(ref.current, {
+          scale: 1
+        });
+      }
+    });
+  }, [isReady]);
+
+  useEffect(() => {
+    if (!containerRef.current || !pageRef.current) return;
+    
+    // Set window width for calculations
+    setWindowWidth(window.innerWidth);
+
+    // Set initial container width to exactly match the number of sections
+    const totalWidth = images.length;
+    containerRef.current.style.width = `${totalWidth}px`;
+
+    // Initialize Lenis with balanced settings for smoothness and responsiveness
+    lenisRef.current = new Lenis({
+      wrapper: pageRef.current,
+      content: containerRef.current,
+      duration: 1.2,
+      easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)), // Smoother easing
+      orientation: 'horizontal',
+      gestureOrientation: 'horizontal',
+      smoothWheel: true,
+      wheelMultiplier: 2.5,
+      smoothTouch: true,
+      touchMultiplier: 1.5,
+      infinite: false,
+    });
+
+    // Direct wheel event handler to ensure horizontal scrolling
+    const handleWheel = (e) => {
+      e.preventDefault();
+      const delta = e.deltaY || e.deltaX;
+      
+      // Use Lenis for smooth scrolling if available
+      if (lenisRef.current) {
+        const targetScroll = pageRef.current.scrollLeft + delta * 6;
+        lenisRef.current.scrollTo(targetScroll, {
+          force: true,
+          duration: 0.8,
+          stagger: 0.05,
+          easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t))
+        });
+      } else {
+        pageRef.current.scrollLeft += delta * 2;
+      }
+    };
+    
+    // Track scroll position for animations
+    const handleScrollUpdate = () => {
+      if (pageRef.current) {
+        setScrollPosition(pageRef.current.scrollLeft);
+      }
+    };
+
+    // Animation frame with lerp for smoother scrolling
+    function raf(time) {
+      lenisRef.current?.raf(time);
+      requestAnimationFrame(raf);
+      handleScrollUpdate();
+    }
+    requestAnimationFrame(raf);
+
+    // Handle resize
+    const handleResize = () => {
+      // Exact width calculation to avoid gaps
+      const newWidth = window.innerWidth * images.length;
+      containerRef.current.style.width = `${newWidth}px`;
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    // Add wheel event listener with passive:false to allow preventing default
+    pageRef.current.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      lenisRef.current?.destroy();
+      window.removeEventListener('resize', handleResize);
+      pageRef.current?.removeEventListener('wheel', handleWheel);
+    };
+  }, [images.length]);
+  
+  // Effect for scroll-triggered animations
+  useEffect(() => {
+    if (!windowWidth) return;
+    
+    // Section 1 starts at windowWidth (after first section)
+    // Animation should start when scrolling into view and complete by middle of section
+    const triggerStart = windowWidth * 0.2; // Start when 20% into first section
+    const triggerEnd = windowWidth * 1;   // End by middle of section 1
+    
+    if (scrollPosition >= triggerStart && scrollPosition <= triggerEnd) {
+      // Calculate progress from 0 to 1 based on scroll position
+      const progress = (scrollPosition - triggerStart) / (triggerEnd - triggerStart);
+      
+      // Animate headings
+      if (aboutLeftRef.current && aboutRightRef.current) {
+        gsap.to(aboutLeftRef.current, {
+          x: 0,
+          opacity: Math.min(progress * 2, 1),
+          duration: 0.1,
+          overwrite: true
+        });
+        
+        gsap.to(aboutRightRef.current, {
+          x: 0,
+          opacity: Math.min(progress * 2, 1),
+          duration: 0.1,
+          overwrite: true
+        });
+      }
+      
+      // Animate paragraphs with stagger
+      if (aboutTextsRef.current.length > 0) {
+        aboutTextsRef.current.forEach((textRef, index) => {
+          // Stagger the animations based on index
+          const delayedProgress = progress - (index * 0.1);
+          const opacity = Math.max(0, Math.min(delayedProgress * 3, 1));
+          
+          gsap.to(textRef, {
+            y: delayedProgress > 0 ? Math.max(30 * (1 - delayedProgress * 2), 0) : 30,
+            opacity: opacity,
+            overwrite: true,
+            duration: 0.1,
+            stagger: 0.1,
+          });
+        });
+      }
+    } else if (scrollPosition < triggerStart) {
+      // Reset animations when scrolling back
+      if (aboutLeftRef.current && aboutRightRef.current) {
+        gsap.to([aboutLeftRef.current, aboutRightRef.current], {
+          opacity: 0,
+          x: (index) => index === 0 ? -50 : 50,
+          duration: 0.3,
+          overwrite: true
+        });
+      }
+      
+      if (aboutTextsRef.current.length > 0) {
+        gsap.to(aboutTextsRef.current, {
+          opacity: 0,
+          y: 30,
+          duration: 0.3,
+          overwrite: true
+        });
+      }
+    }
+    
+    // Animate images based on scroll position (skip the first image)
+    imageRefs.current.forEach((imageRef, index) => {
+      // Skip the first image as it's not scroll-triggered
+      if (!imageRef.current || index === 0) return;
+      
+      // Calculate when image should be in view
+      const imageTriggerStart = windowWidth * (index - 0.5);
+      const imageTriggerEnd = windowWidth * (index + 0.5);
+      
+      // Check if image is in view
+      if (scrollPosition >= imageTriggerStart && scrollPosition <= imageTriggerEnd) {
+        const imageProgress = (scrollPosition - imageTriggerStart) / (imageTriggerEnd - imageTriggerStart);
+        
+        // Apply subtle animation effects to the image
+        gsap.to(imageRef.current, {
+          scale: 1 + Math.sin(imageProgress * Math.PI) * 0.05, // Subtle scale effect based on position
+          filter: `brightness(${1 + imageProgress * 0.2})`,
+          duration: 0.3,
+          overwrite: true
+        });
+      } else {
+        // Reset image when out of view
+        gsap.to(imageRef.current, {
+          scale: 1,
+          filter: "brightness(1)",
+          duration: 0.3,
+          overwrite: true
+        });
+      }
+    });
+  }, [scrollPosition, windowWidth, imagesLoaded]);
+
+  useEffect(() => {
+    setIsReady(true);
+  }, []);
+  
+  // Handle refs for about text paragraphs
+  const setTextRef = (el, index) => {
+    if (aboutTextsRef.current.length <= index) {
+      aboutTextsRef.current[index] = el;
+    } else {
+      aboutTextsRef.current[index] = el;
+    }
+  };
+  
+  // Handle image load events
+  const handleImageLoad = (index) => {
+    const newImagesLoaded = [...imagesLoaded];
+    newImagesLoaded[index] = true;
+    setImagesLoaded(newImagesLoaded);
+    
+    // We're not animating opacity anymore - images should be visible by default
+    if (index > 0 && imageRefs.current[index]?.current) {
+      gsap.to(imageRefs.current[index].current, { 
+        scale: 1,
+        duration: 0.3
+      });
+    }
+  };
+
   return (
-    <ReactLenis root>
-      <div className="page about">
-        <section className="about-header">
-          <h1>Est</h1>
-          <h1>1997</h1>
-        </section>
-
-        <section className="about-hero">
-          <div className="about-hero-img">
-            <img src="/about/about-hero.jpg" alt="" />
-          </div>
-        </section>
-
-        <section className="about-me-copy">
-          <div className="about-me-copy-wrapper">
-            <AnimatedCopy animateOnScroll={true} tag="h3">
-              I'm Nico Palmer — a filmmaker drawn to human stories, quiet
-              moments, and the visual language of emotion. My work spans short
-              films, experimental pieces, and cinematic visuals.
-            </AnimatedCopy>
-
-            <AnimatedCopy animateOnScroll={true} tag="h3">
-              For me, filmmaking isn’t just about images — it’s about what those
-              images make us feel. I believe in subtlety, texture, and honesty
-              in storytelling.
-            </AnimatedCopy>
-
-            <AnimatedCopy animateOnScroll={true} tag="h3">
-              Every project is a new collaboration, a new challenge, and a new
-              chance to create something meaningful. If it moves someone, even
-              for a second — it's done its job.
-            </AnimatedCopy>
-          </div>
-        </section>
-
-        <section className="services">
-          <div className="services-col">
-            <div className="services-banner">
-              <img src="/about/services-banner.jpg" alt="" />
+    <div ref={pageRef} className={`about-page ${isReady ? 'is-ready' : ''}`}>
+      <div ref={containerRef} className="about-container">
+        {images.map((src, index) => (
+          <section key={index} className="about-section">
+            <div className="image-container">
+              <img 
+                ref={imageRefs.current[index]}
+                src={src} 
+                alt={`About section ${index + 1}`} 
+                className="background-image"
+                onLoad={() => handleImageLoad(index)}
+                style={{ opacity: index === 0 ? 0.5 : 1 }} // All images visible except first one slightly faded
+              />
             </div>
-            <p className="primary">Crafted with Intention</p>
-          </div>
-          <div className="services-col">
-            <h4>
-              Every project is a chance to explore new visual language, push
-              creative boundaries, and tell stories that feel real. I approach
-              each film with care, precision, and purpose.
-            </h4>
-
-            <div className="services-list">
-              <div className="service-list-row">
-                <div className="service-list-col">
-                  <h5>Filmmaking</h5>
-                </div>
-                <div className="service-list-col">
-                  <p>
-                    From short films to personal narratives, my work is driven
-                    by emotion and atmosphere. I handle direction,
-                    cinematography, and editing — crafting each piece with a
-                    filmmaker’s eye for mood, movement, and meaning.
+            <div className="about-content">
+              {index === 0 && (
+                <div className="about-content">
+                  <h1 ref={titleRef} className="main-title">
+                    CALL US<br />VISIBLE<span ref={asteriskRef} className="asterisk">*</span>
+                  </h1>
+                  <p ref={subtitleRef} className="subtitle">(VIZ.Ə.BƏL)</p>
+                  <p ref={descriptionRef} className="description">
+                    VZBL IS ALL ABOUT BEING SEEN. IT'S THE FREQUENCY AT WHICH YOUR BRAND SHOWS UP, WHETHER IN SEARCH RESULTS, ON SOCIAL MEDIA, THROUGH EMAIL, OR ACROSS OTHER MARKETING CHANNELS. IT'S ABOUT MAKING YOUR BRAND IMPOSSIBLE TO IGNORE, GRABBING ATTENTION, AND BUILDING AN IDENTITY THAT STICKS.
                   </p>
                 </div>
-              </div>
-
-              <div className="service-list-row">
-                <div className="service-list-col">
-                  <h5>Visual Storytelling</h5>
+              )}
+              {index === 1 && (
+                <div className="about-split-layout">
+                  <div ref={aboutLeftRef} className="about-left">
+                    <h2 className="about-heading">/ ABOUT</h2>
+                  </div>
+                  <div ref={aboutTextContainerRef} className="about-text-container">
+                    <p ref={(el) => setTextRef(el, 0)} className="about-paragraph">A CREATIVE AGENCY BUILT TO DEFY THE ORDINARY.</p>
+                    <p ref={(el) => setTextRef(el, 1)} className="about-paragraph">FROM BRANDING TO MEDIA PRODUCTION, WE DELIVER WORK THAT REVEALS THE UNSEEN.</p>
+                    <p ref={(el) => setTextRef(el, 2)} className="about-paragraph">OUR APPROACH IS SIMPLE: THINK BOLD, CREATE SMART, AND OWN THE SPOTLIGHT WITH EVERY PROJECT.</p>
+                  </div>
+                  <div ref={aboutRightRef} className="about-right">
+                    <h2 className="about-heading">US /</h2>
+                  </div>
                 </div>
-                <div className="service-list-col">
-                  <p>
-                    I create visuals that speak — whether it’s a quiet moment or
-                    a bold idea. My work blends aesthetic choices with story
-                    clarity, making sure the emotional core always comes
-                    through.
-                  </p>
-                </div>
-              </div>
-
-              <div className="service-list-row">
-                <div className="service-list-col">
-                  <h5>Creative Direction</h5>
-                </div>
-                <div className="service-list-col">
-                  <p>
-                    From ideation to final cut, I guide the visual and narrative
-                    tone of every project. I bring a cohesive, cinematic vision
-                    that aligns story, style, and intention — grounded in
-                    authenticity.
-                  </p>
-                </div>
-              </div>
+              )}
             </div>
-          </div>
-        </section>
-
-        <section className="about-banner-img">
-          <div className="about-banner-img-wrapper">
-            <img src="/about/about-banner.jpg" alt="" />
-          </div>
-        </section>
-
-        <section className="fav-tools">
-          <div className="fav-tools-header">
-            <AnimatedCopy tag="p" animateOnScroll={true} className="primary sm">
-              Daily Stack
-            </AnimatedCopy>
-            <AnimatedCopy tag="h2" animateOnScroll={true} delay={0.25}>
-              Favourite Tools
-            </AnimatedCopy>
-            <AnimatedCopy
-              tag="p"
-              animateOnScroll={true}
-              className="secondary"
-              delay={0.5}
-            >
-              My favorite stack includes Framer, Figma, and other cutting-edge
-              technologies to ensure seamless and dynamic designs.
-            </AnimatedCopy>
-          </div>
-
-          <div className="fav-tools-list">
-            <div className="fav-tools-list-row">
-              <div className="fav-tool">
-                <div className="fav-tool-img">
-                  <img src="/about/tool-1.jpg" alt="" />
-                </div>
-                <h4>DaVinci Resolve</h4>
-                <p className="primary sm">Color Grading</p>
-              </div>
-              <div className="fav-tool">
-                <div className="fav-tool-img">
-                  <img src="/about/tool-2.jpg" alt="" />
-                </div>
-                <h4>Adobe Premiere Pro</h4>
-                <p className="primary sm">Video Editing</p>
-              </div>
-              <div className="fav-tool">
-                <div className="fav-tool-img">
-                  <img src="/about/tool-3.jpg" alt="" />
-                </div>
-                <h4>Blackmagic Pocket</h4>
-                <p className="primary sm">Cinematic Shooting</p>
-              </div>
-            </div>
-            <div className="fav-tools-list-row">
-              <div className="fav-tool">
-                <div className="fav-tool-img">
-                  <img src="/about/tool-4.jpg" alt="" />
-                </div>
-                <h4>ShotDeck</h4>
-                <p className="primary sm">Visual References</p>
-              </div>
-              <div className="fav-tool">
-                <div className="fav-tool-img">
-                  <img src="/about/tool-5.jpg" alt="" />
-                </div>
-                <h4>Frame.io</h4>
-                <p className="primary sm">Remote Collaboration</p>
-              </div>
-              <div className="fav-tool">
-                <div className="fav-tool-img">
-                  <img src="/about/tool-6.jpg" alt="" />
-                </div>
-                <h4>Celtx</h4>
-                <p className="primary sm">Scriptwriting Tool</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <ContactForm />
-
-        <Footer />
+          </section>
+        ))}
       </div>
-    </ReactLenis>
+    </div>
   );
 };
 

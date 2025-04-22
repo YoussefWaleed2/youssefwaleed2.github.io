@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { useGLTF } from '@react-three/drei';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import Lenis from '@studio-freight/lenis';
 import * as THREE from 'three';
@@ -16,6 +16,22 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
   const currentPosition = useRef({ x: 0, y: 0, z: 0 });
   const currentRotation = useRef({ x: 0, y: 0 });
   const animationInProgress = useRef(false);
+  const { viewport } = useThree();
+  
+  // Calculate responsive scaling factor based on viewport size
+  const scaleFactor = useMemo(() => {
+    // Base scale is 0.3
+    const baseScale = 0.3;
+    
+    // For smaller screens, reduce the scale
+    if (viewport.width < 5) { // Equivalent to ~768px
+      return baseScale * 0.7;
+    } else if (viewport.width < 8) { // Equivalent to ~1200px
+      return baseScale * 0.85;
+    }
+    
+    return baseScale;
+  }, [viewport.width]);
   
   // Set the model color and material properties
   useEffect(() => {
@@ -37,10 +53,10 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
       }
     });
     
-    // Initial position and scale
-    scene.scale.set(0.3, 0.3, 0.3);
+    // Initial scale - using responsive scaleFactor
+    scene.scale.set(scaleFactor, scaleFactor, scaleFactor);
     
-    // Set initial position based on which hand it is
+    // Set initial position based on which hand it is and viewport size
     const startX = isLeftHand ? -50 : 50; // Start from left or right
     scene.position.set(startX, -100, 0);
     scene.rotation.y = Math.PI * 2; // Start with a full rotation
@@ -59,6 +75,26 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
 
     // Mark the model as ready
     setIsReady(true);
+    
+    // Calculate responsive position adjustments based on viewport width
+    const calculateResponsivePosition = () => {
+      // Base positions
+      let xPos = isLeftHand ? -30 : 30;
+      let yPos = -35;
+      
+      // Adjust for smaller screens
+      if (viewport.width < 5) { // Mobile
+        xPos = isLeftHand ? -20 : 20;
+        yPos = -25;
+      } else if (viewport.width < 8) { // Tablet
+        xPos = isLeftHand ? -25 : 25;
+        yPos = -30;
+      }
+      
+      return { x: xPos, y: yPos };
+    };
+    
+    const responsivePosition = calculateResponsivePosition();
     
     // Create a timeline for coordinated animations
     const tl = gsap.timeline({
@@ -95,10 +131,10 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
       }
     });
 
-    // Add animations to timeline
+    // Add animations to timeline with responsive positions
     tl.to(scene.position, {
-      x: isLeftHand ? -30 : 30, // Final x position beside first section
-      y: -35, // Lowered position further down
+      x: responsivePosition.x, // Responsive x position
+      y: responsivePosition.y, // Responsive y position
       z: 0,
       duration: 3.5,
       ease: "power2.out"
@@ -111,13 +147,13 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
 
     // Add a scale bounce effect
     tl.from(scene.scale, {
-      x: 0.25,
-      y: 0.25,
-      z: 0.25,
+      x: scaleFactor * 0.8,
+      y: scaleFactor * 0.8,
+      z: scaleFactor * 0.8,
       duration: 3,
       ease: "elastic.out(1, 0.2)"
     }, "<0.3"); // Start slightly after the main animation
-  }, [scene, isLeftHand]);
+  }, [scene, isLeftHand, scaleFactor, viewport.width]);
 
   // Update rotation and position based on scroll progress
   useEffect(() => {
@@ -130,18 +166,35 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
       // Determine if we're in an even or odd section
       const isEvenSection = currentSection % 2 === 0;
       
+      // Calculate responsive movement range based on viewport width
+      const calculateMovementRange = () => {
+        // Base range
+        let range = 60;
+        
+        // Adjust for smaller screens
+        if (viewport.width < 5) { // Mobile
+          range = 35;
+        } else if (viewport.width < 8) { // Tablet
+          range = 45;
+        }
+        
+        return range;
+      };
+      
+      const movementRange = calculateMovementRange();
+      
       // Calculate horizontal movement (zigzag pattern)
       let targetX;
       if (isLeftHand) {
         // Left hand moves from left to right in odd sections, right to left in even sections
         targetX = isEvenSection 
-          ? -30 + (sectionProgress * 60) // Move from left to right
-          : 30 - (sectionProgress * 60); // Move from right to left
+          ? -30 + (sectionProgress * movementRange) // Move from left to right
+          : 30 - (sectionProgress * movementRange); // Move from right to left
       } else {
         // Right hand moves from right to left in odd sections, left to right in even sections
         targetX = isEvenSection 
-          ? 30 - (sectionProgress * 60) // Move from right to left
-          : -30 + (sectionProgress * 60); // Move from left to right
+          ? 30 - (sectionProgress * movementRange) // Move from right to left
+          : -30 + (sectionProgress * movementRange); // Move from left to right
       }
       
       // Calculate target positions
@@ -188,7 +241,7 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
       modelRef.current.rotation.y = currentRotation.current.y;
       modelRef.current.rotation.x = currentRotation.current.x;
     }
-  }, [scrollProgress, modelRef, entranceComplete, isLeftHand]);
+  }, [scrollProgress, modelRef, entranceComplete, isLeftHand, viewport.width]);
 
   return isReady ? <primitive object={scene} ref={modelRef} /> : null;
 }
@@ -201,10 +254,25 @@ const Services = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [canvasLoaded, setCanvasLoaded] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const titleRef = useRef(null);
   const sectionsRef = useRef(null);
   const navRef = useRef(null);
   const lenisRef = useRef(null);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   // Handle entrance animation completion
   const handleEntranceComplete = () => {
@@ -315,7 +383,7 @@ const Services = () => {
 
       <div className="model-container">
         <Canvas
-          camera={{ position: [0, 0, 75], fov: 45 }}
+          camera={{ position: [0, 0, 75], fov: isMobile ? 60 : 45 }}
           style={{ width: '100%', height: '100%' }}
           gl={{ alpha: true }}
           onCreated={() => setCanvasLoaded(true)}

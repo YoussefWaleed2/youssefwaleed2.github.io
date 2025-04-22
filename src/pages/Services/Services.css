@@ -51,7 +51,7 @@ html, body {
 }
 
 .services-content h1 {
-    font-size: 5rem;
+    font-size: clamp(3rem, 8vw, 5rem);
     color: white;
     text-align: center;
     margin-top: 40px;
@@ -111,14 +111,14 @@ html, body {
 }
 
 .service-number {
-    font-size: 1.5rem;
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
     color: #8C7A32;
     margin-bottom: 1rem;
     font-family: "TT Norms Light", sans-serif;
 }
 
 .service-title {
-    font-size: 2.5rem;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
     color: white;
     margin-bottom: 2rem;
     font-family: "TT Norms Light", sans-serif;
@@ -129,22 +129,51 @@ html, body {
     line-height: 1.6;
     margin-bottom: 1rem;
     font-family: "TT Norms Light", sans-serif;
+    font-size: clamp(0.9rem, 1.5vw, 1rem);
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-    .services-content h1 {
-        font-size: 2.5rem;
+@media (max-width: 1200px) {
+    .service-section:nth-child(odd) {
+        padding-right: 40%;
     }
+    
+    .service-section:nth-child(even) {
+        padding-left: 40%;
+    }
+}
 
-    .services-content p {
-        font-size: 1rem;
+@media (max-width: 992px) {
+    .services-content {
+        margin-bottom: 2rem;
     }
     
     .service-section {
-        padding: 1.5rem;
-        padding-left: 0;
-        padding-right: 0;
+        padding: 3rem 1.5rem;
+    }
+    
+    .service-section:nth-child(odd) {
+        padding-right: 35%;
+    }
+    
+    .service-section:nth-child(even) {
+        padding-left: 35%;
+    }
+}
+
+@media (max-width: 768px) {
+    .services-container {
+        padding-top: 100px;
+        padding: 1rem;
+        padding-top: 100px;
+    }
+    
+    .services-content {
+        margin-bottom: 1rem;
+    }
+    
+    .service-section {
+        padding: 2.5rem 1rem;
     }
     
     .service-section:nth-child(odd),
@@ -154,13 +183,33 @@ html, body {
         align-items: flex-start;
         text-align: left;
     }
-    
-    .service-section h2 {
-        font-size: 1.5rem;
+}
+
+@media (max-width: 576px) {
+    .services-container {
+        padding-top: 80px;
     }
     
-    .service-section p {
-        font-size: 1rem;
+    .services-content h1 {
+        margin-top: 20px;
+    }
+    
+    .service-section {
+        padding: 2rem 0.5rem;
+    }
+    
+    .service-section:nth-child(odd),
+    .service-section:nth-child(even) {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .service-number {
+        margin-bottom: 0.5rem;
+    }
+    
+    .service-title {
+        margin-bottom: 1rem;
     }
 }
 

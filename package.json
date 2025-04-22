@@ -8,8 +8,8 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "vercel:deploy": "vercel --prod",
-    "vercel:dev": "vercel dev"
+    "vercel:deploy": "vercel --prod --legacy-peer-deps",
+    "vercel:dev": "vercel dev --legacy-peer-deps"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

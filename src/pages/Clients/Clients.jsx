@@ -153,16 +153,12 @@ const Clients = () => {
 
     // Animate client items
     gsap.from(clientRefs.current, {
-      opacity: 0.7, // Start from higher opacity
+      opacity: 1, // Start from higher opacity
       y: 100,
       stagger: 0.1,
       duration: 0.8,
       ease: "power3.out",
-      delay: 0.8,
-      onComplete: () => {
-        // Ensure all client items are fully visible after animation
-        gsap.set(clientRefs.current, { opacity: 1, clearProps: "all" });
-      }
+      delay: 0.8
     });
   }, []);
 

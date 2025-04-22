@@ -4,13 +4,10 @@ body {
   overflow: hidden;
   margin: 0;
   padding: 0;
-  height: 100vh;
-  width: 100vw;
 }
 .page.project {
   min-height: 100vh;
   width: 100%;
-  overflow: hidden;
 }
 
 .project-header {
@@ -23,14 +20,13 @@ body {
   gap: 1.5em;
   padding-bottom: 3em;
   text-align: center;
-  overflow: hidden;
 }
 
 .project-banner-img {
   position: relative;
   width: 100svw;
   height: 100svh;
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 
 .project-banner-img-wrapper {
@@ -50,7 +46,6 @@ body {
   align-items: center;
   text-align: center;
   gap: 4em;
-  overflow: hidden;
 }
 
 .details {
@@ -63,7 +58,6 @@ body {
   background-color: var(--fg);
   color: var(--bg);
   padding: 4em 2em;
-  overflow: hidden;
 }
 
 .project-images-container {
@@ -92,13 +86,13 @@ body {
 .next-project {
   width: 100vw;
   height: 100svh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 1.5em;
   text-align: center;
-  overflow: hidden;
 }
 
 .next-project-img {
@@ -117,9 +111,9 @@ body {
 }
 
 .project-container {
-  position: fixed;
+  position: relative;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -494,7 +488,7 @@ body {
   .project-title {
     font-size: 3rem;
     position: absolute;
-    top: 10%;
+    top: 15%;
     left: 0;
     right: 0;
     z-index: 2;
@@ -527,16 +521,17 @@ body {
   .project-title {
     font-size: 3rem;
     position: absolute;
-    top: 6%;
+    top: 15%;
     left: 0;
     right: 0;
     z-index: 2;
   }
+
   .project-content {
-    gap: 2rem;
+    gap: 1rem;
     padding: 0 1rem;
     height: 45%;  
-    margin-top: 6rem;
+    margin-top: 8rem;
   }
 
   .project-image {
@@ -582,36 +577,6 @@ body {
     padding: 3em 1em;
   } 
   
-}
-
-/* Ensure all sections prevent scrolling */
-.project-header,
-.project-details,
-.project-images,
-.next-project {
-  overflow: hidden;
-}
-
-/* Add this to ensure proper height on mobile devices */
-@media (max-width: 768px) {
-  body {
-    position: fixed;
-    overflow: hidden;
-  }
-  
-  .page.project {
-    position: fixed;
-    overflow: hidden;
-  }
-}
-
-/* Add this for iOS devices */
-@supports (-webkit-touch-callout: none) {
-  body {
-    position: fixed;
-    overflow: hidden;
-    -webkit-overflow-scrolling: touch;
-  }
 }
 
 

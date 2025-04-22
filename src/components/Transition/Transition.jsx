@@ -3,11 +3,12 @@ import { motion } from 'framer-motion';
 import { usePageTransition } from '../../hooks/usePageTransition';
 import './Transition.css';
 import gsap from 'gsap';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Transition = (Component) => {
   return () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const isEntering = useRef(true);
     const videoRef = useRef(null);
     const { pageVariants, pageTransition } = usePageTransition();
@@ -51,10 +52,27 @@ const Transition = (Component) => {
         isEntering.current = false;
       }
 
+      // Cleanup function
       return () => {
         timeline.kill();
+        isEntering.current = true;
       };
     }, [location]);
+
+    // Handle navigation
+    useEffect(() => {
+      const handleClick = (e) => {
+        const link = e.target.closest('a');
+        if (link && link.getAttribute('href')?.startsWith('/')) {
+          e.preventDefault();
+          const path = link.getAttribute('href');
+          navigate(path);
+        }
+      };
+
+      document.addEventListener('click', handleClick);
+      return () => document.removeEventListener('click', handleClick);
+    }, [navigate]);
 
     return (
       <motion.div

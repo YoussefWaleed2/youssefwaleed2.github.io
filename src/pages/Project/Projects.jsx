@@ -23,7 +23,7 @@ const Projects = () => {
     "/project/Service-img-3.webp"
   ];
 
-  const titles = ["BRANDING", "Marketing", "Advertising"];
+
   const handleNext = () => {
     if (currentIndex < images.length - 1 && !isAnimating) {
       setIsAnimating(true);

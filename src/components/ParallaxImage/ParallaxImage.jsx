@@ -98,6 +98,7 @@ const ParallaxImage = ({ src, alt, speed = 0.2 }) => {
         position: "absolute",
         top: 0,
         left: 0,
+        opacity: 1
       }}
     />
   );

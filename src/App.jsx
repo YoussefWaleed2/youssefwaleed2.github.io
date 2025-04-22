@@ -8,7 +8,7 @@ import Home from "./pages/Home/Home";
 import Work from "./pages/Join Us/Work";
 import Project from "./pages/Project/Projects";
 import About from "./pages/About Us/About";
-import FAQ from "./pages/Clients/FAQ";
+import Clients from "./pages/Clients/Clients";
 import Contact from "./pages/Get In Touch/Contact";
 import Services from "./pages/Services/Services";
 import AllProjects from "./pages/All-Projects/All-Projects";
@@ -37,7 +37,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/clients" element={<FAQ />} />
+          <Route path="/clients" element={<Clients />} />
           <Route path="/join-us" element={<Work />} />
           <Route path="/services" element={<Services />} />
           <Route path="/projects" element={<Project />} />

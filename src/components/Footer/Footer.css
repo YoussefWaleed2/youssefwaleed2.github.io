@@ -15,6 +15,10 @@
   z-index: 10;
   position: relative;
 }
+.footer-text-bold {
+  font-weight: 900;
+  font-size: 1.05rem;
+}
 
 .footer-content {
   display: flex;
@@ -24,7 +28,7 @@
 }
 
 .footer-left {
-  max-width: 500px;
+  max-width: 550px;
 }
 
 .footer-text {
@@ -38,6 +42,7 @@
 .social-links {
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 .social-links a {
@@ -56,6 +61,7 @@
 .social-links a:hover {
   background-color: white;
   color: #1a1a1a;
+  transform: translateY(-3px);
 }
 
 .footer-right {
@@ -108,32 +114,128 @@
 @media (max-width: 768px) {
   .footer {
     padding: 40px 20px;
+    text-align: center;
   }
 
   .footer-content {
     flex-direction: column;
     gap: 30px;
+    align-items: center;
   }
 
   .footer-left {
     max-width: 100%;
-  }
-
-  .footer-right {
-    justify-content: flex-start;
-  }
-
-  .footer-nav {
+    display: flex;
     flex-direction: column;
-    gap: 20px;
+    align-items: center;
+  }
+
+  .footer-text {
+    text-align: center;
+    max-width: 500px;
   }
 
   .social-links {
-    justify-content: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .footer-right {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .footer-nav {
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
   }
 
   .footer-logo svg {
     width: 140px;
+  }
+}
+
+/* Tablet specific styles */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .footer {
+    padding: 50px 40px;
+    text-align: center;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .footer-left {
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .social-links {
+    justify-content: center;
+    gap: 25px;
+  }
+
+  .social-links a {
+    width: 45px;
+    height: 45px;
+  }
+
+  .footer-right {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .footer-nav {
+    flex-direction: row;
+    justify-content: center;
+    gap: 35px;
+  }
+
+  .footer-nav a {
+    font-size: 16px;
+  }
+}
+
+/* Small Mobile Screens */
+@media (max-width: 480px) {
+  .footer {
+    padding: 30px 15px;
+  }
+
+  .footer-content {
+    gap: 25px;
+  }
+
+  .social-links {
+    gap: 15px;
+    max-width: 280px;
+  }
+
+  .social-links a {
+    width: 38px;
+    height: 38px;
+  }
+
+  .footer-nav {
+    gap: 15px;
+  }
+
+  .footer-nav a {
+    font-size: 14px;
+  }
+
+  .footer-logo svg {
+    width: 120px;
   }
 }
 

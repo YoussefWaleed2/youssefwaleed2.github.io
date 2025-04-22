@@ -9,26 +9,31 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-left">
           <p className="footer-text">
-            LOREM IPSUM DOLOR SIT AMET, CONSECTETUER ADIPISCING
-            ELIT, SED DIAM NONUMMY NIBH EUISMOD TINCIDUNT UT
-            LAOREET DOLORE MAGNA ALIQUAM ERAT VOLUTPAT. UT WISI
-            ENIM AD MINIM VENIAM.
+          <span className="footer-text-bold">VZBL</span> is all about being seen.
+          <br></br>
+          <span>It’s the frequency at which your brand shows up,
+          whether in search results, on social media, through email,
+          or across other marketing channels. It’s about making your brand impossible to ignore, grabbing attention,
+          and building an identity that sticks.</span>
           </p>
           <div className="social-links">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.instagram.com/vzbl.co" target="_blank" rel="noopener noreferrer">
               <i className="fab fa-instagram"></i>
             </a>
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.facebook.com/vzbl.co/" target="_blank" rel="noopener noreferrer">
               <i className="fab fa-facebook-f"></i>
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+            <a href="https://eg.linkedin.com/company/vzbl.co" target="_blank" rel="noopener noreferrer">
               <i className="fab fa-linkedin-in"></i>
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-              <i className="fab fa-twitter"></i>
+            <a href="https://www.behance.net/ahmedelzalat3" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-behance"></i>
             </a>
-            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.tiktok.com/@vzbl.co" target="_blank" rel="noopener noreferrer">
               <i className="fab fa-tiktok"></i>
+            </a>
+            <a href="https://vimeo.com/vzblco" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-vimeo"></i>
             </a>
           </div>
         </div>

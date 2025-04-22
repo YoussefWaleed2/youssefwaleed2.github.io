@@ -57,11 +57,11 @@ const Work = () => {
       description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod.",
     },
     {
-      title: "Graphic Designer",
+      title: "Web Developer",
       description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod.",
     },
     {
-      title: "Graphic Designer",
+      title: "Digital Marketing Specialist",
       description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod.",
     }
   ];
@@ -86,13 +86,13 @@ const Work = () => {
         </div>
         
         <div className="work-content">
-          <div className="work-header">
+          <header className="work-header">
             <h1 className="join-title">JOIN</h1>
             <div className="join-subtitle">
               <span className="the">The</span>
               <span className="bold-creatives">BOLD CREATIVES</span>
             </div>
-          </div>
+          </header>
 
           <div className="positions-grid">
             {positions.map((position, index) => (

@@ -286,7 +286,7 @@ const MobileMenu = () => {
         <div className="menu-links">
           <div className="menu-link">
             <Link to="/" onClick={(e) => handleNavigation(e, "/")}>
-              <h1>Index</h1>
+              <h1>Home</h1>
             </Link>
           </div>
           <div className="menu-link">

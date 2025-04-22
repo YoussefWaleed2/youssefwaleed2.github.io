@@ -1,0 +1,361 @@
+.clients.page {
+  padding-top: 8em;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #000;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.clients-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.clients-title {
+  font-size: 5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-family: 'Sprat', serif;
+  text-transform: uppercase;
+  position: relative;
+  letter-spacing: -1px;
+}
+
+.clients-intro {
+  max-width: 800px;
+  margin: 0 auto 5rem;
+  padding: 0 2rem;
+  text-align: center;
+  font-size: 1.2rem;
+  line-height: 1.8;
+}
+
+.clients-grid {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8rem;
+}
+
+.client-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  position: relative;
+}
+
+.client-item.left {
+  grid-template-areas: "image content";
+}
+
+.client-item.right {
+  grid-template-areas: "content image";
+}
+
+.client-image-container {
+  grid-area: image;
+  height: 500px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.client-content {
+  grid-area: content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.client-name {
+  font-size: 2.8rem;
+  margin-bottom: 1.5rem;
+  font-family: 'Sprat', serif;
+  letter-spacing: -0.5px;
+  position: relative;
+}
+
+.client-name::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: #fff;
+}
+
+.client-description {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  opacity: 0.8;
+  max-width: 500px;
+}
+
+/* Special clients section */
+.special-clients-section {
+  width: 100%;
+  margin: 6rem auto 0;
+  padding: 4rem 0;
+  background-color: rgba(10, 10, 10, 0.3);
+}
+
+.special-clients-title {
+  font-size: 3rem;
+  text-align: center;
+  font-family: 'Sprat', serif;
+  margin-bottom: 3rem;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+}
+
+.client-images-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.client-images-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  width: 100%;
+  padding: 0 20px;
+  justify-content: center;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.client-images-row::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+.client-image-box {
+  flex: 0 0 180px;
+  height: 500px;
+  position: relative;
+  transition: flex 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.client-image-box:hover {
+  flex: 0 0 750px;
+}
+
+.client-image-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.client-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.client-image-box:hover .client-img {
+  transform: scale(1.05);
+}
+
+.client-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.client-image-box:hover .client-overlay {
+  opacity: 1;
+}
+
+.client-overlay h3 {
+  color: #fff;
+  font-size: 1.2rem;
+  margin: 0;
+  font-family: 'Sprat', serif;
+  text-transform: uppercase;
+}
+
+.clients-footer {
+  margin: 8rem auto 5rem;
+  text-align: center;
+  padding: 3rem;
+  max-width: 800px;
+}
+
+.clients-footer h2 {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  font-family: 'Sprat', serif;
+}
+
+.clients-footer p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.contact-button {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  background-color: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.contact-button:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+  .client-item {
+    gap: 2rem;
+  }
+  
+  .client-image-container {
+    height: 400px;
+  }
+  
+  .client-name {
+    font-size: 2.2rem;
+  }
+  
+  .client-image-box {
+    flex: 0 0 80px;
+    height: 400px;
+  }
+  
+  .client-image-box:hover {
+    flex: 0 0 300px;
+  }
+  
+  .special-clients-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .clients-title {
+    font-size: 3.5rem;
+  }
+  
+  .clients-grid {
+    gap: 5rem;
+  }
+  
+  .client-item, 
+  .client-item.left, 
+  .client-item.right {
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+      "image"
+      "content";
+  }
+  
+  .client-image-container {
+    height: 350px;
+  }
+  
+  .client-content {
+    padding: 1rem 0;
+  }
+  
+  .client-image-box {
+    flex: 0 0 60px;
+    height: 350px;
+  }
+  
+  .client-image-box:hover {
+    flex: 0 0 250px;
+  }
+  
+  .special-clients-section {
+    padding: 3rem 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .clients-title {
+    font-size: 2.5rem;
+  }
+  
+  .clients-intro {
+    font-size: 1rem;
+    padding: 0 1.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .clients-grid {
+    padding: 1rem;
+    gap: 4rem;
+  }
+  
+  .client-image-container {
+    height: 300px;
+  }
+  
+  .client-name {
+    font-size: 1.8rem;
+  }
+  
+  .client-description {
+    font-size: 1rem;
+  }
+  
+  .client-image-box {
+    flex: 0 0 50px;
+    height: 300px;
+  }
+  
+  .client-image-box:hover {
+    flex: 0 0 200px;
+  }
+  
+  .client-overlay h3 {
+    font-size: 1rem;
+  }
+  
+  .special-clients-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .clients-footer {
+    margin: 5rem auto 3rem;
+    padding: 1.5rem;
+  }
+  
+  .clients-footer h2 {
+    font-size: 2rem;
+  }
+}

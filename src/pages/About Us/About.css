@@ -1,14 +1,26 @@
 .about-page {
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.5s ease-in-out;
   background-color: #F5F2EA;
-  background-image: url('/texture.webp');
+  /* background-image: url('/texture.webp'); */
   background-repeat: repeat;
   background-size: 200px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  /* Default smooth scroll as fallback */
+  scroll-behavior: smooth;
+  overscroll-behavior-x: none;
+  touch-action: pan-x;
+}
+
+.about-page::-webkit-scrollbar {
+  display: none;
 }
 
 .about-page.is-ready {
@@ -16,82 +28,76 @@
   visibility: visible;
 }
 
-.horizontal-scroll-wrapper {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.horizontal-scroll-wrapper::-webkit-scrollbar {
-  display: none;
-}
-
 .about-container {
+  width: fit-content;
+  height: 100vh;
   display: flex;
-  height: 100%;
+  flex-direction: row;
   position: relative;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.05s linear;
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 .about-section {
-  min-width: 100vw;
-  height: 100%;
+  width: 1440px;
+  height: 777px;
   position: relative;
   flex-shrink: 0;
+  flex-grow: 0;
   overflow: hidden;
+  /* padding-top: 20px; */
 }
-
-
 
 .background-image {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 1440px;
+  height: 777px;
   z-index: 1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 /* First slide styles */
 .about-content {
   position: relative;
   z-index: 2;
-  height: 100%;
+  width: 1440px;
+  height: 777px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 80px 80px;
+  /* padding: 80px 80px; */
 }
 
 .main-title {
   color: #000;
   font-family: Helvetica;
-  font-size: 190px;
+  font-size: 12rem;
   font-style: normal;
   font-weight: 400;
   line-height: 0.85;
-  letter-spacing: -15.2px;
+  /* letter-spacing: -15.2px; */
   text-transform: uppercase;
   margin: 0;
   padding: 0;
-  text-align: left;
   max-width: 800px;
-  margin-top: 40px;
+  margin-left: 100px;
+  margin-top: 140px;
+  overflow: hidden;
 }
 
 .asterisk {
-  color: #000;
+  color: black;
   font-size: 160px;
   display: inline-block;
   position: relative;
   line-height: 0;
   margin-left: 0;
   top: -40px;
+  overflow: hidden;
+  transform-origin: center;
 }
 
 .subtitle {
@@ -102,8 +108,10 @@
   font-weight: 400;
   line-height: normal;
   text-transform: uppercase;
-  margin: 60px 0 20px;
+  margin-top: 20px;
+  margin-left: 140px;
   text-align: left;
+  overflow: hidden;
 }
 
 .description {
@@ -116,8 +124,9 @@
   line-height: 22px;
   text-transform: uppercase;
   max-width: 520px;
-  margin: 0;
+  margin-left: 140px;
   letter-spacing: 0.5px;
+  overflow: hidden;
 }
 
 /* Second slide styles */
@@ -131,25 +140,35 @@
   position: relative;
 }
 
-.about-text-container {
-  max-width: 320px;
-  margin: 0 auto;
-  text-align: center;
+.about-left, 
+.about-right {
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  will-change: opacity, transform;
 }
 
-.about-text-container p {
+.about-text-container {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.about-paragraph {
   color: #000;
   font-family: Helvetica;
-  font-size: 16px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 400;
   line-height: 22px;
   text-transform: uppercase;
   margin: 0 0 40px;
   white-space: pre-line;
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  will-change: opacity, transform;
 }
 
-.about-text-container p:last-child {
+.about-paragraph:last-child {
   margin-bottom: 0;
 }
 
@@ -161,7 +180,6 @@
   font-weight: 400;
   line-height: normal;
   text-transform: uppercase;
-  margin: 0;
   white-space: nowrap;
 }
 
@@ -198,8 +216,12 @@
   z-index: 1;
 }
 
-.about-section:nth-child(3) .background-image {
-  border-radius: 106px 0px 0px 106px;
+.about-section:nth-child(3) .background-image,
+.about-section:nth-child(4) .background-image,
+.about-section:nth-child(5) .background-image,
+.about-section:nth-child(6) .background-image,
+.about-section:last-child .background-image {
+  border-radius: 60px 0px 0px 60px;
 }
 
 .about-section:nth-child(4) {
@@ -208,18 +230,10 @@
   z-index: 2;
 }
 
-.about-section:nth-child(4) .background-image {
-  border-radius: 106px 0px 0px 106px;
-}
-
 .about-section:nth-child(5) {
   position: relative;
   margin-left: -106px;
   z-index: 3;
-}
-
-.about-section:nth-child(5) .background-image {
-  border-radius: 106px 0px 0px 106px;
 }
 
 /* Ensure proper stacking for subsequent sections */
@@ -229,14 +243,9 @@
   z-index: 4;
 }
 
-.about-section:nth-child(n+6) .background-image {
-  border-radius: 106px 0px 0px 106px;
-}
-
-/* Last section specific adjustments */
-.about-section:last-child .background-image {
-  width: calc(100% + 106px); /* Extend the image to cover the extra space */
-  border-radius: 106px 0 0 106px;
+/* Fix for the last section to prevent extra gap */
+.about-section:last-child {
+  margin-right: 0;
 }
 
 /* Touch device styles */
@@ -247,7 +256,7 @@
 }
 
 /* Ensure navigation has mix-blend-mode on About page */
-body:has(.horizontal-scroll-wrapper) .navbar {
+body:has(.about-page) .navbar {
   mix-blend-mode: difference !important;
   backdrop-filter: none !important;
   background: transparent !important;
@@ -355,4 +364,22 @@ body:has(.horizontal-scroll-wrapper) .navbar {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.char {
+  display: inline-block;
+  transform-origin: bottom left;
+  overflow: hidden;
+}
+
+.line {
+  overflow: hidden;
+  display: block;
+}
+
+/* Ensure visibility of animated items */
+.main-title .word,
+.subtitle .word,
+.description .line {
+  overflow: hidden;
 } 

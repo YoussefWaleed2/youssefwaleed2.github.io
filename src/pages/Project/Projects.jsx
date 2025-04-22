@@ -3,6 +3,7 @@ import "./Projects.css";
 import Transition from "../../components/Transition/Transition";
 import gsap from "gsap";
 import { useNavigate } from "react-router-dom";
+import projectsData from "../../data/projectsData.json";
 
 const Projects = () => {
   const navigate = useNavigate();
@@ -21,7 +22,6 @@ const Projects = () => {
     "/project/Service-img-2.webp",
     "/project/Service-img-3.webp"
   ];
-
 
 
   const handleNext = () => {
@@ -383,6 +383,8 @@ const Projects = () => {
                 onMouseMove={e => handleCardMouseMove(e, index)}
                 onMouseLeave={() => handleCardMouseLeave(index)}
                 onMouseEnter={e => handleCardMouseEnter(e, index)}
+                onClick={handlePreviewClick}
+                style={{ cursor: 'pointer' }}
               >
                 <img src={image} alt={`Project ${index + 1}`} />
               </div>

@@ -167,12 +167,7 @@
   font-family: 'TT Norms', sans-serif;
 }
 
-/* Fix the invisible footer */
-.footer {
-  opacity: 1 !important; /* Override to ensure footer is visible */
-  z-index: 10;
-  position: relative;
-}
+
 
 @media (max-width: 1280px) {
   .project-grid {

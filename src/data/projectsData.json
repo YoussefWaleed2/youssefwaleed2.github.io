@@ -1,0 +1,152 @@
+{
+    "BRANDING": [
+      {
+        "title": "Épos",
+        "media": "/project/Project-Assets/Branding/EPOS.webp",
+        "mediaType": "image",
+        "description": "Complete brand identity and guidelines"
+      },
+      {
+        "title": "Shawerma El Reem",
+        "media": "/project/Project-Assets/Branding/SHAWERMA EL REEM.webp",
+        "mediaType": "image",
+        "description": "Modern take on iconic brand"
+      },
+      {
+        "title": "Venti",
+        "media": "/project/Project-Assets/Branding/VENTI.webp",
+        "mediaType": "image",
+        "description": "Modern take on iconic brand"
+      },
+      {
+        "title": "L'azurde",
+        "media": "/project/Project-Assets/Branding/L'AZURDE.webp",
+        "mediaType": "image",
+        "description": "Modern take on iconic brand"
+      },
+      {
+        "title": "Telofill",
+        "media": "/project/Project-Assets/Branding/TELOFILL.webp",
+        "mediaType": "image",
+        "description": "Modern take on iconic brand"
+      },
+      {
+        "title": "Dippy's",
+        "media": "/project/Project-Assets/Branding/DIPPY'S.webp",
+        "mediaType": "image",
+        "description": "Modern take on iconic brand"
+      },
+      {
+        "title": "NotFound",
+        "media": "/project/Project-Assets/Branding/NotFound.webp",
+        "mediaType": "image",
+        "description": "Modern take on iconic brand"
+      },
+      {
+        "title": "Hlep",
+        "media": "/project/Project-Assets/Branding/HLEP.webp",
+        "mediaType": "image",
+        "description": "Modern take on iconic brand"
+      },
+      {
+        "title": "Merkur",
+        "media": "/project/Project-Assets/Branding/MERKUR.webp",
+        "mediaType": "image",
+        "description": "Modern take on iconic brand"
+      },
+      {
+        "title": "Invesco",
+        "media": "/project/Project-Assets/Branding/INVESCO.webp",
+        "mediaType": "image",
+        "description": "Modern take on iconic brand"
+      },
+      {
+        "title": "Ever mark",
+        "media": "/project/Project-Assets/Branding/EVER MARK.webp",
+        "mediaType": "image",
+        "description": "Modern take on iconic brand"
+      },
+      {
+        "title": "Ozirea",
+        "media": "/project/Project-Assets/Branding/OZIREA.webp",
+        "mediaType": "image",
+        "description": "Modern take on iconic brand"
+      }
+    ],
+    "Marketing": [
+      {
+        "title": "Bunker",
+        "media": "/project/Project-Assets/Marketing/Bunker.webm",
+        "mediaType": "video",
+        "description": "Social media strategy and content"
+      },
+      {
+        "title": "Bouchée",
+        "media": "/project/Project-Assets/Marketing/BOUCHÉE.webm",
+        "mediaType": "video",
+        "description": "Viral marketing campaign"
+      },
+      {
+        "title": "Munch & Shake",
+        "media": "/project/Project-Assets/Marketing/Munch & Shake.webm",
+        "mediaType": "video",
+        "description": "Social media strategy and content"
+      },
+      {
+        "title": "CRMBZ",
+        "media": "/project/Project-Assets/Marketing/CRMBZ.webm",
+        "mediaType": "video",
+        "description": "Social media strategy and content"
+      },
+      {
+        "title": "Momochi",
+        "media": "/project/Service-img-2.webp",
+        "mediaType": "image",
+        "description": "Social media strategy and content"
+      },
+      {
+        "title": "NEV",
+        "media": "/project/Project-Assets/Marketing/Nev.webm",
+        "mediaType": "video",
+        "description": "Social media strategy and content"
+      },
+      {
+        "title": "Pyramids",
+        "media": "/project/Project-Assets/Marketing/Pyramids.webm",
+        "mediaType": "video",
+        "description": "Social media strategy and content"
+      }
+    ],
+    "Advertising": [
+      {
+        "title": "Apero with Emit (Emit x Porsche event)",
+        "media": "/project/Project-Assets/Advertising/Apero with Emit.webm",
+        "mediaType": "video",
+        "description": "High-end video production"
+      },
+      {
+        "title": "Emit x Leopelle",
+        "media": "/project/Project-Assets/Advertising/Emit x Leopelle.webm",
+        "mediaType": "video",
+        "description": "Behind the scenes story"
+      },
+      {
+        "title": "Leopelle",
+        "media": "/project/Project-Assets/Advertising/Leopelle.webm",
+        "mediaType": "video",
+        "description": "Behind the scenes story"
+      },
+      {
+        "title": "Yazi’s World",
+        "media": "/project/Project-Assets/Advertising/Yazi's World.webm",
+        "mediaType": "video",
+        "description": "Viral marketing campaign"
+      },
+      {
+        "title": "Shawerma El Reem",
+        "media": "/project/Project-Assets/Advertising/SHAWERMA EL REEM.webm",
+        "mediaType": "video",
+        "description": "Behind the scenes story"
+      }
+    ]
+}

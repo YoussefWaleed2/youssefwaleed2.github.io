@@ -1,14 +1,18 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import "./All-Projects.css";
+import Footer from "../../components/Footer/Footer";
 import Transition from "../../components/Transition/Transition";
+import ReactLenis from "lenis/react";
 import gsap from "gsap";
+import { CustomEase } from "gsap/CustomEase";
 
 const AllProjects = () => {
   const { category } = useParams();
   const [projects, setProjects] = useState([]);
   const containerRef = useRef(null);
   const videoRef = useRef(null);
+  const titleRef = useRef(null);
 
   useEffect(() => {
     // Get projects data from sessionStorage
@@ -17,86 +21,179 @@ const AllProjects = () => {
       setProjects(JSON.parse(storedProjects));
     }
 
-    // Animation for page elements
-    const tl = gsap.timeline({
-      defaults: {
-        ease: "power3.out",
-        duration: 0.8
-      }
+    const customEase = CustomEase.create("custom", ".87,0,.13,1");
+
+    // Set initial states
+    gsap.set([".all-projects-container", "footer"], {
+      opacity: 0
+    });
+
+    gsap.set(".all-projects-container", {
+      clipPath: "polygon(0% 0%, 0% 0%, 0% 0%, 0% 0%)",
+      scale: 0,
+      rotation: 25,
     });
 
     // Animate the video background
     if (videoRef.current) {
       gsap.to(videoRef.current, {
-        filter: "blur(100px)",
+        filter: "blur(150px)",
         duration: 1,
         ease: "power2.inOut"
       });
     }
 
-    tl.from(".category-title", {
-      y: 30,
-      opacity: 0,
-      duration: 1
+    // Create entrance animation sequence
+    
+    const tl = gsap.timeline();
+
+    // First clip-path animation
+    tl.to(".all-projects-container", {
+      clipPath: "polygon(0% 45%, 25% 45%, 25% 55%, 0% 55%)",
+      duration: 0,
+      ease: customEase,
     })
+    // Second clip-path animation
+    .to(".all-projects-container", {
+      clipPath: "polygon(0% 45%, 100% 45%, 100% 55%, 0% 55%)",
+      duration: 0,
+      ease: customEase
+    })
+    // Final reveal animation
+    .to(".all-projects-container", {
+      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+      scale: 1,
+      rotation: 0,
+      opacity: 1,
+      duration: 1.5,
+      ease: customEase,
+      onStart: () => {
+        // Animate title characters
+        gsap.to(".category-title .char", {
+          y: 0,
+          opacity: 1,
+          duration: 1.8,
+          stagger: 0.05,
+          delay: 0.5,
+          ease: customEase,
+        });
+      },onComplete: () =>{
+        gsap.to("footer", {
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.out"
+        })
+      }
+    })
+    // Animate project items
     .from(".project-grid .project-item", {
       y: 50,
       opacity: 0,
-      stagger: 0.1
-    }, "-=0.5");
+      stagger: 0.1,
+      duration: 0.8,
+      ease: "power3.out"
+    }, "-=0.5")
 
   }, [category]);
 
-  // Function to format the project number
-  const formatProjectNumber = (index) => {
-    return (index + 1).toString().padStart(2, '0');
+  // Split title into characters for animation
+  const renderTitle = (title) => {
+    return title.split("").map((char, index) => (
+      <span key={index} className="char" style={{ opacity: 0, transform: "translateY(100%)" }}>
+        {char}
+      </span>
+    ));
   };
 
-  return (
-    <>
-      <div className="video-background">
+  const renderMedia = (project) => {
+    if (project.mediaType === 'video') {
+      // Log the exact path being used
+      console.log('Attempting to load video from:', project.media);
+      
+      // Test if the file exists
+      // fetch(project.media)
+      //   .then(response => {
+      //     console.log('Video file response:', response.status);
+      //     if (!response.ok) {
+      //       throw new Error(`HTTP error! status: ${response.status}`);
+      //     }
+      //   })
+      //   .catch(error => console.error('Error checking video file:', error));
+
+      return (
         <video
-          ref={videoRef}
-          className="project-video"
+          className="project-media"
           autoPlay
           muted
           loop
           playsInline
-          src="/home/vid.mp4"
-        />
-      </div>
-      <div className="all-projects-container" ref={containerRef}>
-        <h1 className="category-title">{category.replace("-", " ").toUpperCase()}</h1>
-        
-        <div className="project-grid">
-          {projects.map((project, index) => (
-            <div 
-              className="project-item" 
-              key={index}
-              style={{
-                '--delay': `${index * 0.1}s`
-              }}
-            >
-              <div className="project-video-container">
-                <img src={project.image} alt={project.title} />
-                <div className="play-button">
-                  <svg width="74" height="74" viewBox="0 0 74 74" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M36.9998 67.8337C54.0286 67.8337 67.8332 54.0291 67.8332 37.0003C67.8332 19.9715 54.0286 6.16699 36.9998 6.16699C19.9711 6.16699 6.1665 19.9715 6.1665 37.0003C6.1665 54.0291 19.9711 67.8337 36.9998 67.8337Z" stroke="white" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M30 27L44 37L30 47V27Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+          preload="auto"
+          onError={(e) => {
+            console.error('Video loading error:', {
+              error: e.target.error,
+              src: project.media,
+              networkState: e.target.networkState,
+              readyState: e.target.readyState
+            });
+          }}
+        >
+          <source src={project.media} type="video/webm" />
+          Your browser does not support the video tag.
+        </video>
+      );
+    }
+    return (
+      <img 
+        className="project-media"
+        src={project.media} 
+        alt={project.title} 
+      />
+    );
+  };
+
+  return (
+    <>
+      <ReactLenis root>
+        <div className="all-projects-container" ref={containerRef}>
+          <div className="video-background">
+            <video
+              ref={videoRef}
+              className="project-video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              src="/home/vid.webm"
+            />
+          </div>
+          <h1 className="category-title" ref={titleRef}>
+            {renderTitle(category.replace("-", " ").toUpperCase())}
+          </h1>
+          
+          <div className="project-grid">
+            {projects.map((project, index) => (
+              <div 
+                className="project-item" 
+                key={index}
+                style={{
+                  '--delay': `${index * 0.1}s`
+                }}
+              >
+                <div className="project-video-container">
+                  {renderMedia(project)}
+                </div>
+                <div className="project-info">
+                  <h3>{project.title.toUpperCase()}</h3>
+                  <p>{project.description}</p>
                 </div>
               </div>
-              <div className="project-info">
-                <div className="project-number">{formatProjectNumber(index)}</div>
-                <h3>{project.title.toUpperCase()}</h3>
-                <p>{project.description}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+        <Footer />
+      </ReactLenis>
     </>
   );
 };
 
-export default Transition(AllProjects); 
+export default AllProjects; 

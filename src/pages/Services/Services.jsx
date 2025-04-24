@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import './Services.css';
 import { Environment, SpotLight } from '@react-three/drei';
 import Transition from '../../components/Transition/Transition';
+import { handleOverlay } from '../../utils/overlayManager';
 
 function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete }) {
   const { scene } = useGLTF('/services/Vzbl hand.glb');
@@ -372,6 +373,11 @@ const Services = () => {
       });
     }
   }, [canvasLoaded]);
+
+  useEffect(() => {
+    handleOverlay();
+    return () => handleOverlay();
+  }, []);
 
   return (
     <div className="services-container" ref={containerRef}>

@@ -137,7 +137,6 @@ textarea:focus {
   font-size: 1rem;
   font-weight: 600;
   -webkit-font-smoothing: antialiased;
-  border-radius: 0.5rem;
 }
 
 input::placeholder,

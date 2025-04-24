@@ -8,9 +8,15 @@ import Footer from "../../components/Footer/Footer";
 import ReactLenis from "lenis/react";
 
 import Transition from "../../components/Transition/Transition";
+import { handleOverlay } from "../../utils/overlayManager";
 
 const Contact = () => {
   const videoRef = useRef(null);
+
+  useEffect(() => {
+    handleOverlay();
+    return () => handleOverlay();
+  }, []);
 
   useEffect(() => {
     // Animate the video background

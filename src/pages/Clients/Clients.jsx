@@ -6,6 +6,7 @@ import ParallaxImage from "../../components/ParallaxImage/ParallaxImage";
 import gsap from "gsap";
 import SplitType from "split-type";
 import Footer from "../../components/Footer/Footer";
+import { handleOverlay } from "../../utils/overlayManager";
 
 const ClientData = [
   {
@@ -160,6 +161,11 @@ const Clients = () => {
       ease: "power3.out",
       delay: 0.8
     });
+  }, []);
+
+  useEffect(() => {
+    handleOverlay();
+    return () => handleOverlay();
   }, []);
 
   // Assign refs to client items

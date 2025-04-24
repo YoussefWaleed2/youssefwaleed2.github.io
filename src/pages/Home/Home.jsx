@@ -10,6 +10,7 @@ const Home = () => {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [showSplash, setShowSplash] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isSplashComplete, setIsSplashComplete] = useState(false);
 
   // Check if device is mobile
   useEffect(() => {
@@ -41,15 +42,15 @@ const Home = () => {
 
   // Handle splash screen completion
   const handleSplashComplete = () => {
+    setIsSplashComplete(true);
     try {
       sessionStorage.setItem('hasSeenSplash', 'true');
     } catch (error) {
       console.error("Error setting sessionStorage:", error);
     }
-    setShowSplash(false);
-    handleOverlay();
   };
 
+  // Handle video loading and splash screen coordination
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -69,7 +70,20 @@ const Home = () => {
     return () => {
       video.removeEventListener('canplay', handleCanPlay);
     };
-  }, [isMobile]); // Re-run when isMobile changes to update video source
+  }, [isMobile]);
+
+  // Handle final transition after both splash and video are ready
+  useEffect(() => {
+    if (isSplashComplete && isVideoLoaded) {
+      // Add a small delay to ensure smooth transition
+      const timer = setTimeout(() => {
+        setShowSplash(false);
+        handleOverlay();
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isSplashComplete, isVideoLoaded]);
 
   return (
     <ReactLenis root>
@@ -90,7 +104,10 @@ const Home = () => {
             loop 
             playsInline
             preload="auto"
-            style={{ opacity: isVideoLoaded ? 1 : 0 }}
+            style={{ 
+              opacity: isVideoLoaded && isSplashComplete ? 1 : 0,
+              transition: 'opacity 0.5s ease-in-out'
+            }}
           />
         </div>
       </div>

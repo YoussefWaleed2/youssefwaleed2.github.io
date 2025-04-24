@@ -9,6 +9,21 @@ const Home = () => {
   const videoRef = useRef(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [showSplash, setShowSplash] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   // Check if we should show the splash screen
   useEffect(() => {
@@ -54,7 +69,7 @@ const Home = () => {
     return () => {
       video.removeEventListener('canplay', handleCanPlay);
     };
-  }, []);
+  }, [isMobile]); // Re-run when isMobile changes to update video source
 
   return (
     <ReactLenis root>
@@ -68,7 +83,7 @@ const Home = () => {
           )} */}
           <video 
             ref={videoRef}
-            src="home/vid.webm"
+            src={isMobile ? "home/Home Mobile vid.webm" : "home/vid.webm"}
             poster="home/poster.jpg"
             autoPlay 
             muted

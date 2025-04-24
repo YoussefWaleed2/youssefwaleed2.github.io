@@ -5,6 +5,7 @@ import gsap from "gsap";
 import CustomEase from "gsap/CustomEase";
 import SplitType from 'split-type';
 import './About.css';
+import { handleOverlay } from '../../utils/overlayManager';
 
 const About = () => {
   const [isReady, setIsReady] = useState(false);
@@ -31,7 +32,10 @@ const About = () => {
   const [windowWidth, setWindowWidth] = useState(0);
   
   const images = Array.from({ length: 13 }, (_, i) => `/about/${i + 1}.webp`);
-
+  useEffect(() => {
+    handleOverlay();
+    return () => handleOverlay();
+  }, []);
   // Initialize image refs arrays
   useEffect(() => {
     imageRefs.current = Array(images.length).fill().map(() => React.createRef());

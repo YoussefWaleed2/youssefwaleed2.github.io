@@ -4,6 +4,7 @@ import Transition from "../../components/Transition/Transition";
 import gsap from "gsap";
 import { useNavigate } from "react-router-dom";
 import projectsData from "../../data/projectsData.json";
+import { handleOverlay } from "./../../utils/overlayManager";
 
 // Debug log to check if this file is being loaded correctly
 console.log("Projects.jsx loaded, projectsData:", Object.keys(projectsData));
@@ -348,6 +349,12 @@ const Projects = () => {
       });
     }
   }, [currentIndex, images.length]);
+
+  // Handle overlay on mount and unmount
+  useEffect(() => {
+    handleOverlay();
+    return () => handleOverlay();
+  }, []);
 
   return (
     <>

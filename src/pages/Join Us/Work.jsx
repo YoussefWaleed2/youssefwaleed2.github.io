@@ -5,11 +5,17 @@ import JoinUsForm from "../../components/JoinUsForm/JoinUsForm";
 import Footer from "../../components/Footer/Footer";
 import gsap from "gsap";
 import ReactLenis from "lenis/react";
+import { handleOverlay } from "../../utils/overlayManager";
 
 const Work = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState("");
   const videoRef = useRef(null);
+
+  useEffect(() => {
+    handleOverlay();
+    return () => handleOverlay();
+  }, []);
 
   useEffect(() => {
     if (videoRef.current) {

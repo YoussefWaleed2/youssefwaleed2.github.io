@@ -1,137 +1,54 @@
-import workList from "../../data/workList";
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import "./Home.css";
-
-import ContactForm from "../../components/ContactForm/ContactForm";
-import Footer from "../../components/Footer/Footer";
-import Menu from "../../components/Menu/Menu";
 import SplashScreen from "../../components/SplashScreen/SplashScreen";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import "./Home.css";
 import ReactLenis from "lenis/react";
 import Transition from "../../components/Transition/Transition";
-gsap.registerPlugin(ScrollTrigger);
+import { handleOverlay, shouldShowSplash } from "./../../utils/overlayManager";
 
 const Home = () => {
-  const workItems = Array.isArray(workList) ? workList : [];
-  const stickyTitlesRef = useRef(null);
-  const titlesRef = useRef([]);
-  const stickyWorkHeaderRef = useRef(null);
-  const homeWorkRef = useRef(null);
   const videoRef = useRef(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [showSplash, setShowSplash] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
+  // Check if device is mobile
   useEffect(() => {
-    const handleResize = () => {
-      ScrollTrigger.refresh();
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
     };
-
-    window.addEventListener("resize", handleResize);
-
-    const stickySection = stickyTitlesRef.current;
-    const titles = titlesRef.current.filter(Boolean);
-
-    if (!stickySection || titles.length !== 3) {
-      window.removeEventListener("resize", handleResize);
-      return;
-    }
-
-    gsap.set(titles[0], { opacity: 1, scale: 1 });
-    gsap.set(titles[1], { opacity: 0, scale: 0.75 });
-    gsap.set(titles[2], { opacity: 0, scale: 0.75 });
-
-    const pinTrigger = ScrollTrigger.create({
-      trigger: stickySection,
-      start: "top top",
-      end: `+=${window.innerHeight * 5}`,
-      pin: true,
-      pinSpacing: true,
-    });
-
-    const masterTimeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: stickySection,
-        start: "top top",
-        end: `+=${window.innerHeight * 4}`,
-        scrub: 0.5,
-      },
-    });
-
-    masterTimeline
-      .to(
-        titles[0],
-        {
-          opacity: 0,
-          scale: 0.75,
-          duration: 0.3,
-          ease: "power2.out",
-        },
-        1
-      )
-
-      .to(
-        titles[1],
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.3,
-          ease: "power2.in",
-        },
-        1.25
-      );
-
-    masterTimeline
-      .to(
-        titles[1],
-        {
-          opacity: 0,
-          scale: 0.75,
-          duration: 0.3,
-          ease: "power2.out",
-        },
-        2.5
-      )
-
-      .to(
-        titles[2],
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.3,
-          ease: "power2.in",
-        },
-        2.75
-      );
-
-    const workHeaderSection = stickyWorkHeaderRef.current;
-    const homeWorkSection = homeWorkRef.current;
-
-    let workHeaderPinTrigger;
-    if (workHeaderSection && homeWorkSection) {
-      workHeaderPinTrigger = ScrollTrigger.create({
-        trigger: workHeaderSection,
-        start: "top top",
-        endTrigger: homeWorkSection,
-        end: "bottom bottom",
-        pin: true,
-        pinSpacing: false,
-      });
-    }
-
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
     return () => {
-      pinTrigger.kill();
-      if (workHeaderPinTrigger) {
-        workHeaderPinTrigger.kill();
-      }
-      if (masterTimeline.scrollTrigger) {
-        masterTimeline.scrollTrigger.kill();
-      }
-      masterTimeline.kill();
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', checkMobile);
     };
   }, []);
+
+  // Check if we should show the splash screen
+  useEffect(() => {
+    // Force clear the splash screen on each page mount to handle navigation
+    handleOverlay();
+    
+    // Check if splash should be shown
+    setShowSplash(shouldShowSplash());
+    
+    // Add a cleanup function to force hide the overlay when unmounting
+    return () => {
+      handleOverlay();
+    };
+  }, []);
+
+  // Handle splash screen completion
+  const handleSplashComplete = () => {
+    try {
+      sessionStorage.setItem('hasSeenSplash', 'true');
+    } catch (error) {
+      console.error("Error setting sessionStorage:", error);
+    }
+    setShowSplash(false);
+    handleOverlay();
+  };
 
   useEffect(() => {
     const video = videoRef.current;
@@ -157,16 +74,16 @@ const Home = () => {
   return (
     <ReactLenis root>
       <div className="page home">
-        <SplashScreen />
+        {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
         <div className="video-wrapper">
-          {!isVideoLoaded && (
+          {/* {!isVideoLoaded && (
             <div className="video-placeholder">
               <img src="home/poster.jpg" alt="Video Poster" />
             </div>
-          )}
+          )} */}
           <video 
             ref={videoRef}
-            src="home/vid.webm"
+            src={isMobile ? "home/Home Mobile vid.webm" : "home/vid.webm"}
             poster="home/poster.jpg"
             autoPlay 
             muted

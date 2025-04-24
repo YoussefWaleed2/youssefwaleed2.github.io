@@ -33,9 +33,6 @@ const About = () => {
   
   const images = Array.from({ length: 13 }, (_, i) => `/about/${i + 1}.webp`);
 
-  // Check if we're on mobile or tablet
-  const isMobileOrTablet = windowWidth <= 1024;
-
   // Initialize image refs arrays
   useEffect(() => {
     imageRefs.current = Array(images.length).fill().map(() => React.createRef());

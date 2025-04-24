@@ -6,6 +6,7 @@ import Transition from "../../components/Transition/Transition";
 import ReactLenis from "lenis/react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
+import { handleOverlay } from "../../utils/overlayManager";
 
 const AllProjects = () => {
   const { category } = useParams();
@@ -13,6 +14,12 @@ const AllProjects = () => {
   const containerRef = useRef(null);
   const videoRef = useRef(null);
   const titleRef = useRef(null);
+
+  // Handle overlay on mount and unmount
+  useEffect(() => {
+    handleOverlay();
+    return () => handleOverlay();
+  }, []);
 
   useEffect(() => {
     // Get projects data from sessionStorage
@@ -155,17 +162,6 @@ const AllProjects = () => {
     <>
       <ReactLenis root>
         <div className="all-projects-container" ref={containerRef}>
-          <div className="video-background">
-            <video
-              ref={videoRef}
-              className="project-video"
-              autoPlay
-              muted
-              loop
-              playsInline
-              src="/home/vid.webm"
-            />
-          </div>
           <h1 className="category-title" ref={titleRef}>
             {renderTitle(category.replace("-", " ").toUpperCase())}
           </h1>
@@ -196,4 +192,4 @@ const AllProjects = () => {
   );
 };
 
-export default AllProjects; 
+export default Transition(AllProjects); 

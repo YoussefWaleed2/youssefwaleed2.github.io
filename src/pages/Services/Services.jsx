@@ -466,7 +466,7 @@ const Services = () => {
 
         <section className="service-section">
           <div className="service-number">03.</div>
-          <h2 className="service-title">MEDIA PRODUCTION</h2>
+          <h2 className="service-title">ADVERTISEMENT</h2>
           <p className="service-description">
             Every brand has a story to tell, but sometimes, that story needs a fresh perspective.
           </p>

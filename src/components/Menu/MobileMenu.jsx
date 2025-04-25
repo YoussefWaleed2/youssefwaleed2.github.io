@@ -311,7 +311,7 @@ const MobileMenu = () => {
           </div>
           <div className="menu-link">
             <Link to="/contact" onClick={(e) => handleNavigation(e, "/contact")}>
-              <h1>Contact</h1>
+              <h1>Get In Touch</h1>
             </Link>
           </div>
           <div className="menu-link">

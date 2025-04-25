@@ -33,6 +33,7 @@
   text-align: center;
   font-size: 1.2rem;
   line-height: 1.8;
+  font-family: "TT Norms", sans-serif;
 }
 
 .clients-grid {
@@ -100,6 +101,8 @@
   line-height: 1.7;
   opacity: 0.8;
   max-width: 500px;
+  font-family: "TT Norms Light", sans-serif;
+  font-weight: 300;
 }
 
 /* Special clients section */
@@ -239,10 +242,11 @@
 .clients-footer p {
   font-size: 1.2rem;
   margin-bottom: 2rem;
+  font-family: "TT Norms", sans-serif;
 }
 
 .contact-button {
-  font-family: "Aboreto", cursive;
+  font-family: 'Sprat', serif;
   border: 2px solid #ffffff;
   background: transparent;
   color: #ffffff;
@@ -297,6 +301,7 @@
   
   .clients-grid {
     gap: 5rem;
+    padding: 1rem;
   }
   
   .client-item, 
@@ -313,7 +318,7 @@
   }
   
   .client-content {
-    padding: 1rem 0;
+    padding: 1.5rem 1rem;
   }
   
   .client-image-box {
@@ -331,31 +336,40 @@
 }
 
 @media (max-width: 600px) {
+  .clients.page {
+    padding-top: 5em;
+  }
+
   .clients-title {
     font-size: 2.5rem;
+    margin-bottom: 1.5rem;
   }
   
   .clients-intro {
     font-size: 1rem;
     padding: 0 1.5rem;
     margin-bottom: 3rem;
+    line-height: 1.6;
   }
   
   .clients-grid {
-    padding: 1rem;
-    gap: 4rem;
+    padding: 0 1rem;
+    gap: 3.5rem;
   }
   
   .client-image-container {
-    height: 300px;
+    height: 250px;
   }
   
   .client-name {
     font-size: 1.8rem;
+    margin-bottom: 1rem;
   }
   
   .client-description {
-    font-size: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    padding: 0 0.5rem;
   }
   
   .client-image-box {
@@ -372,16 +386,27 @@
   }
   
   .special-clients-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .special-clients-title-container {
+    flex-direction: column;
     margin-bottom: 2rem;
   }
   
   .clients-footer {
-    margin: 5rem auto 3rem;
-    padding: 1.5rem;
+    margin: 3rem auto 2rem;
+    padding: 1rem;
   }
   
   .clients-footer h2 {
-    font-size: 2rem;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .clients-footer p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
   }
 }

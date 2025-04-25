@@ -267,7 +267,7 @@ const MobileAbout = ({ images = [] }) => {
           </div>
         </section>
         
-        {/* The Team Section */}
+        {/* The Visionary Mind Section */}
         <section className="section team-section">
           <div 
             className="section-title right-aligned"
@@ -275,57 +275,6 @@ const MobileAbout = ({ images = [] }) => {
           >
             <h2 className="heading-text script">The</h2>
             <h2 className="heading-text">VISIONARY ////////MIND</h2>
-          </div>
-          
-          <div className="team-gallery">
-            <div className="team-image-box">
-              <img 
-                src={getImage(7)} 
-                alt="VZBL Team" 
-                onError={handleImageError}
-                ref={el => imageRefs.current[2] = el}
-              />
-            </div>
-            <div className="team-image-box">
-              <img 
-                src={getImage(8)} 
-                alt="VZBL Team" 
-                onError={handleImageError}
-                ref={el => imageRefs.current[3] = el}
-              />
-            </div>
-            <div className="team-image-box">
-              <img 
-                src={getImage(9)} 
-                alt="VZBL Team" 
-                onError={handleImageError}
-                ref={el => imageRefs.current[4] = el}
-              />
-            </div>
-            <div className="team-image-box">
-              <img 
-                src={getImage(10)} 
-                alt="VZBL Team" 
-                onError={handleImageError}
-                ref={el => imageRefs.current[5] = el}
-              />
-            </div>
-            <div className="team-image-box">
-              <img 
-                src={getImage(11)} 
-                alt="VZBL Team" 
-                onError={handleImageError}
-                ref={el => imageRefs.current[6] = el}
-              />
-            </div>
-            <div className="team-image-box">
-              <img 
-                src={getImage(12)} 
-                alt="VZBL Team" 
-                onError={handleImageError}
-                ref={el => imageRefs.current[7] = el}
-              />
-            </div>
           </div>
         </section>
         
@@ -354,8 +303,80 @@ const MobileAbout = ({ images = [] }) => {
               src={getImage(14)} 
               alt="VZBL Founder" 
               onError={handleImageError}
-              ref={el => imageRefs.current[8] = el}
+              ref={el => imageRefs.current[2] = el}
             />
+          </div>
+        </section>
+        
+        {/* Meet The Team Section */}
+        <section className="section team-section">
+          <div 
+            className="section-title centered"
+            ref={el => titleRefs.current[3] = el}
+          >
+            <h2 className="heading-text">MEET</h2>
+            <h2 className="heading-text script">The</h2>
+            <h2 className="heading-text">TEAM</h2>
+          </div>
+          
+          <div className="content-block centered-text">
+            <p 
+              className="body-text centered animate-text" 
+              ref={el => textRefs.current[5] = el}
+            >
+              OUR TEAM OF CREATIVE PROFESSIONALS BRINGS DIVERSE SKILLS AND PERSPECTIVES TO EVERY PROJECT. TOGETHER, WE COLLABORATE TO TRANSFORM CHALLENGES INTO OPPORTUNITIES AND DELIVER WORK THAT MAKES BRANDS TRULY VISIBLE.
+            </p>
+          </div>
+          
+          <div className="team-gallery">
+            <div className="team-image-box">
+              <img 
+                src={getImage(7)} 
+                alt="VZBL Team" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[9] = el}
+              />
+            </div>
+            <div className="team-image-box">
+              <img 
+                src={getImage(8)} 
+                alt="VZBL Team" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[10] = el}
+              />
+            </div>
+            <div className="team-image-box">
+              <img 
+                src={getImage(9)} 
+                alt="VZBL Team" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[11] = el}
+              />
+            </div>
+            <div className="team-image-box">
+              <img 
+                src={getImage(10)} 
+                alt="VZBL Team" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[12] = el}
+              />
+            </div>
+            <div className="team-image-box">
+              <img 
+                src={getImage(11)} 
+                alt="VZBL Team" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[13] = el}
+              />
+            </div>
+            <div className="team-image-box">
+              <img 
+                src={getImage(12)} 
+                alt="VZBL Team" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[14] = el}
+              />
+            </div>
           </div>
         </section>
         

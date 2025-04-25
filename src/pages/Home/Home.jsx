@@ -7,7 +7,6 @@ import { handleOverlay, shouldShowSplash } from "./../../utils/overlayManager";
 
 const Home = () => {
   const videoRef = useRef(null);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [showSplash, setShowSplash] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -54,20 +53,11 @@ const Home = () => {
     const video = videoRef.current;
     if (!video) return;
 
-    const handleCanPlay = () => {
-      setIsVideoLoaded(true);
-      video.play().catch(console.error);
-    };
-
-    video.addEventListener('canplay', handleCanPlay);
+    // Start playing video as soon as possible
+    video.play().catch(console.error);
     
-    // Preload video
-    if (video.readyState >= 3) {
-      handleCanPlay();
-    }
-
     return () => {
-      video.removeEventListener('canplay', handleCanPlay);
+      // Clean up
     };
   }, []);
 
@@ -76,11 +66,6 @@ const Home = () => {
       <div className="page home">
         {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
         <div className="video-wrapper">
-          {/* {!isVideoLoaded && (
-            <div className="video-placeholder">
-              <img src="home/poster.jpg" alt="Video Poster" />
-            </div>
-          )} */}
           <video 
             ref={videoRef}
             src={isMobile ? "home/Home Mobile vid.webm" : "home/vid.webm"}
@@ -90,7 +75,6 @@ const Home = () => {
             loop 
             playsInline
             preload="auto"
-            style={{ opacity: isVideoLoaded ? 1 : 0 }}
           />
         </div>
       </div>

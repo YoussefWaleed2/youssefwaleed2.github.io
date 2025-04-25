@@ -15,47 +15,21 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
     phone: "",
     aboutYou: "",
     resume: null,
-    interests: []
+    jobTitle: selectedJob || ""
   });
   
   const [loading, setLoading] = useState(false);
   const [popup, setPopup] = useState({ show: false, message: "", type: "" });
 
-  const interestOptions = [
-    "GRAPHIC DESIGN",
-    "Account Management",
-    "Content Creation",
-    "Production",
-    "Video Editing",
-    "UI/UX Design",
-    "HR"
-  ];
-
-  // Set initial interest based on selectedJob if provided
+  // Set initial job title based on selectedJob if provided
   useEffect(() => {
     if (selectedJob && isOpen) {
-      // If the job matches one of our interests, select it
-      const matchingInterest = interestOptions.find(
-        interest => interest.toLowerCase() === selectedJob.toLowerCase()
-      );
-      
-      if (matchingInterest) {
-        setForm(prev => ({
-          ...prev,
-          interests: [matchingInterest]
-        }));
-      }
+      setForm(prev => ({
+        ...prev,
+        jobTitle: selectedJob
+      }));
     }
   }, [selectedJob, isOpen]);
-
-  const handleInterestClick = (interest) => {
-    setForm(prev => ({
-      ...prev,
-      interests: prev.interests.includes(interest)
-        ? prev.interests.filter(i => i !== interest)
-        : [...prev.interests, interest]
-    }));
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -102,8 +76,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
         {
           ...form,
           to_email: "HR@VZBL.CO",
-          selectedJob: selectedJob || "General Application",
-          interests: form.interests.join(", "),
+          selectedJob: form.jobTitle || "General Application",
           resume: form.resume ? form.resume.name : "No file attached"
         },
         emailConfig.publicKey
@@ -122,7 +95,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
             phone: "",
             aboutYou: "",
             resume: null,
-            interests: []
+            jobTitle: ""
           });
           if (onClose) onClose();
         },
@@ -205,24 +178,22 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
               />
             )}
             
-            <button className="close-button" onClick={onClose}>×</button>
+            <button className="close-button" onClick={onClose}>
+              <span style={{ fontSize: "24px", fontWeight: "bold" }}>✕</span>
+            </button>
             <h2>{selectedJob ? `JOIN AS ${selectedJob.toUpperCase()}` : "SEND EMAIL"}</h2>
 
             <form onSubmit={handleSubmit}>
-              <div className="interest-section">
-                <p>I'm interested in...</p>
-                <div className="interest-options">
-                  {interestOptions.map((interest) => (
-                    <button
-                      key={interest}
-                      type="button"
-                      className={`interest-option ${form.interests.includes(interest) ? 'selected' : ''}`}
-                      onClick={() => handleInterestClick(interest)}
-                    >
-                      {interest}
-                    </button>
-                  ))}
-                </div>
+              <div className="form-group-joinus">
+                <label>JOB TITLE</label>
+                <input
+                  type="text"
+                  name="jobTitle"
+                  value={form.jobTitle}
+                  onChange={handleChange}
+                  placeholder="Enter job title"
+                  required
+                />
               </div>
 
               <div className="form-row">
@@ -277,7 +248,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
                 </div>
               </div>
               <div className="form-group-joinus">
-                <label>CV / Protofolio</label>
+                <label>CV / Portfolio</label>
                 <div 
                   className="file-input-label"
                   onClick={() => fileInputRef.current.click()}
@@ -305,7 +276,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
                 className="submit-btn"
                 disabled={loading}
               >
-                {loading ? "SENDING..." : "SEND US"}
+                {loading ? "SENDING..." : "SEND US YOUR CV"}
               </button>
             </form>
           </motion.div>

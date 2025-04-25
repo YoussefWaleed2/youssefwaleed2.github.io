@@ -8,7 +8,7 @@
   margin: 2em auto;
   background-color: rgb(18, 18, 18);
   border-radius: 24px;
-  font-family: "TT Norms Light", sans-serif;
+  font-family: "Audrey", sans-serif;
   max-width: 800px;
   width: calc(100% - 4em);
 }
@@ -20,24 +20,29 @@
 .contact-form select,
 .contact-form textarea,
 .contact-form button {
-  font-family: "TT Norms Light", sans-serif;
+  font-family: "Audrey", sans-serif;
 }
 
 .contact-form input,
 .contact-form textarea {
-  background-color: var(--fg200);
+  background-color: transparent;
   color: white;
   border: none;
-  padding: 1em;
+  border-bottom: 1px solid rgba(255, 255, 255, 1);
+  padding: 0;
+  padding-bottom: 0.25em;
   width: 100%;
   font-size: 1rem;
-  font-family: "TT Norms Light", sans-serif;
+  font-family: "Audrey", sans-serif;
+  line-height: 1.5;
+  transition: all 0.3s ease;
+  border-radius: 0;
 }
 
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
   color: rgba(255, 255, 255, 0.7);
-  font-family: "TT Norms Light", sans-serif;
+  font-family: "Audrey", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -45,15 +50,16 @@
 .contact-form input:focus,
 .contact-form textarea:focus {
   outline: none;
-  background-color: var(--fg200);
-  color: white;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 1);
+  box-shadow: none;
+  background-color: transparent;
 }
 
 .contact-form .btn {
   background-color: var(--bg);
   color: var(--fg);
-  font-family: "TT Norms Light", sans-serif;
+  font-family: "Audrey", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 1em 2em;
@@ -120,7 +126,7 @@
   margin-bottom: 0.25em;
   color: white;
   font-size: 0.85rem;
-  font-family: "TT Norms Light", sans-serif;
+  font-family: "Audrey", sans-serif;
   text-transform: uppercase;
 }
 
@@ -130,24 +136,28 @@
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 1);
   color: white;
   font-size: 1rem;
-  padding: 0.5em 0;
+  padding: 0;
+  padding-bottom: 0.25em;
   transition: all 0.3s ease;
+  border-radius: 0;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
+  border: none;
   border-bottom: 1px solid rgba(255, 255, 255, 1);
+  box-shadow: none;
 }
 
 .form-group input::placeholder,
 .form-group select::placeholder {
   color: rgba(255, 255, 255, 0.5);
-  font-family: "TT Norms Light", sans-serif;
+  font-family: "Audrey", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -162,12 +172,13 @@
   background-position: right 0.5em center;
   background-size: 12px;
   padding-right: 2em;
+  background-color: transparent;
 }
 
 .form-group select option {
   background-color: rgb(18, 18, 18);
   color: white;
-  font-family: "TT Norms Light", sans-serif;
+  font-family: "Audrey", sans-serif;
   padding: 0.5em;
 }
 
@@ -202,20 +213,26 @@
   width: auto;
   margin-right: 0.5em;
   cursor: pointer;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .submit-btn {
   width: 100%;
-  padding: 1em;
+  padding: 1.25em;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
   color: white;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-top: 1em;
+  margin-top: 2em;
+  margin-bottom: 10px;
+  font-family: "Audrey", sans-serif;
+  position: relative;
 }
 
 .submit-btn:hover:not(:disabled) {
@@ -286,7 +303,7 @@
   border-radius: 4px;
   font-size: 0.9rem;
   transition: all 0.3s ease;
-  font-family: "TT Norms", sans-serif;
+  font-family: "Audrey", sans-serif;
 }
 
 .form-message.success {
@@ -309,7 +326,7 @@
 
 .contact-form-row-copy-item p.primary.sm,
 .contact-form-availability p.primary.sm {
-  font-family: "TT Norms Light", sans-serif;
+  font-family: "Audrey", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }

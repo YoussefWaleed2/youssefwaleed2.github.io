@@ -23,7 +23,8 @@ body.form-open {
   margin: auto;
   width: 90%;
   max-width: 600px;
-  height: 90vh;
+  max-height: 90vh;
+  height: auto;
   background-color: rgb(18, 18, 18);
   border-radius: 24px;
   padding: 2.5em;
@@ -32,7 +33,7 @@ body.form-open {
   font-family: "TT Norms Light", sans-serif;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .join-us-form-content {
@@ -208,9 +209,11 @@ body.form-open {
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 2em;
+  margin-bottom: 10px;
   font-family: "TT Norms Light", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  position: relative;
 }
 
 .submit-btn:hover:not(:disabled) {
@@ -271,5 +274,32 @@ body.form-open {
 
   .form-group-joinus {
     margin-bottom: 1em;
+  }
+}
+
+@media (max-height: 700px) {
+  .join-us-form {
+    height: 95vh;
+    padding: 1.5em;
+  }
+  
+  .interest-section {
+    margin-bottom: 1.5em;
+  }
+  
+  .form-group-joinus {
+    margin-bottom: 1em;
+  }
+  
+  .submit-btn {
+    margin-top: 1em;
+  }
+}
+
+/* For very small screens */
+@media (max-height: 600px) {
+  .join-us-form {
+    height: 98vh;
+    padding: 1.2em;
   }
 } 

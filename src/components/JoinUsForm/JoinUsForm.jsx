@@ -5,7 +5,7 @@ import Popup from "../Popup/Popup";
 import { motion, AnimatePresence } from "framer-motion";
 import "./JoinUsForm.css";
 
-const JoinUsForm = ({ isOpen, onClose, position = {} }) => {
+const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
   const formRef = useRef();
   const fileInputRef = useRef();
   const [form, setForm] = useState({
@@ -30,6 +30,23 @@ const JoinUsForm = ({ isOpen, onClose, position = {} }) => {
     "UI/UX Design",
     "HR"
   ];
+
+  // Set initial interest based on selectedJob if provided
+  useEffect(() => {
+    if (selectedJob && isOpen) {
+      // If the job matches one of our interests, select it
+      const matchingInterest = interestOptions.find(
+        interest => interest.toLowerCase() === selectedJob.toLowerCase()
+      );
+      
+      if (matchingInterest) {
+        setForm(prev => ({
+          ...prev,
+          interests: [matchingInterest]
+        }));
+      }
+    }
+  }, [selectedJob, isOpen]);
 
   const handleInterestClick = (interest) => {
     setForm(prev => ({
@@ -85,6 +102,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {} }) => {
         {
           ...form,
           to_email: "HR@VZBL.CO",
+          selectedJob: selectedJob || "General Application",
           interests: form.interests.join(", "),
           resume: form.resume ? form.resume.name : "No file attached"
         },
@@ -174,9 +192,10 @@ const JoinUsForm = ({ isOpen, onClose, position = {} }) => {
           <motion.div
             className="join-us-form"
             style={position}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            variants={formVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
           >
             {popup.show && (
               <Popup
@@ -187,7 +206,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {} }) => {
             )}
             
             <button className="close-button" onClick={onClose}>×</button>
-            <h2>SEND EMAIL</h2>
+            <h2>{selectedJob ? `JOIN AS ${selectedJob.toUpperCase()}` : "SEND EMAIL"}</h2>
 
             <form onSubmit={handleSubmit}>
               <div className="interest-section">
@@ -281,8 +300,12 @@ const JoinUsForm = ({ isOpen, onClose, position = {} }) => {
                 </div>
               </div>
 
-              <button className="submit-btn" type="submit" disabled={loading}>
-                {loading ? "Sending..." : "SEND US"}
+              <button 
+                type="submit" 
+                className="submit-btn"
+                disabled={loading}
+              >
+                {loading ? "SENDING..." : "SEND US"}
               </button>
             </form>
           </motion.div>

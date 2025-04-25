@@ -97,6 +97,7 @@
   justify-content: center;
   background: rgba(0, 0, 0, 0.3);
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .project-video-container::after {
@@ -117,6 +118,36 @@
   object-fit: cover;
   object-position: center;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Video container and thumbnail styles */
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.video-thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 2;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.project-video-container:hover .video-thumbnail {
+  opacity: 0;
+}
+
+.video-container video {
+  position: relative;
+  z-index: 1;
+  opacity: 1;
 }
 
 .play-button {
@@ -203,7 +234,9 @@
   
   .project-video-container,
   .project-video-container img,
-  .project-video-container video {
+  .project-video-container video,
+  .video-container,
+  .video-thumbnail {
     width: 100%;
     height: auto;
     aspect-ratio: 1/1;

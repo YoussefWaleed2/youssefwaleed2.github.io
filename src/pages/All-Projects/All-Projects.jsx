@@ -14,6 +14,7 @@ const AllProjects = () => {
   const containerRef = useRef(null);
   const videoRef = useRef(null);
   const titleRef = useRef(null);
+  const videoRefs = useRef({});
 
   // Handle overlay on mount and unmount
   useEffect(() => {
@@ -112,41 +113,52 @@ const AllProjects = () => {
     ));
   };
 
-  const renderMedia = (project) => {
-    if (project.mediaType === 'video') {
-      // Log the exact path being used
-      console.log('Attempting to load video from:', project.media);
-      
-      // Test if the file exists
-      // fetch(project.media)
-      //   .then(response => {
-      //     console.log('Video file response:', response.status);
-      //     if (!response.ok) {
-      //       throw new Error(`HTTP error! status: ${response.status}`);
-      //     }
-      //   })
-      //   .catch(error => console.error('Error checking video file:', error));
+  const handleVideoHover = (index, isHovering) => {
+    const videoElement = videoRefs.current[index];
+    if (videoElement) {
+      if (isHovering) {
+        videoElement.play().catch(err => {
+          console.log("Autoplay prevented:", err);
+        });
+      } else {
+        // Optional: pause when not hovering
+        // videoElement.pause();
+      }
+    }
+  };
 
+  const renderMedia = (project, index) => {
+    if (project.mediaType === 'video') {
       return (
-        <video
-          className="project-media"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          onError={(e) => {
-            console.error('Video loading error:', {
-              error: e.target.error,
-              src: project.media,
-              networkState: e.target.networkState,
-              readyState: e.target.readyState
-            });
-          }}
-        >
-          <source src={project.media} type="video/webm" />
-          Your browser does not support the video tag.
-        </video>
+        <div className="video-container">
+          {project.thumbnail && (
+            <img 
+              className="video-thumbnail"
+              src={project.thumbnail} 
+              alt={`${project.title} thumbnail`}
+            />
+          )}
+          <video
+            className="project-media"
+            ref={el => videoRefs.current[index] = el}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={project.thumbnail}
+            onError={(e) => {
+              console.error('Video loading error:', {
+                error: e.target.error,
+                src: project.media,
+                networkState: e.target.networkState,
+                readyState: e.target.readyState
+              });
+            }}
+          >
+            <source src={project.media} type="video/webm" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
       );
     }
     return (
@@ -175,15 +187,19 @@ const AllProjects = () => {
                   '--delay': `${index * 0.1}s`
                 }}
               >
-                <div className="project-video-container">
-                  {renderMedia(project)}
+                <div 
+                  className="project-video-container"
+                  onMouseEnter={() => handleVideoHover(index, true)}
+                  onMouseLeave={() => handleVideoHover(index, false)}
+                >
+                  {renderMedia(project, index)}
                 </div>
                 <div className="project-info">
                   <div className="project-number">
                     {(index + 1).toString().padStart(2, '0')}.
                   </div>
                   <h3>{project.title.toUpperCase()}</h3>
-                  <p>{project.description}</p>
+                  {project.description && <p>{project.description}</p>}
                 </div>
               </div>
             ))}

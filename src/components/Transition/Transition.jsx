@@ -13,18 +13,36 @@ const Transition = (Component) => {
     const videoRef = useRef(null);
     const { pageVariants, pageTransition } = usePageTransition();
 
-    // Custom variants for Projects page
-    const customVariants = {
-      initial: {
-        x: location.pathname === '/projects' ? 0 : '100vw',
-      },
-      animate: {
-        x: 0,
-      },
-      exit: {
-        x: location.pathname === '/projects' ? 0 : '-100vw',
-      }
+    // Dynamic variants based on current page and destination
+    const getDynamicVariants = () => {
+      const isProjects = location.pathname === '/projects';
+      
+      return {
+        initial: {
+          x: '100vw', // Always start from right
+          opacity: isProjects ? 0 : 1, // Projects has special handling
+        },
+        animate: {
+          x: 0,
+          opacity: 1,
+          transition: {
+            duration: 0.5,
+            ease: "easeInOut"
+          }
+        },
+        exit: {
+          x: '-100vw', // Always exit to left
+          opacity: isProjects ? 0 : 1,
+          transition: {
+            duration: 0.5,
+            ease: "easeInOut"
+          }
+        }
+      };
     };
+
+    // Get the dynamic variants
+    const variants = getDynamicVariants();
 
     useEffect(() => {
       const timeline = gsap.timeline();
@@ -34,20 +52,22 @@ const Transition = (Component) => {
         const homeVideo = document.querySelector('.home-video');
         if (homeVideo) {
           const projectVideo = document.querySelector('.project-video');
-          gsap.set(projectVideo, {
-            opacity: 0
-          });
+          if (projectVideo) {
+            gsap.set(projectVideo, {
+              opacity: 0
+            });
 
-          timeline
-            .to(homeVideo, {
-              filter: "blur(10px)",
-              duration: 1,
-              ease: "power2.inOut"
-            })
-            .to(projectVideo, {
-              opacity: 1,
-              duration: 0.5
-            }, "-=0.5");
+            timeline
+              .to(homeVideo, {
+                filter: "blur(10px)",
+                duration: 1,
+                ease: "power2.inOut"
+              })
+              .to(projectVideo, {
+                opacity: 1,
+                duration: 0.5
+              }, "-=0.5");
+          }
         }
         isEntering.current = false;
       }
@@ -80,7 +100,7 @@ const Transition = (Component) => {
         initial="initial"
         animate="animate"
         exit="exit"
-        variants={customVariants}
+        variants={variants}
         transition={pageTransition}
       >
         <Component />

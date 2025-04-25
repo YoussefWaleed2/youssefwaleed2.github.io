@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { useNavigate } from "react-router-dom";
 import projectsData from "../../data/projectsData.json";
 import { handleOverlay } from "./../../utils/overlayManager";
+import ReactLenis from "lenis/react";
 
 // Debug log to check if this file is being loaded correctly
 console.log("Projects.jsx loaded, projectsData:", Object.keys(projectsData));
@@ -254,102 +255,105 @@ const Projects = () => {
       opacity: 0
     });
 
-    // Animate the video background
-    gsap.to(videoRef.current, {
-      filter: "blur(100px)",
-      duration: 1,
-      ease: "power2.inOut"
-    });
-
-    // Set initial transforms
-    gsap.set(titleRef.current, { 
-      y: -50, 
-      visibility: "visible",
-      opacity: 0
-    });
-    gsap.set(prevBtnRef.current, { 
-      x: -50, 
-      visibility: "visible",
-      opacity: 0,
-    });
-    gsap.set(nextBtnRef.current, { 
-      x: -50, 
-      visibility: "visible",
-      opacity: 0
-    });
-    gsap.set(counterRef.current, { y: 30, visibility: "visible" });
-    gsap.set(previewRef.current, { scale: 0, visibility: "visible" });
-
-    // Set initial states for all images
-    imageRefs.current.forEach((ref, index) => {
-      if (index === 0) {
-        gsap.set(ref.current, { 
-          y: 0, 
-          visibility: "visible",
-          zIndex: 2,
-          scale: 1,
-          rotation: 0,
-        });
-      } else {
-        gsap.set(ref.current, { 
-          y: 500,
-          visibility: "hidden",
-          zIndex: 1 - index,
-          scale: 1,
-          rotation: 0
-        });
-      }
-    });
-
-    const tl = gsap.timeline({
-      defaults: { 
-        ease: "power2.out",
-        duration: 0.8
-      }
-    });
-
-    // Initial animation
-    tl.to(titleRef.current, {
-      opacity: 1,
-      y: 0,
-      delay: 0.8,
-      ease: "power3.out"
-    })
-    .to(prevBtnRef.current, {
-      opacity: 0.3,
-      x: 0,
-      duration: 0.5,
-      ease: "power2.inOut"
-    }, "-=0.7")
-    .to(nextBtnRef.current, {
-      opacity: 0.7,
-      x: 0,
-      duration: 0.5,
-      ease: "power2.inOut"
-    }, "-=0.5")
-    .fromTo(imageRefs.current[0].current,
-      {
-        y: 1000,
-        scale: 1
-      },
-      {
-        y: 0,
-        scale: 1,
-        opacity: 1,
+    // Wait a short delay to ensure transition has completed
+    setTimeout(() => {
+      // Animate the video background
+      gsap.to(videoRef.current, {
+        filter: "blur(100px)",
         duration: 1,
+        ease: "power2.inOut"
+      });
+
+      // Set initial transforms
+      gsap.set(titleRef.current, { 
+        y: -50, 
+        visibility: "visible",
+        opacity: 0
+      });
+      gsap.set(prevBtnRef.current, { 
+        x: -50, 
+        visibility: "visible",
+        opacity: 0,
+      });
+      gsap.set(nextBtnRef.current, { 
+        x: -50, 
+        visibility: "visible",
+        opacity: 0
+      });
+      gsap.set(counterRef.current, { y: 30, visibility: "visible" });
+      gsap.set(previewRef.current, { scale: 0, visibility: "visible" });
+
+      // Set initial states for all images
+      imageRefs.current.forEach((ref, index) => {
+        if (index === 0) {
+          gsap.set(ref.current, { 
+            y: 0, 
+            visibility: "visible",
+            zIndex: 2,
+            scale: 1,
+            rotation: 0,
+          });
+        } else {
+          gsap.set(ref.current, { 
+            y: 500,
+            visibility: "hidden",
+            zIndex: 1 - index,
+            scale: 1,
+            rotation: 0
+          });
+        }
+      });
+
+      const tl = gsap.timeline({
+        defaults: { 
+          ease: "power2.out",
+          duration: 0.8
+        }
+      });
+
+      // Initial animation
+      tl.to(titleRef.current, {
+        opacity: 1,
+        y: 0,
+        delay: 0.3, // Reduced from 0.8 to speed up after transition
         ease: "power3.out"
-      }, "-=0.2")
-    .to(counterRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.6
-    }, "-=0.4")
-    .to(previewRef.current, {
-      opacity: 1,
-      scale: 1,
-      duration: 0.6,
-      ease: "back.out(1.7)"
-    }, "-=0.3");
+      })
+      .to(prevBtnRef.current, {
+        opacity: 0.3,
+        x: 0,
+        duration: 0.5,
+        ease: "power2.inOut"
+      }, "-=0.7")
+      .to(nextBtnRef.current, {
+        opacity: 0.7,
+        x: 0,
+        duration: 0.5,
+        ease: "power2.inOut"
+      }, "-=0.5")
+      .fromTo(imageRefs.current[0].current,
+        {
+          y: 1000,
+          scale: 1
+        },
+        {
+          y: 0,
+          scale: 1,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out"
+        }, "-=0.2")
+      .to(counterRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6
+      }, "-=0.4")
+      .to(previewRef.current, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.6,
+        ease: "back.out(1.7)"
+      }, "-=0.3");
+    }, 100); // Short delay to let transition component work
 
   }, []);
 
@@ -395,7 +399,7 @@ const Projects = () => {
   }, []);
 
   return (
-    <>
+    <ReactLenis root options={{ duration: 1.2 }}>
       <div className="video-background">
         <video
           ref={videoRef}
@@ -485,7 +489,7 @@ const Projects = () => {
           </div>
         </div>
       </div>
-    </>
+    </ReactLenis>
   );
 };
 

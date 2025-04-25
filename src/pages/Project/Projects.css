@@ -170,8 +170,9 @@ body {
 
 .project-title {
   font-size: 3rem;
-  font-family: "Sprat Condensed", sans-serif;
-  font-weight: 300;
+  font-family: "Sprat", serif;
+  
+  font-weight: 500;
   letter-spacing: 0.1em;
   margin-top: 6rem;
   text-align: center;

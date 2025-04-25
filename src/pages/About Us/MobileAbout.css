@@ -1,11 +1,32 @@
 /* Mobile About Us Page Styles */
 .mobile-about.dark-theme {
-  width: 100%;
-  min-height: 100vh;
-  overflow-x: hidden;
+  width: 100% !important;
+  min-height: 100vh !important;
+  overflow-x: hidden !important;
   background-color: #0a0a0a;
   color: #ffffff;
-  font-family: 'TT Norms', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Audrey', 'Golden Plains', serif;
+  display: block !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Force proper sizing on all viewports */
+html, body {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+@media (max-width: 1024px) {
+  html, body {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
 }
 
 /* Loading Screen */
@@ -84,31 +105,48 @@
 /* Main Content */
 .mobile-about-content {
   padding-top: 4rem;
+  opacity: 0;
+  visibility: visible;
+  transition: opacity 0.5s ease;
+}
+
+.mobile-about-content.loaded {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* Common Section Styles */
 .section {
   padding: 1.5rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
 }
 
 /* Typography */
 .heading-text {
   font-size: 2.5rem;
+  font-family: 'Audrey', serif;
   font-weight: 500;
   letter-spacing: 0.1rem;
   margin: 0;
   line-height: 1;
   text-transform: uppercase;
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
 .heading-text.script {
-  font-family: 'Golden Plains', 'Cormorant Garamond', serif;
+  font-family: 'Golden Plains', 'Audrey', serif;
   font-style: italic;
   font-weight: 400;
   text-transform: none;
   font-size: 3rem;
   margin: 0 0.5rem;
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
 .subheading {
@@ -117,6 +155,7 @@
   letter-spacing: 0.1rem;
   margin-bottom: 1rem;
   text-align: center;
+  font-family: 'Audrey', serif;
 }
 
 .body-text {
@@ -126,6 +165,7 @@
   font-weight: 300;
   letter-spacing: 0.05rem;
   color: rgba(255, 255, 255, 0.8);
+  font-family: 'Audrey', serif;
 }
 
 .body-text.centered {
@@ -144,6 +184,28 @@
   display: flex;
   align-items: baseline;
   margin: 2rem 0;
+  position: relative;
+  padding: 2rem 1rem;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.section-title-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.section-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  opacity: 0.85;
+  filter: contrast(1.1) brightness(1.05);
 }
 
 .section-title.right-aligned {
@@ -155,6 +217,31 @@
   flex-wrap: wrap;
 }
 
+/* Centered elements */
+.section-title.centered {
+  justify-content: center;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content-block.centered-text {
+  text-align: center;
+  padding: 0 1rem;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.body-text.centered {
+  text-align: center;
+}
+
+.centered-image {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 90%;
+}
+
 /* Content Blocks */
 .content-block {
   max-width: 100%;
@@ -162,13 +249,15 @@
 }
 
 .content-block.left-aligned {
-  text-align: left;
-  padding-right: 25%;
+  text-align: center;
+  padding-right: 0%;
+  font-family: 'Audrey', serif;
 }
 
 .content-block.right-aligned {
   text-align: right;
-  padding-left: 25%;
+  padding-left: 0%;
+  font-family: 'Audrey', serif;
 }
 
 /* Grid Gallery Styles */
@@ -210,14 +299,16 @@
 
 /* Since 2017 Section */
 .since-section {
-  padding: 3rem 1.5rem;
+  padding: 1.5rem 1.5rem;
   position: relative;
+  margin-bottom: 1.5rem;
+  margin-top: 0.5rem;
 }
 
 .since-container {
   background-color: rgba(20, 20, 20, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 2rem;
+  padding: 1.5rem;
   text-align: center;
   border-radius: 5px;
   backdrop-filter: blur(10px);
@@ -225,28 +316,279 @@
   margin: 0 auto;
 }
 
-/* Founder Section */
-.founder-section {
-  margin-bottom: 0;
+/* Team and Founder Sections */
+.team-section, .founder-section {
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.founder-content {
+.team-gallery {
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
-.founder-image {
+.team-image-box {
   width: 100%;
-  aspect-ratio: 1.2/1;
+  height: auto;
+  aspect-ratio: 16/10;
   overflow: hidden;
   background-color: #1a1a1a;
-  margin-top: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.founder-image img {
+.team-image-box img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.team-image-box:hover img {
+  transform: scale(1.03);
+}
+
+/* Founder-specific styling */
+.founder-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.founder-team-image {
+  margin-top: 1.5rem;
+  max-width: 90%;
+  aspect-ratio: 9/16;
+  max-height: 70vh;
+}
+
+.founder-team-image img {
+  object-position: 60% center;
+  object-fit: cover;
+}
+
+/* Media queries for Team and Founder sections */
+@media (min-width: 481px) and (max-width: 768px) {
+  .team-section, .founder-section {
+    padding: 2.5rem 2rem;
+  }
+  
+  .team-gallery {
+    gap: 2rem;
+  }
+  
+  .team-image-box {
+    aspect-ratio: 16/9;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .team-section, .founder-section {
+    padding: 3rem;
+  }
+  
+  .team-gallery {
+    gap: 2.5rem;
+  }
+  
+  .team-image-box {
+    aspect-ratio: 16/9;
+    max-width: 90%;
+    margin: 0 auto;
+  }
+}
+
+/* Call Us Visible Title */
+.call-us-visible-container {
+  width: 100%;
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+  background-color: #0a0a0a;
+  position: relative;
+  overflow: hidden;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+}
+
+.call-us-visible-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 85% center;
+  opacity: 0.85;
+  filter: contrast(1.1) brightness(1.05);
+}
+
+.call-us-visible-title {
+  font-family: Helvetica, sans-serif;
+  font-size: 3.5rem;
+  font-weight: 500;
+  line-height: 0.9;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  letter-spacing: -1px;
+  color: #000000;
+  position: relative;
+  z-index: 2;
+  
+}
+
+.call-us-visible-subtitle {
+  font-family: Helvetica, sans-serif;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+  letter-spacing: 0.05rem;
+  color: #000000;
+  position: relative;
+  z-index: 2;
+  
+}
+
+.asterisk {
+  font-size: 2.5rem;
+  position: relative;
+  top: -0.5rem;
+  margin-left: 0.2rem;
+}
+
+/* Media queries for Call Us Visible */
+@media (min-width: 481px) and (max-width: 768px) {
+  .call-us-visible-title {
+    font-size: 4.5rem;
+  }
+  
+  .call-us-visible-subtitle {
+    font-size: 1.4rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .call-us-visible-title {
+    font-size: 5.5rem;
+  }
+  
+  .call-us-visible-subtitle {
+    font-size: 1.6rem;
+  }
+}
+
+/* About The Hand section with background */
+.about-hand-container {
+  width: 100%;
+  margin: 0.5rem 0 1.5rem 0;
+  background-color: #0a0a0a;
+  position: relative;
+  overflow: hidden;
+  min-height: 50vh; /* Smaller height */
+  max-height: 300px; /* Limit maximum height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0;
+  border-radius: 4px;
+}
+
+.about-hand-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.about-hand-bg-image {
+  width: 100%;
+  height: 110%;
+  object-fit: cover;
+  object-position: 100% center; /* Focus on right side of image */
+  opacity: 0.9;
+  filter: contrast(1.2) brightness(1.05);
+}
+
+.hand-title {
+  background-color: transparent;
+  padding: 0;
+  margin: 2rem 0 1rem 0;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.hand-content {
+  text-align: center;
+  padding: 0 0 2rem 0;
+  margin-top: 1rem;
+}
+
+.hand-content .body-text {
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: none;
+  text-align: center;
+}
+
+/* Media queries for About Hand section */
+@media (min-width: 481px) and (max-width: 768px) {
+  .about-hand-container {
+    min-height: 45vh;
+    max-height: 350px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .about-hand-container {
+    min-height: 50vh;
+    max-height: 400px;
+  }
+}
+
+/* Ensure proper loading for direct navigation */
+body.about-page-active {
+  overflow-x: hidden !important;
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: #0a0a0a;
+}
+
+body.about-page-loaded .mobile-about-content {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Fix for direct navigation loading */
+.mobile-about-content {
+  opacity: 0;
+  visibility: visible;
+  transition: opacity 0.5s ease;
+}
+
+.mobile-about-content.loaded {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* About Hand Section */
+.about-hand-section {
+  margin-bottom: 0.5rem;
 }
 
 /* Media Queries for different device sizes */
@@ -273,6 +615,19 @@
   
   .top-gallery {
     grid-template-columns: repeat(3, 1fr);
+  }
+  
+  /* Team and founder specific */
+  .team-section, .founder-section {
+    padding: 2.5rem 2rem;
+  }
+  
+  .team-gallery {
+    gap: 2rem;
+  }
+  
+  .team-image-box {
+    aspect-ratio: 16/9;
   }
 }
 
@@ -301,17 +656,18 @@
     grid-template-columns: repeat(3, 1fr);
   }
   
-  .founder-content {
-    flex-direction: row;
-    gap: 2rem;
+  /* Team and founder specific */
+  .team-section, .founder-section {
+    padding: 3rem;
   }
   
-  .founder-content .content-block {
-    flex: 1;
+  .team-gallery {
+    gap: 2.5rem;
   }
   
-  .founder-image {
-    flex: 1;
-    margin-top: 0;
+  .team-image-box {
+    aspect-ratio: 16/9;
+    max-width: 90%;
+    margin: 0 auto;
   }
-} 
+}

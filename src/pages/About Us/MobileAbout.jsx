@@ -5,176 +5,204 @@ import Footer from '../../components/Footer/Footer';
 import './MobileAbout.css';
 
 const MobileAbout = ({ images = [] }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
   const contentRef = useRef(null);
 
-  // Preload images
+  // Add viewport meta tag for proper mobile rendering
   useEffect(() => {
-    if (!Array.isArray(images) || images.length === 0) {
-      setIsLoaded(true);
-      return;
+    // Check if viewport meta exists
+    let viewportMeta = document.querySelector('meta[name="viewport"]');
+    
+    // If not, create one
+    if (!viewportMeta) {
+      viewportMeta = document.createElement('meta');
+      viewportMeta.name = 'viewport';
+      document.getElementsByTagName('head')[0].appendChild(viewportMeta);
     }
-
-    const imagePromises = images.map(src => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = src;
-        img.onload = resolve;
-        img.onerror = reject;
-      });
-    });
-
-    Promise.all(imagePromises)
-      .then(() => {
-        setIsLoaded(true);
-      })
-      .catch(error => {
-        console.error("Error loading images:", error);
-        setIsLoaded(true); // Continue anyway
-      });
-  }, [images]);
+    
+    // Set content attribute with width=device-width
+    viewportMeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+  }, []);
 
   // Animation for page content
   useEffect(() => {
-    if (isLoaded && contentRef.current) {
-      gsap.fromTo(
-        contentRef.current,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }
-      );
+    if (contentRef.current) {
+      try {
+        // Force layout recalculation before animation
+        document.body.offsetHeight;
+        
+        gsap.fromTo(
+          contentRef.current,
+          { opacity: 0, y: 20 },
+          { 
+            opacity: 1, 
+            y: 0, 
+            duration: 0.8, 
+            ease: "power2.out",
+            onComplete: () => {
+              // Add a class to the body to indicate the page is loaded
+              document.body.classList.add('about-page-loaded');
+            }
+          }
+        );
+      } catch (error) {
+        console.error("Animation error:", error);
+        // Still mark as loaded even if animation fails
+        document.body.classList.add('about-page-loaded');
+      }
     }
-  }, [isLoaded]);
+  }, []);
+
+  // Ensure proper page setup for direct navigation
+  useEffect(() => {
+    // Set a proper document title
+    document.title = "About Us | VZBL";
+    
+    // Force scrolling to the top
+    window.scrollTo(0, 0);
+    
+    // Add class to body for page-specific styling
+    document.body.classList.add('about-page-active');
+    
+    return () => {
+      // Clean up class when component unmounts
+      document.body.classList.remove('about-page-active');
+      document.body.classList.remove('about-page-loaded');
+    };
+  }, []);
 
   // Fallback image
   const defaultImage = "/about/1.webp";
   
-  // Helper function to safely get an image
+  // Helper function to get image path
   const getImage = (index) => {
-    if (!Array.isArray(images) || images.length === 0) return defaultImage;
-    return images[index] || images[0] || defaultImage;
+    return `/about/${index + 1}.webp`;
+  };
+
+  // Handle image errors
+  const handleImageError = (e) => {
+    e.target.src = defaultImage;
   };
 
   return (
     <div className="mobile-about dark-theme">
-      {isLoaded ? (
-        <div className="mobile-about-content" ref={contentRef}>
-          {/* Header with logo */}
-          <div className="mobile-header">
-           
+      <div className="mobile-about-content" ref={contentRef}>
+        {/* Header with logo */}
+        <div className="mobile-header">
+         
+        </div>
+        
+        {/* About The Hand Section */}
+        <section className="section about-hand-section">
+          <div className="call-us-visible-container">
+            <div className="call-us-visible-bg">
+              <img src="/about/1.webp" alt="Background" className="bg-image" onError={handleImageError} />
+            </div>
+            <h1 className="call-us-visible-title">
+              CALL US<br />VISIBLE<span className="asterisk">*</span>
+            </h1>
+            <p className="call-us-visible-subtitle">(VIZ.Ə.BƏL)</p>
           </div>
           
-          {/* About The Hand Section */}
-          <section className="section about-hand-section">
-            <div className="grid-gallery top-gallery">
-              <div className="image-box">
-                <img src={getImage(0)} alt="About VZBL" />
-              </div>
-              <div className="image-box">
-                <img src={getImage(1)} alt="About VZBL" />
-              </div>
-              <div className="image-box">
-                <img src={getImage(2)} alt="About VZBL" />
-              </div>
-              <div className="image-box tall">
-                <img src={getImage(3)} alt="About VZBL" />
-              </div>
-              <div className="image-box">
-                <img src={getImage(4)} alt="About VZBL" />
-              </div>
-            </div>
-            
-            <div className="content-block left-aligned">
-              <p className="body-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam malesuada nibh auctor lacinia sit amet. Morbi vulputate libero magna. Duis vel felis consequat, viverra sem a, blandit ex imperdiet vehicula quis malesuad alesce blandit odio.
-              </p>
-            </div>
-            
-            <div className="section-title">
-              <h2 className="heading-text">ABOUT</h2>
-              <h2 className="heading-text script">The</h2>
-              <h2 className="heading-text">HAND</h2>
-            </div>
-            
-            <div className="content-block right-aligned">
-              <p className="body-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam malesuada nibh auctor lacinia sit amet. Morbi vulputate libero magna. Duis vel felis consequat, viverra sem a, blandit ex. Id qui anim est voluptate veniam, quid nostrud exercit ullamce dolore magna aliqua.
-              </p>
-            </div>
-          </section>
-          
-          {/* Since 2017 Section */}
-          <section className="section since-section">
-            <div className="since-container">
-              <h3 className="subheading">SINCE 2017</h3>
-              <p className="body-text centered">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam malesuada nibh auctor lacinia sit amet. Morbi vulputate libero magna. Duis vel felis consequat, viverra sem a, blandit ex. Ut enim anim quis nostrud, quid nostrud exercit ullamc commodo anim sit.
-              </p>
-            </div>
-          </section>
-          
-          {/* The Brand Section */}
-          <section className="section brand-section">
-            <div className="content-block left-aligned">
-              <p className="body-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam malesuada nibh auctor lacinia sit amet. Morbi vulputate libero magna. Duis vel felis consequat, viverra sem a, blandit ex. Id qui anim est voluptate veniam, quid nostrud exercit ullamce dolore magna aliqua.
-              </p>
-            </div>
-            
-            <div className="section-title right-aligned">
-              <h2 className="heading-text script">The</h2>
-              <h2 className="heading-text">BRAND</h2>
-            </div>
-            
-            <div className="grid-gallery brand-gallery">
-              <div className="image-box">
-                <img src={getImage(5)} alt="VZBL Brand" />
-              </div>
-              <div className="image-box">
-                <img src={getImage(6)} alt="VZBL Brand" />
-              </div>
-              <div className="image-box">
-                <img src={getImage(7)} alt="VZBL Brand" />
-              </div>
-              <div className="image-box">
-                <img src={getImage(8)} alt="VZBL Brand" />
-              </div>
-            </div>
-          </section>
-          
-          {/* About The Founder Section */}
-          <section className="section founder-section">
-            <div className="section-title wide">
-              <h2 className="heading-text">ABOUT</h2>
-              <h2 className="heading-text script">The</h2>
-              <h2 className="heading-text">FOUNDER</h2>
-            </div>
-            
-            <div className="founder-content">
-              <div className="content-block left-aligned">
-                <p className="body-text">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam malesuada nibh auctor lacinia sit amet. Morbi vulputate libero magna. Duis vel felis consequat, viverra sem a, blandit ex imperdiet. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </p>
-              </div>
-              
-              <div className="founder-image">
-                <img src={getImage(9)} alt="VZBL Founder" />
-              </div>
-            </div>
-          </section>
-          
-          {/* Use the existing Footer component */}
-          <Footer />
-        </div>
-      ) : (
-        <div className="loading-screen">
-          <div className="logo-loader">VZBL</div>
-          <div className="loading-bar">
-            <div className="loading-progress"></div>
+          <div className="content-block left-aligned">
+            <p className="body-text">
+              VZBL IS ALL ABOUT BEING SEEN. IT'S THE FREQUENCY AT WHICH YOUR BRAND SHOWS UP, WHETHER IN SEARCH RESULTS, ON SOCIAL MEDIA, THROUGH EMAIL, OR ACROSS OTHER MARKETING CHANNELS. IT'S ABOUT MAKING YOUR BRAND IMPOSSIBLE TO IGNORE, GRABBING ATTENTION, AND BUILDING AN IDENTITY THAT STICKS.
+            </p>
           </div>
-        </div>
-      )}
+          
+          <div className="section-title hand-title">
+            <h2 className="heading-text">ABOUT</h2>
+            <h2 className="heading-text script">The</h2>
+            <h2 className="heading-text">HAND</h2>
+          </div>
+          
+          <div className="about-hand-container">
+            <div className="about-hand-bg">
+              <img src="/about/4.webp" alt="Background" className="about-hand-bg-image" onError={handleImageError} />
+            </div>
+          </div>
+          
+          <div className="content-block hand-content">
+            <p className="body-text">
+            THE HAND IS MORE THAN A SYMBOL, IT PROMISES STRENGTH, CREATIVITY, AND UNITY. IT STANDS FOR OPENNESS AND THE ABILITY TO TRANSFORM IDEAS INTO ACTION. IT REFLECTS WHO    
+  WE ARE AND WHAT WE STAND FOR
+
+            </p>
+          </div>
+        </section>
+        
+        {/* Since 2017 Section */}
+        <section className="section since-section">
+          <div className="since-container">
+            <h3 className="subheading">SINCE 2017</h3>
+            <p className="body-text centered">
+            A CREATIVE AGENCY BUILT TO DEFY
+THE ORDINARY.
+
+FROM BRANDING TO MEDIA PRODUCTION, WE DELIVER WORK THAT REVEALS THE UNSEEN.
+
+OUR APPROACH IS SIMPLE: THINK BOLD, CREATE SMART, AND OWN THE SPOTLIGHT WITH EVERY PROJECT.
+            </p>
+          </div>
+        </section>
+        
+        {/* The Team Section */}
+        <section className="section team-section">
+          <div className="section-title right-aligned">
+            <h2 className="heading-text script">The</h2>
+            <h2 className="heading-text">VISIONARY ////////MIND</h2>
+          </div>
+          
+          <div className="team-gallery">
+            <div className="team-image-box">
+              <img src={getImage(7)} alt="VZBL Team" onError={handleImageError} />
+            </div>
+            <div className="team-image-box">
+              <img src={getImage(8)} alt="VZBL Team" onError={handleImageError} />
+            </div>
+            <div className="team-image-box">
+              <img src={getImage(9)} alt="VZBL Team" onError={handleImageError} />
+            </div>
+            <div className="team-image-box">
+              <img src={getImage(10)} alt="VZBL Team" onError={handleImageError} />
+            </div>
+            <div className="team-image-box">
+              <img src={getImage(11)} alt="VZBL Team" onError={handleImageError} />
+            </div>
+            <div className="team-image-box">
+              <img src={getImage(12)} alt="VZBL Team" onError={handleImageError} />
+            </div>
+          </div>
+        </section>
+        
+        {/* About The Founder Section */}
+        <section className="section founder-section">
+          <div className="section-title wide centered">
+            <h2 className="heading-text">ABOUT</h2>
+            <h2 className="heading-text script">The</h2>
+            <h2 className="heading-text">FOUNDER</h2>
+          </div>
+          
+          <div className="content-block centered-text">
+            <p className="body-text centered">
+            AHMED'S CURIOSITY IS HIS GREATEST STRENGTH. IT PUSHES HIM TO EXPLORE EVERY BRAND'S STORY AND UNCOVER WHAT OTHERS OFTEN OVERLOOK. HE LOOKS BEYOND THE SURFACE, FINDING HIDDEN INSIGHTS AND UNSPOKEN TRUTHS THAT HELP BRANDS CONNECT ON A DEEPER LEVEL. IT'S HIS ABILITY TO SEE WHAT'S UNSEEN THAT SETS HIM APART AND DRIVES HIS PASSION FOR MAKING BRANDS THAT TRULY STAND OUT.
+            </p>
+          </div>
+          
+          <div className="team-image-box founder-team-image centered-image">
+            <img src={getImage(14)} alt="VZBL Founder" onError={handleImageError} />
+          </div>
+        </section>
+        
+        {/* Use the existing Footer component */}
+        <Footer />
+      </div>
     </div>
   );
 };
 
-export default Transition(MobileAbout); 
+// Export with Transition HOC with explicit settings
+export default Transition(MobileAbout, {
+  unmountDelay: 800,
+  mountDelay: 300,
+  appear: true,
+}); 

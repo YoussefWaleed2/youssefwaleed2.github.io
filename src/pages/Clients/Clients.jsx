@@ -112,6 +112,11 @@ const Clients = () => {
   const clientRefs = useRef([]);
   const specialClientsRef = useRef(null);
 
+  // Set page title
+  useEffect(() => {
+    document.title = "Our Clients | VZBL";
+  }, []);
+
   // Animation setup
   useEffect(() => {
     // Initialize refs

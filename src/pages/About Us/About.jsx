@@ -90,7 +90,9 @@ const About = () => {
     imageRefs.current = Array(images.length).fill().map(() => React.createRef());
     setImagesLoaded(Array(images.length).fill(false));
   }, [images.length]);
-
+  useEffect(() => {
+    document.title = "About Us | VZBL";
+  }, []);
   // Set window width and check device type on initial render and window resize
   useEffect(() => {
     const handleResize = () => {

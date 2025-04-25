@@ -13,6 +13,11 @@ import { handleOverlay } from "../../utils/overlayManager";
 const Contact = () => {
   const videoRef = useRef(null);
 
+  // Set page title
+  useEffect(() => {
+    document.title = "Get In Touch | VZBL";
+  }, []);
+
   useEffect(() => {
     handleOverlay();
     return () => handleOverlay();

@@ -21,6 +21,12 @@ const AllProjects = () => {
     return () => handleOverlay();
   }, []);
 
+  // Set page title
+  useEffect(() => {
+    const categoryName = category ? category.replace("-", " ") : "All";
+    document.title = `${categoryName} Projects | VZBL`;
+  }, [category]);
+
   useEffect(() => {
     // Get projects data from sessionStorage
     const storedProjects = sessionStorage.getItem('currentProjects');

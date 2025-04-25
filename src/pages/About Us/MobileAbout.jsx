@@ -1,11 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Transition from '../../components/Transition/Transition';
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Footer from '../../components/Footer/Footer';
 import './MobileAbout.css';
 
 const MobileAbout = ({ images = [] }) => {
   const contentRef = useRef(null);
+  const textRefs = useRef([]);
+  const titleRefs = useRef([]);
+  const imageRefs = useRef([]);
+
+  // Register ScrollTrigger plugin
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+  }, []);
 
   // Add viewport meta tag for proper mobile rendering
   useEffect(() => {
@@ -41,6 +50,24 @@ const MobileAbout = ({ images = [] }) => {
             onComplete: () => {
               // Add a class to the body to indicate the page is loaded
               document.body.classList.add('about-page-loaded');
+              
+              // Now animate the main title with a slight delay
+              const mainTitle = document.querySelector('.call-us-visible-title');
+              const subtitle = document.querySelector('.call-us-visible-subtitle');
+              
+              if (mainTitle && subtitle) {
+                gsap.fromTo(
+                  mainTitle, 
+                  { opacity: 0, y: 30 }, 
+                  { opacity: 1, y: 0, duration: 0.8, ease: "power2.out", delay: 0.2 }
+                );
+                
+                gsap.fromTo(
+                  subtitle, 
+                  { opacity: 0, y: 20 }, 
+                  { opacity: 1, y: 0, duration: 0.8, ease: "power2.out", delay: 0.4 }
+                );
+              }
             }
           }
         );
@@ -50,6 +77,75 @@ const MobileAbout = ({ images = [] }) => {
         document.body.classList.add('about-page-loaded');
       }
     }
+  }, []);
+
+  // Create scroll animations for all text elements
+  useEffect(() => {
+    // Animate text paragraphs on scroll
+    textRefs.current.forEach((textRef, index) => {
+      if (textRef) {
+        gsap.fromTo(
+          textRef,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: textRef,
+              start: "top 80%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      }
+    });
+
+    // Animate section titles with stagger effect
+    titleRefs.current.forEach((titleRef) => {
+      if (titleRef) {
+        const titleElements = titleRef.querySelectorAll('.heading-text');
+        
+        gsap.fromTo(
+          titleElements,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6, 
+            stagger: 0.1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: titleRef,
+              start: "top 75%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      }
+    });
+
+    // Animate images with subtle scale effect
+    imageRefs.current.forEach((imageRef) => {
+      if (imageRef) {
+        gsap.fromTo(
+          imageRef,
+          { opacity: 0.7, scale: 1.05 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1.2,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: imageRef,
+              start: "top 85%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      }
+    });
   }, []);
 
   // Ensure proper page setup for direct navigation
@@ -95,7 +191,13 @@ const MobileAbout = ({ images = [] }) => {
         <section className="section about-hand-section">
           <div className="call-us-visible-container">
             <div className="call-us-visible-bg">
-              <img src="/about/1.webp" alt="Background" className="bg-image" onError={handleImageError} />
+              <img 
+                src="/about/1.webp" 
+                alt="Background" 
+                className="bg-image" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[0] = el}
+              />
             </div>
             <h1 className="call-us-visible-title">
               CALL US<br />VISIBLE<span className="asterisk">*</span>
@@ -104,12 +206,18 @@ const MobileAbout = ({ images = [] }) => {
           </div>
           
           <div className="content-block left-aligned">
-            <p className="body-text">
+            <p 
+              className="body-text animate-text" 
+              ref={el => textRefs.current[0] = el}
+            >
               VZBL IS ALL ABOUT BEING SEEN. IT'S THE FREQUENCY AT WHICH YOUR BRAND SHOWS UP, WHETHER IN SEARCH RESULTS, ON SOCIAL MEDIA, THROUGH EMAIL, OR ACROSS OTHER MARKETING CHANNELS. IT'S ABOUT MAKING YOUR BRAND IMPOSSIBLE TO IGNORE, GRABBING ATTENTION, AND BUILDING AN IDENTITY THAT STICKS.
             </p>
           </div>
           
-          <div className="section-title hand-title">
+          <div 
+            className="section-title hand-title" 
+            ref={el => titleRefs.current[0] = el}
+          >
             <h2 className="heading-text">ABOUT</h2>
             <h2 className="heading-text script">The</h2>
             <h2 className="heading-text">HAND</h2>
@@ -117,15 +225,22 @@ const MobileAbout = ({ images = [] }) => {
           
           <div className="about-hand-container">
             <div className="about-hand-bg">
-              <img src="/about/4.webp" alt="Background" className="about-hand-bg-image" onError={handleImageError} />
+              <img 
+                src="/about/4.webp" 
+                alt="Background" 
+                className="about-hand-bg-image" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[1] = el}
+              />
             </div>
           </div>
           
           <div className="content-block hand-content">
-            <p className="body-text">
-            THE HAND IS MORE THAN A SYMBOL, IT PROMISES STRENGTH, CREATIVITY, AND UNITY. IT STANDS FOR OPENNESS AND THE ABILITY TO TRANSFORM IDEAS INTO ACTION. IT REFLECTS WHO    
-  WE ARE AND WHAT WE STAND FOR
-
+            <p 
+              className="body-text animate-text" 
+              ref={el => textRefs.current[1] = el}
+            >
+              THE HAND IS MORE THAN A SYMBOL, IT PROMISES STRENGTH, CREATIVITY, AND UNITY. IT STANDS FOR OPENNESS AND THE ABILITY TO TRANSFORM IDEAS INTO ACTION. IT REFLECTS WHO WE ARE AND WHAT WE STAND FOR
             </p>
           </div>
         </section>
@@ -133,63 +248,114 @@ const MobileAbout = ({ images = [] }) => {
         {/* Since 2017 Section */}
         <section className="section since-section">
           <div className="since-container">
-            <h3 className="subheading">SINCE 2017</h3>
-            <p className="body-text centered">
-            A CREATIVE AGENCY BUILT TO DEFY
-THE ORDINARY.
-
-FROM BRANDING TO MEDIA PRODUCTION, WE DELIVER WORK THAT REVEALS THE UNSEEN.
-
-OUR APPROACH IS SIMPLE: THINK BOLD, CREATE SMART, AND OWN THE SPOTLIGHT WITH EVERY PROJECT.
+            <h3 
+              className="subheading animate-text" 
+              ref={el => textRefs.current[2] = el}
+            >
+              SINCE 2017
+            </h3>
+            <p 
+              className="body-text centered animate-text" 
+              ref={el => textRefs.current[3] = el}
+            >
+              A CREATIVE AGENCY BUILT TO DEFY THE ORDINARY.
+              <br /><br />
+              FROM BRANDING TO MEDIA PRODUCTION, WE DELIVER WORK THAT REVEALS THE UNSEEN.
+              <br /><br />
+              OUR APPROACH IS SIMPLE: THINK BOLD, CREATE SMART, AND OWN THE SPOTLIGHT WITH EVERY PROJECT.
             </p>
           </div>
         </section>
         
         {/* The Team Section */}
         <section className="section team-section">
-          <div className="section-title right-aligned">
+          <div 
+            className="section-title right-aligned"
+            ref={el => titleRefs.current[1] = el}
+          >
             <h2 className="heading-text script">The</h2>
             <h2 className="heading-text">VISIONARY ////////MIND</h2>
           </div>
           
           <div className="team-gallery">
             <div className="team-image-box">
-              <img src={getImage(7)} alt="VZBL Team" onError={handleImageError} />
+              <img 
+                src={getImage(7)} 
+                alt="VZBL Team" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[2] = el}
+              />
             </div>
             <div className="team-image-box">
-              <img src={getImage(8)} alt="VZBL Team" onError={handleImageError} />
+              <img 
+                src={getImage(8)} 
+                alt="VZBL Team" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[3] = el}
+              />
             </div>
             <div className="team-image-box">
-              <img src={getImage(9)} alt="VZBL Team" onError={handleImageError} />
+              <img 
+                src={getImage(9)} 
+                alt="VZBL Team" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[4] = el}
+              />
             </div>
             <div className="team-image-box">
-              <img src={getImage(10)} alt="VZBL Team" onError={handleImageError} />
+              <img 
+                src={getImage(10)} 
+                alt="VZBL Team" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[5] = el}
+              />
             </div>
             <div className="team-image-box">
-              <img src={getImage(11)} alt="VZBL Team" onError={handleImageError} />
+              <img 
+                src={getImage(11)} 
+                alt="VZBL Team" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[6] = el}
+              />
             </div>
             <div className="team-image-box">
-              <img src={getImage(12)} alt="VZBL Team" onError={handleImageError} />
+              <img 
+                src={getImage(12)} 
+                alt="VZBL Team" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[7] = el}
+              />
             </div>
           </div>
         </section>
         
         {/* About The Founder Section */}
         <section className="section founder-section">
-          <div className="section-title wide centered">
+          <div 
+            className="section-title wide centered"
+            ref={el => titleRefs.current[2] = el}
+          >
             <h2 className="heading-text">ABOUT</h2>
             <h2 className="heading-text script">The</h2>
             <h2 className="heading-text">FOUNDER</h2>
           </div>
           
           <div className="content-block centered-text">
-            <p className="body-text centered">
-            AHMED'S CURIOSITY IS HIS GREATEST STRENGTH. IT PUSHES HIM TO EXPLORE EVERY BRAND'S STORY AND UNCOVER WHAT OTHERS OFTEN OVERLOOK. HE LOOKS BEYOND THE SURFACE, FINDING HIDDEN INSIGHTS AND UNSPOKEN TRUTHS THAT HELP BRANDS CONNECT ON A DEEPER LEVEL. IT'S HIS ABILITY TO SEE WHAT'S UNSEEN THAT SETS HIM APART AND DRIVES HIS PASSION FOR MAKING BRANDS THAT TRULY STAND OUT.
+            <p 
+              className="body-text centered animate-text" 
+              ref={el => textRefs.current[4] = el}
+            >
+              AHMED'S CURIOSITY IS HIS GREATEST STRENGTH. IT PUSHES HIM TO EXPLORE EVERY BRAND'S STORY AND UNCOVER WHAT OTHERS OFTEN OVERLOOK. HE LOOKS BEYOND THE SURFACE, FINDING HIDDEN INSIGHTS AND UNSPOKEN TRUTHS THAT HELP BRANDS CONNECT ON A DEEPER LEVEL. IT'S HIS ABILITY TO SEE WHAT'S UNSEEN THAT SETS HIM APART AND DRIVES HIS PASSION FOR MAKING BRANDS THAT TRULY STAND OUT.
             </p>
           </div>
           
           <div className="team-image-box founder-team-image centered-image">
-            <img src={getImage(14)} alt="VZBL Founder" onError={handleImageError} />
+            <img 
+              src={getImage(14)} 
+              alt="VZBL Founder" 
+              onError={handleImageError}
+              ref={el => imageRefs.current[8] = el}
+            />
           </div>
         </section>
         

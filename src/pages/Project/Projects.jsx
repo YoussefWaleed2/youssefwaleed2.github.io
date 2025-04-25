@@ -29,7 +29,9 @@ const Projects = () => {
     "/project/Service-img-2.webp",
     "/project/Service-img-3.webp"
   ];
-
+  useEffect(() => {
+    document.title = "Projects | VZBL";
+  }, []);
   const titles = ["BRANDING", "Marketing", "Advertising"];
   // Debug log to check if titles array is defined
   console.log("Titles in Projects.jsx:", titles);

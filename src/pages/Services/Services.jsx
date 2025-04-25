@@ -261,6 +261,11 @@ const Services = () => {
   const navRef = useRef(null);
   const lenisRef = useRef(null);
 
+  // Set page title
+  useEffect(() => {
+    document.title = "Services | VZBL";
+  }, []);
+
   // Check if device is mobile
   useEffect(() => {
     const checkMobile = () => {

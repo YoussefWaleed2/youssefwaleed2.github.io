@@ -12,6 +12,11 @@ const Work = () => {
   const [selectedJob, setSelectedJob] = useState("");
   const videoRef = useRef(null);
 
+  // Set page title
+  useEffect(() => {
+    document.title = "Join Us | VZBL";
+  }, []);
+
   useEffect(() => {
     handleOverlay();
     return () => handleOverlay();

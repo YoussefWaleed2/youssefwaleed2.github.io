@@ -24,6 +24,11 @@ const Home = () => {
     };
   }, []);
 
+  // Set page title
+  useEffect(() => {
+    document.title = "VZBL";
+  }, []);
+
   // Check if we should show the splash screen
   useEffect(() => {
     // Force clear the splash screen on each page mount to handle navigation

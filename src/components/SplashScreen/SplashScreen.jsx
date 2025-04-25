@@ -38,8 +38,8 @@ function SplashScreen({ onComplete }) {
       },
       { 
         scaleY: 0,
-        duration: 1.5,
-        ease: "power3.inOut",
+        duration: 2.2,
+        ease: "easeInOut",
         transformOrigin: "top"
       }
     );
@@ -47,13 +47,13 @@ function SplashScreen({ onComplete }) {
     // Then animate the overlay exit
     masterTimeline.to(".overlay", {
       yPercent: -100,
-      duration: 0.8,
+      duration: 1,
       ease: "power3.inOut",
       onComplete: () => {
         // After fade out, slide up
         gsap.to(".overlay", {
           yPercent: 0,
-          duration: 0.5,
+          duration: 0.8,
           ease: "power3.inOut"
         });
       }

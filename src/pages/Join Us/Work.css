@@ -80,7 +80,7 @@
 }
 
 .page.work {
-  padding-top: 8em;
+  padding-top: 0;
   min-height: 100vh;
   background-color: black;
   color: white;
@@ -244,41 +244,37 @@
 
 .work-header {
   position: relative;
-  top: 80px;
-  left: 100px;
   z-index: 2;
-  margin-bottom: 7rem;
+  text-align: center;
+  margin-bottom: 5rem;
 }
 
 .join-title {
   font-family: "Audrey", serif;
   font-size: 128px;
   font-weight: 400;
-  line-height: 0.6;
+  line-height: 0.8;
   margin: 0;
   letter-spacing: -0.02em;
   text-transform: uppercase;
   color: white;
 }
 
+.join-subtitle {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
 .join-subtitle .the {
-  position: relative;
-  margin-left: 55px;
-  right: 8px;
-  bottom: 30px;
   font-family: "Golden Plains", serif;
   font-size: 4rem;
   font-weight: normal;
   font-style: normal;
   color: rgba(255, 255, 255, 0.9);
   line-height: 1;
-}
-
-.join-subtitle {
-  display: flex;
-  align-items: baseline;
-  margin-top: 2rem;
-  margin-left: 0.5rem;
+  margin-right: 1rem;
 }
 
 .join-subtitle .bold-creatives {
@@ -305,12 +301,22 @@
   grid-template-columns: 320px 1fr;
 }
 .position-image {
-  aspect-ratio: 1;
+  width: 100%;
+  aspect-ratio: 16/9;
   overflow: hidden;
-  border-radius: 24px;
-  width: 295px;
-  height: 350px;
-  max-width: 400px;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+}
+
+.position-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.position-card:hover .position-image img {
+  transform: scale(1.05);
 }
 
 .image-placeholder {
@@ -412,11 +418,6 @@
 }
 
 @media (max-width: 1200px) {
-  .work-header {
-    left: 60px;
-    margin-bottom: 7rem;
-  }
-
   .join-title {
     font-size: 10rem;
   }
@@ -428,140 +429,58 @@
 }
 
 @media (max-width: 992px) {
-  .work-header {
-    left: 40px;
-    top: 60px;
-    margin-bottom: 6rem;
-  }
-
   .join-title {
     font-size: 8rem;
   }
-
-  .positions-grid {
-    grid-template-columns: 1fr;
-    gap: 4rem;
-    padding: 0 2rem 0 4rem;
-  }
-
-  .position-card {
-    grid-template-columns: minmax(250px, 300px) 1fr;
-    gap: 2rem;
-  }
-
-  /* Reset position for all cards */
-  .position-card:nth-child(n) {
-    margin-top: 0;
-    margin-left: 0;
-  }
-
-  /* Add some spacing between cards */
-  .position-card + .position-card {
-    margin-top: 5rem;
-  }
-
-  .position-image {
-    height: 280px;
-    width: 100%;
+  
+  .work-header {
+    margin-bottom: 4rem;
   }
 }
 
 @media (max-width: 768px) {
-  .work-header {
-    left: 30px;
-    top: 40px;
-    margin-bottom: 5rem;
-  }
-
   .join-title {
     font-size: 6rem;
   }
 
   .join-subtitle {
-    margin-top: 0.5rem;
+    margin-top: 1rem;
   }
 
   .join-subtitle .the {
-    margin-left: 30px;
-    bottom: 15px;
-    font-size: 1.8rem;
+    font-size: 2rem;
+    margin-right: 0.5rem;
   }
 
   .join-subtitle .bold-creatives {
-    font-size: 1.8rem;
-  }
-
-  .positions-grid {
-    padding: 0 2rem 0 3rem;
-    gap: 3rem;
-  }
-
-  .position-card {
-    grid-template-columns: minmax(200px, 280px) 1fr;
-    gap: 1.5rem;
-  }
-
-  .position-title {
     font-size: 2rem;
   }
-
-  .position-image {
-    height: 250px;
+  
+  .join-us-button {
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
   }
 }
 
 @media (max-width: 576px) {
-  .work-header {
-    left: 20px;
-    top: 30px;
-    margin-bottom: 4rem;
-  }
-
   .join-title {
     font-size: 4.5rem;
   }
 
   .join-subtitle .the {
-    margin-left: 20px;
-    bottom: 10px;
     font-size: 1.5rem;
   }
 
   .join-subtitle .bold-creatives {
     font-size: 1.5rem;
   }
-
-  .positions-grid {
-    padding: 0 1.5rem 0 2rem;
-    gap: 2.5rem;
-  }
-
-  .position-card {
-    grid-template-columns: 1fr;
-  }
-
-  .position-image {
-    height: 220px;
-    width: 100%;
-    max-width: 280px;
-  }
-
-  .position-content {
-    padding-top: 0.5rem;
-  }
-
-  .position-title {
-    font-size: 1.8rem;
-    margin: 0.25rem 0 0.5rem;
-  }
-
-  .position-description {
-    font-size: 0.9rem;
-    margin: 0.5rem 0;
+  
+  .work-header {
+    margin-bottom: 3rem;
   }
 }
 
-/* Ensure the video background works well on all devices */
+/* Video background */
 .video-background {
   position: fixed;
   top: 0;
@@ -569,18 +488,12 @@
   width: 100%;
   height: 100%;
   z-index: 0;
-  overflow: hidden;
 }
 
 .background-video {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 0;
-  opacity: 0.3;
 }
 
 .work-footer-container {
@@ -609,6 +522,7 @@
   position: relative;
   z-index: 1;
   background-color: #1a1a1a;
+  margin-top: auto;
 }
 
 @media (min-width: 992px) and (max-width: 1200px) {
@@ -730,10 +644,11 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   margin: 0;
-  padding-right: 0;
-  overflow-x: hidden; /* Prevent horizontal overflow */
+  padding: 0;
 }
 
 /* More specific media query for 1024px screens */
@@ -824,4 +739,37 @@
   .position-card:nth-child(4) {
     margin-top: -5rem;
   }
+}
+
+/* Button styling */
+.join-us-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.join-us-button {
+  font-family: "Audrey", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: white;
+  background: none;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50px;
+  padding: 1rem 3rem;
+  text-align: center;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+}
+
+.join-us-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
+}
+
+/* Body styling for when form is open */
+body.form-open {
+  overflow: hidden;
 }

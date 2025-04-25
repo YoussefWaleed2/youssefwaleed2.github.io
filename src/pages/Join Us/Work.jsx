@@ -18,23 +18,12 @@ const Work = () => {
   }, []);
 
   useEffect(() => {
+    // Animate the video background - same as Contact page
     if (videoRef.current) {
-      videoRef.current.play().catch(error => {
-        console.log("Video autoplay failed:", error);
-      });
-
-      // Set constant blur
-      gsap.set(videoRef.current, {
-        filter: "blur(100px)",
-        opacity: 0
-      });
-
-      // Only animate the opacity
       gsap.to(videoRef.current, {
-        opacity: 0.3,
-        duration: 1.5,
-        delay: 0.5,
-        ease: "power2.out"
+        filter: "blur(100px)",
+        duration: 1,
+        ease: "power2.inOut"
       });
     }
   }, []);
@@ -53,45 +42,22 @@ const Work = () => {
     };
   }, [isFormOpen]);
 
-  const positions = [
-    {
-      title: "Account Manager",
-      description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod.",
-    },
-    {
-      title: "Graphic Designer",
-      description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod.",
-    },
-    {
-      title: "Web Developer",
-      description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod.",
-    },
-    {
-      title: "Digital Marketing Specialist",
-      description: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod.",
-    }
-  ];
-
-  const handleApplyClick = (jobTitle) => {
-    setSelectedJob(jobTitle);
-    setIsFormOpen(true);
-  };
-
   return (
     <ReactLenis root>
       <div className="page work">
-        <div className="video-background">
-          <video
-            ref={videoRef}
-            className="background-video"
-            muted
-            loop
-            playsInline
-            src="/home/vid.webm"
-          />
-        </div>
         
         <div className="work-content">
+          <div className="video-background">
+            <video
+              ref={videoRef}
+              className="background-video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              src="/home/vid.webm"
+            />
+          </div>
           <header className="work-header">
             <h1 className="join-title">JOIN</h1>
             <div className="join-subtitle">
@@ -100,25 +66,16 @@ const Work = () => {
             </div>
           </header>
 
-          <div className="positions-grid">
-            {positions.map((position, index) => (
-              <div className="position-card" key={index}>
-                <div className="position-image">
-                  <div className="image-placeholder"></div>
-                </div>
-                <div className="position-content">
-                  <span className="join-label">Join us now</span>
-                  <h2 className="position-title">{position.title}</h2>
-                  <p className="position-description">{position.description}</p>
-                  <button 
-                    className="apply-button"
-                    onClick={() => handleApplyClick(position.title)}
-                  >
-                    APPLY NOW
-                  </button>
-                </div>
-              </div>
-            ))}
+          <div className="join-us-container">
+            <button 
+              className="join-us-button"
+              onClick={() => {
+                setSelectedJob("");
+                setIsFormOpen(true);
+              }}
+            >
+              JOIN US NOW
+            </button>
           </div>
         </div>
 

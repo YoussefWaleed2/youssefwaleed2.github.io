@@ -179,6 +179,9 @@ const AllProjects = () => {
                   {renderMedia(project)}
                 </div>
                 <div className="project-info">
+                  <div className="project-number">
+                    {(index + 1).toString().padStart(2, '0')}.
+                  </div>
                   <h3>{project.title.toUpperCase()}</h3>
                   <p>{project.description}</p>
                 </div>

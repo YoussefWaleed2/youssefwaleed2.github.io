@@ -3,14 +3,16 @@ import "./Home.css";
 import SplashScreen from "../../components/SplashScreen/SplashScreen";
 import ReactLenis from "lenis/react";
 import Transition from "../../components/Transition/Transition";
-import { handleOverlay, shouldShowSplash } from "./../../utils/overlayManager";
+import { shouldShowSplash , handleOverlay } from "./../../utils/overlayManager";
 
 const Home = () => {
   const videoRef = useRef(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [showSplash, setShowSplash] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
+  useEffect(() => {
+    handleOverlay();
+  }, []);
   // Check if device is mobile
   useEffect(() => {
     const checkMobile = () => {
@@ -27,16 +29,8 @@ const Home = () => {
 
   // Check if we should show the splash screen
   useEffect(() => {
-    // Force clear the splash screen on each page mount to handle navigation
-    handleOverlay();
-    
-    // Check if splash should be shown
+    // Check if splash should be shown - don't call handleOverlay here
     setShowSplash(shouldShowSplash());
-    
-    // Add a cleanup function to force hide the overlay when unmounting
-    return () => {
-      handleOverlay();
-    };
   }, []);
 
   // Handle splash screen completion
@@ -47,7 +41,8 @@ const Home = () => {
       console.error("Error setting sessionStorage:", error);
     }
     setShowSplash(false);
-    handleOverlay();
+    // handleOverlay call is not needed here - the SplashScreen component
+    // already handles its own animation exit
   };
 
   useEffect(() => {

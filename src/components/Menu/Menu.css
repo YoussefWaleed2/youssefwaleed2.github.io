@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Aboreto&display=swap');
+/* We're using local fonts now */
+/* @import url('https://fonts.googleapis.com/css2?family=Aboreto&display=swap'); */
 
 :root {
   --copy: #ffffff;
@@ -11,7 +12,7 @@
 }
 
 body {
-    font-family: "Aboreto", cursive;
+    font-family: "TT Norms", sans-serif;
 }
 
 /* Navbar */
@@ -130,11 +131,14 @@ body:has(.horizontal-scroll-wrapper) .img-logo {
 .showreel a,
 .media-link a {
     position: relative;
-    color: var(--copy);
+    color: #FFF;
     text-decoration: none;
+    font-family: "TT Norms";
     font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
     text-transform: uppercase;
-    font-weight: 600;
     padding: 4px 0;
     display: block;
     will-change: transform;
@@ -143,11 +147,14 @@ body:has(.horizontal-scroll-wrapper) .img-logo {
 
 .nav-links a {
     position: relative;
-    color: #ffffff;
+    color: #FFF;
     text-decoration: none;
+    font-family: "TT Norms";
     font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
     text-transform: uppercase;
-    font-weight: 600;
     padding: 4px 0;
     display: inline-block;
     overflow: hidden;
@@ -246,20 +253,23 @@ nav a,
 
 /* Contact Button */
 .contact-button {
-    font-family: "Aboreto", cursive;
-    border: 2px solid #ffffff;
-    background: transparent;
-    color: #ffffff;
-    padding: 10px 20px;
-    border-radius: 10px;
-    cursor: pointer;
+    font-family: "Sprat", serif;
     font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    letter-spacing: 0px;
     text-transform: uppercase;
+    color: #FFF;
+    border: 1px solid #ffffff;
+    background: transparent;
+    padding: 10px 30px;
+    border-radius: 25px;
+    cursor: pointer;
     transition: background 0.3s ease, color 0.3s ease;
     mix-blend-mode: difference;
     white-space: nowrap;
 }
-
 
 .contact-button:hover {
     background-color: #ffffff;

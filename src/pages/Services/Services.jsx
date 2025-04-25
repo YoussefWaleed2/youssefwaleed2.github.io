@@ -441,10 +441,10 @@ const Services = () => {
           <div className="service-number">01.</div>
           <h2 className="service-title">BRANDING</h2>
           <p className="service-description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Every brand has a story to tell, but sometimes, that story needs a fresh perspective.
           </p>
           <p className="service-description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Our rebranding process goes beyond just a new logo or color scheme; it's about uncovering the brand's essence and redefining how it connects with its audience.
           </p>
         </section>
 
@@ -452,10 +452,10 @@ const Services = () => {
           <div className="service-number">02.</div>
           <h2 className="service-title">SOCIAL MEDIA</h2>
           <p className="service-description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Every brand has a story to tell, but sometimes, that story needs a fresh perspective.
           </p>
           <p className="service-description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Our rebranding process goes beyond just a new logo or color scheme; it's about uncovering the brand's essence and redefining how it connects with its audience.
           </p>
         </section>
 
@@ -463,10 +463,10 @@ const Services = () => {
           <div className="service-number">03.</div>
           <h2 className="service-title">MEDIA PRODUCTION</h2>
           <p className="service-description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Every brand has a story to tell, but sometimes, that story needs a fresh perspective.
           </p>
           <p className="service-description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Our rebranding process goes beyond just a new logo or color scheme; it's about uncovering the brand's essence and redefining how it connects with its audience.
           </p>
         </section>
 
@@ -474,10 +474,10 @@ const Services = () => {
           <div className="service-number">04.</div>
           <h2 className="service-title">PACKAGING</h2>
           <p className="service-description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Every brand has a story to tell, but sometimes, that story needs a fresh perspective.
           </p>
           <p className="service-description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Our rebranding process goes beyond just a new logo or color scheme; it's about uncovering the brand's essence and redefining how it connects with its audience.
           </p>
         </section>
       </div>

@@ -1,14 +1,63 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Component } from 'react';
 import Lenis from 'lenis';
 import Transition from '../../components/Transition/Transition';
 import gsap from "gsap";
 import CustomEase from "gsap/CustomEase";
 import SplitType from 'split-type';
 import './About.css';
-import { handleOverlay } from '../../utils/overlayManager';
+import MobileAbout from './MobileAbout'; // Import the mobile component
+import { handleOverlay } from "./../../utils/overlayManager";
+
+
+// Error Boundary component
+class ErrorBoundary extends Component {
+  
+  
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Error in About component:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // Fallback UI when an error occurs
+      return (
+        <div style={{ padding: '2rem', textAlign: 'center', color: 'white', background: 'black', minHeight: '100vh' }}>
+          <h2>Something went wrong.</h2>
+          <p>Please try refreshing the page or contact support if the issue persists.</p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{ padding: '0.5rem 1rem', marginTop: '1rem', cursor: 'pointer' }}
+          >
+            Refresh Page
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+// Mobile detection function
+const detectMobileOrTablet = () => {
+  const userAgent = typeof window.navigator === 'undefined' ? '' : navigator.userAgent;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent) || window.innerWidth <= 1024;
+};
 
 const About = () => {
   const [isReady, setIsReady] = useState(false);
+  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
+  const [documentReady, setDocumentReady] = useState(false);
   const containerRef = useRef(null);
   const pageRef = useRef(null);
   const lenisRef = useRef(null);
@@ -42,148 +91,205 @@ const About = () => {
     setImagesLoaded(Array(images.length).fill(false));
   }, [images.length]);
 
+  // Set window width and check device type on initial render and window resize
   useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      setIsMobileOrTablet(detectMobileOrTablet());
+    };
+    
+    // Set initial window width and device type
+    handleResize();
+    
+    // Add resize listener
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // All desktop-specific code in these useEffects will only run if !isMobileOrTablet
+  // Effect for desktop GSAP animations
+  useEffect(() => {
+    if (isMobileOrTablet) return;
+    
     // Register GSAP plugins
     gsap.registerPlugin(CustomEase);
     const customEase = CustomEase.create("custom", ".87,0,.13,1");
 
     // Initialize text animation
     if (titleRef.current && subtitleRef.current && descriptionRef.current && asteriskRef.current) {
-      // Split text for animation
-      const titleSplit = new SplitType(titleRef.current, { types: 'chars' });
-      const subtitleSplit = new SplitType(subtitleRef.current, { types: 'chars' });
-      const descriptionSplit = new SplitType(descriptionRef.current, { types: 'lines' });
-      
-      // Set initial states
-      gsap.set([titleSplit.chars, subtitleSplit.chars, descriptionSplit.lines], {
-        y: '100%',
-        opacity: 0
-      });
-      
-      gsap.set(asteriskRef.current, {
-        y: '100%',
-        opacity: 0
-      });
-
-      // Set initial state for first image
-      if (imageRefs.current[0]?.current) {
-        gsap.set(imageRefs.current[0].current, {
-          scale: 1.2,
-          opacity: 0.5,
-          filter: "blur(10px)"
+      try {
+        // Split text for animation
+        const titleSplit = new SplitType(titleRef.current, { types: 'chars' });
+        const subtitleSplit = new SplitType(subtitleRef.current, { types: 'chars' });
+        const descriptionSplit = new SplitType(descriptionRef.current, { types: 'lines' });
+        
+        // Set initial states
+        if (titleSplit.chars && subtitleSplit.chars && descriptionSplit.lines) {
+          gsap.set([titleSplit.chars, subtitleSplit.chars, descriptionSplit.lines], {
+            y: '100%',
+            opacity: 0
+          });
+        }
+        
+        gsap.set(asteriskRef.current, {
+          y: '100%',
+          opacity: 0
         });
+
+        // Set initial state for first image
+        if (imageRefs.current[0]?.current) {
+          gsap.set(imageRefs.current[0].current, {
+            scale: 1.2,
+            opacity: 1,
+            filter: "blur(5px)"
+          });
+        }
+
+        // Fixed timing animations
+        setTimeout(() => {
+          // Animate title
+          if (titleSplit.chars) {
+            gsap.to(titleSplit.chars, {
+              y: '0%',
+              opacity: 1,
+              duration: 1,
+              stagger: 0.03,
+              ease: customEase
+            });
+          }
+          
+          // Animate the asterisk along with the last chars of the title
+          if (asteriskRef.current) {
+            gsap.to(asteriskRef.current, {
+              y: '0%',
+              opacity: 1,
+              duration: 1,
+              ease: customEase
+            });
+          }
+
+          // Animate first image with title
+          if (imageRefs.current[0]?.current) {
+            gsap.to(imageRefs.current[0].current, {
+              scale: 1,
+              opacity: 1,
+              filter: "blur(0px)",
+              duration: 1.5,
+              ease: customEase
+            });
+          }
+
+          // Animate subtitle
+          if (subtitleSplit.chars) {
+            gsap.to(subtitleSplit.chars, {
+              y: '0%',
+              opacity: 1,
+              duration: 0.8,
+              stagger: 0.02,
+              ease: customEase,
+              delay: 0.2
+            });
+          }
+
+          // Animate description
+          if (descriptionSplit.lines) {
+            gsap.to(descriptionSplit.lines, {
+              y: '0%',
+              opacity: 1,
+              duration: 0.8,
+              stagger: 0.1,
+              ease: customEase,
+              delay: 0.5
+            });
+          }
+        }, 300);
+      } catch (error) {
+        console.error("Error in text animation:", error);
       }
-
-      // Animate title
-      gsap.to(titleSplit.chars, {
-        y: '0%',
-        opacity: 1,
-        duration: 1,
-        stagger: 0.03,
-        ease: customEase,
-        delay: 1
-      });
-      
-      // Animate the asterisk along with the last chars of the title
-      gsap.to(asteriskRef.current, {
-        y: '0%',
-        opacity: 1,
-        duration: 1,
-        ease: customEase,
-        delay: 0.5 
-      });
-
-      // Animate first image with title
-      if (imageRefs.current[0]?.current) {
-        gsap.to(imageRefs.current[0].current, {
-          scale: 1,
-          opacity: 1,
-          filter: "blur(0px)",
-          duration: 1.5,
-          ease: customEase,
-          delay: 0.5 // Start with title animation
-        });
-      }
-
-      // Animate subtitle
-      gsap.to(subtitleSplit.chars, {
-        y: '0%',
-        opacity: 1,
-        duration: 0.8,
-        stagger: 0.02,
-        ease: customEase,
-        delay: 1.2
-      });
-
-      // Animate description
-      gsap.to(descriptionSplit.lines, {
-        y: '0%',
-        opacity: 1,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: customEase,
-        delay: 1.5
-      });
     }
     
     // Initialize about section text elements
     if (aboutLeftRef.current && aboutRightRef.current && aboutTextContainerRef.current) {
-      // Set initial states for About section elements
       gsap.set([aboutLeftRef.current, aboutRightRef.current], {
         opacity: 0,
-        x: (index) => index === 0 ? -50 : 50 // Left heading moves from left, right heading from right
+        x: (index) => index === 0 ? -50 : 50
       });
       
-      // Handle text paragraphs
       if (aboutTextsRef.current.length > 0) {
-        gsap.set(aboutTextsRef.current, {
-          opacity: 0,
-          y: 30
-        });
+        const validTexts = aboutTextsRef.current.filter(ref => ref);
+        if (validTexts.length > 0) {
+          gsap.set(validTexts, {
+            opacity: 0,
+            y: 30
+          });
+        }
       }
     }
     
     // Set initial state for images (except first one)
     imageRefs.current.forEach((ref, index) => {
-      if (ref.current && index > 0) {
+      if (ref?.current && index > 0) {
         gsap.set(ref.current, {
-          scale: 1
+          scale: 1,
+          opacity: 1
         });
       }
     });
-  }, [isReady]);
+  }, [isReady, isMobileOrTablet]);
 
+  // Effect for desktop horizontal scrolling setup
   useEffect(() => {
-    if (!containerRef.current || !pageRef.current) return;
+    if (isMobileOrTablet || !containerRef.current || !pageRef.current) return;
     
-    // Set window width for calculations
-    setWindowWidth(window.innerWidth);
-
-    // Set initial container width to exactly match the number of sections
-    const totalWidth = images.length;
+    // Calculate total width precisely - no extra space between sections
+    const sectionWidth = window.innerWidth;
+    const totalWidth = sectionWidth * images.length;
+    
+    // Desktop horizontal scroll setup - set exact width
     containerRef.current.style.width = `${totalWidth}px`;
-
-    // Initialize Lenis with balanced settings for smoothness and responsiveness
-    lenisRef.current = new Lenis({
-      wrapper: pageRef.current,
-      content: containerRef.current,
-      duration: 1.2,
-      easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)), // Smoother easing
-      orientation: 'horizontal',
-      gestureOrientation: 'horizontal',
-      smoothWheel: true,
-      wheelMultiplier: 2.5,
-      smoothTouch: true,
-      touchMultiplier: 1.5,
-      infinite: false,
-    });
-
-    // Direct wheel event handler to ensure horizontal scrolling
+    
+    // Force the sections to be exactly viewport width
+    const sections = document.querySelectorAll('.about-section');
+    if (sections && sections.length > 0) {
+      sections.forEach(section => {
+        if (section) {
+          section.style.width = `${sectionWidth}px`;
+          section.style.margin = '0';
+          section.style.display = 'block';
+        }
+      });
+    }
+    
+    // Initialize Lenis with horizontal scrolling for desktop
+    try {
+      lenisRef.current = new Lenis({
+        wrapper: pageRef.current,
+        content: containerRef.current,
+        duration: 1.2,
+        easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)),
+        orientation: 'horizontal',
+        gestureOrientation: 'horizontal',
+        smoothWheel: true,
+        wheelMultiplier: 2.5,
+        smoothTouch: true,
+        touchMultiplier: 1.5,
+        infinite: false,
+      });
+    } catch (error) {
+      console.error("Error initializing Lenis:", error);
+    }
+    
+    // Direct wheel event handler to ensure horizontal scrolling (desktop only)
     const handleWheel = (e) => {
+      if (!pageRef.current) return;
+      
       e.preventDefault();
       const delta = e.deltaY || e.deltaX;
       
-      // Use Lenis for smooth scrolling if available
       if (lenisRef.current) {
         const targetScroll = pageRef.current.scrollLeft + delta * 6;
         lenisRef.current.scrollTo(targetScroll, {
@@ -206,39 +312,104 @@ const About = () => {
 
     // Animation frame with lerp for smoother scrolling
     function raf(time) {
-      lenisRef.current?.raf(time);
-      requestAnimationFrame(raf);
-      handleScrollUpdate();
+      if (lenisRef.current) {
+        lenisRef.current.raf(time);
+        requestAnimationFrame(raf);
+        handleScrollUpdate();
+      }
     }
     requestAnimationFrame(raf);
 
     // Handle resize
     const handleResize = () => {
-      // Exact width calculation to avoid gaps
-      const newWidth = window.innerWidth * images.length;
-      containerRef.current.style.width = `${newWidth}px`;
+      // Update window width state
       setWindowWidth(window.innerWidth);
+      
+      // If transitioning to mobile, reload the page to get mobile view
+      if (window.innerWidth <= 1024) {
+        window.location.reload();
+        return;
+      }
+      
+      // Recalculate dimensions when window is resized
+      if (!containerRef.current) return;
+      
+      const newSectionWidth = window.innerWidth;
+      const newTotalWidth = newSectionWidth * images.length;
+      
+      containerRef.current.style.width = `${newTotalWidth}px`;
+      
+      // Update all section widths
+      const sections = document.querySelectorAll('.about-section');
+      if (sections && sections.length > 0) {
+        sections.forEach(section => {
+          if (section) {
+            section.style.width = `${newSectionWidth}px`;
+            section.style.margin = '0';
+          }
+        });
+      }
     };
-
+    
+    // Add wheel event handler for desktop
+    if (pageRef.current) {
+      pageRef.current.addEventListener('wheel', handleWheel, { passive: false });
+      
+      // Add touch events for desktop horizontal touch scrolling
+      const handleTouchStart = (e) => {
+        if (!pageRef.current) return;
+        pageRef.current.touchStartX = e.touches[0].clientX;
+      };
+      
+      const handleTouchMove = (e) => {
+        if (!pageRef.current || !pageRef.current.touchStartX) return;
+        
+        const touchDelta = pageRef.current.touchStartX - e.touches[0].clientX;
+        if (Math.abs(touchDelta) > 5) {
+          e.preventDefault();
+          
+          if (lenisRef.current) {
+            const targetScroll = pageRef.current.scrollLeft + touchDelta * 1.2;
+            lenisRef.current.scrollTo(targetScroll, {
+              force: true,
+              duration: 0.3,
+            });
+          } else {
+            pageRef.current.scrollLeft += touchDelta * 1.2;
+          }
+          
+          pageRef.current.touchStartX = e.touches[0].clientX;
+        }
+      };
+      
+      // Add touch handlers for desktop
+      pageRef.current.addEventListener('touchstart', handleTouchStart, { passive: false });
+      pageRef.current.addEventListener('touchmove', handleTouchMove, { passive: false });
+    }
+    
     window.addEventListener('resize', handleResize);
-    // Add wheel event listener with passive:false to allow preventing default
-    pageRef.current.addEventListener('wheel', handleWheel, { passive: false });
-
+    
+    // Cleanup for desktop
     return () => {
-      lenisRef.current?.destroy();
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+      }
       window.removeEventListener('resize', handleResize);
-      pageRef.current?.removeEventListener('wheel', handleWheel);
+      if (pageRef.current) {
+        pageRef.current.removeEventListener('wheel', handleWheel);
+        pageRef.current.removeEventListener('touchstart', handleTouchStart);
+        pageRef.current.removeEventListener('touchmove', handleTouchMove);
+      }
     };
-  }, [images.length]);
-  
+  }, [images.length, isMobileOrTablet]);
+
   // Effect for scroll-triggered animations
   useEffect(() => {
-    if (!windowWidth) return;
+    if (isMobileOrTablet || !windowWidth) return;
     
-    // Section 1 starts at windowWidth (after first section)
-    // Animation should start when scrolling into view and complete by middle of section
-    const triggerStart = windowWidth * 0.2; // Start when 20% into first section
-    const triggerEnd = windowWidth * 1;   // End by middle of section 1
+    // Desktop scroll animations
+    const triggerStart = windowWidth * 0.5;
+    const triggerEnd = windowWidth * 1.2;
     
     if (scrollPosition >= triggerStart && scrollPosition <= triggerEnd) {
       // Calculate progress from 0 to 1 based on scroll position
@@ -263,19 +434,24 @@ const About = () => {
       
       // Animate paragraphs with stagger
       if (aboutTextsRef.current.length > 0) {
-        aboutTextsRef.current.forEach((textRef, index) => {
-          // Stagger the animations based on index
-          const delayedProgress = progress - (index * 0.1);
-          const opacity = Math.max(0, Math.min(delayedProgress * 3, 1));
-          
-          gsap.to(textRef, {
-            y: delayedProgress > 0 ? Math.max(30 * (1 - delayedProgress * 2), 0) : 30,
-            opacity: opacity,
-            overwrite: true,
-            duration: 0.1,
-            stagger: 0.1,
+        const validTexts = aboutTextsRef.current.filter(ref => ref);
+        if (validTexts.length > 0) {
+          validTexts.forEach((textRef, index) => {
+            if (!textRef) return;
+            
+            // Stagger the animations based on index
+            const delayedProgress = progress - (index * 0.1);
+            const opacity = Math.max(0, Math.min(delayedProgress * 3, 1));
+            
+            gsap.to(textRef, {
+              y: delayedProgress > 0 ? Math.max(30 * (1 - delayedProgress * 2), 0) : 30,
+              opacity: opacity,
+              overwrite: true,
+              duration: 0.1,
+              stagger: 0.1,
+            });
           });
-        });
+        }
       }
     } else if (scrollPosition < triggerStart) {
       // Reset animations when scrolling back
@@ -289,23 +465,26 @@ const About = () => {
       }
       
       if (aboutTextsRef.current.length > 0) {
-        gsap.to(aboutTextsRef.current, {
-          opacity: 0,
-          y: 30,
-          duration: 0.3,
-          overwrite: true
-        });
+        const validTexts = aboutTextsRef.current.filter(ref => ref);
+        if (validTexts.length > 0) {
+          gsap.to(validTexts, {
+            opacity: 0,
+            y: 30,
+            duration: 0.3,
+            overwrite: true
+          });
+        }
       }
     }
     
     // Animate images based on scroll position (skip the first image)
     imageRefs.current.forEach((imageRef, index) => {
       // Skip the first image as it's not scroll-triggered
-      if (!imageRef.current || index === 0) return;
+      if (!imageRef?.current || index === 0) return;
       
-      // Calculate when image should be in view
-      const imageTriggerStart = windowWidth * (index - 0.5);
-      const imageTriggerEnd = windowWidth * (index + 0.5);
+      // Calculate when image should be in view, based on window width
+      const imageTriggerStart = windowWidth * (index - 0.3);
+      const imageTriggerEnd = windowWidth * (index + 0.7);
       
       // Check if image is in view
       if (scrollPosition >= imageTriggerStart && scrollPosition <= imageTriggerEnd) {
@@ -314,7 +493,6 @@ const About = () => {
         // Apply subtle animation effects to the image
         gsap.to(imageRef.current, {
           scale: 1 + Math.sin(imageProgress * Math.PI) * 0.05, // Subtle scale effect based on position
-          filter: `brightness(${1 + imageProgress * 0.2})`,
           duration: 0.3,
           overwrite: true
         });
@@ -322,13 +500,12 @@ const About = () => {
         // Reset image when out of view
         gsap.to(imageRef.current, {
           scale: 1,
-          filter: "brightness(1)",
           duration: 0.3,
           overwrite: true
         });
       }
     });
-  }, [scrollPosition, windowWidth, imagesLoaded]);
+  }, [scrollPosition, windowWidth, imagesLoaded, isMobileOrTablet]);
 
   useEffect(() => {
     setIsReady(true);
@@ -348,34 +525,93 @@ const About = () => {
     const newImagesLoaded = [...imagesLoaded];
     newImagesLoaded[index] = true;
     setImagesLoaded(newImagesLoaded);
-    
-    // We're not animating opacity anymore - images should be visible by default
-    if (index > 0 && imageRefs.current[index]?.current) {
-      gsap.to(imageRefs.current[index].current, { 
-        scale: 1,
-        duration: 0.3
-      });
-    }
   };
 
+  // Make sure document is ready before any processing
+  useEffect(() => {
+    // For direct navigation, ensure document is fully loaded
+    if (document.readyState === 'complete') {
+      setDocumentReady(true);
+    } else {
+      const handleLoad = () => setDocumentReady(true);
+      window.addEventListener('load', handleLoad);
+      return () => window.removeEventListener('load', handleLoad);
+    }
+  }, []);
+  
+  // Handle direct navigation by setting history state
+  useEffect(() => {
+    if (documentReady) {
+      // Force scroll to top on direct navigation
+      window.scrollTo(0, 0);
+      
+      // Set history state if needed for back navigation
+      if (window.history.state === null) {
+        window.history.replaceState({ page: 'about' }, 'About Us', window.location.href);
+      }
+    }
+  }, [documentReady]);
+
+  // If on mobile/tablet, render the mobile version
+  if (isMobileOrTablet) {
+    return <MobileAbout images={images} />;
+  }
+
+  // Desktop version
   return (
     <div ref={pageRef} className={`about-page ${isReady ? 'is-ready' : ''}`}>
       <div ref={containerRef} className="about-container">
         {images.map((src, index) => (
-          <section key={index} className="about-section">
-            <div className="image-container">
+          <section 
+            key={index} 
+            className="about-section"
+            style={{
+              width: '100vw',
+              height: '100vh',
+              position: 'relative',
+              overflow: 'hidden',
+              margin: 0,
+              padding: 0
+            }}
+          >
+            <div className="image-container" style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              overflow: 'hidden'
+            }}>
               <img 
                 ref={imageRefs.current[index]}
                 src={src} 
                 alt={`About section ${index + 1}`} 
                 className="background-image"
                 onLoad={() => handleImageLoad(index)}
-                style={{ opacity: index === 0 ? 0.5 : 1 }} // All images visible except first one slightly faded
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  objectFit: 'cover',
+                  display: 'block',
+                }} 
               />
             </div>
-            <div className="about-content">
+            <div className="about-content" style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              zIndex: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              padding: '0 80px',
+              boxSizing: 'border-box'
+            }}>
               {index === 0 && (
-                <div className="about-content">
+                <div className="about-hero-content">
                   <h1 ref={titleRef} className="main-title">
                     CALL US<br />VISIBLE<span ref={asteriskRef} className="asterisk">*</span>
                   </h1>
@@ -408,4 +644,11 @@ const About = () => {
   );
 };
 
-export default Transition(About);
+// Wrap the component with the error boundary before applying the Transition HOC
+const AboutWithErrorHandling = () => (
+  <ErrorBoundary>
+    <About />
+  </ErrorBoundary>
+);
+
+export default Transition(AboutWithErrorHandling);

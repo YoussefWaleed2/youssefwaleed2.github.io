@@ -163,7 +163,6 @@ html, body {
 
 @media (max-width: 768px) {
     .services-container {
-        padding-top: 100px;
         padding: 1rem;
         padding-top: 100px;
     }

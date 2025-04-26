@@ -8,7 +8,7 @@
   margin: 2em auto;
   background-color: rgb(18, 18, 18);
   border-radius: 24px;
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   max-width: 800px;
   width: calc(100% - 4em);
 }
@@ -20,7 +20,7 @@
 .contact-form select,
 .contact-form textarea,
 .contact-form button {
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
 }
 
 .contact-form input,
@@ -33,7 +33,7 @@
   padding-bottom: 0.25em;
   width: 100%;
   font-size: 1rem;
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   line-height: 1.5;
   transition: all 0.3s ease;
   border-radius: 0;
@@ -42,7 +42,7 @@
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
   color: rgba(255, 255, 255, 0.7);
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -59,7 +59,7 @@
 .contact-form .btn {
   background-color: var(--bg);
   color: var(--fg);
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 1em 2em;
@@ -126,7 +126,7 @@
   margin-bottom: 0.25em;
   color: white;
   font-size: 0.85rem;
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   text-transform: uppercase;
 }
 
@@ -157,7 +157,7 @@
 .form-group input::placeholder,
 .form-group select::placeholder {
   color: rgba(255, 255, 255, 0.5);
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -178,7 +178,7 @@
 .form-group select option {
   background-color: rgb(18, 18, 18);
   color: white;
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   padding: 0.5em;
 }
 
@@ -231,7 +231,7 @@
   letter-spacing: 0.05em;
   margin-top: 2em;
   margin-bottom: 10px;
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   position: relative;
 }
 
@@ -303,7 +303,7 @@
   border-radius: 4px;
   font-size: 0.9rem;
   transition: all 0.3s ease;
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
 }
 
 .form-message.success {
@@ -326,7 +326,7 @@
 
 .contact-form-row-copy-item p.primary.sm,
 .contact-form-availability p.primary.sm {
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }

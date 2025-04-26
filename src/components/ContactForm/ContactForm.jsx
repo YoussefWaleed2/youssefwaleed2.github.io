@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import emailjs from "@emailjs/browser";
 import { emailConfig } from "../../config/emailConfig";
 import Popup from "../Popup/Popup";
 import "./ContactForm.css";
@@ -75,53 +74,96 @@ const ContactForm = () => {
     e.preventDefault();
     setLoading(true);
 
-    const emailData = {
-      ...form,
-      to_email: "HELLO@VZBL.CO",
-      platforms: form.platforms.join(", ")
+    // Format the email content based on the selected service
+    let serviceSpecificContent = '';
+    
+    if (selectedService === "Branding") {
+      serviceSpecificContent = `
+        <p><strong>Brand Name:</strong> ${form.brandName}</p>
+        <p><strong>Branding Type:</strong> ${form.brandingType}</p>
+      `;
+    } else if (selectedService === "Marketing" || selectedService === "Advertisement") {
+      serviceSpecificContent = `
+        <p><strong>Social Media Link:</strong> ${form.socialMediaLink}</p>
+        <p><strong>Platforms:</strong> ${form.platforms.join(", ")}</p>
+      `;
+      
+      if (selectedService === "Advertisement") {
+        serviceSpecificContent += `<p><strong>Campaign Objective:</strong> ${form.campaignObjective}</p>`;
+      }
+    }
+
+    const sendEmailWithBrevo = async () => {
+      try {
+        const emailData = {
+          sender: {
+            name: emailConfig.senderName,
+            email: emailConfig.senderEmail
+          },
+          to: emailConfig.recipientEmails.map(email => ({ email })),
+          subject: `Contact Form: ${form.projectName}`,
+          htmlContent: `
+            <h2>New Contact Form Submission</h2>
+            <p><strong>Name:</strong> ${form.name}</p>
+            <p><strong>Email:</strong> ${form.email}</p>
+            <p><strong>Phone:</strong> ${form.phone}</p>
+            <p><strong>Project Name:</strong> ${form.projectName}</p>
+            <p><strong>Sector:</strong> ${form.sector}</p>
+            <p><strong>Service:</strong> ${form.service}</p>
+            ${serviceSpecificContent}
+            <p><strong>Budget:</strong> ${form.budget}</p>
+          `
+        };
+
+        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'api-key': emailConfig.apiKey
+          },
+          body: JSON.stringify(emailData)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to send email');
+        }
+
+        setPopup({
+          show: true,
+          message: "Your message has been sent successfully!",
+          type: "success"
+        });
+        
+        setForm({
+          name: "",
+          email: "",
+          phone: "",
+          projectName: "",
+          sector: "",
+          service: "",
+          brandName: "",
+          brandingType: "",
+          budget: "",
+          socialMediaLink: "",
+          platforms: [],
+          campaignObjective: "",
+        });
+        
+        setSelectedService("");
+      } catch (error) {
+        console.error("Error sending email:", error);
+        setPopup({
+          show: true,
+          message: "Failed to send message. Please try again later.",
+          type: "error"
+        });
+      } finally {
+        setLoading(false);
+      }
     };
 
-    emailjs
-      .send(
-        emailConfig.serviceId,
-        emailConfig.templateId,
-        emailData,
-        emailConfig.publicKey
-      )
-      .then(
-        (result) => {
-          setPopup({
-            show: true,
-            message: "Your message has been sent successfully!",
-            type: "success"
-          });
-          setForm({
-            name: "",
-            email: "",
-            phone: "",
-            projectName: "",
-            sector: "",
-            service: "",
-            brandName: "",
-            brandingType: "",
-            budget: "",
-            socialMediaLink: "",
-            platforms: [],
-            campaignObjective: "",
-          });
-          setSelectedService("");
-        },
-        (error) => {
-          setPopup({
-            show: true,
-            message: "Failed to send message. Please try again later.",
-            type: "error"
-          });
-        }
-      )
-      .finally(() => {
-        setLoading(false);
-      });
+    sendEmailWithBrevo();
   };
 
   return (

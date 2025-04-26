@@ -205,8 +205,12 @@ const Projects = () => {
     if (currentTitle && projectsData && projectsData[currentTitle]) {
       // Store the projects data in sessionStorage for the All-Projects page
       sessionStorage.setItem('currentProjects', JSON.stringify(projectsData[currentTitle]));
+      
+      // Format the category for the URL
+      let urlCategory = currentTitle.toLowerCase().replace(" ", "-");
+      
       // Navigate to all-projects with current category
-      navigate(`/all-projects/${currentTitle.toLowerCase().replace(" ", "-")}`);
+      navigate(`/all-projects/${urlCategory}`);
     } else {
       console.error("Cannot navigate - missing data:", { 
         currentTitle, 

@@ -17,6 +17,7 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
   const currentPosition = useRef({ x: 0, y: 0, z: 0 });
   const currentRotation = useRef({ x: 0, y: 0 });
   const animationInProgress = useRef(false);
+  const animationInitialized = useRef(false);
   const { viewport } = useThree();
   
   // Calculate responsive scaling factor based on viewport size
@@ -36,6 +37,10 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
   
   // Set the model color and material properties
   useEffect(() => {
+    // Prevent animation from being initialized more than once
+    if (animationInitialized.current) return;
+    animationInitialized.current = true;
+
     // Make the model invisible initially
     scene.visible = false;
     
@@ -47,7 +52,7 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
           roughness: 0.1,
           clearcoat: 1,
           clearcoatRoughness: 0.1,
-          reflectivity: 0.7,
+          reflectivity: 0.4,
           envMapIntensity: 1
         });
         child.material = shinyMaterial;
@@ -99,7 +104,7 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
     
     // Create a timeline for coordinated animations
     const tl = gsap.timeline({
-      delay: 0.5,
+      delay: 0.2,
       ease: "power1.out",
       onStart: () => {
         // Make the model visible when animation starts
@@ -137,12 +142,12 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
       x: responsivePosition.x, // Responsive x position
       y: responsivePosition.y, // Responsive y position
       z: 0,
-      duration: 3.5,
+      duration: 1.5, // Reduced from 3.5 to 1.5
       ease: "power2.out"
     })
     .to(scene.rotation, {
       y: isLeftHand ? Math.PI * 0.5 : Math.PI * 1.5, // Rotate to face the section
-      duration: 4,
+      duration: 1.5, // Reduced from 4 to 1.8
       ease: "power1.out"
     }, "<"); // Start at the same time as position animation
 
@@ -151,7 +156,7 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
       x: scaleFactor * 0.8,
       y: scaleFactor * 0.8,
       z: scaleFactor * 0.8,
-      duration: 3,
+      duration: 1.5, // Reduced from 3 to 1.5
       ease: "elastic.out(1, 0.2)"
     }, "<0.3"); // Start slightly after the main animation
   }, [scene, isLeftHand, scaleFactor, viewport.width]);
@@ -210,8 +215,8 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
 
       // Calculate target rotations - SLOWED DOWN ROTATION
       const rotationDirection = isLeftHand ? 1 : -1;
-      // Reduced from Math.PI * 4 to Math.PI * 2 for slower rotation
-      const targetRotationY = initialRotation.current + (scrollProgress * Math.PI * 2 * rotationDirection);
+      // Increased from Math.PI * 0.8 to Math.PI * 2.5 for much faster rotation
+      const targetRotationY = initialRotation.current + (scrollProgress * Math.PI * 2.2 * rotationDirection);
       const targetRotationX = Math.sin(scrollProgress * Math.PI) * 0.1;
 
       // Apply smooth easing - INCREASED SMOOTHNESS
@@ -289,7 +294,7 @@ const Services = () => {
   // Initialize Lenis for smooth scrolling
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 3,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       direction: 'vertical',
       gestureDirection: 'vertical',
@@ -362,12 +367,6 @@ const Services = () => {
           servicesContent.classList.add('visible');
         }
       }, "+=0.5");
-
-      // Start hand entrance animation
-      timeline.add(() => {
-        // Hand animation is already set up in the Model component
-        // It will start automatically when the component mounts
-      }, "+=0.3");
 
       // Reveal sections one by one
       const sections = document.querySelectorAll('.service-section');
@@ -447,8 +446,6 @@ const Services = () => {
           <h2 className="service-title">BRANDING</h2>
           <p className="service-description">
             Every brand has a story to tell, but sometimes, that story needs a fresh perspective.
-          </p>
-          <p className="service-description">
             Our rebranding process goes beyond just a new logo or color scheme; it's about uncovering the brand's essence and redefining how it connects with its audience.
           </p>
         </section>
@@ -457,10 +454,7 @@ const Services = () => {
           <div className="service-number">02.</div>
           <h2 className="service-title">SOCIAL MEDIA</h2>
           <p className="service-description">
-            Every brand has a story to tell, but sometimes, that story needs a fresh perspective.
-          </p>
-          <p className="service-description">
-            Our rebranding process goes beyond just a new logo or color scheme; it's about uncovering the brand's essence and redefining how it connects with its audience.
+            We take your brand beyond the feed. Through standout campaigns and creative storytelling, we transform social media into a stage where your brand doesn’t just show up, it stands out. From engaging posts to viral content and authentic connections, we ensure your brand stays front of mind. 
           </p>
         </section>
 
@@ -468,10 +462,7 @@ const Services = () => {
           <div className="service-number">03.</div>
           <h2 className="service-title">ADVERTISEMENT</h2>
           <p className="service-description">
-            Every brand has a story to tell, but sometimes, that story needs a fresh perspective.
-          </p>
-          <p className="service-description">
-            Our rebranding process goes beyond just a new logo or color scheme; it's about uncovering the brand's essence and redefining how it connects with its audience.
+            At the heart of what we do, there is a simple truth… visuals are everything. We take abstract ideas and turn them into striking, tangible content that grabs attention and leaves a lasting impression. Whether it's a commercial, a social media campaign, or any other medium, we bring your vision to life through bold, high-impact visuals. Every frame is produced with creativity and purpose to ensure your message not only reaches your audience but resonates deeply. 
           </p>
         </section>
 
@@ -479,10 +470,7 @@ const Services = () => {
           <div className="service-number">04.</div>
           <h2 className="service-title">PACKAGING</h2>
           <p className="service-description">
-            Every brand has a story to tell, but sometimes, that story needs a fresh perspective.
-          </p>
-          <p className="service-description">
-            Our rebranding process goes beyond just a new logo or color scheme; it's about uncovering the brand's essence and redefining how it connects with its audience.
+            we believe packaging is more than just a container—it's a canvas for storytelling. We craft designs that not only protect your product but also elevate your brand's identity. From the tactile feel to the visual appeal, every element is meticulously considered to create an unforgettable unboxing experience. Our approach ensures that your packaging resonates with your audience, making your brand not just seen, but truly VZBL.
           </p>
         </section>
       </div>

@@ -7,6 +7,7 @@ import ReactLenis from "lenis/react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { handleOverlay } from "../../utils/overlayManager";
+import projectsData from "../../data/projectsData.json";
 
 const AllProjects = () => {
   const { category } = useParams();
@@ -29,10 +30,46 @@ const AllProjects = () => {
   }, [category]);
 
   useEffect(() => {
-    // Get projects data from sessionStorage
+    // Function to get projects based on category
+    const getProjectsByCategory = () => {
+      if (!category) return [];
+      
+      // Format category name to match projectsData keys
+      let formattedCategory = category.replace(/-/g, " ");
+      
+      // First letter uppercase for keys like "Branding", "Marketing"
+      // Special case for "Marketing" and "Advertising" to match projectsData keys
+      if (formattedCategory.toLowerCase() === "marketing") {
+        formattedCategory = "Marketing";
+      } else if (formattedCategory.toLowerCase() === "advertising") {
+        formattedCategory = "Advertising";
+      } else if (formattedCategory.toLowerCase() === "branding") {
+        formattedCategory = "BRANDING";
+      }
+      
+      // Check if category exists in projectsData
+      if (projectsData[formattedCategory]) {
+        return projectsData[formattedCategory];
+      }
+      
+      // Try uppercase version as fallback
+      if (projectsData[formattedCategory.toUpperCase()]) {
+        return projectsData[formattedCategory.toUpperCase()];
+      }
+      
+      console.warn(`Category not found: ${formattedCategory}`);
+      return [];
+    };
+
+    // First try to get projects from sessionStorage if available
     const storedProjects = sessionStorage.getItem('currentProjects');
+    
     if (storedProjects) {
       setProjects(JSON.parse(storedProjects));
+    } else {
+      // Otherwise load directly from projectsData based on URL category
+      const projectsByCategory = getProjectsByCategory();
+      setProjects(projectsByCategory);
     }
 
     const customEase = CustomEase.create("custom", ".87,0,.13,1");
@@ -181,7 +218,7 @@ const AllProjects = () => {
       <ReactLenis root>
         <div className="all-projects-container" ref={containerRef}>
           <h1 className="category-title" ref={titleRef}>
-            {renderTitle(category.replace("-", " ").toUpperCase())}
+            {renderTitle(category ? category.replace("-", " ").toUpperCase() : "ALL")}
           </h1>
           
           <div className="project-grid">

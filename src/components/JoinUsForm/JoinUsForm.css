@@ -30,7 +30,7 @@ body.form-open {
   padding: 2.5em;
   z-index: 99999;
   color: white;
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -67,7 +67,7 @@ body.form-open {
   margin-bottom: 2em;
   font-weight: 400;
   letter-spacing: 0.05em;
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
 }
 
 .interest-section {
@@ -78,7 +78,7 @@ body.form-open {
   margin-bottom: 1em;
   color: #fff;
   font-size: 0.9rem;
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
 }
 
 .interest-options {
@@ -96,7 +96,7 @@ body.form-open {
   background: transparent;
   color: white;
   font-size: 0.9rem;
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
 }
 
 .interest-option:hover,
@@ -125,7 +125,7 @@ body.form-open {
   margin-bottom: 0.25em;
   color: white;
   font-size: 0.85rem;
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   text-transform: uppercase;
 }
 
@@ -136,7 +136,7 @@ body.form-open {
   border-bottom: 1px solid rgba(255, 255, 255, 1);
   color: white;
   font-size: 1rem;
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   padding: 0;
   padding-bottom: 0.25em;
   line-height: 1.5;
@@ -156,7 +156,7 @@ body.form-open {
 .form-group-joinus input::placeholder,
 .form-group-joinus textarea::placeholder {
   color: rgba(255, 255, 255, 0.5);
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   font-size: 1rem;
 }
 
@@ -174,7 +174,7 @@ body.form-open {
   font-size: 1rem;
   padding: 0.5em 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
 }
 
 .file-input-label:hover {
@@ -210,7 +210,7 @@ body.form-open {
   transition: all 0.3s ease;
   margin-top: 2em;
   margin-bottom: 10px;
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   position: relative;
@@ -242,7 +242,7 @@ body.form-open {
   width: 36px;
   height: 36px;
   opacity: 1;
-  font-family: "Audrey", sans-serif;
+  font-family: "TT-Norms", sans-serif;
   z-index: 100000;
   border-radius: 50%;
 }

@@ -1,8 +1,10 @@
-// EmailJS Configuration
-// Replace these values with your actual EmailJS credentials
+// Brevo Email Configuration
 export const emailConfig = {
-  serviceId: "service_to23tip", // Your EmailJS service ID
-  templateId: "template_95x0513", // Your EmailJS template ID
-  publicKey: "-qlzxe_r_ORnXTn9Z", // Your EmailJS public key
-  recipientEmail: "abdelrhmanshokry111@gmail.com" // The Gmail address that will receive the form submissions
+  apiKey: import.meta.env.VITE_BREVO_API_KEY || "", // Your Brevo API key
+  senderEmail: import.meta.env.VITE_BREVO_SENDER_EMAIL || "", // Sender email for Brevo
+  senderName: import.meta.env.VITE_BREVO_SENDER_NAME || "VZBL", // Sender name
+  recipientEmails: [
+    import.meta.env.VITE_RECIPIENT_EMAIL_1 || "",
+    import.meta.env.VITE_RECIPIENT_EMAIL_2 || ""
+  ].filter(email => email !== "") // Recipient emails for both contact and join us forms
 }; 

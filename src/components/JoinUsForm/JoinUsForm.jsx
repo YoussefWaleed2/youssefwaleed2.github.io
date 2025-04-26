@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import emailjs from "@emailjs/browser";
 import { emailConfig } from "../../config/emailConfig";
 import Popup from "../Popup/Popup";
 import { motion, AnimatePresence } from "framer-motion";
@@ -69,47 +68,90 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
     e.preventDefault();
     setLoading(true);
 
-    emailjs
-      .send(
-        emailConfig.serviceId,
-        emailConfig.templateId,
-        {
-          ...form,
-          to_email: "HR@VZBL.CO",
-          selectedJob: form.jobTitle || "General Application",
-          resume: form.resume ? form.resume.name : "No file attached"
-        },
-        emailConfig.publicKey
-      )
-      .then(
-        (result) => {
-          setPopup({
-            show: true,
-            message: "Your application has been sent successfully!",
-            type: "success"
-          });
-          setForm({
-            firstName: "",
-            lastName: "",
-            email: "",
-            phone: "",
-            aboutYou: "",
-            resume: null,
-            jobTitle: ""
-          });
-          if (onClose) onClose();
-        },
-        (error) => {
-          setPopup({
-            show: true,
-            message: "Failed to send application. Please try again later.",
-            type: "error"
-          });
-        }
-      )
-      .finally(() => {
-        setLoading(false);
+    // Convert file to base64
+    const readFileAsBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
       });
+    };
+
+    const sendEmailWithBrevo = async () => {
+      try {
+        let attachment = null;
+        
+        if (form.resume) {
+          const base64Content = await readFileAsBase64(form.resume);
+          attachment = {
+            name: form.resume.name,
+            content: base64Content
+          };
+        }
+
+        const emailData = {
+          sender: {
+            name: emailConfig.senderName,
+            email: emailConfig.senderEmail
+          },
+          to: emailConfig.recipientEmails.map(email => ({ email })),
+          subject: `Job Application: ${form.jobTitle || 'General Application'}`,
+          htmlContent: `
+            <h2>New Job Application</h2>
+            <p><strong>Job Title:</strong> ${form.jobTitle || 'General Application'}</p>
+            <p><strong>Name:</strong> ${form.firstName} ${form.lastName}</p>
+            <p><strong>Email:</strong> ${form.email}</p>
+            <p><strong>Phone:</strong> ${form.phone}</p>
+            <p><strong>About:</strong> ${form.aboutYou || 'Not provided'}</p>
+          `,
+          attachment: attachment ? [attachment] : []
+        };
+
+        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'api-key': emailConfig.apiKey
+          },
+          body: JSON.stringify(emailData)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to send email');
+        }
+
+        setPopup({
+          show: true,
+          message: "Your application has been sent successfully!",
+          type: "success"
+        });
+        
+        setForm({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          aboutYou: "",
+          resume: null,
+          jobTitle: ""
+        });
+        
+        if (onClose) onClose();
+      } catch (error) {
+        console.error("Error sending email:", error);
+        setPopup({
+          show: true,
+          message: "Failed to send application. Please try again later.",
+          type: "error"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    sendEmailWithBrevo();
   };
 
   const formVariants = {

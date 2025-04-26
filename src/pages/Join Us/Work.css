@@ -274,7 +274,7 @@
   font-style: normal;
   color: rgba(255, 255, 255, 0.9);
   line-height: 1;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 
 .join-subtitle .bold-creatives {
@@ -527,7 +527,7 @@
 
 @media (min-width: 992px) and (max-width: 1200px) {
   .work-header {
-    left: 40px;
+    
     top: 60px;
     margin-bottom: 7rem; 
   }
@@ -603,7 +603,7 @@
 
 @media (min-width: 1201px) and (max-width: 1440px) {
   .work-header {
-    left: 80px;
+    
     top: 70px;
   }
 

@@ -1,6 +1,6 @@
 // Brevo Email Configuration
 export const emailConfig = {
-  apiKey: "#", // Your Brevo API key
+//api goes here
   senderEmail: "youssef.waleed2231@gmail.com", // Sender email for Brevo
   senderName: "VZBL", // Sender name
   recipientEmails: [

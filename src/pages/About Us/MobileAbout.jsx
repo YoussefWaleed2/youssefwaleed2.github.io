@@ -226,7 +226,7 @@ const MobileAbout = ({ images = [] }) => {
           <div className="about-hand-container">
             <div className="about-hand-bg">
               <img 
-                src="/about/4.webp" 
+                src="/about/16.webp" 
                 alt="Background" 
                 className="about-hand-bg-image" 
                 onError={handleImageError}

@@ -6,6 +6,7 @@ import SplitType from 'split-type';
 import './About.css';
 import MobileAbout from './MobileAbout'; // Import the mobile component
 import { handleOverlay } from "./../../utils/overlayManager";
+import { togglePersonBackground } from '../../utils/personDetection';
 
 // Add debounce function for better performance
 function debounce(func, wait) {
@@ -134,8 +135,17 @@ const About = () => {
   // Set window width and check device type on initial render and window resize
   useEffect(() => {
     const handleResize = () => {
+      // Add resizing class to body during resize
+      document.body.classList.add('resizing');
+      
+      // Set window width and check device type
       setWindowWidth(window.innerWidth);
       setIsMobileOrTablet(detectMobileOrTablet());
+      
+      // Remove resizing class after a short delay
+      setTimeout(() => {
+        document.body.classList.remove('resizing');
+      }, 300);
     };
     
     // Set initial window width and device type
@@ -147,6 +157,7 @@ const About = () => {
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
+      document.body.classList.remove('resizing');
     };
   }, []);
 
@@ -162,16 +173,32 @@ const About = () => {
     // Initialize text animation
     if (titleRef.current && subtitleRef.current && descriptionRef.current && asteriskRef.current) {
       try {
-        // Split text for animation
-        const titleSplit = new SplitType(titleRef.current, { types: 'chars' });
-        const subtitleSplit = new SplitType(subtitleRef.current, { types: 'chars' });
-        const descriptionSplit = new SplitType(descriptionRef.current, { types: 'lines' });
+        // Split text for animation with additional options to prevent spacing issues
+        const titleSplit = new SplitType(titleRef.current, { 
+          types: 'chars',
+          tagName: 'span',
+          charClass: 'title-char' // Custom class for targeting
+        });
+        const subtitleSplit = new SplitType(subtitleRef.current, { 
+          types: 'chars',
+          tagName: 'span' 
+        });
+        const descriptionSplit = new SplitType(descriptionRef.current, { 
+          types: 'lines',
+          tagName: 'span' 
+        });
         
         // Set initial states
         if (titleSplit.chars && subtitleSplit.chars && descriptionSplit.lines) {
           gsap.set([titleSplit.chars, subtitleSplit.chars, descriptionSplit.lines], {
             y: '100%',
             opacity: 0
+          });
+          
+          // Additional setup to prevent character spacing issues
+          gsap.set(titleSplit.chars, {
+            display: 'inline-block',
+            margin: '0 -0.02em 0 0' // Slight negative margin to pull characters together
           });
         }
         
@@ -198,7 +225,23 @@ const About = () => {
               opacity: 1,
               duration: 1,
               stagger: 0.03,
-              ease: customEase
+              ease: customEase,
+              onComplete: () => {
+                // Ensure characters aren't clipped after animation completes
+                gsap.set(titleSplit.chars, {
+                  overflow: 'visible',
+                  width: 'auto',
+                  clearProps: 'overflow,width'
+                });
+                
+                // Fix for S letter specifically
+                if (titleRef.current) {
+                  titleRef.current.style.overflow = 'visible';
+                  titleRef.current.style.paddingRight = '30px';
+                  titleRef.current.style.width = 'auto';
+                  titleRef.current.style.maxWidth = '90%';
+                }
+              }
             });
           }
           
@@ -279,6 +322,21 @@ const About = () => {
         });
       }
     });
+    
+    // Return cleanup function to reset styles when component unmounts
+    return () => {
+      // Reset all image styles on unmount
+      imageRefs.current.forEach((ref) => {
+        if (ref?.current) {
+          gsap.set(ref.current, {
+            scale: 1,
+            opacity: 1,
+            filter: "blur(0px)",
+            clearProps: "all" // Clear all GSAP properties
+          });
+        }
+      });
+    };
   }, [isReady, isMobileOrTablet]);
 
   // Smooth scroll to function
@@ -329,6 +387,56 @@ const About = () => {
     
     // Start animation
     scrollRafRef.current = requestAnimationFrame(animateScroll);
+  };
+
+  // Add these at the top where the other refs are
+  const lastTouchX = useRef(0);
+  const touchStartX = useRef(0);
+
+  // Remove any unused refs that may be causing conflicts
+  const wheelAnimationRef = useRef(null);
+  const isWheelAnimating = useRef(false);
+  
+  // Custom wheel handler with very simple, reliable scrolling
+  const handleWheel = (e) => {
+    if (!pageRef.current) return;
+    
+    e.preventDefault();
+    
+    // Get the delta and apply a multiplier
+    const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+    const scrollAmount = delta * 1.5;
+    
+    // Simply update the scroll position - basic approach that always works
+    pageRef.current.scrollLeft += scrollAmount;
+  };
+  
+  // Simple touch start handler
+  const handleTouchStart = (e) => {
+    if (!pageRef.current) return;
+    
+    // Just store the initial touch position
+    touchStartX.current = e.touches[0].clientX;
+    lastTouchX.current = touchStartX.current;
+  };
+  
+  // Simple touch move handler
+  const handleTouchMove = (e) => {
+    if (!pageRef.current) return;
+    
+    const touchX = e.touches[0].clientX;
+    const deltaX = lastTouchX.current - touchX;
+    
+    // Direct scrolling - most reliable approach
+    pageRef.current.scrollLeft += deltaX;
+    
+    e.preventDefault();
+    lastTouchX.current = touchX;
+  };
+  
+  // Simple touch end handler
+  const handleTouchEnd = (e) => {
+    // No momentum or special handling - keep it simple
   };
 
   // Effect for desktop horizontal scrolling setup - with custom smooth scrolling
@@ -416,6 +524,9 @@ const About = () => {
       }
     };
     
+    // Start the animation
+    const animationFrameId = requestAnimationFrame(smoothScrollAnimation);
+    
     // Modified smooth scroll function with bounds checking
     const boundedSmoothScrollTo = (targetX) => {
       // Clamp the target position to valid bounds
@@ -425,23 +536,22 @@ const About = () => {
       smoothScrollTo(boundedTarget);
     };
     
-    // Start the smooth scroll animation loop
-    const animationFrameId = requestAnimationFrame(smoothScrollAnimation);
-    
     // Add direct scroll listener for scrollbar dragging
     const handleScroll = () => {
-      // Only update if not in the middle of a smooth scroll operation
-      if (!isScrollingRef.current) {
-        // Keep scroll position within bounds
-        if (pageRef.current.scrollLeft < 0) {
-          pageRef.current.scrollLeft = 0;
-        } else if (pageRef.current.scrollLeft > maxScrollPosition) {
-          pageRef.current.scrollLeft = maxScrollPosition;
-        }
-        
-        targetScrollRef.current = pageRef.current.scrollLeft;
-        currentScrollRef.current = pageRef.current.scrollLeft;
+      if (!containerRef.current) return;
+
+      // Calculate current section based on scroll position
+      const scrollX = containerRef.current.scrollLeft;
+      const sectionWidth = window.innerWidth;
+      const newSection = Math.floor(scrollX / sectionWidth);
+      
+      // Update current section if changed
+      if (newSection !== currentSection) {
+        setCurrentSection(newSection);
       }
+      
+      // Existing scroll handling code...
+      setScrollPosition(scrollX);
     };
     
     pageRef.current.addEventListener('scroll', handleScroll, { passive: true });
@@ -578,6 +688,17 @@ const About = () => {
       // Recalculate dimensions when window is resized
       if (!containerRef.current) return;
       
+      // Fix for persisting blur effect on first image
+      if (imageRefs.current[0]?.current) {
+        // Kill any active animations on the image
+        gsap.killTweensOf(imageRefs.current[0].current);
+        
+        // Apply direct style changes to remove blur
+        imageRefs.current[0].current.style.filter = "blur(0px)";
+        imageRefs.current[0].current.style.transform = "scale(1)";
+        imageRefs.current[0].current.style.opacity = "1";
+      }
+      
       const newSectionWidth = newWidth;
       const newTotalWidth = newSectionWidth * (images.length - 0.3); // Same adjustment as initial setup
       
@@ -611,7 +732,9 @@ const About = () => {
     
     // Cleanup
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
       if (scrollRafRef.current) {
         cancelAnimationFrame(scrollRafRef.current);
       }
@@ -709,6 +832,49 @@ const About = () => {
       }
     }
   }, [documentReady]);
+
+  // Add specific effect to handle blur reset on window resize
+  useEffect(() => {
+    if (isMobileOrTablet) return;
+    
+    // Function to clear blur effect
+    const clearBlurEffect = () => {
+      // Immediately clear blur on first image
+      if (imageRefs.current[0]?.current) {
+        gsap.killTweensOf(imageRefs.current[0].current);
+        imageRefs.current[0].current.style.filter = 'blur(0px)';
+        imageRefs.current[0].current.style.transform = 'scale(1)';
+      }
+    };
+    
+    // Add direct resize listener for blur effect
+    window.addEventListener('resize', clearBlurEffect);
+    
+    // Clean up
+    return () => {
+      window.removeEventListener('resize', clearBlurEffect);
+    };
+  }, [isMobileOrTablet]);
+
+  // Track section visibility for navbar styling
+  const [currentSection, setCurrentSection] = useState(0);
+  
+  // List of sections with people - adjust these indices based on your content
+  const peopleImageSections = [2, 3, 8, 10]; // Example: sections 2, 3, 8, 10 have people
+
+  // Update navbar styling based on current section
+  useEffect(() => {
+    if (!isMobileOrTablet) {
+      // Toggle person-bg class if the current section has people
+      const hasPerson = peopleImageSections.includes(currentSection);
+      togglePersonBackground(hasPerson);
+    }
+    
+    return () => {
+      // Clean up when component unmounts
+      togglePersonBackground(false);
+    };
+  }, [currentSection, isMobileOrTablet]);
 
   // If on mobile/tablet, render the mobile version
   if (isMobileOrTablet) {

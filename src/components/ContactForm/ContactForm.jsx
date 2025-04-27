@@ -39,6 +39,27 @@ const ContactForm = ({ formType = 'contact' }) => {
   const services = ["Branding", "Marketing", "Advertisement"];
   const brandingTypes = ["Branding", "Rebranding", "Revamping"];
   const socialPlatforms = ["Instagram", "Tiktok", "Linkedin", "Facebook", "Snapchat"];
+  
+  const budgetOptions = {
+    Advertisement: [
+      "6,000-15,000",
+      "15,000-30,000",
+      "30,000-70,000",
+      "70,000-100,000",
+      "ABOVE 100,000"
+    ],
+    Marketing: [
+      "4,000-7,000",
+      "7,000-10,000",
+      "10,000-15,000"
+    ],
+    Branding: [
+      "5,000-10,000",
+      "10,000-20,000",
+      "20,000-30,000",
+      "ABOVE 30,000"
+    ]
+  };
 
   // Validate input for security
   const validateInput = (input) => {
@@ -257,7 +278,7 @@ const ContactForm = ({ formType = 'contact' }) => {
             onChange={handleChange}
             required
           >
-            <option value="">Select Sector</option>
+            <option value="">SELECT SECTOR</option>
             {sectors.map(sector => (
               <option key={sector} value={sector}>{sector}</option>
             ))}
@@ -271,7 +292,7 @@ const ContactForm = ({ formType = 'contact' }) => {
             onChange={handleServiceChange}
             required
           >
-            <option value="">Select Service</option>
+            <option value="">SELECT SERVICE</option>
             {services.map(service => (
               <option key={service} value={service}>{service}</option>
             ))}
@@ -298,7 +319,7 @@ const ContactForm = ({ formType = 'contact' }) => {
                 onChange={handleChange}
                 required
               >
-                <option value="">Select Branding Type</option>
+                <option value="">SELECT BRANDING TYPE</option>
                 {brandingTypes.map(type => (
                   <option key={type} value={type}>{type}</option>
                 ))}
@@ -306,14 +327,17 @@ const ContactForm = ({ formType = 'contact' }) => {
             </div>
 
             <div className="form-group">
-              <input 
-                type="text" 
+              <select 
                 name="budget" 
                 value={form.budget}
                 onChange={handleChange}
-                placeholder="Budget" 
                 required
-              />
+              >
+                <option value="">SELECT BUDGET</option>
+                {budgetOptions[selectedService].map(budget => (
+                  <option key={budget} value={budget}>{budget}</option>
+                ))}
+              </select>
             </div>
           </>
         )}
@@ -349,14 +373,17 @@ const ContactForm = ({ formType = 'contact' }) => {
             </div>
 
             <div className="form-group">
-              <input 
-                type="text" 
+              <select 
                 name="budget" 
                 value={form.budget}
                 onChange={handleChange}
-                placeholder="Budget" 
                 required
-              />
+              >
+                <option value="">Select Budget</option>
+                {budgetOptions[selectedService].map(budget => (
+                  <option key={budget} value={budget}>{budget}</option>
+                ))}
+              </select>
             </div>
 
             {selectedService === "Advertisement" && (

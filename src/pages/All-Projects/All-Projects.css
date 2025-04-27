@@ -32,7 +32,7 @@
   font-family: 'Sprat', serif;
   margin-top: 40px;
   margin-bottom: 60px;
-  font-weight: 500;
+  font-weight: 300;
   text-transform: uppercase;
   position: relative;
   text-align: center;
@@ -47,7 +47,7 @@
 .project-grid {
   display: grid;
   grid-template-columns: repeat(4, 300px);
-  gap: 10px;
+  gap: 50px;
   padding: 20px 0;
   position: relative;
   max-width: 1800px;
@@ -189,7 +189,7 @@
 .project-info h3 {
   font-size: 20px;
   margin: 0 0 8px 0;
-  font-weight: 500;
+  font-weight: 300;
   color: #fff;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -199,7 +199,7 @@
 
 .project-info p {
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 300;
   color: rgba(255, 255, 255, 0.7);
   line-height: 1.2;
   margin: 0;

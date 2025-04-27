@@ -65,32 +65,32 @@ const Menu = () => {
         ) : (
           <div className="nav-links">
             <Link
-              to="/about"
+              to="/"
               ref={(el) => (navLinksRef.current[0] = el)}
+              data-text="Home"
+            >
+              <span>Home</span>
+            </Link>
+            <Link
+              to="/about"
+              ref={(el) => (navLinksRef.current[1] = el)}
               data-text="About Us"
             >
               <span>About Us</span>
             </Link>
             <Link
               to="/services"
-              ref={(el) => (navLinksRef.current[1] = el)}
+              ref={(el) => (navLinksRef.current[2] = el)}
               data-text="Services"
             >
               <span>Services</span>
             </Link>
             <Link
               to="/projects"
-              ref={(el) => (navLinksRef.current[2] = el)}
+              ref={(el) => (navLinksRef.current[3] = el)}
               data-text="Projects"
             >
               <span>Projects</span>
-            </Link>
-            <Link
-              to="/clients"
-              ref={(el) => (navLinksRef.current[3] = el)}
-              data-text="Clients"
-            >
-              <span>Clients</span>
             </Link>
             <Link
               to="/join-us"

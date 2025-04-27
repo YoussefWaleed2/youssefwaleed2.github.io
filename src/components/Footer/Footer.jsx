@@ -11,9 +11,9 @@ const Footer = () => {
           <p className="footer-text">
           <span className="footer-text-bold">VZBL</span> is all about being seen.
           <br></br>
-          <span>It’s the frequency at which your brand shows up,
+          <span>It's the frequency at which your brand shows up,
           whether in search results, on social media, through email,
-          or across other marketing channels. It’s about making your brand impossible to ignore, grabbing attention,
+          or across other marketing channels. It's about making your brand impossible to ignore, grabbing attention,
           and building an identity that sticks.</span>
           </p>
           <div className="social-links">
@@ -39,18 +39,30 @@ const Footer = () => {
         </div>
 
         <div className="footer-right">
-          <nav className="footer-nav">
-            <Link to="/about">About</Link>
-            <Link to="/projects">Projects</Link>
-            <Link to="/services">Services</Link>
-            <Link to="/join-us">Join Us</Link>
-          </nav>
+          <div className="footer-right-content">
+            <nav className="footer-nav">
+              <Link to="/about">About</Link>
+              <Link to="/projects">Projects</Link>
+              <Link to="/services">Services</Link>
+              <Link to="/join-us">Join Us</Link>
+            </nav>
+            
+            <div className="footer-contact">
+              <div className="contact-location">
+                <h4>DUBAI</h4>
+                <p>(+971) 55 28 8 789 5</p>
+              </div>
+              
+              <div className="contact-location">
+                <h4>CAIRO</h4>
+                <p>(+2) 0111 98 111 93</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className="footer-logo">
-      
-         
             <svg
               className="img-logo"
               width="92"
@@ -82,8 +94,6 @@ const Footer = () => {
                 </clipPath>
               </defs>
             </svg>
-          
-        
       </div>
 
       <div className="footer-bottom">

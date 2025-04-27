@@ -183,6 +183,12 @@ body:has(.horizontal-scroll-wrapper) .img-logo {
     transition: color 0.3s ease;
 }
 
+/* Add specific style for Home link */
+.nav-links a[data-text="Home"] {
+    position: relative;
+    left: 0.6rem;
+}
+
 .nav-links a::before {
     content: attr(data-text); /* Duplicate the text */
     position: absolute;
@@ -218,7 +224,6 @@ body:has(.horizontal-scroll-wrapper) .img-logo {
     color: #ffffff;
     font-size: 18px;
 }
-
 /* Menu Links Animation */
 .menu-links {
     display: flex;
@@ -289,7 +294,7 @@ nav a,
     border: 1px solid #ffffff;
     background: transparent;
     padding: 10px 30px;
-    border-radius: 25px;
+    border-radius: 10px;
     cursor: pointer;
     transition: background 0.3s ease, color 0.3s ease;
     mix-blend-mode: difference;

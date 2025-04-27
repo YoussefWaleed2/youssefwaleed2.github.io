@@ -550,7 +550,7 @@ html, body {
 }
 
 .about-hand-bg-image {
-  width: 100%;
+  width: 110%;
   height: 110%;
   object-fit: cover;
   object-position: 100% center; /* Focus on right side of image */

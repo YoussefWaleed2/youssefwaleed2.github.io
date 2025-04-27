@@ -3,6 +3,8 @@ import { emailConfig } from "../../config/emailConfig";
 import Popup from "../Popup/Popup";
 import { motion, AnimatePresence } from "framer-motion";
 import "./JoinUsForm.css";
+import { sendEmail } from '../../utils/email';
+import { generateJoinUsEmail } from '../../utils/emailTemplates';
 
 const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
   const formRef = useRef();
@@ -30,8 +32,32 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
     }
   }, [selectedJob, isOpen]);
 
+  // Validate input for security
+  const validateInput = (input) => {
+    // Check for potential script injection or suspicious patterns
+    const suspiciousPatterns = [
+      /<script/i,
+      /javascript:/i,
+      /on\w+\s*=/i, // onload=, onclick=, etc.
+      /data:/i
+    ];
+    
+    return !suspiciousPatterns.some(pattern => pattern.test(input));
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
+    // Security validation
+    if (!validateInput(value)) {
+      setPopup({
+        show: true,
+        message: "Invalid input detected. Please avoid using scripts or code.",
+        type: "error"
+      });
+      return;
+    }
+    
     setForm({ ...form, [name]: value });
   };
 
@@ -50,11 +76,22 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
         return;
       }
       
-      // Check file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
+      // Check file size (max 2MB)
+      const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+      if (file.size > maxSize) {
         setPopup({
           show: true,
-          message: "File size should be less than 5MB",
+          message: "File size should be less than 2MB",
+          type: "error"
+        });
+        return;
+      }
+      
+      // Validate file name for security
+      if (!validateInput(file.name)) {
+        setPopup({
+          show: true,
+          message: "Invalid file name. Please rename your file without special characters.",
           type: "error"
         });
         return;
@@ -64,9 +101,23 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setPopup({ show: false, message: "", type: "" });
+
+    // Validate all inputs before submission
+    for (const [field, value] of Object.entries(form)) {
+      if (typeof value === 'string' && !validateInput(value)) {
+        setPopup({
+          show: true,
+          message: "Invalid input detected. Please check your information.",
+          type: "error"
+        });
+        setLoading(false);
+        return;
+      }
+    }
 
     // Convert file to base64
     const readFileAsBase64 = (file) => {
@@ -78,80 +129,101 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
       });
     };
 
-    const sendEmailWithBrevo = async () => {
-      try {
-        let attachment = null;
-        
-        if (form.resume) {
+    try {
+      let attachment = [];
+      
+      if (form.resume) {
+        try {
           const base64Content = await readFileAsBase64(form.resume);
-          attachment = {
+          attachment.push({
             name: form.resume.name,
             content: base64Content
-          };
+          });
+        } catch (fileError) {
+          setPopup({
+            show: true,
+            message: "Error processing your resume file. Please try another file.",
+            type: "error"
+          });
+          setLoading(false);
+          return; // Stop submission if file processing fails
         }
-
-        const emailData = {
-          sender: {
-            name: emailConfig.senderName,
-            email: emailConfig.senderEmail
-          },
-          to: emailConfig.recipientEmails.map(email => ({ email })),
-          subject: `Job Application: ${form.jobTitle || 'General Application'}`,
-          htmlContent: `
-            <h2>New Job Application</h2>
-            <p><strong>Job Title:</strong> ${form.jobTitle || 'General Application'}</p>
-            <p><strong>Name:</strong> ${form.firstName} ${form.lastName}</p>
-            <p><strong>Email:</strong> ${form.email}</p>
-            <p><strong>Phone:</strong> ${form.phone}</p>
-            <p><strong>About:</strong> ${form.aboutYou || 'Not provided'}</p>
-          `,
-          attachment: attachment ? [attachment] : []
-        };
-
-        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'api-key': emailConfig.apiKey
-          },
-          body: JSON.stringify(emailData)
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to send email');
-        }
-
-        setPopup({
-          show: true,
-          message: "Your application has been sent successfully!",
-          type: "success"
-        });
-        
-        setForm({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          aboutYou: "",
-          resume: null,
-          jobTitle: ""
-        });
-        
-        if (onClose) onClose();
-      } catch (error) {
-        console.error("Error sending email:", error);
-        setPopup({
-          show: true,
-          message: "Failed to send application. Please try again later.",
-          type: "error"
-        });
-      } finally {
-        setLoading(false);
       }
-    };
 
-    sendEmailWithBrevo();
+      // Sanitize inputs for email content
+      const sanitize = (str) => {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      };
+
+      // Prepare the form data for the template
+      const sanitizedForm = {
+        firstName: sanitize(form.firstName),
+        lastName: sanitize(form.lastName),
+        email: sanitize(form.email),
+        phone: sanitize(form.phone),
+        jobTitle: sanitize(form.jobTitle),
+        aboutYou: form.aboutYou ? sanitize(form.aboutYou) : '',
+        resume: form.resume ? true : false
+      };
+      
+      // Generate HTML email content
+      const htmlContent = generateJoinUsEmail(sanitizedForm);
+
+      const emailData = {
+        senderName: emailConfig.joinUs.senderName,
+        senderEmail: emailConfig.joinUs.senderEmail,
+        replyTo: form.email,
+        subject: `Join Us Form: ${sanitize(form.jobTitle) || 'General Application'}`,
+        to: [emailConfig.joinUs.recipientEmail],
+        htmlContent,
+        formType: 'joinUs'
+      };
+      
+      // Only add attachment if there's a resume
+      if (attachment.length > 0) {
+        emailData.attachment = attachment;
+      }
+
+      await sendEmail(emailData);
+      
+      // Show success message
+      setPopup({
+        show: true,
+        message: "Application sent successfully!",
+        type: "success"
+      });
+      
+      // Reset the form
+      setForm({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        aboutYou: "",
+        resume: null,
+        jobTitle: ""
+      });
+      
+      // Close the form if needed
+      if (onClose) {
+        setTimeout(() => {
+          onClose();
+        }, 2000); // Close after 2 seconds so user can see success message
+      }
+    } catch (error) {
+      setPopup({
+        show: true,
+        message: "Failed to send application. Please try again later.",
+        type: "error"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formVariants = {
@@ -217,6 +289,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
                 message={popup.message}
                 type={popup.type}
                 onClose={() => setPopup({ ...popup, show: false })}
+                centered={popup.type === 'success'}
               />
             )}
             

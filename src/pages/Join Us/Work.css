@@ -98,14 +98,14 @@
 }
 
 .join-us-header h1 {
-  font-family: "Sprat Extended", sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: clamp(3rem, 8vw, 6rem);
   margin-bottom: 0.2em;
   letter-spacing: 0.05em;
 }
 
 .join-us-header h2 {
-  font-family: "TT Norms Light", sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: clamp(1.5rem, 4vw, 2.5rem);
   letter-spacing: 0.1em;
   color: rgba(255, 255, 255, 0.8);
@@ -156,14 +156,14 @@
 }
 
 .job-info h3 {
-  font-family: "Sprat Extended", sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: 1.5rem;
   color: var(--bg);
   margin-bottom: 0.5em;
 }
 
 .job-info p {
-  font-family: "TT Norms Light", sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
   color: var(--bg);
   font-size: 0.9rem;
   line-height: 1.6;
@@ -177,7 +177,7 @@
   color: var(--fg);
   border: none;
   border-radius: 0.5em;
-  font-family: "TT Norms", sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -250,7 +250,7 @@
 }
 
 .join-title {
-  font-family: "Audrey", serif;
+  font-family: "Sprat", sans-serif; 
   font-size: 128px;
   font-weight: 400;
   line-height: 0.8;
@@ -278,7 +278,7 @@
 }
 
 .join-subtitle .bold-creatives {
-  font-family: "Audrey", serif;
+  font-family: "Sprat", sans-serif;
   font-size: 4rem;
   font-weight: 500;
   letter-spacing: 0.02em;
@@ -349,7 +349,7 @@
 }
 
 .join-label {
-  font-family: "Audrey", sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.7);
   text-transform: uppercase;
@@ -358,7 +358,7 @@
 }
 
 .position-title {
-  font-family: "Audrey", serif;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: 2.5rem;
   font-weight: normal;
   margin: 0.5rem 0 1rem;
@@ -367,7 +367,7 @@
 }
 
 .position-description {
-  font-family: "TT Norms Light", sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.85);
   line-height: 1.6;
@@ -376,7 +376,7 @@
 }
 
 .apply-button {
-  font-family: "Audrey", sans-serif;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: 0.875rem;
   color: white;
   background: none;
@@ -749,7 +749,7 @@
 }
 
 .join-us-button {
-  font-family: "Audrey", sans-serif;
+  font-family: "Sprat", sans-serif;
   font-size: 1.2rem;
   font-weight: 500;
   color: white;

@@ -1,9 +1,11 @@
 import React, { useState, useRef } from "react";
 import { emailConfig } from "../../config/emailConfig";
 import Popup from "../Popup/Popup";
+import { sendEmail } from '../../utils/email';
+import { generateContactEmail } from '../../utils/emailTemplates';
 import "./ContactForm.css";
 
-const ContactForm = () => {
+const ContactForm = ({ formType = 'contact' }) => {
   const formRef = useRef();
   const [form, setForm] = useState({
     name: "",
@@ -38,8 +40,32 @@ const ContactForm = () => {
   const brandingTypes = ["Branding", "Rebranding", "Revamping"];
   const socialPlatforms = ["Instagram", "Tiktok", "Linkedin", "Facebook", "Snapchat"];
 
+  // Validate input for security
+  const validateInput = (input) => {
+    // Check for potential script injection or suspicious patterns
+    const suspiciousPatterns = [
+      /<script/i,
+      /javascript:/i,
+      /on\w+\s*=/i, // onload=, onclick=, etc.
+      /data:/i
+    ];
+    
+    return !suspiciousPatterns.some(pattern => pattern.test(input));
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
+    // Security validation
+    if (!validateInput(value)) {
+      setPopup({
+        show: true,
+        message: "Invalid input detected. Please avoid using scripts or code.",
+        type: "error"
+      });
+      return;
+    }
+    
     setForm({ ...form, [name]: value });
   };
 
@@ -70,100 +96,97 @@ const ContactForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setPopup({ show: false, message: "", type: "" });
 
-    // Format the email content based on the selected service
-    let serviceSpecificContent = '';
-    
-    if (selectedService === "Branding") {
-      serviceSpecificContent = `
-        <p><strong>Brand Name:</strong> ${form.brandName}</p>
-        <p><strong>Branding Type:</strong> ${form.brandingType}</p>
-      `;
-    } else if (selectedService === "Marketing" || selectedService === "Advertisement") {
-      serviceSpecificContent = `
-        <p><strong>Social Media Link:</strong> ${form.socialMediaLink}</p>
-        <p><strong>Platforms:</strong> ${form.platforms.join(", ")}</p>
-      `;
-      
-      if (selectedService === "Advertisement") {
-        serviceSpecificContent += `<p><strong>Campaign Objective:</strong> ${form.campaignObjective}</p>`;
+    // Validate all inputs before submission
+    for (const [field, value] of Object.entries(form)) {
+      if (typeof value === 'string' && !validateInput(value)) {
+        setPopup({
+          show: true,
+          message: "Invalid input detected. Please check your information.",
+          type: "error"
+        });
+        setLoading(false);
+        return;
       }
     }
 
-    const sendEmailWithBrevo = async () => {
-      try {
-        const emailData = {
-          sender: {
-            name: emailConfig.senderName,
-            email: emailConfig.senderEmail
-          },
-          to: emailConfig.recipientEmails.map(email => ({ email })),
-          subject: `Contact Form: ${form.projectName}`,
-          htmlContent: `
-            <h2>New Contact Form Submission</h2>
-            <p><strong>Name:</strong> ${form.name}</p>
-            <p><strong>Email:</strong> ${form.email}</p>
-            <p><strong>Phone:</strong> ${form.phone}</p>
-            <p><strong>Project Name:</strong> ${form.projectName}</p>
-            <p><strong>Sector:</strong> ${form.sector}</p>
-            <p><strong>Service:</strong> ${form.service}</p>
-            ${serviceSpecificContent}
-            <p><strong>Budget:</strong> ${form.budget}</p>
-          `
-        };
-
-        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'api-key': emailConfig.apiKey
-          },
-          body: JSON.stringify(emailData)
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to send email');
-        }
-
-        setPopup({
-          show: true,
-          message: "Your message has been sent successfully!",
-          type: "success"
-        });
-        
-        setForm({
-          name: "",
-          email: "",
-          phone: "",
-          projectName: "",
-          sector: "",
-          service: "",
-          brandName: "",
-          brandingType: "",
-          budget: "",
-          socialMediaLink: "",
-          platforms: [],
-          campaignObjective: "",
-        });
-        
-        setSelectedService("");
-      } catch (error) {
-        console.error("Error sending email:", error);
-        setPopup({
-          show: true,
-          message: "Failed to send message. Please try again later.",
-          type: "error"
-        });
-      } finally {
-        setLoading(false);
-      }
+    // Sanitize inputs for email content
+    const sanitize = (str) => {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     };
 
-    sendEmailWithBrevo();
+    try {
+      // Prepare the form data for the template
+      const sanitizedForm = {
+        name: sanitize(form.name),
+        email: sanitize(form.email),
+        phone: sanitize(form.phone),
+        projectName: sanitize(form.projectName),
+        sector: sanitize(form.sector),
+        service: sanitize(form.service),
+        brandName: form.brandName ? sanitize(form.brandName) : '',
+        brandingType: form.brandingType ? sanitize(form.brandingType) : '',
+        socialMediaLink: form.socialMediaLink ? sanitize(form.socialMediaLink) : '',
+        platforms: form.platforms.map(p => sanitize(p)),
+        campaignObjective: form.campaignObjective ? sanitize(form.campaignObjective) : '',
+        budget: sanitize(form.budget)
+      };
+      
+      // Generate HTML email content
+      const htmlContent = generateContactEmail(sanitizedForm);
+
+      const emailData = {
+        senderName: emailConfig.contact.senderName,
+        senderEmail: emailConfig.contact.senderEmail,
+        replyTo: form.email,
+        subject: `Contact Form: ${sanitize(form.projectName)}`,
+        to: [emailConfig.contact.recipientEmail],
+        htmlContent,
+        formType: formType
+      };
+
+      await sendEmail(emailData);
+
+      setPopup({
+        show: true,
+        message: "Message sent successfully!",
+        type: "success"
+      });
+      
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        projectName: "",
+        sector: "",
+        service: "",
+        brandName: "",
+        brandingType: "",
+        budget: "",
+        socialMediaLink: "",
+        platforms: [],
+        campaignObjective: "",
+      });
+      
+      setSelectedService("");
+    } catch (error) {
+      setPopup({
+        show: true,
+        message: "Failed to send message. Please try again later.",
+        type: "error"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -173,6 +196,7 @@ const ContactForm = () => {
           message={popup.message}
           type={popup.type}
           onClose={() => setPopup({ ...popup, show: false })}
+          centered={popup.type === 'success'}
         />
       )}
       

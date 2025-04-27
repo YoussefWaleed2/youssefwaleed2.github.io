@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, Component } from 'react';
-import Lenis from 'lenis';
 import Transition from '../../components/Transition/Transition';
 import gsap from "gsap";
 import CustomEase from "gsap/CustomEase";
@@ -69,11 +68,16 @@ const About = () => {
   const [documentReady, setDocumentReady] = useState(false);
   const containerRef = useRef(null);
   const pageRef = useRef(null);
-  const lenisRef = useRef(null);
   const titleRef = useRef(null);
   const asteriskRef = useRef(null);
   const subtitleRef = useRef(null);
   const descriptionRef = useRef(null);
+  
+  // Custom smooth scrolling refs
+  const targetScrollRef = useRef(0);
+  const currentScrollRef = useRef(0);
+  const scrollRafRef = useRef(null);
+  const isScrollingRef = useRef(false);
   
   // Refs for About section text
   const aboutLeftRef = useRef(null);
@@ -277,150 +281,281 @@ const About = () => {
     });
   }, [isReady, isMobileOrTablet]);
 
-  // Effect for desktop horizontal scrolling setup
+  // Smooth scroll to function
+  const smoothScrollTo = (targetX) => {
+    if (!pageRef.current) return;
+    
+    // Set target scroll position
+    targetScrollRef.current = targetX;
+    
+    // If animation is already running, just update the target
+    if (isScrollingRef.current) return;
+    
+    // Set scrolling state
+    isScrollingRef.current = true;
+    
+    // Start smooth scroll animation
+    const animateScroll = () => {
+      // Cancel any existing animation
+      if (scrollRafRef.current) {
+        cancelAnimationFrame(scrollRafRef.current);
+      }
+      
+      // Current scroll position
+      currentScrollRef.current = pageRef.current.scrollLeft;
+      
+      // Calculate distance to target
+      const distance = targetScrollRef.current - currentScrollRef.current;
+      
+      // If we're close enough to target, snap to it and stop
+      if (Math.abs(distance) < 0.5) {
+        pageRef.current.scrollLeft = targetScrollRef.current;
+        isScrollingRef.current = false;
+        return;
+      }
+      
+      // Ease toward target (reduced for smoother scrolling)
+      const move = distance * 0.04; // Reduced from 0.1 for smoother movement
+      
+      // Update scroll position
+      pageRef.current.scrollLeft += move;
+      
+      // Update tracking value for animations
+      setScrollPosition(pageRef.current.scrollLeft);
+      
+      // Continue animation
+      scrollRafRef.current = requestAnimationFrame(animateScroll);
+    };
+    
+    // Start animation
+    scrollRafRef.current = requestAnimationFrame(animateScroll);
+  };
+
+  // Effect for desktop horizontal scrolling setup - with custom smooth scrolling
   useEffect(() => {
     if (isMobileOrTablet || !containerRef.current || !pageRef.current) return;
     
-    // Calculate total width precisely - no extra space between sections
+    // Calculate total width precisely - make it exactly match the content
     const sectionWidth = window.innerWidth;
-    const totalWidth = sectionWidth * images.length;
+    // Reduce width to exactly match the last image with no extra space
+    const totalWidth = sectionWidth * (images.length - 0.7); // Greater reduction to eliminate black space
     
     // Desktop horizontal scroll setup - set exact width
     containerRef.current.style.width = `${totalWidth}px`;
     
-    // Force the sections to be exactly viewport width
+    // Force the sections to be exactly viewport width plus overlap
     const sections = document.querySelectorAll('.about-section');
     if (sections && sections.length > 0) {
-      sections.forEach(section => {
+      sections.forEach((section, index) => {
         if (section) {
+          // Make sections wider than viewport to prevent gaps when moving
           section.style.width = `${sectionWidth}px`;
           section.style.margin = '0';
           section.style.display = 'block';
+          
+          // Position sections with precise absolute positioning
+          section.style.position = 'absolute';
+          section.style.left = `${index * sectionWidth}px`;
+          section.style.top = '0';
+          
+          // Set z-index for overlay effect - higher index = higher z-index
+          // This ensures later sections will appear on top of earlier ones
+          section.style.zIndex = index + 10;
         }
       });
     }
     
-    // Setup pageRef for horizontal scrolling
+    // Setup pageRef for scrolling
     if (pageRef.current) {
       pageRef.current.style.overflowX = 'scroll';
       pageRef.current.style.overflowY = 'hidden';
       pageRef.current.style.width = '100vw';
       pageRef.current.style.height = '100vh';
+      pageRef.current.style.scrollBehavior = 'auto'; // Required for custom smoothing
+      
+      // Set scroll snap for better alignment with each section
+      pageRef.current.style.scrollSnapType = 'x mandatory';
     }
-    
-    // Initialize Lenis with optimized settings
-    try {
-      // Destroy existing instance if it exists
-      if (lenisRef.current) {
-        lenisRef.current.destroy();
+
+    // Calculate the maximum allowed scroll position (prevent scrolling beyond content)
+    const maxScrollPosition = totalWidth - sectionWidth;
+
+    // Create our own animation loop for smooth scrolling
+    const smoothScrollAnimation = () => {
+      requestAnimationFrame(smoothScrollAnimation);
+      
+      // If we're not actively smooth scrolling with wheel/touch,
+      // still update based on native scroll position (for scrollbar dragging)
+      if (!isScrollingRef.current && pageRef.current) {
+        currentScrollRef.current = pageRef.current.scrollLeft;
+        targetScrollRef.current = pageRef.current.scrollLeft;
+        setScrollPosition(currentScrollRef.current);
       }
       
-      lenisRef.current = new Lenis({
-        wrapper: pageRef.current,
-        content: containerRef.current,
-        duration: 0.6, // Very responsive
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Optimized ease
-        orientation: 'horizontal',
-        gestureOrientation: 'horizontal',
-        smoothWheel: true,
-        wheelMultiplier: 3.0, // Increased from 0.8 to 3.0 for much higher sensitivity
-        smoothTouch: true,
-        touchMultiplier: 2.0, // Increased from 0.8 to 2.0 for better touch response
-        infinite: false,
-      });
+      // Get sections starting from third image (index 2)
+      const thirdImageAndBeyond = Array.from(sections).slice(2);
       
-      // Set up RAF loop
-      function raf(time) {
-        if (lenisRef.current) {
-          lenisRef.current.raf(time);
-        }
-        requestAnimationFrame(raf);
+      // Get trigger position (left edge of third image)
+      const thirdImageSection = sections[2];
+      
+      // Calculate how much to move based on scroll position
+      if (thirdImageSection) {
+        // How far we've scrolled past the second image
+        const scrollPastSecondImage = Math.max(0, currentScrollRef.current - sectionWidth + 200);
+        
+        // Calculate movement amount proportional to scroll
+        const moveAmount = -Math.min(scrollPastSecondImage * 0.7, sectionWidth * 0.7);
+        
+        // Apply the same transform to third image and all subsequent images with faster transition
+        gsap.to(thirdImageAndBeyond, {
+          x: moveAmount,
+          duration: 0.15,
+          ease: "power1.out",
+          overwrite: true
+        });
       }
-      requestAnimationFrame(raf);
-      
-      // Manual scroll update - separate from Lenis render loop
-      const updateScrollPosition = () => {
-        if (pageRef.current) {
-          setScrollPosition(pageRef.current.scrollLeft);
-          requestAnimationFrame(updateScrollPosition);
-        }
-      };
-      requestAnimationFrame(updateScrollPosition);
-      
-    } catch (error) {
-      console.error("Error initializing Lenis:", error);
-    }
+    };
     
-    // Custom wheel handler for enhanced control - necessary for some browsers
+    // Modified smooth scroll function with bounds checking
+    const boundedSmoothScrollTo = (targetX) => {
+      // Clamp the target position to valid bounds
+      const boundedTarget = Math.max(0, Math.min(targetX, maxScrollPosition));
+      
+      // Call the original smoothScrollTo with the bounded value
+      smoothScrollTo(boundedTarget);
+    };
+    
+    // Start the smooth scroll animation loop
+    const animationFrameId = requestAnimationFrame(smoothScrollAnimation);
+    
+    // Add direct scroll listener for scrollbar dragging
+    const handleScroll = () => {
+      // Only update if not in the middle of a smooth scroll operation
+      if (!isScrollingRef.current) {
+        // Keep scroll position within bounds
+        if (pageRef.current.scrollLeft < 0) {
+          pageRef.current.scrollLeft = 0;
+        } else if (pageRef.current.scrollLeft > maxScrollPosition) {
+          pageRef.current.scrollLeft = maxScrollPosition;
+        }
+        
+        targetScrollRef.current = pageRef.current.scrollLeft;
+        currentScrollRef.current = pageRef.current.scrollLeft;
+      }
+    };
+    
+    pageRef.current.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Custom wheel handler for smooth scrolling with improved edge behavior
     const handleWheel = (e) => {
-      if (!pageRef.current || !lenisRef.current) return;
+      if (!pageRef.current) return;
       
       e.preventDefault();
       
       const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-      const normalizedDelta = delta * 2.5; // Increased from 0.5 to 2.5 - much more sensitive
+      // Reduce speed multiplier for smoother scrolling
+      const normalizedDelta = delta * 1.8; // Reduced from 3.5 for smoother movement
       
-      lenisRef.current.scrollTo(pageRef.current.scrollLeft + normalizedDelta, {
-        immediate: false,
-        duration: 0.5,
-      });
+      // Calculate the proposed new target
+      const proposedTarget = targetScrollRef.current + normalizedDelta;
+      
+      // Special case for reaching bounds - respond more quickly at edges
+      if (proposedTarget < 0 || proposedTarget > maxScrollPosition) {
+        // We're trying to scroll beyond the bounds - apply immediate resistance
+        // This creates a "bounce" feel at the edges with faster response
+        const resistance = 0.3; // Lower = more resistance at edges
+        const boundedDelta = normalizedDelta * resistance;
+        
+        // Apply with less easing for quicker response
+        if (isScrollingRef.current) {
+          // Cancel current animation for faster response at edges
+          isScrollingRef.current = false;
+          if (scrollRafRef.current) {
+            cancelAnimationFrame(scrollRafRef.current);
+          }
+        }
+        
+        // Direct scroll with minimal easing at bounds
+        boundedSmoothScrollTo(targetScrollRef.current + boundedDelta);
+      } else {
+        // Normal smooth scrolling within bounds
+        boundedSmoothScrollTo(proposedTarget);
+      }
     };
     
-    // Optimized touch handling
+    // Smooth touch handling with improved edge response
     let touchStartX = 0;
-    let touchStartTime = 0;
     let lastTouchX = 0;
-    let velocity = 0;
+    let touchVelocity = 0;
+    let lastTouchTime = 0;
     
     const handleTouchStart = (e) => {
-      if (!pageRef.current || !lenisRef.current) return;
+      if (!pageRef.current) return;
+      
+      // Cancel any ongoing smooth scrolling
+      isScrollingRef.current = false;
       
       touchStartX = e.touches[0].clientX;
       lastTouchX = touchStartX;
-      touchStartTime = Date.now();
-      velocity = 0;
-      
-      // Disable Lenis while touching
-      lenisRef.current.stop();
+      lastTouchTime = Date.now();
+      touchVelocity = 0;
     };
     
     const handleTouchMove = (e) => {
-      if (!pageRef.current || !lenisRef.current) return;
+      if (!pageRef.current) return;
       
       const touchX = e.touches[0].clientX;
       const deltaX = lastTouchX - touchX;
-      const now = Date.now();
-      const elapsed = now - touchStartTime;
+      const currentTime = Date.now();
+      const timeDelta = currentTime - lastTouchTime;
       
-      if (elapsed > 0) {
-        velocity = deltaX / elapsed; // pixels per ms
+      // Calculate touch velocity for momentum
+      if (timeDelta > 0) {
+        touchVelocity = deltaX / timeDelta;
       }
       
-      if (Math.abs(deltaX) > 1) {
-        if (pageRef.current) {
-          pageRef.current.scrollLeft += deltaX;
-          e.preventDefault();
-        }
-        
-        lastTouchX = touchX;
-        touchStartTime = now;
+      // Check if we're at the boundaries to add resistance
+      const currentPos = pageRef.current.scrollLeft;
+      let effectiveDelta = deltaX * 1.2;
+      
+      // Add resistance when trying to scroll past the edges
+      if ((currentPos <= 0 && deltaX < 0) || (currentPos >= maxScrollPosition && deltaX > 0)) {
+        effectiveDelta *= 0.3; // Significant resistance at edges
       }
+      
+      // Update target position directly
+      targetScrollRef.current += effectiveDelta;
+      
+      // Apply immediately without easing during touch
+      pageRef.current.scrollLeft += effectiveDelta;
+      currentScrollRef.current = pageRef.current.scrollLeft;
+      
+      e.preventDefault();
+      lastTouchX = touchX;
+      lastTouchTime = currentTime;
     };
     
     const handleTouchEnd = (e) => {
-      if (!pageRef.current || !lenisRef.current) return;
+      // Check if we're already at boundaries
+      const currentPos = pageRef.current.scrollLeft;
       
-      // Apply momentum based on final velocity
-      const momentum = velocity * 300; // Adjust this multiplier for momentum effect
-      
-      lenisRef.current.start();
-      
-      if (Math.abs(momentum) > 1) {
-        lenisRef.current.scrollTo(pageRef.current.scrollLeft + momentum, {
-          duration: 1.2,
-          easing: (t) => 1 - Math.pow(1 - t, 3), // Ease out cubic
-        });
+      if (currentPos < 0) {
+        // Snap back to start with animation
+        boundedSmoothScrollTo(0);
+        return;
+      } else if (currentPos > maxScrollPosition) {
+        // Snap back to end with animation
+        boundedSmoothScrollTo(maxScrollPosition);
+        return;
       }
+      
+      // Apply momentum based on final velocity, but check boundaries
+      if (Math.abs(touchVelocity) > 0.1) {
+        const momentum = touchVelocity * 100; // Adjust for stronger/weaker momentum
+        boundedSmoothScrollTo(targetScrollRef.current + momentum);
+      }
+      
+      touchVelocity = 0;
     };
     
     // Add event listeners
@@ -444,37 +579,45 @@ const About = () => {
       if (!containerRef.current) return;
       
       const newSectionWidth = newWidth;
-      const newTotalWidth = newSectionWidth * images.length;
+      const newTotalWidth = newSectionWidth * (images.length - 0.3); // Same adjustment as initial setup
       
       // Update container width
       containerRef.current.style.width = `${newTotalWidth}px`;
       
-      // Update all section widths
+      // Update all section widths and positions
       const sections = document.querySelectorAll('.about-section');
       if (sections && sections.length > 0) {
-        sections.forEach(section => {
+        sections.forEach((section, idx) => {
           if (section) {
             section.style.width = `${newSectionWidth}px`;
+            section.style.left = `${idx * newSectionWidth}px`;
+            
+            // Maintain z-index for overlay effect
+            section.style.zIndex = idx + 10;
           }
         });
       }
       
-      // Reset Lenis after resize
-      if (lenisRef.current) {
-        lenisRef.current.resize();
-      }
+      // Reset transform on third image and beyond when resizing
+      const thirdImageAndBeyond = Array.from(sections).slice(2);
+      gsap.set(thirdImageAndBeyond, { x: 0 });
+      
+      // Reset scroll position tracking
+      targetScrollRef.current = pageRef.current.scrollLeft;
+      currentScrollRef.current = pageRef.current.scrollLeft;
     }, 150);
     
     window.addEventListener('resize', handleResize);
     
     // Cleanup
     return () => {
-      if (lenisRef.current) {
-        lenisRef.current.destroy();
-        lenisRef.current = null;
+      cancelAnimationFrame(animationFrameId);
+      if (scrollRafRef.current) {
+        cancelAnimationFrame(scrollRafRef.current);
       }
       
       if (pageRef.current) {
+        pageRef.current.removeEventListener('scroll', handleScroll);
         pageRef.current.removeEventListener('wheel', handleWheel);
         pageRef.current.removeEventListener('touchstart', handleTouchStart);
         pageRef.current.removeEventListener('touchmove', handleTouchMove);
@@ -485,118 +628,42 @@ const About = () => {
     };
   }, [images.length, isMobileOrTablet]);
 
-  // Effect for scroll-triggered animations - optimize with batch updates
+  // Effect for static content display - no animations, just show content immediately
   useEffect(() => {
     if (isMobileOrTablet || !windowWidth) return;
     
-    // Batch GSAP animations for better performance
-    gsap.set([], {}); // Start a GSAP batch
+    // Set all content visible immediately with no animations
+    if (aboutLeftRef.current && aboutRightRef.current) {
+      gsap.set([aboutLeftRef.current, aboutRightRef.current], {
+        x: 0,
+        opacity: 1,
+        overwrite: true
+      });
+    }
     
-    // Desktop scroll animations
-    const triggerStart = windowWidth * 0.5;
-    const triggerEnd = windowWidth * 1.2;
-    
-    if (scrollPosition >= triggerStart && scrollPosition <= triggerEnd) {
-      // Calculate progress from 0 to 1 based on scroll position
-      const progress = (scrollPosition - triggerStart) / (triggerEnd - triggerStart);
-      
-      // Animate headings with optimized GSAP properties
-      if (aboutLeftRef.current && aboutRightRef.current) {
-        gsap.to(aboutLeftRef.current, {
-          x: 0,
-          opacity: Math.min(progress * 2, 1),
-          duration: 0.4, // Increased for smoother transitions
-          ease: "power2.out", // Better easing
-          overwrite: "auto" // More efficient overwrite
+    // Make all paragraphs visible immediately
+    if (aboutTextsRef.current.length > 0) {
+      const validTexts = aboutTextsRef.current.filter(ref => ref);
+      if (validTexts.length > 0) {
+        gsap.set(validTexts, {
+          y: 0,
+          opacity: 1,
+          overwrite: true
         });
-        
-        gsap.to(aboutRightRef.current, {
-          x: 0,
-          opacity: Math.min(progress * 2, 1),
-          duration: 0.4,
-          ease: "power2.out",
-          overwrite: "auto"
-        });
-      }
-      
-      // Animate paragraphs with optimized stagger
-      if (aboutTextsRef.current.length > 0) {
-        const validTexts = aboutTextsRef.current.filter(ref => ref);
-        if (validTexts.length > 0) {
-          validTexts.forEach((textRef, index) => {
-            if (!textRef) return;
-            
-            // Stagger the animations based on index
-            const delayedProgress = progress - (index * 0.1);
-            const opacity = Math.max(0, Math.min(delayedProgress * 3, 1));
-            
-            gsap.to(textRef, {
-              y: delayedProgress > 0 ? Math.max(30 * (1 - delayedProgress * 2), 0) : 30,
-              opacity: opacity,
-              duration: 0.4,
-              ease: "power2.out",
-              overwrite: "auto"
-            });
-          });
-        }
-      }
-    } else if (scrollPosition < triggerStart) {
-      // Reset animations when scrolling back - batch for performance
-      if (aboutLeftRef.current && aboutRightRef.current) {
-        gsap.to([aboutLeftRef.current, aboutRightRef.current], {
-          opacity: 0,
-          x: (index) => index === 0 ? -50 : 50,
-          duration: 0.4,
-          ease: "power2.out",
-          overwrite: "auto"
-        });
-      }
-      
-      if (aboutTextsRef.current.length > 0) {
-        const validTexts = aboutTextsRef.current.filter(ref => ref);
-        if (validTexts.length > 0) {
-          gsap.to(validTexts, {
-            opacity: 0,
-            y: 30,
-            duration: 0.4,
-            ease: "power2.out",
-            overwrite: "auto"
-          });
-        }
       }
     }
     
-    // Optimize image animations with less frequent updates
-    imageRefs.current.forEach((imageRef, index) => {
-      // Skip the first image as it's not scroll-triggered
-      if (!imageRef?.current || index === 0) return;
-      
-      // Calculate when image should be in view, based on window width
-      const imageTriggerStart = windowWidth * (index - 0.3);
-      const imageTriggerEnd = windowWidth * (index + 0.7);
-      
-      // Check if image is in view
-      if (scrollPosition >= imageTriggerStart && scrollPosition <= imageTriggerEnd) {
-        const imageProgress = (scrollPosition - imageTriggerStart) / (imageTriggerEnd - imageTriggerStart);
-        
-        // Apply subtle animation effects to the image with better performance
-        gsap.to(imageRef.current, {
-          scale: 1 + Math.sin(imageProgress * Math.PI) * 0.05, // Subtle scale effect
-          duration: 0.5,
-          ease: "power1.out",
-          overwrite: "auto"
-        });
-      } else {
-        // Reset image when out of view
-        gsap.to(imageRef.current, {
+    // Set all images to visible with no scale effects
+    imageRefs.current.forEach((imageRef) => {
+      if (imageRef?.current) {
+        gsap.set(imageRef.current, {
           scale: 1,
-          duration: 0.4,
-          ease: "power1.out",
-          overwrite: "auto"
+          opacity: 1,
+          overwrite: true
         });
       }
     });
-  }, [scrollPosition, windowWidth, imagesLoaded, isMobileOrTablet]);
+  }, [windowWidth, isMobileOrTablet]);
 
   useEffect(() => {
     setIsReady(true);
@@ -651,7 +718,7 @@ const About = () => {
   // Desktop version
   return (
     <div ref={pageRef} className={`about-page ${isReady ? 'is-ready' : ''}`}>
-      <div ref={containerRef} className="about-container">
+      <div ref={containerRef} className="about-container" style={{ position: 'relative' }}>
         {images.map((src, index) => (
           <section 
             key={index} 
@@ -659,10 +726,17 @@ const About = () => {
             style={{
               width: '100vw',
               height: '100vh',
-              position: 'relative',
+              position: 'absolute', // Use absolute positioning
+              left: `${index * 100}vw`, // Position based on index
+              top: 0,
               overflow: 'hidden',
               margin: 0,
-              padding: 0
+              padding: 0,
+              zIndex: index + 10, // Higher z-index for later sections to ensure proper layering
+              transform: 'translateX(0)', // Initial transform for GSAP to animate
+              transition: 'transform 0.2s ease-out', // Faster transition
+              backgroundColor: 'black', // Ensure background is black to match section transitions
+              willChange: 'transform' // Optimize for animation performance
             }}
           >
             <div className="image-container" style={{
@@ -685,6 +759,8 @@ const About = () => {
                   left: 0,
                   objectFit: 'cover',
                   display: 'block',
+                  width: '100%',
+                  height: '100%'
                 }} 
               />
             </div>

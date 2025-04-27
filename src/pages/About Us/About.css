@@ -741,9 +741,14 @@ body:has(.about-page) .navbar {
     margin-bottom: 15px;
   }
 }
+.about-section{
+  background: transparent !important;
+}
+.about-section:nth-child(3) .background-image{
+  border-radius: 106px 0px 0px 106px;
+}
 
 /* Remove border radius that can cause visual gaps */
-.about-section:nth-child(3) .background-image,
 .about-section:nth-child(4) .background-image,
 .about-section:nth-child(5) .background-image,
 .about-section:nth-child(6) .background-image,

@@ -16,26 +16,7 @@ const Footer = () => {
           or across other marketing channels. It's about making your brand impossible to ignore, grabbing attention,
           and building an identity that sticks.</span>
           </p>
-          <div className="social-links">
-            <a href="https://www.instagram.com/vzbl.co" target="_blank" rel="noopener noreferrer">
-              <i className="fab fa-instagram"></i>
-            </a>
-            <a href="https://www.facebook.com/vzbl.co/" target="_blank" rel="noopener noreferrer">
-              <i className="fab fa-facebook-f"></i>
-            </a>
-            <a href="https://eg.linkedin.com/company/vzbl.co" target="_blank" rel="noopener noreferrer">
-              <i className="fab fa-linkedin-in"></i>
-            </a>
-            <a href="https://www.behance.net/ahmedelzalat3" target="_blank" rel="noopener noreferrer">
-              <i className="fab fa-behance"></i>
-            </a>
-            <a href="https://www.tiktok.com/@vzbl.co" target="_blank" rel="noopener noreferrer">
-              <i className="fab fa-tiktok"></i>
-            </a>
-            <a href="https://vimeo.com/vzblco" target="_blank" rel="noopener noreferrer">
-              <i className="fab fa-vimeo"></i>
-            </a>
-          </div>
+          
         </div>
 
         <div className="footer-right">
@@ -97,6 +78,26 @@ const Footer = () => {
       </div>
 
       <div className="footer-bottom">
+          <div className="social-links">
+            <a href="https://www.instagram.com/vzbl.co" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.facebook.com/vzbl.co/" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://eg.linkedin.com/company/vzbl.co" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-linkedin-in"></i>
+            </a>
+            <a href="https://www.behance.net/ahmedelzalat3" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-behance"></i>
+            </a>
+            <a href="https://www.tiktok.com/@vzbl.co" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-tiktok"></i>
+            </a>
+            <a href="https://vimeo.com/vzblco" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-vimeo"></i>
+            </a>
+          </div>
         <p>&copy; 2025 VZBL All rights reserved</p>
       </div>
     </footer>

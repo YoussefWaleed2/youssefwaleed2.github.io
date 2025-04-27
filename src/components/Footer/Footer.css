@@ -156,7 +156,10 @@
 }
 
 .footer-bottom {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 700px;
   padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -164,6 +167,7 @@
 .footer-bottom p {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.7);
+  text-align: right;
   font-family: "TT Norms";
   font-size: 14px;
   font-style: normal;
@@ -200,7 +204,6 @@
     justify-content: center;
     flex-wrap: wrap;
     max-width: 300px;
-    margin: 0 auto;
   }
 
   .footer-right {

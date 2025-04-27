@@ -289,93 +289,146 @@ const MobileAbout = ({ images = [] }) => {
             <h2 className="heading-text">FOUNDER</h2>
           </div>
           
-          <div className="content-block centered-text">
-            <p 
-              className="body-text centered animate-text" 
-              ref={el => textRefs.current[4] = el}
+          <div className="team-member-container">
+            <div className="team-image-box ">
+              <img 
+                src={getImage(14)} 
+                alt="VZBL Founder" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[2] = el}
+              />
+            </div>
+            
+            <div 
+              className="section-title member-title"
+              ref={el => titleRefs.current[7] = el}
             >
-              AHMED'S CURIOSITY IS HIS GREATEST STRENGTH. IT PUSHES HIM TO EXPLORE EVERY BRAND'S STORY AND UNCOVER WHAT OTHERS OFTEN OVERLOOK. HE LOOKS BEYOND THE SURFACE, FINDING HIDDEN INSIGHTS AND UNSPOKEN TRUTHS THAT HELP BRANDS CONNECT ON A DEEPER LEVEL. IT'S HIS ABILITY TO SEE WHAT'S UNSEEN THAT SETS HIM APART AND DRIVES HIS PASSION FOR MAKING BRANDS THAT TRULY STAND OUT.
-            </p>
-          </div>
-          
-          <div className="team-image-box founder-team-image centered-image">
-            <img 
-              src={getImage(14)} 
-              alt="VZBL Founder" 
-              onError={handleImageError}
-              ref={el => imageRefs.current[2] = el}
-            />
+              <h2 className="heading-text">AHMED EL ZALAT</h2>
+            </div>
+            
+            <div className="content-block centered-text">
+              <p 
+                className="body-text centered animate-text" 
+                ref={el => textRefs.current[4] = el}
+              >
+                AHMED'S CURIOSITY IS HIS GREATEST STRENGTH. IT PUSHES HIM TO EXPLORE EVERY BRAND'S STORY AND UNCOVER WHAT OTHERS OFTEN OVERLOOK. HE LOOKS BEYOND THE SURFACE, FINDING HIDDEN INSIGHTS AND UNSPOKEN TRUTHS THAT HELP BRANDS CONNECT ON A DEEPER LEVEL. IT'S HIS ABILITY TO SEE WHAT'S UNSEEN THAT SETS HIM APART AND DRIVES HIS PASSION FOR MAKING BRANDS THAT TRULY STAND OUT.
+              </p>
+            </div>
           </div>
         </section>
         
         {/* Meet The Team Section */}
         <section className="section team-section">
           <div 
-            className="section-title centered"
+            className="section-title wide centered"
             ref={el => titleRefs.current[3] = el}
           >
-            <h2 className="heading-text">MEET</h2>
-            <h2 className="heading-text script">The</h2>
-            <h2 className="heading-text">TEAM</h2>
+            <h2 className="heading-text">OUR TEAM</h2>
           </div>
           
-          <div className="content-block centered-text">
-            <p 
-              className="body-text centered animate-text" 
-              ref={el => textRefs.current[5] = el}
+          {/* Team Member 1: Ebraheim El Zeyoudi */}
+          <div className="team-member-container">
+            <div className="team-image-box member-image">
+              <img 
+                src="/about/19.webp" 
+                alt="Ebraheim El Zeyoudi" 
+                onError={handleImageError}
+                ref={el => imageRefs.current[3] = el}
+              />
+            </div>
+            <div 
+              className="section-title member-title"
+              ref={el => titleRefs.current[4] = el}
             >
-              OUR TEAM OF CREATIVE PROFESSIONALS BRINGS DIVERSE SKILLS AND PERSPECTIVES TO EVERY PROJECT. TOGETHER, WE COLLABORATE TO TRANSFORM CHALLENGES INTO OPPORTUNITIES AND DELIVER WORK THAT MAKES BRANDS TRULY VISIBLE.
-            </p>
+              <h2 className="heading-text">EBRAHEIM EL ZEYOUDI</h2>
+            </div>
+            <div className="content-block member-text">
+              <p 
+                className="body-text animate-text" 
+                ref={el => textRefs.current[6] = el}
+              >
+                EBRAHEIM AL ZEYOUDI IS THE VISIONARY CO-FOUNDER AND CHIEF COM-
+                MERCIAL OFFICER (CCO) OF VZBL, THE LEADING CREATIVE MARKETING
+                AGENCY IN THE UAE AND EGYPT. WITH A DEEP UNDERSTANDING OF
+                BRAND POSITIONING AND COMMERCIAL GROWTH, EBRAHEM HAS PLAYED
+                A PIVOTAL ROLE IN TRANSFORMING VZBL INTO A POWERHOUSE THAT
+                BRIDGES THE CREATIVE GAP IN THE REGION'S MARKETING LANDSCAPE.
+              </p>
+            </div>
           </div>
           
-          <div className="team-gallery">
-            <div className="team-image-box">
+          {/* Team Member 2: Shorouk Abdalla */}
+          <div className="team-member-container">
+            <div className="team-image-box member-image">
               <img 
-                src={getImage(7)} 
-                alt="VZBL Team" 
+                src="/about/18.webp" 
+                alt="Shorouk Abdalla" 
                 onError={handleImageError}
-                ref={el => imageRefs.current[9] = el}
+                ref={el => imageRefs.current[4] = el}
               />
             </div>
-            <div className="team-image-box">
+            <div 
+              className="section-title member-title"
+              ref={el => titleRefs.current[5] = el}
+            >
+              <h2 className="heading-text">Shorouk Abdalla</h2>
+            </div>
+            <div className="content-block member-text">
+              <p 
+                className="body-text animate-text" 
+                ref={el => textRefs.current[7] = el}
+              >
+                WITH A STRONG FOCUS ON BUSINESS DEVEL-
+                OPMENT AND CREATIVE STRATEGY, SHOU-
+                ROUK HELPS CLIENTS REFINE THEIR BRAND
+                POSITIONING AND MARKET PRESENCE. AS A
+                SEASONED RESTAURATEUR AND HOSPITALI-
+                TY CONSULTANT WITH SIX YEARS OF EXPERI-
+                ENCE IN GLOBAL MARKETS, SHE UNDER-
+                STANDS THE CHALLENGES BUSINESSES FACE
+                AND WORKS TO HIGHLIGHT THEIR
+                STRENGTHS AND UNIQUENESS, ENSURING
+                THEY STAND OUT IN A COMPETITIVE ECONO-
+                MY. THROUGH VZBL, SHE CRAFTS TAILORED
+                SOLUTIONS THAT DRIVE GROWTH, VISIBILITY,
+                AND LASTING IMPACT.
+              </p>
+            </div>
+          </div>
+          
+          {/* Team Member 3: Nourhan Nagy */}
+          <div className="team-member-container">
+            <div className="team-image-box member-image">
               <img 
-                src={getImage(8)} 
-                alt="VZBL Team" 
+                src="/about/17.webp" 
+                alt="Nourhan Nagy" 
                 onError={handleImageError}
-                ref={el => imageRefs.current[10] = el}
+                ref={el => imageRefs.current[5] = el}
               />
             </div>
-            <div className="team-image-box">
-              <img 
-                src={getImage(9)} 
-                alt="VZBL Team" 
-                onError={handleImageError}
-                ref={el => imageRefs.current[11] = el}
-              />
+            <div 
+              className="section-title member-title"
+              ref={el => titleRefs.current[6] = el}
+            >
+              <h2 className="heading-text">Nourhan Nagy</h2>
             </div>
-            <div className="team-image-box">
-              <img 
-                src={getImage(10)} 
-                alt="VZBL Team" 
-                onError={handleImageError}
-                ref={el => imageRefs.current[12] = el}
-              />
-            </div>
-            <div className="team-image-box">
-              <img 
-                src={getImage(11)} 
-                alt="VZBL Team" 
-                onError={handleImageError}
-                ref={el => imageRefs.current[13] = el}
-              />
-            </div>
-            <div className="team-image-box">
-              <img 
-                src={getImage(12)} 
-                alt="VZBL Team" 
-                onError={handleImageError}
-                ref={el => imageRefs.current[14] = el}
-              />
+            <div className="content-block member-text">
+              <p 
+                className="body-text animate-text" 
+                ref={el => textRefs.current[8] = el}
+              >
+                AT THE HEART OF VZBL'S OPERATIONS, NOURHAN IS
+                THE FORCE THAT KEEPS EVERYTHING MOVING. WITH A
+                SHARP STRATEGIC MIND AND A NATURAL INSTINCT FOR
+                ORGANIZATION, SHE TURNS BIG IDEAS INTO SEAMLESS
+                EXECUTION AS SHE ENSURES EVERY PROJECT DOESN'T
+                JUST RUN SMOOTHLY BUT WITH PURPOSE, ALIGNING
+                EVERY DETAIL WITH VZBL'S VISION FROM THE FIRST
+                SPARK OF AN IDEA TO THE FINAL EXECUTION. HER ABILI-
+                TY TO NAVIGATE HIGH-PRESSURE SITUATIONS WITH
+                CONFIDENCE AND EFFICIENCY MAKES HER AN ESSEN-
+                TIAL DRIVER OF VZBL'S SUCCESS.
+              </p>
             </div>
           </div>
         </section>

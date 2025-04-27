@@ -20,10 +20,11 @@ body, html {
 }
 
 .about-page {
-  width: 100vw;
-  height: 100vh;
-  overflow-x: scroll;
-  overflow-y: hidden;
+  overflow-x: scroll !important;
+  overflow-y: hidden !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  position: relative !important;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.5s ease-in-out;
@@ -31,10 +32,9 @@ body, html {
   scrollbar-width: none;
   -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
-  scroll-behavior: auto; /* Let Lenis handle the smoothing */
+  scroll-behavior: auto; /* Let JS handle the smoothing */
   overscroll-behavior-x: none;
   touch-action: pan-x;
-  position: relative;
   will-change: transform, scroll-position;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
@@ -54,10 +54,10 @@ body, html {
 }
 
 .about-container {
-  width: fit-content;
-  height: 100vh;
-  display: flex;
-  flex-direction: row;
+  width: max-content !important; /* Allow container to be wider than viewport */
+  height: 100vh !important;
+  display: flex !important;
+  flex-direction: row !important;
   position: relative;
   will-change: transform;
   transform: translate3d(0, 0, 0);
@@ -67,9 +67,11 @@ body, html {
   gap: 0; /* Ensure no gap between sections */
   font-size: 0; /* Remove any potential whitespace between inline elements */
   transition: transform 0.05s linear; /* Very small transition for smoother movement */
+  min-width: 100vw; /* Ensure full width */
 }
 
 .about-section {
+  min-width: 100vw;
   width: 100vw;
   height: 100vh;
   position: relative;
@@ -82,6 +84,8 @@ body, html {
   display: block;
   will-change: transform;
   transform: translate3d(0, 0, 0);
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .image-container {
@@ -94,6 +98,7 @@ body, html {
   margin: 0;
   padding: 0;
   will-change: transform;
+
 }
 
 .background-image {
@@ -103,6 +108,7 @@ body, html {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  
   z-index: 1;
   margin: 0;
   padding: 0;
@@ -124,6 +130,9 @@ body, html {
   justify-content: center;
   padding: 0 80px;
   box-sizing: border-box;
+  
+  
+ 
 }
 
 /* Hero content specific styles */
@@ -151,6 +160,7 @@ body, html {
   max-width: 800px;
   margin-left: 100px;
   overflow: hidden;
+  letter-spacing: -0.02em; /* Fix the spacing between characters */
 }
 
 .asterisk {
@@ -521,6 +531,7 @@ body:has(.about-page) .navbar {
   display: inline-block;
   transform-origin: bottom left;
   overflow: hidden;
+  margin-right: -0.04em; /* Negative margin to pull characters closer */
 }
 
 .line {
@@ -764,3 +775,136 @@ body:has(.about-page) .navbar {
   position: relative;
   z-index: auto;
 }
+
+/* Add specific fixes for MacBook Pro and similar displays */
+@media screen and (min-width: 1280px) and (max-width: 1680px) {
+  .main-title {
+    letter-spacing: -0.03em; /* Tighter spacing for this viewport range */
+  }
+  
+  .char {
+    margin-right: -0.05em; /* Pull characters even closer together */
+  }
+  
+  /* Ensure the characters don't get separated by SplitType */
+  .main-title .word {
+    white-space: nowrap; /* Keep words together */
+    display: inline-block;
+    margin-right: 0.1em; /* Space between words */
+  }
+  
+  /* Fix the specific MacBook Pro rendering issues */
+  .about-hero-content .main-title {
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Fix for retina displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .main-title {
+    letter-spacing: -0.04em;
+  }
+  
+  .char {
+    margin-right: -0.06em;
+  }
+}
+
+/* Title character specific fixes */
+.title-char {
+  display: inline-block !important;
+  margin-right: -0.05em !important;
+  letter-spacing: -0.02em !important;
+  transform: translateZ(0); /* Force GPU acceleration */
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+/* Fix for MacBook Pro with GSAP animations */
+.about-hero-content .main-title {
+  /* Prevent SplitType from adding unwanted spaces */
+  word-spacing: -0.02em;
+  display: block;
+  transform: translateZ(0);
+}
+
+/* MacBook Pro specific fixes */
+@media screen and (min-width: 1280px) and (max-width: 2559px) {
+  /* Ensure title doesn't break apart */
+  .about-hero-content .main-title:not(.char) {
+    letter-spacing: normal;
+    word-spacing: normal;
+  }
+  
+  /* Override SplitType's character spacing */
+  .about-hero-content .main-title .char {
+    margin-right: -0.05em !important;
+  }
+  
+  /* Reduce size slightly for better fit */
+  .about-hero-content .main-title {
+    font-size: 11rem;
+  }
+}
+
+/* Fix for the "S" being cut off */
+.about-hero-content .main-title {
+  padding-right: 30px !important;
+  margin-right: 15px !important;
+  width: auto !important;
+  max-width: 90% !important;
+  box-sizing: content-box !important; /* Ensure padding doesn't affect width calculation */
+  overflow: visible !important; /* Critical to prevent character clipping */
+}
+
+/* Additional character fixes for SplitType */
+@media screen and (min-width: 1280px) and (max-width: 2559px) {
+  /* Ensure the S character isn't cut off */
+  .title-char:last-child,
+  .char:last-child {
+    padding-right: 15px !important;
+    margin-right: 0 !important;
+  }
+  
+  /* Use more specific but compatible selectors */
+  .main-title .word {
+    padding-right: 10px; /* Add padding to all words to be safe */
+  }
+  
+  /* Fix for words after line breaks */
+  .main-title br + .word {
+    display: inline-block;
+    padding-right: 25px;
+  }
+  
+  /* Direct fix for the main title container */
+  .about-hero-content .main-title {
+    padding-right: 40px !important;
+    width: auto !important;
+    max-width: 90% !important;
+  }
+}
+
+/* Ensure images don't have blur on resize */
+@media (min-width: 1024px) {
+  .about-section:first-child .background-image {
+    filter: blur(0px) !important; /* Override any inline styles with !important */
+    transform: scale(1) !important;
+    transition: filter 0.3s ease-out, transform 0.3s ease-out;
+  }
+  
+  /* Immediately clear any blur when resizing */
+  body.resizing .background-image {
+    filter: blur(0px) !important;
+    transform: scale(1) !important;
+    transition: none !important;
+  }
+}
+
+/* Prevent any blur from persisting */
+.background-image {
+  will-change: filter, transform;
+  backface-visibility: hidden;
+}
+

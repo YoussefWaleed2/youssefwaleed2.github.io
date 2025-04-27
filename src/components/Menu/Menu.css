@@ -48,9 +48,17 @@ body {
 
 /* About page specific styles */
 body:has(.horizontal-scroll-wrapper) .navbar {
-    backdrop-filter: none !important;
-    background: transparent !important;
     mix-blend-mode: difference !important;
+    filter: grayscale(1) contrast(1.1) !important; /* Black and white effect */
+}
+
+/* Person background - add 'person-bg' class to body when a person is displayed */
+body.person-bg .navbar {
+    background: rgba(0, 0, 0, 0.7) !important; /* Dark background */
+    mix-blend-mode: normal !important; /* Use normal blend mode instead of difference */
+    backdrop-filter: blur(5px) !important;
+    color: white !important;
+    filter: none !important; /* Remove grayscale filter */
 }
 
 body:has(.horizontal-scroll-wrapper) .nav-links {

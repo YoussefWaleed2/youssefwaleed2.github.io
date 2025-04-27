@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import "./All-Projects.css";
 import Footer from "../../components/Footer/Footer";
 import Transition from "../../components/Transition/Transition";
@@ -11,6 +11,7 @@ import projectsData from "../../data/projectsData.json";
 
 const AllProjects = () => {
   const { category } = useParams();
+  const location = useLocation();
   const [projects, setProjects] = useState([]);
   const containerRef = useRef(null);
   const videoRef = useRef(null);
@@ -23,12 +24,22 @@ const AllProjects = () => {
     return () => handleOverlay();
   }, []);
 
+  // Clear session storage when component unmounts
+  useEffect(() => {
+    return () => {
+      // Clear session storage when navigating away from AllProjects
+      sessionStorage.removeItem('currentProjects');
+      sessionStorage.removeItem('currentProjectCategory');
+    };
+  }, []);
+
   // Set page title
   useEffect(() => {
     const categoryName = category ? category.replace("-", " ") : "All";
     document.title = `${categoryName} Projects | VZBL`;
   }, [category]);
 
+  // Load projects data whenever category or location changes
   useEffect(() => {
     // Function to get projects based on category
     const getProjectsByCategory = () => {
@@ -45,6 +56,8 @@ const AllProjects = () => {
         formattedCategory = "Advertising";
       } else if (formattedCategory.toLowerCase() === "branding") {
         formattedCategory = "BRANDING";
+      } else if (formattedCategory.toLowerCase() === "packaging") {
+        formattedCategory = "Packaging";
       }
       
       // Check if category exists in projectsData
@@ -61,17 +74,11 @@ const AllProjects = () => {
       return [];
     };
 
-    // First try to get projects from sessionStorage if available
-    const storedProjects = sessionStorage.getItem('currentProjects');
+    // Always fetch fresh data for the current category
+    const projectsByCategory = getProjectsByCategory();
+    setProjects(projectsByCategory);
     
-    if (storedProjects) {
-      setProjects(JSON.parse(storedProjects));
-    } else {
-      // Otherwise load directly from projectsData based on URL category
-      const projectsByCategory = getProjectsByCategory();
-      setProjects(projectsByCategory);
-    }
-
+    // Start animations
     const customEase = CustomEase.create("custom", ".87,0,.13,1");
 
     // Set initial states
@@ -95,7 +102,6 @@ const AllProjects = () => {
     }
 
     // Create entrance animation sequence
-    
     const tl = gsap.timeline();
 
     // First clip-path animation
@@ -145,7 +151,7 @@ const AllProjects = () => {
       ease: "power3.out"
     }, "-=0.5")
 
-  }, [category]);
+  }, [category, location.pathname]);
 
   // Split title into characters for animation
   const renderTitle = (title) => {

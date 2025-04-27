@@ -5,7 +5,7 @@
   overflow-x: hidden !important;
   background-color: #0a0a0a;
   color: #ffffff;
-  font-family: 'Audrey', 'Golden Plains', serif;
+  font-family: 'Helvetica Neue', 'Golden Plains', serif;
   display: block !important;
   box-sizing: border-box !important;
   margin: 0 !important;
@@ -154,7 +154,7 @@ html, body {
 /* Typography */
 .heading-text {
   font-size: 2.5rem;
-  font-family: 'Audrey', serif;
+  font-family: 'Helvetica Neue', serif;
   font-weight: 500;
   letter-spacing: 0.1rem;
   margin: 0;
@@ -167,7 +167,7 @@ html, body {
 }
 
 .heading-text.script {
-  font-family: 'Golden Plains', 'Audrey', serif;
+  font-family: 'Golden Plains', 'Helvetica Neue', serif;
   font-style: italic;
   font-weight: 400;
   text-transform: none;
@@ -185,7 +185,7 @@ html, body {
   letter-spacing: 0.1rem;
   margin-bottom: 1rem;
   text-align: center;
-  font-family: 'Audrey', serif;
+  font-family: 'Helvetica Neue', serif;
 }
 
 .body-text {
@@ -195,7 +195,7 @@ html, body {
   font-weight: 300;
   letter-spacing: 0.05rem;
   color: rgba(255, 255, 255, 0.8);
-  font-family: 'Audrey', serif;
+  font-family: 'Helvetica Neue', serif;
   transition: color 0.3s ease;
 }
 
@@ -286,13 +286,13 @@ html, body {
 .content-block.left-aligned {
   text-align: center;
   padding-right: 0%;
-  font-family: 'Audrey', serif;
+  font-family: 'Helvetica Neue', serif;
 }
 
 .content-block.right-aligned {
   text-align: right;
   padding-left: 0%;
-  font-family: 'Audrey', serif;
+  font-family: 'Helvetica Neue', serif;
 }
 
 /* Grid Gallery Styles */
@@ -471,7 +471,7 @@ html, body {
 }
 
 .call-us-visible-title {
-  font-family: Helvetica, sans-serif;
+  font-family: 'Helvetica Neue', sans-serif;
   font-size: 3.5rem;
   font-weight: 500;
   line-height: 0.9;
@@ -485,7 +485,7 @@ html, body {
 }
 
 .call-us-visible-subtitle {
-  font-family: Helvetica, sans-serif;
+  font-family: 'Helvetica Neue', sans-serif;
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
   font-weight: 400;

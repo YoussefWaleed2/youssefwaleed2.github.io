@@ -8,6 +8,7 @@ import './Services.css';
 import { Environment, SpotLight } from '@react-three/drei';
 import Transition from '../../components/Transition/Transition';
 import { handleOverlay } from '../../utils/overlayManager';
+import { useNavigate } from 'react-router-dom';
 
 function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete }) {
   const { scene } = useGLTF('/services/Vzbl hand.glb');
@@ -265,6 +266,7 @@ const Services = () => {
   const sectionsRef = useRef(null);
   const navRef = useRef(null);
   const lenisRef = useRef(null);
+  const navigate = useNavigate();
 
   // Set page title
   useEffect(() => {
@@ -339,6 +341,16 @@ const Services = () => {
     }
   }, [entranceComplete]);
 
+  // Make sure the navbar is always visible, regardless of canvas loading
+  useEffect(() => {
+    // Immediate visibility of navigation bar
+    const nav = document.querySelector('nav');
+    if (nav) {
+      nav.classList.add('nav-reveal');
+      nav.classList.add('visible');
+    }
+  }, []);
+
   // Animation sequence
   useEffect(() => {
     if (canvasLoaded) {
@@ -350,15 +362,6 @@ const Services = () => {
         duration: 0.5,
         onComplete: () => setIsLoading(false)
       });
-
-      // Reveal navigation
-      const nav = document.querySelector('nav');
-      if (nav) {
-        nav.classList.add('nav-reveal');
-        timeline.add(() => {
-          nav.classList.add('visible');
-        }, "+=0.3");
-      }
 
       // Reveal services title
       timeline.add(() => {
@@ -373,6 +376,20 @@ const Services = () => {
       sections.forEach((section, index) => {
         timeline.add(() => {
           section.classList.add('visible');
+          // Add additional animation for the button after section is visible
+          const button = section.querySelector('.service-button');
+          if (button) {
+            gsap.fromTo(button, 
+              { opacity: 0, y: 20 },
+              { 
+                opacity: 1, 
+                y: 0, 
+                duration: 0.5, 
+                delay: 0.3,
+                ease: "power2.out" 
+              }
+            );
+          }
         }, `+=0.2`);
       });
     }
@@ -448,14 +465,16 @@ const Services = () => {
             Every brand has a story to tell, but sometimes, that story needs a fresh perspective.
             Our rebranding process goes beyond just a new logo or color scheme; it's about uncovering the brand's essence and redefining how it connects with its audience.
           </p>
+          <button className="service-button" onClick={() => navigate('/all-projects/branding')}>View projects</button>
         </section>
 
         <section className="service-section">
           <div className="service-number">02.</div>
           <h2 className="service-title">SOCIAL MEDIA</h2>
           <p className="service-description">
-            We take your brand beyond the feed. Through standout campaigns and creative storytelling, we transform social media into a stage where your brand doesn’t just show up, it stands out. From engaging posts to viral content and authentic connections, we ensure your brand stays front of mind. 
+            We take your brand beyond the feed. Through standout campaigns and creative storytelling, we transform social media into a stage where your brand doesn't just show up, it stands out. From engaging posts to viral content and authentic connections, we ensure your brand stays front of mind. 
           </p>
+          <button className="service-button" onClick={() => navigate('/all-projects/marketing')}>View projects</button>
         </section>
 
         <section className="service-section">
@@ -464,6 +483,7 @@ const Services = () => {
           <p className="service-description">
             At the heart of what we do, there is a simple truth… visuals are everything. We take abstract ideas and turn them into striking, tangible content that grabs attention and leaves a lasting impression. Whether it's a commercial, a social media campaign, or any other medium, we bring your vision to life through bold, high-impact visuals. Every frame is produced with creativity and purpose to ensure your message not only reaches your audience but resonates deeply. 
           </p>
+          <button className="service-button" onClick={() => navigate('/all-projects/advertising')}>View projects</button>
         </section>
 
         <section className="service-section">

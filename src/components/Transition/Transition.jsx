@@ -47,6 +47,16 @@ const Transition = (Component) => {
     useEffect(() => {
       const timeline = gsap.timeline();
 
+      // Special handling for services page
+      if (location.pathname === '/services') {
+        // Ensure navbar is visible when navigating to Services page
+        const nav = document.querySelector('nav');
+        if (nav) {
+          nav.classList.add('nav-reveal');
+          nav.classList.add('visible');
+        }
+      }
+
       if (location.pathname === '/projects' && isEntering.current) {
         // If coming from home to projects, transition the video
         const homeVideo = document.querySelector('.home-video');

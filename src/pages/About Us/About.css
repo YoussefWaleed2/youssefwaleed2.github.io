@@ -140,7 +140,7 @@ body, html {
 
 .main-title {
   color: #000;
-  font-family: Helvetica;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: 12rem;
   font-style: normal;
   font-weight: 400;
@@ -167,7 +167,7 @@ body, html {
 
 .subtitle {
   color: #000;
-  font-family: Helvetica;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: 22px;
   font-style: normal;
   font-weight: 400;
@@ -182,7 +182,7 @@ body, html {
 .description {
   color: #000;
   text-align: left;
-  font-family: Helvetica;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -221,7 +221,7 @@ body, html {
 
 .about-paragraph {
   color: #000;
-  font-family: Helvetica;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
@@ -239,7 +239,7 @@ body, html {
 
 .about-heading {
   color: #000;
-  font-family: Helvetica;
+  font-family: "Helvetica Neue", sans-serif;
   font-size: 34px;
   font-style: normal;
   font-weight: 400;

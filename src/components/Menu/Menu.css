@@ -235,7 +235,7 @@ body:has(.horizontal-scroll-wrapper) .img-logo {
     line-height: 0.85;
     color: var(--copy);
     margin: 0;
-    font-family: "Audrey", sans-serif;
+    font-family: "TT Norms", sans-serif;
 }
 
 /* Transform States */

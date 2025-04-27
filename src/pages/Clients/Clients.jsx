@@ -265,7 +265,6 @@ const Clients = () => {
         
         <div className="clients-footer">
           <h2>Ready to Join Our Client List?</h2>
-          <p>Let's create something amazing together.</p>
           <a href="/contact" className="contact-button">Get In Touch</a>
         </div>
       </div>

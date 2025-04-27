@@ -8,6 +8,15 @@ import './About.css';
 import MobileAbout from './MobileAbout'; // Import the mobile component
 import { handleOverlay } from "./../../utils/overlayManager";
 
+// Add debounce function for better performance
+function debounce(func, wait) {
+  let timeout;
+  return function() {
+    const context = this, args = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
+}
 
 // Error Boundary component
 class ErrorBoundary extends Component {
@@ -81,18 +90,43 @@ const About = () => {
   const [windowWidth, setWindowWidth] = useState(0);
   
   const images = Array.from({ length: 13 }, (_, i) => `/about/${i + 1}.webp`);
+
+  // Preload images function to improve performance
+  const preloadImages = async () => {
+    try {
+      const promises = images.map((src) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = () => resolve(true);
+          img.onerror = () => resolve(false); // Resolve even on error to continue
+        });
+      });
+      
+      const results = await Promise.all(promises);
+      setImagesLoaded(results);
+    } catch (error) {
+      console.error("Error preloading images:", error);
+      setImagesLoaded(Array(images.length).fill(true)); // Fallback
+    }
+  };
+
   useEffect(() => {
     handleOverlay();
     return () => handleOverlay();
   }, []);
-  // Initialize image refs arrays
+
+  // Initialize image refs arrays and start preloading
   useEffect(() => {
     imageRefs.current = Array(images.length).fill().map(() => React.createRef());
     setImagesLoaded(Array(images.length).fill(false));
+    preloadImages(); // Start preloading immediately
   }, [images.length]);
+
   useEffect(() => {
     document.title = "About Us | VZBL";
   }, []);
+
   // Set window width and check device type on initial render and window resize
   useEffect(() => {
     const handleResize = () => {
@@ -266,69 +300,142 @@ const About = () => {
       });
     }
     
-    // Initialize Lenis with horizontal scrolling for desktop
+    // Setup pageRef for horizontal scrolling
+    if (pageRef.current) {
+      pageRef.current.style.overflowX = 'scroll';
+      pageRef.current.style.overflowY = 'hidden';
+      pageRef.current.style.width = '100vw';
+      pageRef.current.style.height = '100vh';
+    }
+    
+    // Initialize Lenis with optimized settings
     try {
+      // Destroy existing instance if it exists
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+      }
+      
       lenisRef.current = new Lenis({
         wrapper: pageRef.current,
         content: containerRef.current,
-        duration: 1.2,
-        easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)),
+        duration: 0.6, // Very responsive
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Optimized ease
         orientation: 'horizontal',
         gestureOrientation: 'horizontal',
         smoothWheel: true,
-        wheelMultiplier: 2.5,
+        wheelMultiplier: 3.0, // Increased from 0.8 to 3.0 for much higher sensitivity
         smoothTouch: true,
-        touchMultiplier: 1.5,
+        touchMultiplier: 2.0, // Increased from 0.8 to 2.0 for better touch response
         infinite: false,
       });
+      
+      // Set up RAF loop
+      function raf(time) {
+        if (lenisRef.current) {
+          lenisRef.current.raf(time);
+        }
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+      
+      // Manual scroll update - separate from Lenis render loop
+      const updateScrollPosition = () => {
+        if (pageRef.current) {
+          setScrollPosition(pageRef.current.scrollLeft);
+          requestAnimationFrame(updateScrollPosition);
+        }
+      };
+      requestAnimationFrame(updateScrollPosition);
+      
     } catch (error) {
       console.error("Error initializing Lenis:", error);
     }
     
-    // Direct wheel event handler to ensure horizontal scrolling (desktop only)
+    // Custom wheel handler for enhanced control - necessary for some browsers
     const handleWheel = (e) => {
-      if (!pageRef.current) return;
+      if (!pageRef.current || !lenisRef.current) return;
       
       e.preventDefault();
-      const delta = e.deltaY || e.deltaX;
       
-      if (lenisRef.current) {
-        const targetScroll = pageRef.current.scrollLeft + delta * 6;
-        lenisRef.current.scrollTo(targetScroll, {
-          force: true,
-          duration: 0.8,
-          stagger: 0.05,
-          easing: (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t))
-        });
-      } else {
-        pageRef.current.scrollLeft += delta * 2;
+      const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+      const normalizedDelta = delta * 2.5; // Increased from 0.5 to 2.5 - much more sensitive
+      
+      lenisRef.current.scrollTo(pageRef.current.scrollLeft + normalizedDelta, {
+        immediate: false,
+        duration: 0.5,
+      });
+    };
+    
+    // Optimized touch handling
+    let touchStartX = 0;
+    let touchStartTime = 0;
+    let lastTouchX = 0;
+    let velocity = 0;
+    
+    const handleTouchStart = (e) => {
+      if (!pageRef.current || !lenisRef.current) return;
+      
+      touchStartX = e.touches[0].clientX;
+      lastTouchX = touchStartX;
+      touchStartTime = Date.now();
+      velocity = 0;
+      
+      // Disable Lenis while touching
+      lenisRef.current.stop();
+    };
+    
+    const handleTouchMove = (e) => {
+      if (!pageRef.current || !lenisRef.current) return;
+      
+      const touchX = e.touches[0].clientX;
+      const deltaX = lastTouchX - touchX;
+      const now = Date.now();
+      const elapsed = now - touchStartTime;
+      
+      if (elapsed > 0) {
+        velocity = deltaX / elapsed; // pixels per ms
+      }
+      
+      if (Math.abs(deltaX) > 1) {
+        if (pageRef.current) {
+          pageRef.current.scrollLeft += deltaX;
+          e.preventDefault();
+        }
+        
+        lastTouchX = touchX;
+        touchStartTime = now;
       }
     };
     
-    // Track scroll position for animations
-    const handleScrollUpdate = () => {
-      if (pageRef.current) {
-        setScrollPosition(pageRef.current.scrollLeft);
+    const handleTouchEnd = (e) => {
+      if (!pageRef.current || !lenisRef.current) return;
+      
+      // Apply momentum based on final velocity
+      const momentum = velocity * 300; // Adjust this multiplier for momentum effect
+      
+      lenisRef.current.start();
+      
+      if (Math.abs(momentum) > 1) {
+        lenisRef.current.scrollTo(pageRef.current.scrollLeft + momentum, {
+          duration: 1.2,
+          easing: (t) => 1 - Math.pow(1 - t, 3), // Ease out cubic
+        });
       }
     };
-
-    // Animation frame with lerp for smoother scrolling
-    function raf(time) {
-      if (lenisRef.current) {
-        lenisRef.current.raf(time);
-        requestAnimationFrame(raf);
-        handleScrollUpdate();
-      }
-    }
-    requestAnimationFrame(raf);
-
-    // Handle resize
-    const handleResize = () => {
-      // Update window width state
-      setWindowWidth(window.innerWidth);
+    
+    // Add event listeners
+    pageRef.current.addEventListener('wheel', handleWheel, { passive: false });
+    pageRef.current.addEventListener('touchstart', handleTouchStart, { passive: false });
+    pageRef.current.addEventListener('touchmove', handleTouchMove, { passive: false });
+    pageRef.current.addEventListener('touchend', handleTouchEnd);
+    
+    // Handle resize with debouncing
+    const handleResize = debounce(() => {
+      const newWidth = window.innerWidth;
+      setWindowWidth(newWidth);
       
-      // If transitioning to mobile, reload the page to get mobile view
-      if (window.innerWidth <= 1024) {
+      // If transitioning to mobile, reload
+      if (newWidth <= 1024) {
         window.location.reload();
         return;
       }
@@ -336,9 +443,10 @@ const About = () => {
       // Recalculate dimensions when window is resized
       if (!containerRef.current) return;
       
-      const newSectionWidth = window.innerWidth;
+      const newSectionWidth = newWidth;
       const newTotalWidth = newSectionWidth * images.length;
       
+      // Update container width
       containerRef.current.style.width = `${newTotalWidth}px`;
       
       // Update all section widths
@@ -347,67 +455,42 @@ const About = () => {
         sections.forEach(section => {
           if (section) {
             section.style.width = `${newSectionWidth}px`;
-            section.style.margin = '0';
           }
         });
       }
-    };
-    
-    // Add wheel event handler for desktop
-    if (pageRef.current) {
-      pageRef.current.addEventListener('wheel', handleWheel, { passive: false });
       
-      // Add touch events for desktop horizontal touch scrolling
-      const handleTouchStart = (e) => {
-        if (!pageRef.current) return;
-        pageRef.current.touchStartX = e.touches[0].clientX;
-      };
-      
-      const handleTouchMove = (e) => {
-        if (!pageRef.current || !pageRef.current.touchStartX) return;
-        
-        const touchDelta = pageRef.current.touchStartX - e.touches[0].clientX;
-        if (Math.abs(touchDelta) > 5) {
-          e.preventDefault();
-          
-          if (lenisRef.current) {
-            const targetScroll = pageRef.current.scrollLeft + touchDelta * 1.2;
-            lenisRef.current.scrollTo(targetScroll, {
-              force: true,
-              duration: 0.3,
-            });
-          } else {
-            pageRef.current.scrollLeft += touchDelta * 1.2;
-          }
-          
-          pageRef.current.touchStartX = e.touches[0].clientX;
-        }
-      };
-      
-      // Add touch handlers for desktop
-      pageRef.current.addEventListener('touchstart', handleTouchStart, { passive: false });
-      pageRef.current.addEventListener('touchmove', handleTouchMove, { passive: false });
-    }
+      // Reset Lenis after resize
+      if (lenisRef.current) {
+        lenisRef.current.resize();
+      }
+    }, 150);
     
     window.addEventListener('resize', handleResize);
     
-    // Cleanup for desktop
+    // Cleanup
     return () => {
       if (lenisRef.current) {
         lenisRef.current.destroy();
+        lenisRef.current = null;
       }
-      window.removeEventListener('resize', handleResize);
+      
       if (pageRef.current) {
         pageRef.current.removeEventListener('wheel', handleWheel);
         pageRef.current.removeEventListener('touchstart', handleTouchStart);
         pageRef.current.removeEventListener('touchmove', handleTouchMove);
+        pageRef.current.removeEventListener('touchend', handleTouchEnd);
       }
+      
+      window.removeEventListener('resize', handleResize);
     };
   }, [images.length, isMobileOrTablet]);
 
-  // Effect for scroll-triggered animations
+  // Effect for scroll-triggered animations - optimize with batch updates
   useEffect(() => {
     if (isMobileOrTablet || !windowWidth) return;
+    
+    // Batch GSAP animations for better performance
+    gsap.set([], {}); // Start a GSAP batch
     
     // Desktop scroll animations
     const triggerStart = windowWidth * 0.5;
@@ -417,24 +500,26 @@ const About = () => {
       // Calculate progress from 0 to 1 based on scroll position
       const progress = (scrollPosition - triggerStart) / (triggerEnd - triggerStart);
       
-      // Animate headings
+      // Animate headings with optimized GSAP properties
       if (aboutLeftRef.current && aboutRightRef.current) {
         gsap.to(aboutLeftRef.current, {
           x: 0,
           opacity: Math.min(progress * 2, 1),
-          duration: 0.1,
-          overwrite: true
+          duration: 0.4, // Increased for smoother transitions
+          ease: "power2.out", // Better easing
+          overwrite: "auto" // More efficient overwrite
         });
         
         gsap.to(aboutRightRef.current, {
           x: 0,
           opacity: Math.min(progress * 2, 1),
-          duration: 0.1,
-          overwrite: true
+          duration: 0.4,
+          ease: "power2.out",
+          overwrite: "auto"
         });
       }
       
-      // Animate paragraphs with stagger
+      // Animate paragraphs with optimized stagger
       if (aboutTextsRef.current.length > 0) {
         const validTexts = aboutTextsRef.current.filter(ref => ref);
         if (validTexts.length > 0) {
@@ -448,21 +533,22 @@ const About = () => {
             gsap.to(textRef, {
               y: delayedProgress > 0 ? Math.max(30 * (1 - delayedProgress * 2), 0) : 30,
               opacity: opacity,
-              overwrite: true,
-              duration: 0.1,
-              stagger: 0.1,
+              duration: 0.4,
+              ease: "power2.out",
+              overwrite: "auto"
             });
           });
         }
       }
     } else if (scrollPosition < triggerStart) {
-      // Reset animations when scrolling back
+      // Reset animations when scrolling back - batch for performance
       if (aboutLeftRef.current && aboutRightRef.current) {
         gsap.to([aboutLeftRef.current, aboutRightRef.current], {
           opacity: 0,
           x: (index) => index === 0 ? -50 : 50,
-          duration: 0.3,
-          overwrite: true
+          duration: 0.4,
+          ease: "power2.out",
+          overwrite: "auto"
         });
       }
       
@@ -472,14 +558,15 @@ const About = () => {
           gsap.to(validTexts, {
             opacity: 0,
             y: 30,
-            duration: 0.3,
-            overwrite: true
+            duration: 0.4,
+            ease: "power2.out",
+            overwrite: "auto"
           });
         }
       }
     }
     
-    // Animate images based on scroll position (skip the first image)
+    // Optimize image animations with less frequent updates
     imageRefs.current.forEach((imageRef, index) => {
       // Skip the first image as it's not scroll-triggered
       if (!imageRef?.current || index === 0) return;
@@ -492,18 +579,20 @@ const About = () => {
       if (scrollPosition >= imageTriggerStart && scrollPosition <= imageTriggerEnd) {
         const imageProgress = (scrollPosition - imageTriggerStart) / (imageTriggerEnd - imageTriggerStart);
         
-        // Apply subtle animation effects to the image
+        // Apply subtle animation effects to the image with better performance
         gsap.to(imageRef.current, {
-          scale: 1 + Math.sin(imageProgress * Math.PI) * 0.05, // Subtle scale effect based on position
-          duration: 0.3,
-          overwrite: true
+          scale: 1 + Math.sin(imageProgress * Math.PI) * 0.05, // Subtle scale effect
+          duration: 0.5,
+          ease: "power1.out",
+          overwrite: "auto"
         });
       } else {
         // Reset image when out of view
         gsap.to(imageRef.current, {
           scale: 1,
-          duration: 0.3,
-          overwrite: true
+          duration: 0.4,
+          ease: "power1.out",
+          overwrite: "auto"
         });
       }
     });

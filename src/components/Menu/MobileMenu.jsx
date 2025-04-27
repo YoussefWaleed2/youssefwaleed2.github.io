@@ -161,8 +161,8 @@ const MobileMenu = () => {
           stagger: 0.1,
           ease: CustomEase.create("", ".76,0,.2,1"),
           onComplete: () => {
-            if (navLink) gsap.set(navLink, { y: 20 });
-            if (menuOpenText) gsap.set(menuOpenText, { y: 20 });
+            if (navLink) gsap.set(navLink, { y: 25 });
+            if (menuOpenText) gsap.set(menuOpenText, { y: 25 });
           },
         }
       );

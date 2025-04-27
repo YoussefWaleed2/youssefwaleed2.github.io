@@ -5,10 +5,9 @@ body, html {
   overflow: hidden;
   height: 100%;
   width: 100%;
- 
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-
-
 
 /* Mobile and tablet styles for body and html - increased to 1024px to include iPad Air and tablets */
 @media (max-width: 1024px) {
@@ -17,14 +16,13 @@ body, html {
     overflow-x: hidden !important;
     height: 100% !important;
     overscroll-behavior-y: auto;
-    
   }
 }
 
 .about-page {
   width: 100vw;
   height: 100vh;
-  overflow-x: auto;
+  overflow-x: scroll;
   overflow-y: hidden;
   opacity: 0;
   visibility: hidden;
@@ -33,194 +31,21 @@ body, html {
   scrollbar-width: none;
   -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
+  scroll-behavior: auto; /* Let Lenis handle the smoothing */
   overscroll-behavior-x: none;
   touch-action: pan-x;
   position: relative;
+  will-change: transform, scroll-position;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-/* Add specific class for mobile/tablet view - increased to 1024px to include iPad Air and tablets */
-.about-page.mobile-view {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  height: auto !important;
-  min-height: 100vh;
-  touch-action: pan-y !important;
-  overscroll-behavior-y: none;
-  position: static;
-  
-}
-
-.about-page.mobile-view .about-container {
-  width: 100% !important;
-  height: auto !important;
-  flex-direction: column !important;
-  transform: none !important;
-  transition: none !important;
-  
-}
-
-.about-page.mobile-view .about-section {
-  width: 100% !important;
-  height: auto !important; /* Changed from 100vh to auto */
-  min-height: auto !important; /* Changed from 100vh to auto */
-  margin: 20px 0 !important; /* Add spacing between sections */
-  position: relative !important;
-  display: block !important;
-  
-  padding: 20px 0 !important;
-  overflow: visible !important;
-}
-
-/* Make images smaller and contained properly on mobile */
-.about-page.mobile-view .image-container {
-  position: relative !important; /* Changed from absolute to relative */
-  top: 0 !important;
-  left: 0 !important;
-  width: 90% !important; /* Slightly less than full width */
-  height: auto !important; /* Auto height */
-  overflow: hidden !important;
-  margin: 0 auto !important;
-  border-radius: 10px !important;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
-  max-height: 300px !important; /* Limit height */
-}
-
-.about-page.mobile-view .background-image {
-  width: 100% !important;
-  height: auto !important;
-  object-fit: cover !important; /* Back to cover for better appearance */
-  object-position: center !important;
-  border-radius: 10px !important;
-  opacity: 1 !important;
-  display: block !important;
-  max-height: 300px !important; /* Limit height */
-}
-
-/* Fix text alignment and appearance on mobile */
-.about-page.mobile-view .about-content {
-  position: relative !important;
-  z-index: 5 !important;
-  height: auto !important; /* Changed from 100vh to auto */
-  width: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: flex-start !important; /* Changed from center to flex-start */
-  align-items: center !important;
-  padding: 20px !important;
-  
-  margin-top: 20px !important; /* Add space above content */
-}
-
-.about-page.mobile-view .about-hero-content {
-  padding: 0 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start; /* Changed from center to flex-start */
-  align-items: center;
-  width: 100%;
-  height: auto; /* Changed from 100% to auto */
-  max-width: 500px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 10;
-  margin-top: 10px; /* Adjusted from -100px to 10px */
-  
-}
-
-.about-page.mobile-view .main-title {
-  font-size: 2.5rem;
-  margin-left: 0;
-  text-align: center;
-  width: 100%;
-  line-height: 1;
-  color: #000;
-  margin-top: 20px; /* Add space above title */
-}
-
-.about-page.mobile-view .subtitle {
-  margin-left: 0;
-  text-align: center;
-  margin-top: 10px;
-  font-size: 1rem;
-  width: 100%;
-  color: #000;
-}
-
-.about-page.mobile-view .description {
-  margin-left: 0;
-  max-width: 100%;
-  text-align: center;
-  margin-top: 20px;
-  font-size: 0.85rem;
-  line-height: 1.3;
-  width: 100%;
-  color: #000;
-  background-color: transparent; /* Remove background */
-  padding: 10px;
-  border-radius: 5px;
-}
-
-/* Fix the About Us section layout */
-.about-page.mobile-view .about-split-layout {
-  flex-direction: column;
-  padding: 20px;
-  height: auto;
-  width: 100%;
-  justify-content: flex-start; /* Changed from center to flex-start */
-  align-items: center;
-  display: flex !important;
-  max-width: 500px;
-  margin: 0 auto;
- 
-}
-
-.about-page.mobile-view .about-left, 
-.about-page.mobile-view .about-right {
-  text-align: center;
-  margin: 10px 0;
-  width: 100%;
-  display: block !important;
-  opacity: 1 !important;
-}
-
-.about-page.mobile-view .about-heading {
-  font-size: 1.5rem;
-  margin: 15px 0;
-  display: block !important;
-  color: #000;
-}
-
-.about-page.mobile-view .about-text-container {
-  max-width: 100%;
-  margin: 20px 0;
-  width: 100%;
-  padding: 0;
-  display: block !important;
-}
-
-.about-page.mobile-view .about-paragraph {
-  text-align: center;
-  margin-bottom: 20px;
-  width: 100%;
-  font-size: 0.9rem;
-  line-height: 1.3;
-  display: block !important;
-  opacity: 1 !important;
-  color: #000;
-}
-
-/* Remove all border radius for mobile view sections and images */
-.about-page.mobile-view .about-section:nth-child(3) .background-image,
-.about-page.mobile-view .about-section:nth-child(4) .background-image,
-.about-page.mobile-view .about-section:nth-child(5) .background-image,
-.about-page.mobile-view .about-section:nth-child(6) .background-image,
-.about-page.mobile-view .about-section:last-child .background-image {
-  border-radius: 0 !important;
-}
-
+/* Hide scrollbar for smoother appearance */
 .about-page::-webkit-scrollbar {
   display: none;
+  width: 0;
+  height: 0;
 }
 
 .about-page.is-ready {
@@ -236,11 +61,12 @@ body, html {
   position: relative;
   will-change: transform;
   transform: translate3d(0, 0, 0);
-  transition: transform 0.05s linear;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   perspective: 1000px;
   gap: 0; /* Ensure no gap between sections */
   font-size: 0; /* Remove any potential whitespace between inline elements */
+  transition: transform 0.05s linear; /* Very small transition for smoother movement */
 }
 
 .about-section {
@@ -254,6 +80,8 @@ body, html {
   padding: 0;
   font-size: 16px; /* Reset font size for content */
   display: block;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 
 .image-container {
@@ -265,6 +93,7 @@ body, html {
   overflow: hidden;
   margin: 0;
   padding: 0;
+  will-change: transform;
 }
 
 .background-image {
@@ -278,6 +107,8 @@ body, html {
   margin: 0;
   padding: 0;
   display: block;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 /* First slide styles */

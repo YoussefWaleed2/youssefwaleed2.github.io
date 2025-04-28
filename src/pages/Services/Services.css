@@ -8,16 +8,12 @@
     overflow-y: auto;
     padding-top: 120px;
     background-color: #000000;
-    scrollbar-width: thin;
-    scrollbar-color: white;
     font-family: "Helvetica Neue", sans-serif;
 }
 
 /* Ensure the body has proper overflow */
 html, body {
     overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: white ;
     height: 100%;
 }
 

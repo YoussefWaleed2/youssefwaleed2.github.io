@@ -5,6 +5,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.75);
+  -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   z-index: 99998;
   height: 100vh;
@@ -88,9 +89,6 @@ body.form-open {
   flex: 1;
   overflow-y: auto;
   padding-right: 1em;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
 }
 
 .join-us-form-content::-webkit-scrollbar {
@@ -347,14 +345,7 @@ body.form-open {
     right: 0;
     bottom: 0;
     border-radius: 0;
-    overflow: hidden;
-  }
-  
-  .join-us-form-inner {
-    height: calc(100vh - 60px);
-    padding: 0 2em 2em 2em;
-    overflow-y: auto;
-    margin-top: 60px;
+    overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   }
   

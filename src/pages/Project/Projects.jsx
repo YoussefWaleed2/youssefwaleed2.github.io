@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import "./Projects.css";
 import Transition from "../../components/Transition/Transition";
 import gsap from "gsap";
@@ -15,19 +15,14 @@ const Projects = () => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHoveringEye, setIsHoveringEye] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const seeMoreRef = useRef(null);
   const prevBtnRef = useRef(null);
   const nextBtnRef = useRef(null);
   const textRefs = useRef([useRef(null), useRef(null), useRef(null)]);
   const counterRef = useRef(null);
-  const previewRef = useRef(null);
-  const videoRef = useRef(null);
 
-  // Define categories with capitalization as requested
-  const categories = ["BRANDING", "MARKETING", "ADVERTISING"];
+  // Define categories with memoization to avoid recreation on each render
+  const categories = useMemo(() => ["BRANDING", "MARKETING", "ADVERTISING"], []);
   
   // Client images for the slider
   const clientImages = [
@@ -65,21 +60,23 @@ const Projects = () => {
     };
   }, []);
   
-  const handleNext = () => {
-    if (currentIndex < categories.length - 1 && !isAnimating) {
+  const handleNext = useCallback(() => {
+    if (!isAnimating) {
+      const nextIndex = (currentIndex + 1) % categories.length;
       setIsAnimating(true);
-      animateTextTransition(currentIndex, currentIndex + 1, 'next');
-      setCurrentIndex(prev => prev + 1);
+      animateTextTransition(currentIndex, nextIndex, 'next');
+      setCurrentIndex(nextIndex);
     }
-  };
+  }, [currentIndex, categories.length, isAnimating]);
 
-  const handlePrev = () => {
-    if (currentIndex > 0 && !isAnimating) {
+  const handlePrev = useCallback(() => {
+    if (!isAnimating) {
+      const prevIndex = currentIndex === 0 ? categories.length - 1 : currentIndex - 1;
       setIsAnimating(true);
-      animateTextTransition(currentIndex, currentIndex - 1, 'prev');
-      setCurrentIndex(prev => prev - 1);
+      animateTextTransition(currentIndex, prevIndex, 'prev');
+      setCurrentIndex(prevIndex);
     }
-  };
+  }, [currentIndex, categories.length, isAnimating]);
 
   const animateTextTransition = (fromIndex, toIndex, direction) => {    
     // Get all text elements
@@ -185,83 +182,35 @@ const Projects = () => {
     }
   };
 
-  const handlePreviewClick = () => {
-    const currentCategory = categories[currentIndex];
-    console.log("handlePreviewClick - currentCategory:", currentCategory);
-    
-    if (currentCategory) {
-      // Format the category for the URL
-      let urlCategory = currentCategory.toLowerCase().replace(" ", "-");
-      
-      // Navigate to all-projects with current category
-      navigate(`/all-projects/${urlCategory}`);
-    } else {
-      console.error("Cannot navigate - missing category:", { currentCategory });
-    }
-  };
-
-  const handleEyeMouseEnter = () => {
-    // Make sure element is visible before animation starts
-    if (seeMoreRef.current) {
-      seeMoreRef.current.style.display = 'block';
-    }
-    
-    setIsHoveringEye(true);
-    gsap.fromTo(seeMoreRef.current,
-      { scale: 0, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)" }
-    );
-  };
-
-  const handleEyeMouseLeave = () => {
-    setIsHoveringEye(false);
-    gsap.to(seeMoreRef.current, {
-      scale: 0,
-      opacity: 0,
-      duration: 0.3,
-      ease: "back.in(1.7)",
-      onComplete: () => {
-        if (!isHoveringEye) {
-          seeMoreRef.current.style.display = 'none';
-        }
-      }
-    });
-  };
-
   useEffect(() => {
     // Set initial states for UI elements
     gsap.set([counterRef.current], {
       opacity: 0
     });
 
+    // Store ref values to use in cleanup
+    const prevBtn = prevBtnRef.current;
+    const nextBtn = nextBtnRef.current;
+    const counter = counterRef.current;
+    const textRefElements = textRefs.current.map(ref => ref.current);
+
     // Wait a short delay to ensure transition has completed
     setTimeout(() => {
-      // Animate the video background
-      gsap.to(videoRef.current, {
-        filter: "blur(100px)",
-        duration: 1,
-        ease: "power2.inOut"
-      });
-      
-      gsap.set(prevBtnRef.current, { 
+      // Set initial states for UI elements
+      gsap.set(prevBtn, { 
         y: -50, 
         visibility: "visible",
         opacity: 0
       });
       
-      gsap.set(nextBtnRef.current, { 
+      gsap.set(nextBtn, { 
         y: 50, 
         visibility: "visible",
         opacity: 0
       });
       
-      gsap.set(counterRef.current, { 
+      gsap.set(counter, { 
         y: 30, 
-        visibility: "visible" 
-      });
-      
-      gsap.set(previewRef.current, { 
-        scale: 0, 
         visibility: "visible" 
       });
 
@@ -297,25 +246,19 @@ const Projects = () => {
       // Animate elements in
       const tl = gsap.timeline();
       
-      tl.to(prevBtnRef.current, {
+      tl.to(prevBtn, {
         y: 0,
         opacity: 0.7,
         duration: 0.5,
         ease: "power2.out"
       }, "+=0.2")
-      .to(nextBtnRef.current, {
+      .to(nextBtn, {
         y: 0,
         opacity: 0.7,
         duration: 0.5, 
         ease: "power2.out"
       }, "-=0.3")
-      .to(previewRef.current, {
-        scale: 1,
-        opacity: 0.7,
-        duration: 0.5,
-        ease: "back.out(1.7)"
-      }, "-=0.3")
-      .to(counterRef.current, {
+      .to(counter, {
         y: 0,
         opacity: 1,
         duration: 0.5,
@@ -326,12 +269,10 @@ const Projects = () => {
     // Clean up animations on unmount
     return () => {
       gsap.killTweensOf([
-        prevBtnRef.current,
-        nextBtnRef.current,
-        counterRef.current,
-        previewRef.current,
-        videoRef.current,
-        ...textRefs.current.map(ref => ref.current)
+        prevBtn,
+        nextBtn,
+        counter,
+        ...textRefElements
       ]);
     };
   }, []);
@@ -341,29 +282,182 @@ const Projects = () => {
     return () => handleOverlay();
   }, []);
 
+  // Add effect for mobile text opacity 
+  useEffect(() => {
+    if (isMobile) {
+      // Update opacity for mobile when currentIndex changes
+      textRefs.current.forEach((ref, index) => {
+        // Force calculation of the correct positions, handling circular wrapping properly
+        const isCurrentItem = index === currentIndex;
+        const isNextItem = index === (currentIndex + 1) % categories.length;
+        const isPrevItem = index === (currentIndex - 1 + categories.length) % categories.length;
+        
+        // Handle each position case
+        if (isCurrentItem) {
+          // Current text in center (full opacity)
+          gsap.to(ref.current, {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.4,
+            ease: "power2.out",
+            visibility: "visible"
+          });
+        } else if (isNextItem) {
+          // Text below (medium opacity)
+          gsap.to(ref.current, {
+            opacity: 0.5,
+            scale: 0.9,
+            y: 60,
+            duration: 0.4,
+            ease: "power2.out",
+            visibility: "visible"
+          });
+        } else if (isPrevItem) {
+          // Text above (medium opacity)
+          gsap.to(ref.current, {
+            opacity: 0.5,
+            scale: 0.8,
+            y: -60,
+            duration: 0.4,
+            ease: "power2.out",
+            visibility: "visible"
+          });
+        } else {
+          // Other text items (slight visibility)
+          gsap.to(ref.current, {
+            opacity: 0.2,
+            scale: 0.7,
+            y: index < currentIndex ? -90 : 90,
+            duration: 0.4,
+            ease: "power2.out",
+            visibility: "visible"
+          });
+        }
+      });
+      
+      // Make sure navigation buttons are properly visible on mobile
+      if (prevBtnRef.current && nextBtnRef.current) {
+        gsap.to([prevBtnRef.current, nextBtnRef.current], {
+          opacity: 0.7,
+          duration: 0.3
+        });
+      }
+      
+      // Debug
+      console.log("Current category:", categories[currentIndex], "index:", currentIndex, 
+                  "prev:", (currentIndex - 1 + categories.length) % categories.length,
+                  "next:", (currentIndex + 1) % categories.length);
+    }
+  }, [isMobile, currentIndex, categories.length, categories]);
+
+  // Add a wheel event handler for touchpad/mouse scrolling
+  useEffect(() => {
+    const handleWheel = (e) => {
+      // Don't process if animation is already in progress
+      if (isAnimating) return;
+      
+      // Determine scroll direction (positive = down, negative = up)
+      const direction = e.deltaY > 0 ? 'next' : 'prev';
+      
+      if (direction === 'next') {
+        // Move to next category, or loop back to first
+        const nextIndex = (currentIndex + 1) % categories.length;
+        setIsAnimating(true);
+        animateTextTransition(currentIndex, nextIndex, 'next');
+        setCurrentIndex(nextIndex);
+      } else {
+        // Move to previous category, or loop to last
+        const prevIndex = currentIndex === 0 ? categories.length - 1 : currentIndex - 1;
+        setIsAnimating(true);
+        animateTextTransition(currentIndex, prevIndex, 'prev');
+        setCurrentIndex(prevIndex);
+      }
+    };
+    
+    // Throttle function to prevent too many wheel events
+    let timeout;
+    const throttledWheel = (e) => {
+      if (timeout) return;
+      timeout = setTimeout(() => {
+        handleWheel(e);
+        timeout = null;
+      }, 500); // Adjust this delay to control scroll sensitivity
+    };
+    
+    // Add the event listener to the text container
+    const textContainer = document.querySelector('.text-container');
+    if (textContainer) {
+      textContainer.addEventListener('wheel', throttledWheel);
+    }
+    
+    // Clean up
+    return () => {
+      if (textContainer) {
+        textContainer.removeEventListener('wheel', throttledWheel);
+      }
+      clearTimeout(timeout);
+    };
+  }, [currentIndex, isAnimating, categories.length]);
+
+  // Add touch swipe detection for mobile
+  useEffect(() => {
+    let touchStartY = 0;
+    let touchEndY = 0;
+    const minSwipeDistance = 50;
+    
+    const handleTouchStart = (e) => {
+      if (isAnimating) return;
+      touchStartY = e.touches[0].clientY;
+    };
+    
+    const handleTouchMove = (e) => {
+      if (isAnimating) return;
+      touchEndY = e.touches[0].clientY;
+    };
+    
+    const handleTouchEnd = () => {
+      if (isAnimating) return;
+      
+      const swipeDistance = touchStartY - touchEndY;
+      
+      if (Math.abs(swipeDistance) > minSwipeDistance) {
+        if (swipeDistance > 0) {
+          // Swipe up - go to next
+          handleNext();
+        } else {
+          // Swipe down - go to previous
+          handlePrev();
+        }
+      }
+    };
+    
+    const textContainer = document.querySelector('.text-container');
+    if (textContainer) {
+      textContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+      textContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
+      textContainer.addEventListener('touchend', handleTouchEnd);
+    }
+    
+    return () => {
+      if (textContainer) {
+        textContainer.removeEventListener('touchstart', handleTouchStart);
+        textContainer.removeEventListener('touchmove', handleTouchMove);
+        textContainer.removeEventListener('touchend', handleTouchEnd);
+      }
+    };
+  }, [isAnimating, handleNext, handlePrev]);
+
   return (
     <ReactLenis root>
       <div className="project-container">
-        <div className="video-background">
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-          >
-            <source src="home/vid.webm" type="video/webm" />
-          </video>
-        </div>
-        
         <div className="project-content">
           <div className="project-navigation left-nav">
             <button
               ref={prevBtnRef}
               className="nav-button prev"
               onClick={handlePrev}
-              style={{ opacity: currentIndex === 0 ? 0.3 : 0.7 }}
-              disabled={currentIndex === 0}
+              style={{ opacity: 0.7 }}
             >
               <svg width="28" height="16" viewBox="0 0 28 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2 14L14 2L26 14" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
@@ -373,8 +467,7 @@ const Projects = () => {
               ref={nextBtnRef}
               className="nav-button next"
               onClick={handleNext}
-              style={{ opacity: currentIndex === categories.length - 1 ? 0.3 : 0.7 }}
-              disabled={currentIndex === categories.length - 1}
+              style={{ opacity: 0.7 }}
             >
               <svg width="28" height="16" viewBox="0 0 28 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2 2L14 14L26 2" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
@@ -391,7 +484,7 @@ const Projects = () => {
                 onClick={() => handleCategoryClick(category)}
                 style={{ 
                   cursor: 'pointer',
-                  visibility: isMobile && index !== currentIndex && index !== (currentIndex + 1) % categories.length ? 'hidden' : 'visible' 
+                  visibility: 'visible'
                 }}
               >
                 {category}
@@ -400,18 +493,6 @@ const Projects = () => {
           </div>
 
           <div className="project-navigation right-nav">
-            <button
-              ref={previewRef}
-              className="nav-button eye-button"
-              onClick={handlePreviewClick}
-              onMouseEnter={handleEyeMouseEnter}
-              onMouseLeave={handleEyeMouseLeave}
-            >
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 5.25C4.5 5.25 1.5 12 1.5 12C1.5 12 4.5 18.75 12 18.75C19.5 18.75 22.5 12 22.5 12C22.5 12 19.5 5.25 12 5.25Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M12 15.75C14.0711 15.75 15.75 14.0711 15.75 12C15.75 9.92893 14.0711 8.25 12 8.25C9.92893 8.25 8.25 9.92893 8.25 12C8.25 14.0711 9.92893 15.75 12 15.75Z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
             <div ref={counterRef} className="project-counter">
               <span>1</span>
               <span>/</span>
@@ -421,11 +502,10 @@ const Projects = () => {
         </div>
         
         <ImageSlider assets={clientImages} />
-
-        <div ref={seeMoreRef} className="see-more-text">SEE ALL</div>
       </div>
     </ReactLenis>
   );
 };
 
-export default Transition(Projects);
+const ProjectsPage = Transition(Projects);
+export default ProjectsPage;

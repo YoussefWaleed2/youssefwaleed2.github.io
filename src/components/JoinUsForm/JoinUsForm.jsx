@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { emailConfig } from "../../config/emailConfig";
 import Popup from "../Popup/Popup";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import "./JoinUsForm.css";
 import { sendEmail } from '../../utils/email';
 import { generateJoinUsEmail } from '../../utils/emailTemplates';
@@ -9,7 +9,7 @@ import { countryCodes } from '../../utils/countryCodes';
 import CountryCodeSelect from '../CountryCodeSelect/CountryCodeSelect';
 
 const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
-  const formRef = useRef();
+  
   const fileInputRef = useRef();
   const scrollContainerRef = useRef();
   const [form, setForm] = useState({
@@ -153,7 +153,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
     setPopup({ show: false, message: "", type: "" });
 
     // Validate all inputs before submission
-    for (const [field, value] of Object.entries(form)) {
+    for (const [ value] of Object.entries(form)) {
       if (typeof value === 'string' && !validateInput(value)) {
         setPopup({
           show: true,
@@ -186,6 +186,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
             content: base64Content
           });
         } catch (fileError) {
+          console.error("File processing error:", fileError);
           setPopup({
             show: true,
             message: "Error processing your resume file. Please try another file.",
@@ -263,6 +264,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
         }, 8000); // Close after 2 seconds so user can see success message
       }
     } catch (error) {
+      console.error("Email sending error:", error);
       setPopup({
         show: true,
         message: "Failed to send application. Please try again later.",

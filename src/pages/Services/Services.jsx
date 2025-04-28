@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { useGLTF } from '@react-three/drei';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import Lenis from '@studio-freight/lenis';
 import * as THREE from 'three';
@@ -160,7 +160,7 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
       duration: 1.5, // Reduced from 3 to 1.5
       ease: "elastic.out(1, 0.2)"
     }, "<0.3"); // Start slightly after the main animation
-  }, [scene, isLeftHand, scaleFactor, viewport.width]);
+  }, [scene, isLeftHand, scaleFactor, viewport.width, onEntranceComplete]);
 
   // Update rotation and position based on scroll progress
   useEffect(() => {
@@ -262,9 +262,8 @@ const Services = () => {
   const [canvasLoaded, setCanvasLoaded] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const titleRef = useRef(null);
   const sectionsRef = useRef(null);
-  const navRef = useRef(null);
+
   const lenisRef = useRef(null);
   const navigate = useNavigate();
 
@@ -373,7 +372,7 @@ const Services = () => {
 
       // Reveal sections one by one
       const sections = document.querySelectorAll('.service-section');
-      sections.forEach((section, index) => {
+      sections.forEach((section) => {
         timeline.add(() => {
           section.classList.add('visible');
           // Add additional animation for the button after section is visible

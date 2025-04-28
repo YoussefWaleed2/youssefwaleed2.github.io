@@ -18,7 +18,7 @@
 .popup-content {
   display: flex;
   align-items: flex-start;
-  padding: 20px 24px;
+  padding: 40px 44px;
   border-radius: 8px;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
   min-width: 800px;
@@ -54,7 +54,7 @@
   font-family: "Helvetica Neue", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  font-weight: 500;
+  font-weight: 300;
 }
 
 .thank-you-message {
@@ -62,11 +62,10 @@
   padding-top: 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
   font-size: 14px !important;
-  font-style: italic;
   font-family: "Helvetica Neue", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  font-weight: 500;
+  font-weight: 300;
 }
 
 .popup-close {

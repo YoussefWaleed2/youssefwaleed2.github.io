@@ -254,7 +254,7 @@ body:has(.horizontal-scroll-wrapper) .img-logo {
 
 .menu-overlay h1 {
     text-transform: uppercase;
-    font-weight: 400;
+    font-weight: 100;
     line-height: 0.85;
     color: var(--copy);
     margin: 0;

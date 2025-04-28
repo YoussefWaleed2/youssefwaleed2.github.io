@@ -14,36 +14,72 @@
 
 body.form-open {
   overflow: hidden;
-  height: 100vh;
+  position: fixed;
+  width: 100%;
+  height: 100%;
 }
 
 .join-us-form {
   position: fixed;
   inset: 0;
   margin: auto;
-  width: 90%;
+  width: 95%;
   max-width: 600px;
   max-height: 90vh;
   height: auto;
   background-color: rgb(18, 18, 18);
   border-radius: 24px;
-  padding: 2.5em;
+  padding: 0;
   z-index: 99999;
   color: white;
   font-family: "TT-Norms", sans-serif;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow: hidden;
 }
+
+.join-us-form-inner {
+  padding: 0 2.5em 2.5em 2.5em;
+  overflow-y: auto;
+  max-height: calc(95vh - 60px); /* Account for close button + padding space */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.join-us-form-header {
+  position: sticky;
+  top: 0;
+  background-color: rgb(18, 18, 18);
+  margin-bottom: 1em;
+  z-index: 2;
+}
+
+.join-us-form-inner::-webkit-scrollbar {
+  width: 6px;
+}
+
+.join-us-form-inner::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.join-us-form-inner::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.join-us-form-inner::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
 .img-logo-form-container{
   width: 100%;
   height: 5rem;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 .img-logo-form{
-  margin-top: 0.5rem;
   width: 8.5rem;
   height: 8.5rem;
 }
@@ -240,10 +276,10 @@ body.form-open {
 
 .close-button {
   position: absolute;
-  top: 1.5em;
-  right: 1.5em;
+  top: 3em;
+  right: 3em;
   background-color: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  /* border: 1px solid rgba(255, 255, 255, 0.5); */
   color: white;
   cursor: pointer;
   padding: 2px;
@@ -263,9 +299,10 @@ body.form-open {
   opacity: 1;
   background-color: rgba(255, 255, 255, 0.4);
 }
+
 @media (min-width: 768px) and (max-width: 1024px) {
   .join-us-form {
-    padding: 2em;
+    padding: 0;
     width: 100%;
     height: 100vh;
     max-height: 100vh;
@@ -276,14 +313,30 @@ body.form-open {
     right: 0;
     bottom: 0;
     border-radius: 0;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
     border-radius: 25px;
+  }
+  
+  .join-us-form-inner {
+    height: calc(100vh - 60px);
+    padding: 0 2em 2em 2em;
+    overflow-y: auto;
+    margin-top: 60px;
+  }
+  
+  .join-us-form-header {
+    padding-top: 1em;
+  }
+
+  .close-button {
+    position: fixed;
+    top: 1em;
+    right: 1em;
   }
 }
 @media (max-width: 767px) {
   .join-us-form {
-    padding: 2em;
+    padding: 0;
     width: 100%;
     height: 100vh;
     max-height: 100vh;
@@ -294,8 +347,25 @@ body.form-open {
     right: 0;
     bottom: 0;
     border-radius: 0;
-    overflow-y: scroll;
+    overflow: hidden;
+  }
+  
+  .join-us-form-inner {
+    height: calc(100vh - 60px);
+    padding: 0 2em 2em 2em;
+    overflow-y: auto;
+    margin-top: 60px;
     -webkit-overflow-scrolling: touch;
+  }
+  
+  .join-us-form-header {
+    padding-top: 1em;
+  }
+
+  .close-button {
+    position: fixed;
+    top: 1em;
+    right: 1em;
   }
 
   .form-row {
@@ -305,6 +375,20 @@ body.form-open {
 
   .form-group-joinus {
     margin-bottom: 1em;
+  }
+
+  .phone-input-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .country-code-select {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .phone-input {
+    width: 100%;
   }
 
   .img-logo-form-container{
@@ -346,4 +430,43 @@ body.form-open {
     height: 98vh;
     padding: 1.2em;
   }
+}
+
+.phone-input-container {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.country-code-select {
+  flex: 0 0 auto;
+  min-width: 100px ;
+  max-width: none;
+  border-radius: 0;
+  border-right: none;
+  background-color: transparent;
+  font-size: 16px;
+  color: white;
+  padding: 0 0 0.25em 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='white'%3E%3Cpath d='M2 4L6 8L10 4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5em center;
+  background-size: 12px;
+}
+
+.country-code-select option {
+  background-color: rgb(18, 18, 18);
+  color: white;
+  font-family: "TT-Norms", sans-serif;
+  padding: 0.5em;
+}
+
+.phone-input {
+  flex: 1;
+  border-radius: 0;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 1);
 } 

@@ -101,7 +101,6 @@
   font-weight: 300;
   color: white;
   margin-bottom: 0.5em;
-  letter-spacing: 0.05em;
   text-transform: uppercase;
   font-family: "Sprat", sans-serif;
 }
@@ -269,6 +268,15 @@
     flex-direction: column;
     gap: 0.5em;
   }
+
+  .phone-input-group {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .phone-input {
+    width: 100%;
+  }
 }
 
 /* Popup styles */
@@ -338,4 +346,16 @@
   font-family: "TT-Norms", sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.phone-input-group {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.phone-input {
+  flex: 1;
+  border-radius: 0;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 1);
 }

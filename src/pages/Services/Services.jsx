@@ -472,7 +472,7 @@ const Services = () => {
 
         <section className="service-section">
           <div className="service-number">02.</div>
-          <h2 className="service-title">SOCIAL MEDIA</h2>
+          <h2 className="service-title">MARKETING</h2>
           <p className="service-description">
             We take your brand beyond the feed. Through standout campaigns and creative storytelling, we transform social media into a stage where your brand doesn't just show up, it stands out. From engaging posts to viral content and authentic connections, we ensure your brand stays front of mind. 
           </p>
@@ -498,9 +498,6 @@ const Services = () => {
           <p className="service-description">
             we believe packaging is more than just a container—it's a canvas for storytelling. We craft designs that not only protect your product but also elevate your brand's identity. From the tactile feel to the visual appeal, every element is meticulously considered to create an unforgettable unboxing experience. Our approach ensures that your packaging resonates with your audience, making your brand not just seen, but truly VZBL.
           </p>
-          <button className="service-button" onClick={() => navigate('/all-projects/packaging')}>
-            View projects
-          </button>
         </section>
       </div>
     </div>

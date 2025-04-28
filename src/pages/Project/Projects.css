@@ -728,15 +728,14 @@ body {
 }
 
 .service-selector-right {
-  display: flex;
+  display: flex; 
   flex-direction: column;
-  gap: 1.2rem;
-  min-width: 320px;
+  gap: 0;
 }
 
 .service-list-item {
   color: #eaeada;
-  font-size: 1.18rem;
+  font-size: 1.1rem;
   font-family: 'TT Norms Light', sans-serif;
   letter-spacing: 0.04em;
   font-weight: 400;
@@ -747,8 +746,23 @@ body {
   border: none;
   background: none;
   text-align: left;
-  padding: 0.1rem 0.2rem;
+  padding: 0.3rem 0.2rem;
   transform: perspective(400px) rotateX(0deg) translateY(0);
+  height: 1.8rem;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  user-select: none;
+}
+
+.service-list-item:hover {
+  color: #fff;
+}
+
+.service-list-item:active {
+  transform: perspective(400px) rotateX(0deg) scale(0.98) !important;
+  opacity: 0.9 !important;
 }
 
 .service-list-item.active {
@@ -757,10 +771,6 @@ body {
   opacity: 1;
   z-index: 2;
   transform: perspective(400px) rotateX(0deg) scale(1.08);
-}
-
-.service-list-item:not(.active):hover {
-  opacity: 0.7;
 }
 
 /* Sibling rotation effect using nth-child and parent hover */
@@ -774,10 +784,6 @@ body {
   opacity: 0.3;
   z-index: 1;
 }
-
-
-
-/* For items above, use a selector in JS for inline style (see below) */
 
 /* Mobile: disable 3D effect */
 @media (max-width: 768px) {
@@ -855,6 +861,7 @@ body {
   margin-left: 0.3rem;
   transition: top 0.35s cubic-bezier(0.4,1.6,0.4,1);
   line-height: 1.2;
+  margin-top: 2px;
 }
 
 .service-selector-right {

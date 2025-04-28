@@ -15,10 +15,21 @@ const Projects = () => {
   const videoRef = useRef(null);
 
   const services = [
-    "CREATIVES / ADVERTISEMENT",
-    "ONLINE / OFFLINE MARKETING",
-    "BRANDING / RE-BRANDING"
+    "BRANDING",
+    "MARKETING",
+    "ADVERTISEMENT"
   ];
+
+  const serviceRoutes = [
+    "/all-projects/branding",
+    "/all-projects/marketing",
+    "/all-projects/advertisement"
+  ];
+
+  const handleServiceClick = (index) => {
+    navigate(serviceRoutes[index]);
+  };
+
   useEffect(() => {
     document.title = "Projects | VZBL";
   }, []);
@@ -46,12 +57,15 @@ const Projects = () => {
         <div className="service-selector-row">
           <div style={{position: 'relative'}}>
             <div className="service-selector-left">
-              <span className="section-title">OUR SERVICES</span>
+              <span className="section-title">OUR PROJECTS</span>
               <span 
                 className="section-arrow"
                 style={{
                   position: 'relative',
-                  top: hoveredIndex !== null ? `calc(${hoveredIndex * 1.8}rem)` : '0',
+                  top: hoveredIndex === 2 ? '3rem' : 
+                       hoveredIndex === 1 ? null : 
+                       hoveredIndex === 0 ? '-3rem' : 
+                       '0rem',
                   transition: 'top 0.35s cubic-bezier(0.4,1.6,0.4,1)'
                 }}
               >&gt;</span>
@@ -81,7 +95,8 @@ const Projects = () => {
                   className={`service-list-item${index === hoveredIndex ? ' active' : ''}`}
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
-                  style={style}
+                  onClick={() => handleServiceClick(index)}
+                  style={{...style, cursor: 'pointer'}}
                 >
                   {service}
                 </div>

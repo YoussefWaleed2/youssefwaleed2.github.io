@@ -126,7 +126,7 @@ const ContactForm = ({ formType = 'contact' }) => {
     setPopup({ show: false, message: "", type: "" });
 
     // Validate all inputs before submission
-    for (const [field, value] of Object.entries(form)) {
+    for (const [value] of Object.entries(form)) {
       if (typeof value === 'string' && !validateInput(value)) {
         setPopup({
           show: true,
@@ -204,6 +204,7 @@ const ContactForm = ({ formType = 'contact' }) => {
       
       setSelectedService("");
     } catch (error) {
+      console.error("Email sending error:", error);
       setPopup({
         show: true,
         message: "Failed to send message. Please try again later.",

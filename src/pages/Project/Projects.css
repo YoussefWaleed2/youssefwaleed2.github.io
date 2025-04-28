@@ -14,22 +14,6 @@ html, body, #root {
   overflow: hidden;
 }
 
-.video-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
-
-.video-background video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.7) blur(50px);
-}
-
 .project-container {
   position: relative;
   min-height: 100vh;
@@ -38,7 +22,7 @@ html, body, #root {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba(26, 26, 26, 0.7);
+  background-color: #000000;
   color: white;
   padding: 2rem;
   font-family: "TT Norms Light", sans-serif;
@@ -510,6 +494,7 @@ html, body, #root {
   display: flex;
   align-items: center;
   margin-bottom: 0;
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -654,7 +639,7 @@ html, body, #root {
   bottom: 25px;
   left: 0;
   width: 100%;
-  height: 60px;
+  height: 50px;
   background-color: black;
   overflow: hidden;
   display: flex;
@@ -664,75 +649,88 @@ html, body, #root {
 
 .image-slider {
   display: flex;
-  animation: slide 40s linear infinite;
+  animation: slideInfinite 60s linear infinite;
   width: fit-content;
-  height: 70px;
+  height: 50px;
   align-items: center;
 }
 
 .slider-image {
-  height: 20px;
+  height: 15px;
   margin: 0 20px;
   object-fit: contain;
   filter: brightness(0.8);
   transition: filter 0.3s ease, transform 0.3s ease;
 }
-@keyframes slide {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+
+.slider-more-text {
+  color: white;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  margin: 0 20px;
+  opacity: 0.8;
 }
 
-@keyframes slideReverse {
+@keyframes slideInfinite {
   0% {
-    transform: translateX(-50%);
+    transform: translateX(0);
   }
   100% {
-    transform: translateX(0);
+    /* Move exactly the width of one complete sequence */
+    transform: translateX(-50%);
   }
 }
 
 /* Responsive styling for the slider */
 @media (max-width: 768px) {
   .image-slider-container {
-    height: 140px;
+    height: 50px;
   }
   
   .image-slider, 
   .image-slider-reverse {
-    height: 70px;
+    height: 50px;
   }
   
   .slider-image {
-    height: 55px;
+    height: 15px;
+    margin: 0 15px;
+  }
+  
+  .slider-more-text {
+    font-size: 11px;
     margin: 0 15px;
   }
   
   .project-container {
-    height: calc(100vh - 140px);
+    height: calc(100vh - 50px);
   }
 }
 
 @media (max-width: 480px) {
   .image-slider-container {
-    height: 120px;
+    height: 40px;
   }
   
   .image-slider, 
   .image-slider-reverse {
-    height: 60px;
+    height: 40px;
   }
   
   .slider-image {
-    height: 45px;
+    height: 14px;
+    margin: 0 10px;
+  }
+  
+  .slider-more-text {
+    font-size: 10px;
     margin: 0 10px;
   }
   
   .project-container {
-    height: calc(100vh - 120px);
+    height: calc(100vh - 40px);
   }
 }
 

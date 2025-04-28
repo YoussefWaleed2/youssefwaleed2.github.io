@@ -213,12 +213,16 @@ const MobileMenu = () => {
   useEffect(() => {
     gsap.registerPlugin(CustomEase);
 
-    if (menuOpenBtnRef.current) {
-      menuOpenBtnRef.current.addEventListener("click", handleOpenMenu);
+    // Save references to the current DOM elements
+    const openBtn = menuOpenBtnRef.current;
+    const closeBtn = menuCloseBtnRef.current;
+
+    if (openBtn) {
+      openBtn.addEventListener("click", handleOpenMenu);
     }
 
-    if (menuCloseBtnRef.current) {
-      menuCloseBtnRef.current.addEventListener("click", handleCloseMenu);
+    if (closeBtn) {
+      closeBtn.addEventListener("click", handleCloseMenu);
     }
 
     // Listen for route changes
@@ -230,12 +234,12 @@ const MobileMenu = () => {
     window.addEventListener('popstate', handleRouteChange);
 
     return () => {
-      if (menuOpenBtnRef.current) {
-        menuOpenBtnRef.current.removeEventListener("click", handleOpenMenu);
+      if (openBtn) {
+        openBtn.removeEventListener("click", handleOpenMenu);
       }
 
-      if (menuCloseBtnRef.current) {
-        menuCloseBtnRef.current.removeEventListener("click", handleCloseMenu);
+      if (closeBtn) {
+        closeBtn.removeEventListener("click", handleCloseMenu);
       }
 
       // Remove event listener for route changes

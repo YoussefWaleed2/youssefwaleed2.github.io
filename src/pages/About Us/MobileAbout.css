@@ -39,12 +39,14 @@
 .section-title .heading-text {
   opacity: 0;
   transform: translateY(20px);
+  font-weight: 100;
 }
 
 /* Force proper sizing on all viewports */
 html, body {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%; /* stylelint-disable-line property-no-unknown */
 }
 
 @media (max-width: 1024px) {
@@ -115,6 +117,7 @@ html, body {
   width: 100%;
   z-index: 100;
   background-color: rgba(10, 10, 10, 0.8);
+  -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
 }
 
@@ -245,7 +248,25 @@ html, body {
 }
 
 .section-title.right-aligned {
-  justify-content: flex-end;
+  text-align: center;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.section-title.right-aligned .heading-text {
+  font-size: 2rem;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  display: inline-block;
+  padding: 0 0.3rem;
 }
 
 .section-title.wide {
@@ -364,6 +385,7 @@ html, body {
   padding: 1.5rem;
   text-align: center;
   border-radius: 5px;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   max-width: 90%;
   margin: 0 auto;
@@ -376,16 +398,25 @@ html, body {
   width: 100%;
   box-sizing: border-box;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .team-member-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 4rem;
+  justify-content: center;
+  margin: 0 auto 4rem auto;
   padding: 1rem;
   width: 100%;
+  max-width: 500px;
   box-sizing: border-box;
+  text-align: center;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .team-gallery {
@@ -409,12 +440,15 @@ html, body {
 }
 
 .member-title {
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
+  margin: 1.5rem auto 0.5rem auto;
   text-align: center;
   padding: 0;
   width: 100%;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .member-title .heading-text {
@@ -425,6 +459,7 @@ html, body {
   max-width: 100%;
   padding: 0 10px;
   text-align: center;
+  margin: 0 auto;
 }
 
 .member-text {
@@ -558,6 +593,7 @@ html, body {
   letter-spacing: -1px;
   color: #000000;
   position: relative;
+  text-align: left;
   z-index: 2;
   
 }
@@ -571,7 +607,8 @@ html, body {
   color: #000000;
   position: relative;
   z-index: 2;
-  
+  text-align: left;
+  align-self: flex-start;
 }
 
 .asterisk {
@@ -643,7 +680,8 @@ html, body {
   text-align: center;
   width: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
+  
 }
 
 .hand-content {
@@ -703,6 +741,10 @@ body.about-page-loaded .mobile-about-content {
 /* About Hand Section */
 .about-hand-section {
   margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 /* Media Queries for different device sizes */

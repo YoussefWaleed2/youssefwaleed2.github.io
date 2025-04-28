@@ -331,7 +331,6 @@
     flex-wrap: nowrap;
     overflow-x: auto;
     padding: 5px 0;
-    -webkit-overflow-scrolling: touch;
   }
 
   .social-links a {

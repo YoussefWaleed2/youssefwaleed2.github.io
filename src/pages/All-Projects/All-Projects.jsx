@@ -273,4 +273,5 @@ const AllProjects = () => {
   );
 };
 
-export default Transition(AllProjects); 
+const AllProjectsPage = Transition(AllProjects);
+export default AllProjectsPage; 

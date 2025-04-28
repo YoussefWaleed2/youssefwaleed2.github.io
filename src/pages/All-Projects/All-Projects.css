@@ -2,7 +2,7 @@
 
 .all-projects-container {
   padding: 100px 5vw;
-  min-height: auto;
+  min-height: 100vh;
   color: white;
   position: relative;
   z-index: 1;

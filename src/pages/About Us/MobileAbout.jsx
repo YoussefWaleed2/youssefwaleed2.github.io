@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Transition from '../../components/Transition/Transition';
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Footer from '../../components/Footer/Footer';
 import './MobileAbout.css';
 
-const MobileAbout = ({ images = [] }) => {
+const MobileAbout = () => {
   const contentRef = useRef(null);
   const textRefs = useRef([]);
   const titleRefs = useRef([]);
@@ -82,7 +82,7 @@ const MobileAbout = ({ images = [] }) => {
   // Create scroll animations for all text elements
   useEffect(() => {
     // Animate text paragraphs on scroll
-    textRefs.current.forEach((textRef, index) => {
+    textRefs.current.forEach((textRef) => {
       if (textRef) {
         gsap.fromTo(
           textRef,
@@ -319,12 +319,7 @@ const MobileAbout = ({ images = [] }) => {
         
         {/* Meet The Team Section */}
         <section className="section team-section">
-          <div 
-            className="section-title wide centered"
-            ref={el => titleRefs.current[3] = el}
-          >
-            <h2 className="heading-text">OUR TEAM</h2>
-          </div>
+         
           
           {/* Team Member 1: Ebraheim El Zeyoudi */}
           <div className="team-member-container">

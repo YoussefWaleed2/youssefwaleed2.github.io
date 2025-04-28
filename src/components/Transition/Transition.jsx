@@ -1,17 +1,20 @@
-import React, { useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
+import { motion as _Motion } from 'framer-motion';
 import { usePageTransition } from '../../hooks/usePageTransition';
 import './Transition.css';
 import gsap from 'gsap';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const Transition = (Component) => {
-  return () => {
+// Properly structured HOC
+// eslint-disable-next-line no-unused-vars
+const Transition = (_WrappedComponent) => {
+  // This returns a proper function component where hooks can be used
+  const TransitionComponent = (props) => {
     const location = useLocation();
     const navigate = useNavigate();
-    const isEntering = useRef(true);
-    const videoRef = useRef(null);
-    const { pageVariants, pageTransition } = usePageTransition();
+    const isEntering = React.useRef(true);
+    const _videoRef = React.useRef(null);
+    const { pageVariants: _pageVariants, pageTransition } = usePageTransition();
 
     // Dynamic variants based on current page and destination
     const getDynamicVariants = () => {
@@ -44,7 +47,7 @@ const Transition = (Component) => {
     // Get the dynamic variants
     const variants = getDynamicVariants();
 
-    useEffect(() => {
+    React.useEffect(() => {
       const timeline = gsap.timeline();
 
       // Special handling for services page
@@ -90,7 +93,7 @@ const Transition = (Component) => {
     }, [location]);
 
     // Handle navigation
-    useEffect(() => {
+    React.useEffect(() => {
       const handleClick = (e) => {
         const link = e.target.closest('a');
         if (link && link.getAttribute('href')?.startsWith('/')) {
@@ -105,7 +108,7 @@ const Transition = (Component) => {
     }, [navigate]);
 
     return (
-      <motion.div
+      <_Motion.div
         className="transition-wrapper"
         initial="initial"
         animate="animate"
@@ -113,10 +116,12 @@ const Transition = (Component) => {
         variants={variants}
         transition={pageTransition}
       >
-        <Component />
-      </motion.div>
+        <_WrappedComponent {...props} />
+      </_Motion.div>
     );
   };
+
+  return TransitionComponent;
 };
 
 export default Transition;

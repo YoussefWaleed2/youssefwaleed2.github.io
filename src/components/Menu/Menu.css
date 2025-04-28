@@ -28,6 +28,7 @@ body {
     z-index: 999;
     will-change: transform;
     background: rgba(0, 0, 0, 0.1);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border-radius: 25px;
     opacity: 1;
@@ -56,6 +57,7 @@ body:has(.horizontal-scroll-wrapper) .navbar {
 body.person-bg .navbar {
     background: rgba(0, 0, 0, 0.7) !important; /* Dark background */
     mix-blend-mode: normal !important; /* Use normal blend mode instead of difference */
+    -webkit-backdrop-filter: blur(5px) !important;
     backdrop-filter: blur(5px) !important;
     color: white !important;
     filter: none !important; /* Remove grayscale filter */
@@ -162,6 +164,7 @@ body:has(.horizontal-scroll-wrapper) .img-logo {
     padding: 4px 0;
     display: block;
     will-change: transform;
+    -webkit-user-select: none;
     user-select: none;
 }
 

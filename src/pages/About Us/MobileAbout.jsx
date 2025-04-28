@@ -274,7 +274,7 @@ const MobileAbout = ({ images = [] }) => {
             ref={el => titleRefs.current[1] = el}
           >
             <h2 className="heading-text script">The</h2>
-            <h2 className="heading-text">VISIONARY ////////MIND</h2>
+            <h2 className="heading-text">VISIONARY /////////MIND</h2>
           </div>
         </section>
         
@@ -293,7 +293,7 @@ const MobileAbout = ({ images = [] }) => {
             <div className="team-image-box ">
               <img 
                 src={getImage(14)} 
-                alt="VZBL Founder" 
+                alt="VZBL Founder"  
                 onError={handleImageError}
                 ref={el => imageRefs.current[2] = el}
               />
@@ -347,12 +347,13 @@ const MobileAbout = ({ images = [] }) => {
                 className="body-text animate-text" 
                 ref={el => textRefs.current[6] = el}
               >
-                EBRAHEIM AL ZEYOUDI IS THE VISIONARY CO-FOUNDER AND CHIEF COM-
-                MERCIAL OFFICER (CCO) OF VZBL, THE LEADING CREATIVE MARKETING
-                AGENCY IN THE UAE AND EGYPT. WITH A DEEP UNDERSTANDING OF
-                BRAND POSITIONING AND COMMERCIAL GROWTH, EBRAHEM HAS PLAYED
-                A PIVOTAL ROLE IN TRANSFORMING VZBL INTO A POWERHOUSE THAT
-                BRIDGES THE CREATIVE GAP IN THE REGION'S MARKETING LANDSCAPE.
+                EBRAHEIM EL ZEYOUDI IS THE VISIONARY CO-FOUNDER AND CHIEF 
+                COMMERCIAL OFFICER (CCO) OF VZBL, THE LEADING CREATIVE 
+                MARKETING AGENCY IN THE UAE AND EGYPT. WITH A DEEP 
+                UNDERSTANDING OF BRAND POSITIONING AND COMMERCIAL GROWTH, 
+                EBRAHEIM HAS PLAYED A PIVOTAL ROLE IN TRANSFORMING VZBL 
+                INTO A POWERHOUSE THAT BRIDGES THE CREATIVE GAP IN THE 
+                REGION'S MARKETING LANDSCAPE.
               </p>
             </div>
           </div>
@@ -378,20 +379,14 @@ const MobileAbout = ({ images = [] }) => {
                 className="body-text animate-text" 
                 ref={el => textRefs.current[7] = el}
               >
-                WITH A STRONG FOCUS ON BUSINESS DEVEL-
-                OPMENT AND CREATIVE STRATEGY, SHOU-
-                ROUK HELPS CLIENTS REFINE THEIR BRAND
-                POSITIONING AND MARKET PRESENCE. AS A
-                SEASONED RESTAURATEUR AND HOSPITALI-
-                TY CONSULTANT WITH SIX YEARS OF EXPERI-
-                ENCE IN GLOBAL MARKETS, SHE UNDER-
-                STANDS THE CHALLENGES BUSINESSES FACE
-                AND WORKS TO HIGHLIGHT THEIR
-                STRENGTHS AND UNIQUENESS, ENSURING
-                THEY STAND OUT IN A COMPETITIVE ECONO-
-                MY. THROUGH VZBL, SHE CRAFTS TAILORED
-                SOLUTIONS THAT DRIVE GROWTH, VISIBILITY,
-                AND LASTING IMPACT.
+                WITH A STRONG FOCUS ON BUSINESS DEVELOPMENT AND CREATIVE 
+                STRATEGY, SHOUROUK HELPS CLIENTS REFINE THEIR BRAND POSITIONING 
+                AND MARKET PRESENCE. AS A SEASONED RESTAURATEUR AND HOSPITALITY 
+                CONSULTANT WITH SIX YEARS OF EXPERIENCE IN GLOBAL MARKETS, SHE 
+                UNDERSTANDS THE CHALLENGES BUSINESSES FACE AND WORKS TO 
+                HIGHLIGHT THEIR STRENGTHS AND UNIQUENESS, ENSURING THEY STAND 
+                OUT IN A COMPETITIVE ECONOMY. THROUGH VZBL, SHE CRAFTS TAILORED 
+                SOLUTIONS THAT DRIVE GROWTH, VISIBILITY, AND LASTING IMPACT.
               </p>
             </div>
           </div>
@@ -417,17 +412,15 @@ const MobileAbout = ({ images = [] }) => {
                 className="body-text animate-text" 
                 ref={el => textRefs.current[8] = el}
               >
-                AT THE HEART OF VZBL'S OPERATIONS, NOURHAN IS
-                THE FORCE THAT KEEPS EVERYTHING MOVING. WITH A
-                SHARP STRATEGIC MIND AND A NATURAL INSTINCT FOR
-                ORGANIZATION, SHE TURNS BIG IDEAS INTO SEAMLESS
-                EXECUTION AS SHE ENSURES EVERY PROJECT DOESN'T
-                JUST RUN SMOOTHLY BUT WITH PURPOSE, ALIGNING
-                EVERY DETAIL WITH VZBL'S VISION FROM THE FIRST
-                SPARK OF AN IDEA TO THE FINAL EXECUTION. HER ABILI-
-                TY TO NAVIGATE HIGH-PRESSURE SITUATIONS WITH
-                CONFIDENCE AND EFFICIENCY MAKES HER AN ESSEN-
-                TIAL DRIVER OF VZBL'S SUCCESS.
+                AT THE HEART OF VZBL'S OPERATIONS, NOURHAN IS THE FORCE THAT 
+                KEEPS EVERYTHING MOVING. WITH A SHARP STRATEGIC MIND AND A 
+                NATURAL INSTINCT FOR ORGANIZATION, SHE TURNS BIG IDEAS INTO 
+                SEAMLESS EXECUTION AS SHE ENSURES EVERY PROJECT DOESN'T JUST 
+                RUN SMOOTHLY BUT WITH PURPOSE, ALIGNING EVERY DETAIL WITH 
+                VZBL'S VISION FROM THE FIRST SPARK OF AN IDEA TO THE FINAL 
+                EXECUTION. HER ABILITY TO NAVIGATE HIGH-PRESSURE SITUATIONS 
+                WITH CONFIDENCE AND EFFICIENCY MAKES HER AN ESSENTIAL DRIVER 
+                OF VZBL'S SUCCESS.
               </p>
             </div>
           </div>

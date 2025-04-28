@@ -17,6 +17,7 @@ const Projects = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHoveringEye, setIsHoveringEye] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const seeMoreRef = useRef(null);
   const prevBtnRef = useRef(null);
   const nextBtnRef = useRef(null);
@@ -46,6 +47,22 @@ const Projects = () => {
   
   useEffect(() => {
     document.title = "Projects | VZBL";
+    
+    // Check if device is mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    // Initial check
+    checkMobile();
+    
+    // Add resize listener
+    window.addEventListener('resize', checkMobile);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
   
   const handleNext = () => {
@@ -87,7 +104,8 @@ const Projects = () => {
         opacity: 1,
         scale: 1, 
         duration: 0.5,
-        ease: "power3.out"
+        ease: "power3.out",
+        visibility: 'visible'
       });
       
       // Third text moves below
@@ -97,7 +115,8 @@ const Projects = () => {
           opacity: 0.3,
           scale: 0.9,
           duration: 0.5,
-          ease: "power3.out"
+          ease: "power3.out",
+          visibility: 'visible'
         });
       }
     } else {
@@ -116,17 +135,19 @@ const Projects = () => {
         opacity: 1,
         scale: 1, 
         duration: 0.5,
-        ease: "power3.out"
+        ease: "power3.out",
+        visibility: 'visible'
       });
       
-      // Third text stays or moves
+      // Third text moves
       if (thirdText) {
         gsap.to(thirdText, {
-          y: thirdIndex < toIndex ? -100 : 100,
+          y: -100,
           opacity: 0,
           scale: 0.8,
           duration: 0.5,
-          ease: "power3.out"
+          ease: "power3.out",
+          visibility: 'visible'
         });
       }
     }
@@ -244,7 +265,7 @@ const Projects = () => {
         visibility: "visible" 
       });
 
-      // Initialize text elements 
+      // Initialize text elements - same for mobile and desktop
       textRefs.current.forEach((ref, index) => {
         if (index === 0) {
           // Current category (centered)
@@ -263,7 +284,7 @@ const Projects = () => {
             visibility: "visible"
           });
         } else {
-          // Hidden category
+          // Previous category (above)
           gsap.set(ref.current, { 
             y: -100,
             opacity: 0,
@@ -368,7 +389,10 @@ const Projects = () => {
                 ref={textRefs.current[index]} 
                 className={`category-text ${index === currentIndex ? 'active' : ''}`}
                 onClick={() => handleCategoryClick(category)}
-                style={{ cursor: 'pointer' }}
+                style={{ 
+                  cursor: 'pointer',
+                  visibility: isMobile && index !== currentIndex && index !== (currentIndex + 1) % categories.length ? 'hidden' : 'visible' 
+                }}
               >
                 {category}
               </div>

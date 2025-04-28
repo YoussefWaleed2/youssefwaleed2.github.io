@@ -607,6 +607,283 @@ body {
   }
 }
 
+/* --- Text Card Styles for Service Selector --- */
+.text-card-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 20, 20, 0.85);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: box-shadow 0.3s, background 0.3s;
+  will-change: transform, opacity;
+  z-index: 2;
+}
+
+.text-card-wrapper:hover {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.22);
+  background: rgba(30, 30, 30, 0.92);
+}
+
+.service-text {
+  color: #eaeada;
+  font-size: 1.5rem;
+  font-family: 'TT Norms Light', sans-serif;
+  letter-spacing: 0.08em;
+  text-align: center;
+  font-weight: 400;
+  line-height: 1.4;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  padding: 0 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .text-card-wrapper {
+    min-height: 180px;
+    height: 180px;
+    width: 95vw;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 10px;
+    padding: 0.5rem 0;
+  }
+  .service-text {
+    font-size: 1.1rem;
+    padding: 0 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .text-card-wrapper {
+    min-height: 120px;
+    height: 120px;
+    width: 98vw;
+    border-radius: 8px;
+    padding: 0.2rem 0;
+  }
+  .service-text {
+    font-size: 0.98rem;
+    padding: 0 0.2rem;
+  }
+}
+
+/* --- Service Selector Layout --- */
+.service-selector-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1.2rem;
+  margin-top: 8rem;
+  margin-bottom: 2rem;
+}
+
+.service-selector-align {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.service-selector-left {
+  text-align: left;
+}
+
+.service-selector-right-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.section-arrow-animated {
+  position: absolute;
+  left: 12rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #eaeada;
+  opacity: 1 !important;
+  pointer-events: none;
+  line-height: 2.8rem;
+  top: 0.1rem;
+  transition: top 0.35s cubic-bezier(0.4,1.6,0.4,1);
+  display: block !important;
+}
+
+.section-title {
+  color: #eaeada;
+  font-size: 1.1rem;
+  font-family: 'TT Norms Light', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 400;
+  opacity: 0.85;
+  margin-right: 0.4rem;
+  line-height: 2.8rem;
+}
+
+.service-selector-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  min-width: 320px;
+}
+
+.service-list-item {
+  color: #eaeada;
+  font-size: 1.18rem;
+  font-family: 'TT Norms Light', sans-serif;
+  letter-spacing: 0.04em;
+  font-weight: 400;
+  opacity: 0.7;
+  cursor: pointer;
+  transition: opacity 0.3s, color 0.2s, font-weight 0.2s, transform 0.5s cubic-bezier(0.4,1.6,0.4,1), z-index 0.3s;
+  outline: none;
+  border: none;
+  background: none;
+  text-align: left;
+  padding: 0.1rem 0.2rem;
+  transform: perspective(400px) rotateX(0deg) translateY(0);
+}
+
+.service-list-item.active {
+  color: #fff;
+  font-weight: 600;
+  opacity: 1;
+  z-index: 2;
+  transform: perspective(400px) rotateX(0deg) scale(1.08);
+}
+
+.service-list-item:not(.active):hover {
+  opacity: 0.7;
+}
+
+/* Sibling rotation effect using nth-child and parent hover */
+.service-selector-right:hover .service-list-item {
+  opacity: 0.4;
+}
+
+.service-list-item.active ~ .service-list-item {
+  /* Items below hovered: rotate down */
+  transform: perspective(400px) rotateX(30deg) translateY(18px) scale(0.98);
+  opacity: 0.3;
+  z-index: 1;
+}
+
+
+
+/* For items above, use a selector in JS for inline style (see below) */
+
+/* Mobile: disable 3D effect */
+@media (max-width: 768px) {
+  .service-list-item,
+  .service-list-item.active,
+  .service-list-item.active ~ .service-list-item {
+    transform: none !important;
+    opacity: 1 !important;
+    z-index: 1 !important;
+  }
+  .section-arrow-animated {
+    left: 8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .service-selector-layout {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.7rem;
+    margin-top: 4rem;
+    margin-bottom: 1rem;
+  }
+  .service-selector-left {
+    gap: 0.3rem;
+    margin-bottom: 0.5rem;
+  }
+  .service-selector-right {
+    min-width: unset;
+    width: 100vw;
+    gap: 0.7rem;
+  }
+}
+
+/* --- Service Selector Row Layout --- */
+.service-selector-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2.5rem;
+  margin-top: 8rem;
+  margin-bottom: 2rem;
+}
+
+.service-selector-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: left;
+  min-width: 180px;
+}
+
+.section-title {
+  color: #eaeada;
+  font-size: 1.1rem;
+  font-family: 'TT Norms Light', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 400;
+  opacity: 0.85;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.section-arrow {
+  color: #eaeada;
+  font-size: 1.3rem;
+  font-weight: 700;
+  opacity: 0.8;
+  display: inline-block;
+  position: relative;
+  z-index: 10;
+  margin-left: 0.3rem;
+  transition: top 0.35s cubic-bezier(0.4,1.6,0.4,1);
+  line-height: 1.2;
+}
+
+.service-selector-right {
+  display: flex; 
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.service-list-item {
+  font-size: 1.1rem;
+  line-height: 1.2;
+  padding: 0.3rem 0;
+}
+
+/* Mobile adjustment */
+@media (max-width: 768px) {
+  .service-selector-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
+    margin-top: 4rem;
+    margin-bottom: 1rem;
+  }
+  
+  .section-title {
+    font-size: 0.98rem;
+  }
+}
+
 
 
 

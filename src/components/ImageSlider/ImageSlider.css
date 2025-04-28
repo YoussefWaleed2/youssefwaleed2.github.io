@@ -1,0 +1,71 @@
+/* CSS for the infinite slider */
+.image-slider-container {
+  position: absolute;
+  bottom: 25px;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: black;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+}
+
+.image-slider {
+  display: flex;
+  animation: slide 40s linear infinite;
+  width: fit-content;
+  height: 70px;
+  align-items: center;
+}
+
+.slider-image {
+  height: 20px;
+  margin: 0 20px;
+  object-fit: contain;
+  filter: brightness(0.8);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Responsive styling for the slider */
+@media (max-width: 768px) {
+  .image-slider-container {
+    height: 50px;
+    bottom: 20px;
+  }
+  
+  .image-slider {
+    height: 50px;
+  }
+  
+  .slider-image {
+    height: 18px;
+    margin: 0 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .image-slider-container {
+    height: 40px;
+    bottom: 15px;
+  }
+  
+  .image-slider {
+    height: 40px;
+  }
+  
+  .slider-image {
+    height: 16px;
+    margin: 0 10px;
+  }
+} 

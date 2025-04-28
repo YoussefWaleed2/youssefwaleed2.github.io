@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import projectsData from "../../data/projectsData.json";
 import { handleOverlay } from "./../../utils/overlayManager";
 import ReactLenis from "lenis/react";
+import ImageSlider from "../../components/ImageSlider/ImageSlider";
 
 // Debug log to check if this file is being loaded correctly
 console.log("Projects.jsx loaded, projectsData:", Object.keys(projectsData));
@@ -24,6 +25,22 @@ const Projects = () => {
     "/all-projects/branding",
     "/all-projects/marketing",
     "/all-projects/advertisement"
+  ];
+
+  // Assets for the slider
+  const sliderAssets = [
+    "/project/Asset 1.webp",
+    "/project/Asset 3.webp", 
+    "/project/Asset 4.webp",
+    "/project/Asset 5.webp",
+    "/project/Asset 6.webp",
+    "/project/Asset 7.webp",
+    "/project/Asset 8.webp",
+    "/project/Asset 9.webp",
+    "/project/Asset 10.webp",
+    "/project/Asset 11.webp",
+    "/project/Asset 12.webp",
+    "/project/Asset 13.webp"
   ];
 
   const handleServiceClick = (index) => {
@@ -105,6 +122,9 @@ const Projects = () => {
           </div>
         </div>
       </div>
+
+      {/* Use the ImageSlider component */}
+      <ImageSlider assets={sliderAssets} />
     </ReactLenis>
   );
 };

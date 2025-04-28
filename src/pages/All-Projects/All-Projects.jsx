@@ -18,6 +18,9 @@ const AllProjects = () => {
   const titleRef = useRef(null);
   const videoRefs = useRef({});
 
+  // Debug log to check routing
+  console.log("All-Projects loaded with category:", category, "from path:", location.pathname);
+
   // Handle overlay on mount and unmount
   useEffect(() => {
     handleOverlay();
@@ -48,29 +51,39 @@ const AllProjects = () => {
       // Format category name to match projectsData keys
       let formattedCategory = category.replace(/-/g, " ");
       
-      // First letter uppercase for keys like "Branding", "Marketing"
-      // Special case for "Marketing" and "Advertising" to match projectsData keys
-      if (formattedCategory.toLowerCase() === "marketing") {
-        formattedCategory = "Marketing";
-      } else if (formattedCategory.toLowerCase() === "advertising") {
-        formattedCategory = "Advertising";
-      } else if (formattedCategory.toLowerCase() === "branding") {
-        formattedCategory = "BRANDING";
-      } else if (formattedCategory.toLowerCase() === "packaging") {
-        formattedCategory = "Packaging";
+      console.log("Processing category:", formattedCategory, "Available categories:", Object.keys(projectsData));
+      
+      // Map URL categories to data keys exactly as in Projects.jsx
+      const categoryMap = {
+        "branding": "BRANDING",
+        "marketing": "Marketing",
+        "advertisement": "Advertising"
+      };
+      
+      // Use the map if it exists
+      if (categoryMap[formattedCategory.toLowerCase()]) {
+        formattedCategory = categoryMap[formattedCategory.toLowerCase()];
       }
       
       // Check if category exists in projectsData
       if (projectsData[formattedCategory]) {
+        console.log("Found exact match:", formattedCategory);
         return projectsData[formattedCategory];
       }
       
       // Try uppercase version as fallback
       if (projectsData[formattedCategory.toUpperCase()]) {
+        console.log("Found uppercase match:", formattedCategory.toUpperCase());
         return projectsData[formattedCategory.toUpperCase()];
       }
       
-      console.warn(`Category not found: ${formattedCategory}`);
+      // Try lowercase version as fallback
+      if (projectsData[formattedCategory.toLowerCase()]) {
+        console.log("Found lowercase match:", formattedCategory.toLowerCase());
+        return projectsData[formattedCategory.toLowerCase()];
+      }
+      
+      console.warn(`Category not found: ${formattedCategory}`, "Available categories:", Object.keys(projectsData));
       return [];
     };
 

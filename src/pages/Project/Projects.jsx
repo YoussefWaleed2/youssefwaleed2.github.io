@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import projectsData from "../../data/projectsData.json";
 import { handleOverlay } from "./../../utils/overlayManager";
 import ReactLenis from "lenis/react";
+import ImageSlider from "../../components/ImageSlider/ImageSlider";
 
 // Debug log to check if this file is being loaded correctly
 console.log("Projects.jsx loaded, projectsData:", Object.keys(projectsData));
@@ -15,10 +16,37 @@ const Projects = () => {
   const videoRef = useRef(null);
 
   const services = [
-    "CREATIVES / ADVERTISEMENT",
-    "ONLINE / OFFLINE MARKETING",
-    "BRANDING / RE-BRANDING"
+    "BRANDING",
+    "MARKETING",
+    "ADVERTISEMENT"
   ];
+
+  const serviceRoutes = [
+    "/all-projects/branding",
+    "/all-projects/marketing",
+    "/all-projects/advertisement"
+  ];
+
+  // Assets for the slider
+  const sliderAssets = [
+    "/project/Asset 1.webp",
+    "/project/Asset 3.webp", 
+    "/project/Asset 4.webp",
+    "/project/Asset 5.webp",
+    "/project/Asset 6.webp",
+    "/project/Asset 7.webp",
+    "/project/Asset 8.webp",
+    "/project/Asset 9.webp",
+    "/project/Asset 10.webp",
+    "/project/Asset 11.webp",
+    "/project/Asset 12.webp",
+    "/project/Asset 13.webp"
+  ];
+
+  const handleServiceClick = (index) => {
+    navigate(serviceRoutes[index]);
+  };
+
   useEffect(() => {
     document.title = "Projects | VZBL";
   }, []);
@@ -46,12 +74,15 @@ const Projects = () => {
         <div className="service-selector-row">
           <div style={{position: 'relative'}}>
             <div className="service-selector-left">
-              <span className="section-title">OUR SERVICES</span>
+              <span className="section-title">OUR PROJECTS</span>
               <span 
                 className="section-arrow"
                 style={{
                   position: 'relative',
-                  top: hoveredIndex !== null ? `calc(${hoveredIndex * 1.8}rem)` : '0',
+                  top: hoveredIndex === 2 ? '3rem' : 
+                       hoveredIndex === 1 ? null : 
+                       hoveredIndex === 0 ? '-3rem' : 
+                       '0rem',
                   transition: 'top 0.35s cubic-bezier(0.4,1.6,0.4,1)'
                 }}
               >&gt;</span>
@@ -81,7 +112,8 @@ const Projects = () => {
                   className={`service-list-item${index === hoveredIndex ? ' active' : ''}`}
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
-                  style={style}
+                  onClick={() => handleServiceClick(index)}
+                  style={{...style, cursor: 'pointer'}}
                 >
                   {service}
                 </div>
@@ -90,6 +122,9 @@ const Projects = () => {
           </div>
         </div>
       </div>
+
+      {/* Use the ImageSlider component */}
+      <ImageSlider assets={sliderAssets} />
     </ReactLenis>
   );
 };

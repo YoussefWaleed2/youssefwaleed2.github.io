@@ -728,15 +728,14 @@ body {
 }
 
 .service-selector-right {
-  display: flex;
+  display: flex; 
   flex-direction: column;
-  gap: 1.2rem;
-  min-width: 320px;
+  gap: 0;
 }
 
 .service-list-item {
   color: #eaeada;
-  font-size: 1.18rem;
+  font-size: 1.1rem;
   font-family: 'TT Norms Light', sans-serif;
   letter-spacing: 0.04em;
   font-weight: 400;
@@ -747,8 +746,23 @@ body {
   border: none;
   background: none;
   text-align: left;
-  padding: 0.1rem 0.2rem;
+  padding: 0.3rem 0.2rem;
   transform: perspective(400px) rotateX(0deg) translateY(0);
+  height: 1.8rem;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  user-select: none;
+}
+
+.service-list-item:hover {
+  color: #fff;
+}
+
+.service-list-item:active {
+  transform: perspective(400px) rotateX(0deg) scale(0.98) !important;
+  opacity: 0.9 !important;
 }
 
 .service-list-item.active {
@@ -757,10 +771,6 @@ body {
   opacity: 1;
   z-index: 2;
   transform: perspective(400px) rotateX(0deg) scale(1.08);
-}
-
-.service-list-item:not(.active):hover {
-  opacity: 0.7;
 }
 
 /* Sibling rotation effect using nth-child and parent hover */
@@ -774,10 +784,6 @@ body {
   opacity: 0.3;
   z-index: 1;
 }
-
-
-
-/* For items above, use a selector in JS for inline style (see below) */
 
 /* Mobile: disable 3D effect */
 @media (max-width: 768px) {
@@ -855,6 +861,7 @@ body {
   margin-left: 0.3rem;
   transition: top 0.35s cubic-bezier(0.4,1.6,0.4,1);
   line-height: 1.2;
+  margin-top: 2px;
 }
 
 .service-selector-right {
@@ -867,6 +874,109 @@ body {
   font-size: 1.1rem;
   line-height: 1.2;
   padding: 0.3rem 0;
+}
+
+/* Mobile adjustment */
+@media (max-width: 768px) {
+  .service-selector-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
+    margin-top: 4rem;
+    margin-bottom: 1rem;
+  }
+  
+  .section-title {
+    font-size: 0.98rem;
+  }
+}
+
+/* CSS for the infinite slider */
+.image-slider-container {
+  position: absolute;
+  bottom: 25px;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: black;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+}
+
+.image-slider {
+  display: flex;
+  animation: slide 40s linear infinite;
+  width: fit-content;
+  height: 70px;
+  align-items: center;
+}
+
+.slider-image {
+  height: 20px;
+  margin: 0 20px;
+  object-fit: contain;
+  filter: brightness(0.8);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes slideReverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Responsive styling for the slider */
+@media (max-width: 768px) {
+  .image-slider-container {
+    height: 140px;
+  }
+  
+  .image-slider, 
+  .image-slider-reverse {
+    height: 70px;
+  }
+  
+  .slider-image {
+    height: 55px;
+    margin: 0 15px;
+  }
+  
+  .project-container {
+    height: calc(100vh - 140px);
+  }
+}
+
+@media (max-width: 480px) {
+  .image-slider-container {
+    height: 120px;
+  }
+  
+  .image-slider, 
+  .image-slider-reverse {
+    height: 60px;
+  }
+  
+  .slider-image {
+    height: 45px;
+    margin: 0 10px;
+  }
+  
+  .project-container {
+    height: calc(100vh - 120px);
+  }
 }
 
 /* Mobile adjustment */

@@ -141,11 +141,11 @@
 .footer-logo {
   display: flex;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .footer-logo svg {
-  width: 150px;
+  width: 85px;
   height: auto;
   opacity: 0.9;
 }

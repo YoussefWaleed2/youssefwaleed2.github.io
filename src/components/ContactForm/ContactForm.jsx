@@ -3,6 +3,8 @@ import { emailConfig } from "../../config/emailConfig";
 import Popup from "../Popup/Popup";
 import { sendEmail } from '../../utils/email';
 import { generateContactEmail } from '../../utils/emailTemplates';
+import { countryCodes } from '../../utils/countryCodes';
+import CountryCodeSelect from '../CountryCodeSelect/CountryCodeSelect';
 import "./ContactForm.css";
 
 const ContactForm = ({ formType = 'contact' }) => {
@@ -11,6 +13,7 @@ const ContactForm = ({ formType = 'contact' }) => {
     name: "",
     email: "",
     phone: "",
+    countryCode: "+971", // Default country code (UAE)
     projectName: "",
     sector: "",
     service: "",
@@ -42,22 +45,22 @@ const ContactForm = ({ formType = 'contact' }) => {
   
   const budgetOptions = {
     Advertisement: [
-      "6,000-15,000",
-      "15,000-30,000",
-      "30,000-70,000",
-      "70,000-100,000",
-      "ABOVE 100,000"
+      "6,000-15,000$",
+      "15,000-30,000$",
+      "30,000-70,000$",
+      "70,000-100,000$",
+      "ABOVE 100,000$"
     ],
     Marketing: [
-      "4,000-7,000",
-      "7,000-10,000",
-      "10,000-15,000"
+      "4,000$-7,000$",
+      "7,000$-10,000$",
+      "10,000$-15,000$"
     ],
     Branding: [
-      "5,000-10,000",
-      "10,000-20,000",
-      "20,000-30,000",
-      "ABOVE 30,000"
+      "5,000$-10,000$",
+      "10,000$-20,000$",
+      "20,000$-30,000$",
+      "ABOVE 30,000$"
     ]
   };
 
@@ -150,7 +153,7 @@ const ContactForm = ({ formType = 'contact' }) => {
       const sanitizedForm = {
         name: sanitize(form.name),
         email: sanitize(form.email),
-        phone: sanitize(form.phone),
+        phone: `${sanitize(form.countryCode)} ${sanitize(form.phone)}`, // Include country code
         projectName: sanitize(form.projectName),
         sector: sanitize(form.sector),
         service: sanitize(form.service),
@@ -187,6 +190,7 @@ const ContactForm = ({ formType = 'contact' }) => {
         name: "",
         email: "",
         phone: "",
+        countryCode: "+971",
         projectName: "",
         sector: "",
         service: "",
@@ -249,13 +253,18 @@ const ContactForm = ({ formType = 'contact' }) => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-group phone-input-group">
+          <CountryCodeSelect 
+            value={form.countryCode}
+            onChange={handleChange}
+          />
           <input 
             type="tel" 
             name="phone" 
             value={form.phone}
             onChange={handleChange}
             placeholder="Phone Number" 
+            className="phone-input"
             required
           />
         </div>

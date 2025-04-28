@@ -223,6 +223,7 @@ html, body {
   padding: 2rem 1rem;
   overflow: hidden;
   z-index: 1;
+  text-align: center;
 }
 
 .section-title-bg {
@@ -295,6 +296,23 @@ html, body {
   font-family: 'Helvetica Neue', serif;
 }
 
+.content-block.member-text {
+  text-align: center;
+  max-width: 100%;
+  margin: 0 auto 2rem auto;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.content-block.member-text .body-text {
+  word-wrap: break-word;
+  word-break: normal;
+  white-space: normal;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
 /* Grid Gallery Styles */
 .grid-gallery {
   display: grid;
@@ -355,6 +373,9 @@ html, body {
 .team-section, .founder-section {
   padding: 2rem 1.5rem;
   margin-bottom: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .team-member-container {
@@ -363,6 +384,8 @@ html, body {
   align-items: center;
   margin-bottom: 4rem;
   padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .team-gallery {
@@ -390,6 +413,18 @@ html, body {
   margin-bottom: 0.5rem;
   text-align: center;
   padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.member-title .heading-text {
+  font-size: 1.8rem;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  padding: 0 10px;
+  text-align: center;
 }
 
 .member-text {
@@ -605,7 +640,7 @@ html, body {
   background-color: transparent;
   padding: 0;
   margin: 2rem 0 1rem 0;
-  text-align: left;
+  text-align: center;
   width: 100%;
   display: flex;
   justify-content: flex-start;
@@ -762,4 +797,77 @@ body.about-page-loaded .mobile-about-content {
 .section-title:hover .heading-text.script {
   transform: translateY(-5px);
   transition: transform 0.3s ease;
+}
+
+/* Fix for the VISIONARY MIND section */
+.section-title.right-aligned {
+  text-align: right;
+  padding-right: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.section-title.right-aligned .heading-text {
+  font-size: 2rem;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  display: inline-block;
+}
+
+/* Fix for member titles */
+.member-title {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.member-title .heading-text {
+  font-size: 1.8rem;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  padding: 0 10px;
+  text-align: center;
+}
+
+/* Media queries for better responsiveness */
+@media (max-width: 480px) {
+  .heading-text {
+    font-size: 1.8rem;
+    letter-spacing: -0.5px;
+    padding: 0 5px;
+  }
+  
+  .section-title.right-aligned .heading-text {
+    font-size: 1.6rem;
+    letter-spacing: -0.5px;
+  }
+  
+  .member-title .heading-text {
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+  }
+  
+  .content-block.member-text .body-text {
+    font-size: 0.8rem;
+    word-spacing: normal;
+    padding: 0 5px;
+  }
+  
+  .team-member-container {
+    padding: 0.5rem;
+  }
+  
+  .section-title {
+    overflow: visible;
+    margin: 1.5rem 0;
+  }
 }

@@ -107,8 +107,8 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
+  gap: 20px;
   position: relative;
-  bottom: 10px;
 }
 
 .footer-contact h3 {
@@ -266,7 +266,7 @@
   .footer-left {
     max-width: 600px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     text-align: center;
   }
@@ -307,7 +307,6 @@
 
   .footer-contact {
     text-align: center;
-    margin-top: 25px;
   }
 
   .contact-location {

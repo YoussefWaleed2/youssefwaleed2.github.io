@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import "./JoinUsForm.css";
 import { sendEmail } from '../../utils/email';
 import { generateJoinUsEmail } from '../../utils/emailTemplates';
-import { countryCodes } from '../../utils/countryCodes';
 import CountryCodeSelect from '../CountryCodeSelect/CountryCodeSelect';
 
 const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {

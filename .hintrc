@@ -8,7 +8,10 @@
       {
         "ignore": [
           "overscroll-behavior",
-          "text-size-adjust"
+          "text-size-adjust",
+          "scrollbar-width",
+          "scrollbar-color",
+          "-webkit-overflow-scrolling"
         ]
       }
     ]

@@ -3,7 +3,6 @@ import { emailConfig } from "../../config/emailConfig";
 import Popup from "../Popup/Popup";
 import { sendEmail } from '../../utils/email';
 import { generateContactEmail } from '../../utils/emailTemplates';
-import { countryCodes } from '../../utils/countryCodes';
 import CountryCodeSelect from '../CountryCodeSelect/CountryCodeSelect';
 import "./ContactForm.css";
 

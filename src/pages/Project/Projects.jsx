@@ -175,7 +175,12 @@ const Projects = () => {
   const handleCategoryClick = (category) => {
     if (!isAnimating) {
       // Format the category for the URL
-      let urlCategory = category.toLowerCase().replace(" ", "-");
+      let urlCategory = category.toLowerCase().replace(/ /g, "-");
+      
+      // Special case for advertising/advertisement
+      if (urlCategory === "advertising") {
+        urlCategory = "advertising";
+      }
       
       // Navigate to all-projects with current category
       navigate(`/all-projects/${urlCategory}`);
@@ -357,6 +362,9 @@ const Projects = () => {
       // Don't process if animation is already in progress
       if (isAnimating) return;
       
+      // Skip handling on mobile devices
+      if (isMobile) return;
+      
       // Determine scroll direction (positive = down, negative = up)
       const direction = e.deltaY > 0 ? 'next' : 'prev';
       
@@ -378,6 +386,9 @@ const Projects = () => {
     // Throttle function to prevent too many wheel events
     let timeout;
     const throttledWheel = (e) => {
+      // Skip handling on mobile devices
+      if (isMobile) return;
+      
       if (timeout) return;
       timeout = setTimeout(() => {
         handleWheel(e);
@@ -398,29 +409,37 @@ const Projects = () => {
       }
       clearTimeout(timeout);
     };
-  }, [currentIndex, isAnimating, categories.length]);
+  }, [currentIndex, isAnimating, categories.length, isMobile]);
 
   // Add touch swipe detection for mobile
   useEffect(() => {
     let touchStartY = 0;
     let touchEndY = 0;
-    const minSwipeDistance = 50;
+    const minSwipeDistance = 50; // Minimum distance for swipe detection
     
     const handleTouchStart = (e) => {
       if (isAnimating) return;
+      // Record start position
       touchStartY = e.touches[0].clientY;
     };
     
     const handleTouchMove = (e) => {
       if (isAnimating) return;
+      // Update end position
       touchEndY = e.touches[0].clientY;
     };
     
-    const handleTouchEnd = () => {
+    const handleTouchEnd = (e) => {
       if (isAnimating) return;
+      
+      // If this was a tap/click on a category element, don't process as swipe
+      if (e.target.closest('.category-text')) {
+        return;
+      }
       
       const swipeDistance = touchStartY - touchEndY;
       
+      // Only process if it's a significant swipe gesture
       if (Math.abs(swipeDistance) > minSwipeDistance) {
         if (swipeDistance > 0) {
           // Swipe up - go to next
@@ -433,7 +452,7 @@ const Projects = () => {
     };
     
     const textContainer = document.querySelector('.text-container');
-    if (textContainer) {
+    if (textContainer && isMobile) {
       textContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
       textContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
       textContainer.addEventListener('touchend', handleTouchEnd);
@@ -446,7 +465,7 @@ const Projects = () => {
         textContainer.removeEventListener('touchend', handleTouchEnd);
       }
     };
-  }, [isAnimating, handleNext, handlePrev]);
+  }, [isAnimating, isMobile, handleNext, handlePrev]);
 
   return (
     <ReactLenis root>

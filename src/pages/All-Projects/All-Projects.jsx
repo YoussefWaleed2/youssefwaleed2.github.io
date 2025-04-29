@@ -57,6 +57,7 @@ const AllProjects = () => {
       const categoryMap = {
         "branding": "BRANDING",
         "marketing": "Marketing",
+        "advertising": "Advertising",
         "advertisement": "Advertising"
       };
       

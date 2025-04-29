@@ -146,6 +146,7 @@ html, body, #root {
   will-change: transform, opacity;
   color: white;
   text-shadow: none;
+  cursor: pointer;
 }
 
 .category-text.active {
@@ -255,6 +256,19 @@ html, body, #root {
 @media (max-width: 480px) {
   .category-text {
     font-size: 1.8rem;
+    max-width: 100%;
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+    white-space: normal; /* Allow text wrapping if needed */
+    touch-action: manipulation; /* Improve touch experience */
+    cursor: pointer;
+  }
+  
+  /* Specific fix for ADVERTISING text */
+  .text-container .category-text:nth-child(3) {
+    font-size: 1.5rem; /* Smaller size for ADVERTISING */
+    letter-spacing: 0; /* Tighter letter spacing */
   }
   
   .project-content {
@@ -687,6 +701,7 @@ html, body, #root {
 @media (max-width: 768px) {
   .image-slider-container {
     height: 50px;
+    bottom: 120px;
   }
   
   .image-slider, 
@@ -705,13 +720,31 @@ html, body, #root {
   }
   
   .project-container {
-    height: calc(100vh - 50px);
+    padding: 1rem;
+    min-height: 100vh;
+    height: 100%;
+    justify-content: center;
+    overflow: hidden;
+    touch-action: none;
+  }
+  
+  /* Ensure text container doesn't allow scrolling */
+  .text-container {
+    overflow: hidden;
+    touch-action: none;
+  }
+  
+  /* Prevent ReactLenis scrolling on mobile */
+  .lenis.lenis-smooth[data-lenis-prevent] {
+    -webkit-overscroll-behavior: none;
+    overscroll-behavior: none;
   }
 }
 
 @media (max-width: 480px) {
   .image-slider-container {
     height: 40px;
+    bottom: 150px;
   }
   
   .image-slider, 
@@ -731,21 +764,48 @@ html, body, #root {
   
   .project-container {
     height: calc(100vh - 40px);
+    padding-bottom: 180px;
   }
 }
 
-/* Mobile adjustment */
-@media (max-width: 768px) {
-  .service-selector-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.2rem;
-    margin-top: 4rem;
-    margin-bottom: 1rem;
+/* Safari on iOS specific fix */
+@supports (-webkit-touch-callout: none) {
+  .image-slider-container {
+    position: fixed;
+    top: auto;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
   }
   
-  .section-title {
-    font-size: 0.98rem;
+  .project-container {
+    padding-bottom: 220px;
+  }
+  
+  .slider-more-text {
+    opacity: 1;
+    color: #fff;
+  }
+  
+  .slider-image {
+    filter: brightness(1);
+  }
+}
+
+/* Specific iPhone models - position even higher */
+@media only screen and (device-width: 375px), 
+       only screen and (device-width: 390px),
+       only screen and (device-width: 414px),
+       only screen and (device-width: 430px) {
+  @supports (-webkit-touch-callout: none) {
+    .image-slider-container {
+      top: 80%;
+    }
   }
 }
 
@@ -755,6 +815,20 @@ html, body, #root {
     min-height: 100vh;
     height: 100%;
     justify-content: center;
+    overflow: hidden;
+    touch-action: none;
+  }
+  
+  /* Ensure text container doesn't allow scrolling */
+  .text-container {
+    overflow: hidden;
+    touch-action: none;
+  }
+  
+  /* Prevent ReactLenis scrolling on mobile */
+  .lenis.lenis-smooth[data-lenis-prevent] {
+    -webkit-overscroll-behavior: none;
+    overscroll-behavior: none;
   }
 }
 

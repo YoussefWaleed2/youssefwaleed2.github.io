@@ -270,8 +270,15 @@
   }
 
   .phone-input-group {
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: row;
+    gap: 10px;
+    align-items: flex-end;
+  }
+
+  .country-code-select {
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
   }
 
   .phone-input {

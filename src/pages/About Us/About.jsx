@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Component, useCallback } from 'react';
+import React, { useState, useEffect, useRef, Component } from 'react';
 import Transition from '../../components/Transition/Transition';
 import gsap from "gsap";
 import CustomEase from "gsap/CustomEase";
@@ -7,6 +7,16 @@ import './About.css';
 import MobileAbout from './MobileAbout'; // Import the mobile component
 import { handleOverlay } from "./../../utils/overlayManager";
 import { togglePersonBackground } from '../../utils/personDetection';
+
+// Add debounce function for better performance
+function debounce(func, wait) {
+  let timeout;
+  return function() {
+    const context = this, args = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
+}
 
 // Error Boundary component
 class ErrorBoundary extends Component {
@@ -81,13 +91,13 @@ const About = () => {
   const [imagesLoaded, setImagesLoaded] = useState([]);
 
   // Track scroll position to trigger animations
-  const [setScrollPosition] = useState(0);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(0);
   
   const images = Array.from({ length: 13 }, (_, i) => `/about/${i + 1}.webp`);
 
   // Preload images function to improve performance
-  const preloadImages = useCallback(async () => {
+  const preloadImages = async () => {
     try {
       const promises = images.map((src) => {
         return new Promise((resolve) => {
@@ -104,7 +114,7 @@ const About = () => {
       console.error("Error preloading images:", error);
       setImagesLoaded(Array(images.length).fill(true)); // Fallback
     }
-  }, [images, setImagesLoaded]);
+  };
 
   useEffect(() => {
     handleOverlay();
@@ -116,7 +126,7 @@ const About = () => {
     imageRefs.current = Array(images.length).fill().map(() => React.createRef());
     setImagesLoaded(Array(images.length).fill(false));
     preloadImages(); // Start preloading immediately
-  }, [images.length, preloadImages]);
+  }, [images.length]);
 
   useEffect(() => {
     document.title = "About Us | VZBL";
@@ -128,18 +138,9 @@ const About = () => {
       // Add resizing class to body during resize
       document.body.classList.add('resizing');
       
-      // Check previous state versus current state
-      const wasMobileOrTablet = isMobileOrTablet;
-      const currentMobileOrTablet = detectMobileOrTablet();
-      
       // Set window width and check device type
       setWindowWidth(window.innerWidth);
-      setIsMobileOrTablet(currentMobileOrTablet);
-      
-      // If switching from mobile to desktop, reload the page
-      if (wasMobileOrTablet && !currentMobileOrTablet) {
-        window.location.reload();
-      }
+      setIsMobileOrTablet(detectMobileOrTablet());
       
       // Remove resizing class after a short delay
       setTimeout(() => {
@@ -158,7 +159,7 @@ const About = () => {
       window.removeEventListener('resize', handleResize);
       document.body.classList.remove('resizing');
     };
-  }, [isMobileOrTablet]);
+  }, []);
 
   // All desktop-specific code in these useEffects will only run if !isMobileOrTablet
   // Effect for desktop GSAP animations
@@ -339,7 +340,7 @@ const About = () => {
   }, [isReady, isMobileOrTablet]);
 
   // Smooth scroll to function
-  const _smoothScrollTo = (targetX) => {
+  const smoothScrollTo = (targetX) => {
     if (!pageRef.current) return;
     
     // Set target scroll position
@@ -386,6 +387,56 @@ const About = () => {
     
     // Start animation
     scrollRafRef.current = requestAnimationFrame(animateScroll);
+  };
+
+  // Add these at the top where the other refs are
+  const lastTouchX = useRef(0);
+  const touchStartX = useRef(0);
+
+  // Remove any unused refs that may be causing conflicts
+  const wheelAnimationRef = useRef(null);
+  const isWheelAnimating = useRef(false);
+  
+  // Custom wheel handler with very simple, reliable scrolling
+  const handleWheel = (e) => {
+    if (!pageRef.current) return;
+    
+    e.preventDefault();
+    
+    // Get the delta and apply a multiplier
+    const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+    const scrollAmount = delta * 1.5;
+    
+    // Simply update the scroll position - basic approach that always works
+    pageRef.current.scrollLeft += scrollAmount;
+  };
+  
+  // Simple touch start handler
+  const handleTouchStart = (e) => {
+    if (!pageRef.current) return;
+    
+    // Just store the initial touch position
+    touchStartX.current = e.touches[0].clientX;
+    lastTouchX.current = touchStartX.current;
+  };
+  
+  // Simple touch move handler
+  const handleTouchMove = (e) => {
+    if (!pageRef.current) return;
+    
+    const touchX = e.touches[0].clientX;
+    const deltaX = lastTouchX.current - touchX;
+    
+    // Direct scrolling - most reliable approach
+    pageRef.current.scrollLeft += deltaX;
+    
+    e.preventDefault();
+    lastTouchX.current = touchX;
+  };
+  
+  // Simple touch end handler
+  const handleTouchEnd = (e) => {
+    // No momentum or special handling - keep it simple
   };
 
   // Effect for desktop horizontal scrolling setup - with custom smooth scrolling
@@ -436,135 +487,268 @@ const About = () => {
 
     // Calculate the maximum allowed scroll position (prevent scrolling beyond content)
     const maxScrollPosition = totalWidth - sectionWidth;
-    
-    // Smooth scrolling with improved edge behavior
-    const boundedSmoothScrollTo = (targetPosition, duration = 500) => {
-      if (!pageRef.current) return;
+
+    // Create our own animation loop for smooth scrolling
+    const smoothScrollAnimation = () => {
+      requestAnimationFrame(smoothScrollAnimation);
       
-      // Ensure we don't scroll beyond bounds
-      const boundedTarget = Math.max(0, Math.min(targetPosition, maxScrollPosition));
-      
-      const startPosition = pageRef.current.scrollLeft;
-      const distance = boundedTarget - startPosition;
-      let startTime = null;
-      
-      const animateScroll = (currentTime) => {
-        if (!pageRef.current) return; // Safety check
-        if (startTime === null) startTime = currentTime;
-        const timeElapsed = currentTime - startTime;
-        const progress = Math.min(timeElapsed / duration, 1);
-        
-        // Easing function for smoother motion
-        const easeProgress = 0.5 - 0.5 * Math.cos(progress * Math.PI);
-        const newPosition = startPosition + distance * easeProgress;
-        
-        pageRef.current.scrollLeft = newPosition;
-        
-        if (timeElapsed < duration) {
-          scrollRafRef.current = requestAnimationFrame(animateScroll);
-        }
-      };
-      
-      if (scrollRafRef.current) {
-        cancelAnimationFrame(scrollRafRef.current);
+      // If we're not actively smooth scrolling with wheel/touch,
+      // still update based on native scroll position (for scrollbar dragging)
+      if (!isScrollingRef.current && pageRef.current) {
+        currentScrollRef.current = pageRef.current.scrollLeft;
+        targetScrollRef.current = pageRef.current.scrollLeft;
+        setScrollPosition(currentScrollRef.current);
       }
       
-      scrollRafRef.current = requestAnimationFrame(animateScroll);
-    };
-
-    // Wheel event handler for custom smooth scrolling
-    const handleWheel = (e) => {
-      e.preventDefault();
+      // Get sections starting from third image (index 2)
+      const thirdImageAndBeyond = Array.from(sections).slice(2);
       
+      // Get trigger position (left edge of third image)
+      const thirdImageSection = sections[2];
+      
+      // Calculate how much to move based on scroll position
+      if (thirdImageSection) {
+        // How far we've scrolled past the second image
+        const scrollPastSecondImage = Math.max(0, currentScrollRef.current - sectionWidth + 200);
+        
+        // Calculate movement amount proportional to scroll
+        const moveAmount = -Math.min(scrollPastSecondImage * 0.7, sectionWidth * 0.7);
+        
+        // Apply the same transform to third image and all subsequent images with faster transition
+        gsap.to(thirdImageAndBeyond, {
+          x: moveAmount,
+          duration: 0.15,
+          ease: "power1.out",
+          overwrite: true
+        });
+      }
+    };
+    
+    // Start the animation
+    const animationFrameId = requestAnimationFrame(smoothScrollAnimation);
+    
+    // Modified smooth scroll function with bounds checking
+    const boundedSmoothScrollTo = (targetX) => {
+      // Clamp the target position to valid bounds
+      const boundedTarget = Math.max(0, Math.min(targetX, maxScrollPosition));
+      
+      // Call the original smoothScrollTo with the bounded value
+      smoothScrollTo(boundedTarget);
+    };
+    
+    // Add direct scroll listener for scrollbar dragging
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+
+      // Calculate current section based on scroll position
+      const scrollX = containerRef.current.scrollLeft;
+      const sectionWidth = window.innerWidth;
+      const newSection = Math.floor(scrollX / sectionWidth);
+      
+      // Update current section if changed
+      if (newSection !== currentSection) {
+        setCurrentSection(newSection);
+      }
+      
+      // Existing scroll handling code...
+      setScrollPosition(scrollX);
+    };
+    
+    pageRef.current.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Custom wheel handler for smooth scrolling with improved edge behavior
+    const handleWheel = (e) => {
       if (!pageRef.current) return;
       
-      // Get current scroll position
-      const currentScroll = pageRef.current.scrollLeft;
+      e.preventDefault();
       
-      // Calculate smooth scroll target based on wheel delta
-      // Use a more responsive scrolling distance calculation
-      const scrollMultiplier = 2.5; // Increased multiplier for more responsive scrolling
-      const newPosition = currentScroll + (e.deltaY * scrollMultiplier);
+      const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+      // Reduce speed multiplier for smoother scrolling
+      const normalizedDelta = delta * 1.8; // Reduced from 3.5 for smoother movement
       
-      // Ensure scrolling stays within bounds
-      const boundedPosition = Math.max(0, Math.min(newPosition, maxScrollPosition));
+      // Calculate the proposed new target
+      const proposedTarget = targetScrollRef.current + normalizedDelta;
       
-      // Use smooth scrolling with shorter duration for more responsive feel
-      boundedSmoothScrollTo(boundedPosition, 300);
+      // Special case for reaching bounds - respond more quickly at edges
+      if (proposedTarget < 0 || proposedTarget > maxScrollPosition) {
+        // We're trying to scroll beyond the bounds - apply immediate resistance
+        // This creates a "bounce" feel at the edges with faster response
+        const resistance = 0.3; // Lower = more resistance at edges
+        const boundedDelta = normalizedDelta * resistance;
+        
+        // Apply with less easing for quicker response
+        if (isScrollingRef.current) {
+          // Cancel current animation for faster response at edges
+          isScrollingRef.current = false;
+          if (scrollRafRef.current) {
+            cancelAnimationFrame(scrollRafRef.current);
+          }
+        }
+        
+        // Direct scroll with minimal easing at bounds
+        boundedSmoothScrollTo(targetScrollRef.current + boundedDelta);
+      } else {
+        // Normal smooth scrolling within bounds
+        boundedSmoothScrollTo(proposedTarget);
+      }
     };
-
-    // Touch handling for better mobile experience
+    
+    // Smooth touch handling with improved edge response
     let touchStartX = 0;
     let lastTouchX = 0;
     let touchVelocity = 0;
+    let lastTouchTime = 0;
     
     const handleTouchStart = (e) => {
       if (!pageRef.current) return;
       
+      // Cancel any ongoing smooth scrolling
+      isScrollingRef.current = false;
+      
       touchStartX = e.touches[0].clientX;
       lastTouchX = touchStartX;
-      
-      // Cancel any ongoing animation
-      if (scrollRafRef.current) {
-        cancelAnimationFrame(scrollRafRef.current);
-      }
+      lastTouchTime = Date.now();
+      touchVelocity = 0;
     };
     
     const handleTouchMove = (e) => {
       if (!pageRef.current) return;
       
-      const currentX = e.touches[0].clientX;
-      const deltaX = lastTouchX - currentX;
+      const touchX = e.touches[0].clientX;
+      const deltaX = lastTouchX - touchX;
+      const currentTime = Date.now();
+      const timeDelta = currentTime - lastTouchTime;
       
-      // Update velocity for momentum scrolling
-      touchVelocity = deltaX;
-      
-      // Scroll directly for immediate feedback
-      if (pageRef.current) {
-        pageRef.current.scrollLeft += deltaX;
-        
-        // Ensure we stay within bounds
-        if (pageRef.current.scrollLeft <= 0) {
-          pageRef.current.scrollLeft = 0;
-        } else if (pageRef.current.scrollLeft >= maxScrollPosition) {
-          pageRef.current.scrollLeft = maxScrollPosition;
-        }
+      // Calculate touch velocity for momentum
+      if (timeDelta > 0) {
+        touchVelocity = deltaX / timeDelta;
       }
       
-      lastTouchX = currentX;
+      // Check if we're at the boundaries to add resistance
+      const currentPos = pageRef.current.scrollLeft;
+      let effectiveDelta = deltaX * 1.2;
+      
+      // Add resistance when trying to scroll past the edges
+      if ((currentPos <= 0 && deltaX < 0) || (currentPos >= maxScrollPosition && deltaX > 0)) {
+        effectiveDelta *= 0.3; // Significant resistance at edges
+      }
+      
+      // Update target position directly
+      targetScrollRef.current += effectiveDelta;
+      
+      // Apply immediately without easing during touch
+      pageRef.current.scrollLeft += effectiveDelta;
+      currentScrollRef.current = pageRef.current.scrollLeft;
+      
+      e.preventDefault();
+      lastTouchX = touchX;
+      lastTouchTime = currentTime;
     };
     
-    const handleTouchEnd = () => {
-      if (!pageRef.current) return;
+    const handleTouchEnd = (e) => {
+      // Check if we're already at boundaries
+      const currentPos = pageRef.current.scrollLeft;
       
-      // Apply momentum scrolling based on final velocity
-      const momentumDistance = touchVelocity * 10; // Adjust for desired momentum effect
-      const targetPosition = pageRef.current.scrollLeft + momentumDistance;
+      if (currentPos < 0) {
+        // Snap back to start with animation
+        boundedSmoothScrollTo(0);
+        return;
+      } else if (currentPos > maxScrollPosition) {
+        // Snap back to end with animation
+        boundedSmoothScrollTo(maxScrollPosition);
+        return;
+      }
       
-      // Use smooth scrolling for the momentum effect
-      boundedSmoothScrollTo(targetPosition, 500);
+      // Apply momentum based on final velocity, but check boundaries
+      if (Math.abs(touchVelocity) > 0.1) {
+        const momentum = touchVelocity * 100; // Adjust for stronger/weaker momentum
+        boundedSmoothScrollTo(targetScrollRef.current + momentum);
+      }
+      
+      touchVelocity = 0;
     };
-
-    // Add wheel event listener for custom scrolling
-    if (pageRef.current) {
-      const currentPageRef = pageRef.current;
-      currentPageRef.addEventListener('wheel', handleWheel, { passive: false });
-      currentPageRef.addEventListener('touchstart', handleTouchStart, { passive: false });
-      currentPageRef.addEventListener('touchmove', handleTouchMove, { passive: false });
-      currentPageRef.addEventListener('touchend', handleTouchEnd);
     
-      // Clean up event listeners when component unmounts
-      return () => {
-        currentPageRef.removeEventListener('wheel', handleWheel);
-        currentPageRef.removeEventListener('touchstart', handleTouchStart);
-        currentPageRef.removeEventListener('touchmove', handleTouchMove);
-        currentPageRef.removeEventListener('touchend', handleTouchEnd);
+    // Add event listeners
+    pageRef.current.addEventListener('wheel', handleWheel, { passive: false });
+    pageRef.current.addEventListener('touchstart', handleTouchStart, { passive: false });
+    pageRef.current.addEventListener('touchmove', handleTouchMove, { passive: false });
+    pageRef.current.addEventListener('touchend', handleTouchEnd);
+    
+    // Handle resize with debouncing
+    const handleResize = debounce(() => {
+      const newWidth = window.innerWidth;
+      setWindowWidth(newWidth);
+      
+      // If transitioning to mobile, reload
+      if (newWidth <= 1024) {
+        window.location.reload();
+        return;
+      }
+      
+      // Recalculate dimensions when window is resized
+      if (!containerRef.current) return;
+      
+      // Fix for persisting blur effect on first image
+      if (imageRefs.current[0]?.current) {
+        // Kill any active animations on the image
+        gsap.killTweensOf(imageRefs.current[0].current);
         
-        if (scrollRafRef.current) {
-          cancelAnimationFrame(scrollRafRef.current);
-        }
-      };
-    }
+        // Apply direct style changes to remove blur
+        imageRefs.current[0].current.style.filter = "blur(0px)";
+        imageRefs.current[0].current.style.transform = "scale(1)";
+        imageRefs.current[0].current.style.opacity = "1";
+      }
+      
+      const newSectionWidth = newWidth;
+      const newTotalWidth = newSectionWidth * (images.length - 0.3); // Same adjustment as initial setup
+      
+      // Update container width
+      containerRef.current.style.width = `${newTotalWidth}px`;
+      
+      // Update all section widths and positions
+      const sections = document.querySelectorAll('.about-section');
+      if (sections && sections.length > 0) {
+        sections.forEach((section, idx) => {
+          if (section) {
+            section.style.width = `${newSectionWidth}px`;
+            section.style.left = `${idx * newSectionWidth}px`;
+            
+            // Maintain z-index for overlay effect
+            section.style.zIndex = idx + 10;
+          }
+        });
+      }
+      
+      // Reset transform on third image and beyond when resizing
+      const thirdImageAndBeyond = Array.from(sections).slice(2);
+      gsap.set(thirdImageAndBeyond, { x: 0 });
+      
+      // Reset scroll position tracking
+      targetScrollRef.current = pageRef.current.scrollLeft;
+      currentScrollRef.current = pageRef.current.scrollLeft;
+    }, 150);
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      if (scrollRafRef.current) {
+        cancelAnimationFrame(scrollRafRef.current);
+      }
+      
+      if (pageRef.current) {
+        pageRef.current.removeEventListener('scroll', handleScroll);
+        pageRef.current.removeEventListener('wheel', handleWheel);
+        pageRef.current.removeEventListener('touchstart', handleTouchStart);
+        pageRef.current.removeEventListener('touchmove', handleTouchMove);
+        pageRef.current.removeEventListener('touchend', handleTouchEnd);
+      }
+      
+      window.removeEventListener('resize', handleResize);
+    };
   }, [images.length, isMobileOrTablet]);
 
   // Effect for static content display - no animations, just show content immediately
@@ -673,7 +857,7 @@ const About = () => {
   }, [isMobileOrTablet]);
 
   // Track section visibility for navbar styling
-  const [currentSection, _setCurrentSection] = useState(0);
+  const [currentSection, setCurrentSection] = useState(0);
   
   // List of sections with people - adjust these indices based on your content
   const peopleImageSections = [2, 3, 8, 10]; // Example: sections 2, 3, 8, 10 have people
@@ -690,7 +874,7 @@ const About = () => {
       // Clean up when component unmounts
       togglePersonBackground(false);
     };
-  }, [currentSection, isMobileOrTablet, peopleImageSections]);
+  }, [currentSection, isMobileOrTablet]);
 
   // If on mobile/tablet, render the mobile version
   if (isMobileOrTablet) {

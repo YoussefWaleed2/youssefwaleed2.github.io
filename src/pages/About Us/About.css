@@ -904,13 +904,3 @@ body:has(.about-page) .navbar {
   backface-visibility: hidden;
 }
 
-/* Apply border radius to the 4th image */
-.about-section:nth-child(4) .background-image {
-  border-radius: 106px 0px 0px 106px;
-  transform: scale(1.02); /* Slightly larger to prevent gaps at edges */
-}
-.about-section:nth-child(5) .background-image {
-  border-radius: 106px 0px 0px 106px;
-  transform: scale(1.02); /* Slightly larger to prevent gaps at edges */
-}
-

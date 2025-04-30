@@ -94,7 +94,7 @@ const MobileMenu = () => {
         ease: "power4.in",
         onComplete: () => {
           menuLinks.forEach(link => {
-            gsap.set(link, { y: "100%" });
+            gsap.set(link, { y: "120%" });
           });
         },
       });
@@ -111,7 +111,8 @@ const MobileMenu = () => {
         if (menuOverlayRef.current) {
           gsap.set(menuOverlayRef.current, {
             pointerEvents: "none",
-            clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+            clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+            top: "-100vh"
           });
         }
       },
@@ -161,12 +162,15 @@ const MobileMenu = () => {
           stagger: 0.1,
           ease: CustomEase.create("", ".76,0,.2,1"),
           onComplete: () => {
-            if (navLink) gsap.set(navLink, { y: 25 });
-            if (menuOpenText) gsap.set(menuOpenText, { y: 25 });
+            if (navLink) gsap.set(navLink, { y: 20 });
+            if (menuOpenText) gsap.set(menuOpenText, { y: 20 });
           },
         }
       );
     }
+
+    // First reset the menu position
+    gsap.set(menuOverlayRef.current, { top: 0 });
 
     // Animate the menu overlay
     gsap.to(menuOverlayRef.current, {
@@ -183,7 +187,7 @@ const MobileMenu = () => {
     const menuLinks = document.querySelectorAll(".menu-link a");
     if (menuLinks.length > 0) {
       gsap.to(menuLinks, {
-        y: "5%",
+        y: "-5%",
         duration: 1,
         stagger: 0.1,
         delay: 0.5,
@@ -216,6 +220,15 @@ const MobileMenu = () => {
     // Save references to the current DOM elements
     const openBtn = menuOpenBtnRef.current;
     const closeBtn = menuCloseBtnRef.current;
+    
+    // Set initial menu state
+    if (menuOverlayRef.current) {
+      gsap.set(menuOverlayRef.current, {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+        top: "-100vh",
+        pointerEvents: "none"
+      });
+    }
 
     if (openBtn) {
       openBtn.addEventListener("click", handleOpenMenu);
@@ -273,7 +286,11 @@ const MobileMenu = () => {
         </div>
       </nav>
 
-      <div className="menu-overlay" ref={menuOverlayRef}>
+      <div className="menu-overlay" ref={menuOverlayRef} style={{ 
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+        top: "-100vh",
+        pointerEvents: "none"
+      }}>
         <div className="menu-overlay-bar" ref={menuOverlayBarRef}>
           <div className="logo">
           </div>

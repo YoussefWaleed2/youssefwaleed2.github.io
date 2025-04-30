@@ -394,7 +394,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
             
             <div className="join-us-form-inner" ref={scrollContainerRef}>
               <div className="join-us-form-header">
-                <h2>{selectedJob ? `JOIN AS ${selectedJob.toUpperCase()}` : "SEND EMAIL"}</h2>
+                <h2>{selectedJob ? `JOIN AS ${selectedJob.toUpperCase()}` : "JOIN US"}</h2>
               </div>
 
               <form className="join-us-form-content" ref={formRef} onSubmit={handleSubmit}>

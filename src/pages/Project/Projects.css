@@ -255,7 +255,7 @@ html, body, #root {
 /* Mobile Phones Large */
 @media (max-width: 480px) {
   .category-text {
-    font-size: 1.8rem;
+    font-size: 1.2rem;
     max-width: 100%;
     width: 100%;
     padding: 0 10px;
@@ -264,10 +264,21 @@ html, body, #root {
     touch-action: manipulation; /* Improve touch experience */
     cursor: pointer;
   }
+  .text-container .category-text:nth-child(1) 
+  {
+    font-size: 1.2rem;
+    letter-spacing: 0;
+  }
+  .text-container .category-text:nth-child(2) 
+  {
+    font-size: 1.2rem;
+    letter-spacing: 0;
+  }
   
+
   /* Specific fix for ADVERTISING text */
   .text-container .category-text:nth-child(3) {
-    font-size: 1.5rem; /* Smaller size for ADVERTISING */
+    font-size: 1.2rem; /* Smaller size for ADVERTISING */
     letter-spacing: 0; /* Tighter letter spacing */
   }
   
@@ -743,7 +754,7 @@ html, body, #root {
 
 @media (max-width: 480px) {
   .image-slider-container {
-    height: 40px;
+    height: 40vh;
     bottom: 150px;
   }
   

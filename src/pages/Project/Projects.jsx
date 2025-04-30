@@ -22,7 +22,7 @@ const Projects = () => {
   const counterRef = useRef(null);
 
   // Define categories with memoization to avoid recreation on each render
-  const categories = useMemo(() => ["BRANDING", "MARKETING", "ADVERTISING"], []);
+  const categories = useMemo(() => ["BRANDING", "MARKETING", "ADVERTISEMENT"], []);
   
   // Client images for the slider
   const clientImages = [
@@ -30,14 +30,14 @@ const Projects = () => {
     "/project/Asset 3.webp",
     "/project/Asset 4.webp",
     "/project/Asset 5.webp",
-    "/project/Asset 6.webp",
     "/project/Asset 7.webp",
+    "/project/Asset 6.webp",
+    "/project/Asset 13.webp",
     "/project/Asset 8.webp",
-    "/project/Asset 9.webp",
-    "/project/Asset 10.webp",
-    "/project/Asset 11.webp",
     "/project/Asset 12.webp",
-    "/project/Asset 13.webp"
+    "/project/Asset 11.webp",
+    "/project/Asset 10.webp",
+    "/project/Asset 9.webp"
   ];
   
   useEffect(() => {

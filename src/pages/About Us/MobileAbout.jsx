@@ -319,7 +319,14 @@ const MobileAbout = () => {
         
         {/* Meet The Team Section */}
         <section className="section team-section">
-         
+          <div 
+            className="section-title wide centered"
+            ref={el => titleRefs.current[3] = el}
+          >
+            <h2 className="heading-text">MEET</h2>
+            <h2 className="heading-text script">The</h2>
+            <h2 className="heading-text">CCO</h2>
+          </div>
           
           {/* Team Member 1: Ebraheim El Zeyoudi */}
           <div className="team-member-container">
@@ -335,6 +342,7 @@ const MobileAbout = () => {
               className="section-title member-title"
               ref={el => titleRefs.current[4] = el}
             >
+             
               <h2 className="heading-text">EBRAHEIM EL ZEYOUDI</h2>
             </div>
             <div className="content-block member-text">
@@ -353,8 +361,18 @@ const MobileAbout = () => {
             </div>
           </div>
           
+
           {/* Team Member 2: Shorouk Abdalla */}
+          <div 
+            className="section-title wide centered"
+            ref={el => titleRefs.current[8] = el}
+          >
+            <h2 className="heading-text">MEET</h2>
+            <h2 className="heading-text script">The</h2>
+            <h2 className="heading-text">STRATEGIC PARTNER</h2>
+          </div>
           <div className="team-member-container">
+       
             <div className="team-image-box member-image">
               <img 
                 src="/about/18.webp" 
@@ -367,6 +385,7 @@ const MobileAbout = () => {
               className="section-title member-title"
               ref={el => titleRefs.current[5] = el}
             >
+              
               <h2 className="heading-text">Shorouk Abdalla</h2>
             </div>
             <div className="content-block member-text">
@@ -387,6 +406,14 @@ const MobileAbout = () => {
           </div>
           
           {/* Team Member 3: Nourhan Nagy */}
+          <div 
+            className="section-title wide centered"
+            ref={el => titleRefs.current[9] = el}
+          >
+            <h2 className="heading-text">MEET</h2>
+            <h2 className="heading-text script">The</h2>
+            <h2 className="heading-text">OPERATIONS MANAGER</h2>
+          </div>
           <div className="team-member-container">
             <div className="team-image-box member-image">
               <img 

@@ -237,7 +237,7 @@ const ContactForm = ({ formType = 'contact' }) => {
             name="name" 
             value={form.name}
             onChange={handleChange}
-            placeholder="Name" 
+            placeholder="FULL NAME" 
             required
           />
         </div>

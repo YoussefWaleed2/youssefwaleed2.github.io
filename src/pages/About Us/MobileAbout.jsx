@@ -412,7 +412,7 @@ const MobileAbout = () => {
           >
             <h2 className="heading-text">MEET</h2>
             <h2 className="heading-text script">The</h2>
-            <h2 className="heading-text">OPERATIONS MANAGER</h2>
+            <h2 className="heading-text">COO</h2>
           </div>
           <div className="team-member-container">
             <div className="team-image-box member-image">

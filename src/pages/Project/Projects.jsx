@@ -415,38 +415,73 @@ const Projects = () => {
   useEffect(() => {
     let touchStartY = 0;
     let touchEndY = 0;
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let touchStartTime = 0;
     const minSwipeDistance = 50; // Minimum distance for swipe detection
+    const maxTapDuration = 300; // Maximum duration for a tap in milliseconds
+    let isTouchScrolling = false;
+    
+    // Prevent page scrolling
+    const preventPageScroll = (e) => {
+      // Allow scrolling only within .text-container
+      if (!e.target.closest('.text-container')) {
+        e.preventDefault();
+      }
+    };
+    
+    // Add event listeners to prevent page scrolling
+    document.addEventListener('touchmove', preventPageScroll, { passive: false });
     
     const handleTouchStart = (e) => {
       if (isAnimating) return;
-      // Record start position
+      // Record start position and time
       touchStartY = e.touches[0].clientY;
+      touchStartX = e.touches[0].clientX;
+      touchStartTime = Date.now();
+      isTouchScrolling = false;
     };
     
     const handleTouchMove = (e) => {
       if (isAnimating) return;
       // Update end position
       touchEndY = e.touches[0].clientY;
+      touchEndX = e.touches[0].clientX;
+      
+      // Determine if this is a vertical scroll
+      const verticalDistance = Math.abs(touchEndY - touchStartY);
+      const horizontalDistance = Math.abs(touchEndX - touchStartX);
+      
+      // If vertical movement is significantly greater than horizontal, mark as scrolling
+      if (verticalDistance > horizontalDistance * 1.5 && verticalDistance > 10) {
+        isTouchScrolling = true;
+      }
     };
     
     const handleTouchEnd = (e) => {
       if (isAnimating) return;
       
-      // If this was a tap/click on a category element, don't process as swipe
-      if (e.target.closest('.category-text')) {
+      const touchDuration = Date.now() - touchStartTime;
+      
+      // If this was a tap/click on a category element, handle it as a click
+      if (e.target.closest('.category-text') && !isTouchScrolling && touchDuration < maxTapDuration) {
+        // This will be handled by the onClick handler, so just return
         return;
       }
       
-      const swipeDistance = touchStartY - touchEndY;
-      
-      // Only process if it's a significant swipe gesture
-      if (Math.abs(swipeDistance) > minSwipeDistance) {
-        if (swipeDistance > 0) {
-          // Swipe up - go to next
-          handleNext();
-        } else {
-          // Swipe down - go to previous
-          handlePrev();
+      // If we're scrolling the container, don't process as a swipe
+      if (isTouchScrolling) {
+        const swipeDistance = touchStartY - touchEndY;
+        
+        // Only process if it's a significant swipe gesture
+        if (Math.abs(swipeDistance) > minSwipeDistance) {
+          if (swipeDistance > 0) {
+            // Swipe up - go to next
+            handleNext();
+          } else {
+            // Swipe down - go to previous
+            handlePrev();
+          }
         }
       }
     };
@@ -464,11 +499,12 @@ const Projects = () => {
         textContainer.removeEventListener('touchmove', handleTouchMove);
         textContainer.removeEventListener('touchend', handleTouchEnd);
       }
+      document.removeEventListener('touchmove', preventPageScroll);
     };
   }, [isAnimating, isMobile, handleNext, handlePrev]);
 
   return (
-    <ReactLenis root>
+    <ReactLenis root options={{ smooth: false, gestureOrientation: 'vertical', syncTouch: true }}>
       <div className="project-container">
         <div className="project-content">
           <div className="project-navigation left-nav">

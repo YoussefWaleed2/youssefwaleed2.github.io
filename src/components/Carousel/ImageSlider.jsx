@@ -1,8 +1,97 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import './ImageSlider.css';
 
 const ImageSlider = ({ assets }) => {
   const sliderRef = useRef(null);
+  const containerRef = useRef(null);
+  const [isIOS, setIsIOS] = useState(false);
+  const [isIPhone15, setIsIPhone15] = useState(false);
+  
+  // Detect iOS and iPhone model
+  useEffect(() => {
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    setIsIOS(iOS);
+    
+    // Check for iPhone 15 specifically (430px width, 932px height, 3x pixel ratio)
+    const iPhone15Check = iOS && 
+      (window.screen.width === 430 || window.screen.height === 430) && 
+      (window.screen.height === 932 || window.screen.width === 932) && 
+      window.devicePixelRatio === 3;
+    
+    setIsIPhone15(iPhone15Check);
+    
+    if (iPhone15Check) {
+      console.log("iPhone 15 detected - applying specific fixes");
+    }
+  }, []);
+  
+  // Fix for iOS devices
+  useEffect(() => {
+    if (!isIOS || !containerRef.current) return;
+    
+    // Force repaint to ensure visibility on iOS
+    containerRef.current.style.display = 'none';
+    
+    // Force iOS to position the element correctly
+    if (isIPhone15 && containerRef.current) {
+      // Apply direct styles for iPhone 15
+      const container = containerRef.current;
+      container.style.position = 'fixed';
+      container.style.bottom = '50px';
+      container.style.left = '0';
+      container.style.right = '0';
+      container.style.top = 'auto';
+      container.style.transform = 'none';
+      container.style.webkitTransform = 'none';
+      container.style.zIndex = '9999';
+      container.style.height = '60px';
+      container.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+      
+      // Add event listener to ensure it stays at the bottom even after scrolling
+      const fixPosition = () => {
+        if (containerRef.current) {
+          containerRef.current.style.position = 'fixed';
+          containerRef.current.style.bottom = '50px';
+        }
+      };
+      
+      window.addEventListener('scroll', fixPosition);
+      window.addEventListener('resize', fixPosition);
+      window.addEventListener('orientationchange', fixPosition);
+      
+      // Clean up event listeners
+      return () => {
+        window.removeEventListener('scroll', fixPosition);
+        window.removeEventListener('resize', fixPosition);
+        window.removeEventListener('orientationchange', fixPosition);
+      };
+    }
+    
+    // For all iOS devices
+    setTimeout(() => {
+      if (containerRef.current) {
+        containerRef.current.style.display = 'flex';
+      }
+      
+      // Make sure animation is running
+      if (sliderRef.current) {
+        sliderRef.current.style.animationPlayState = 'running';
+        sliderRef.current.style.webkitAnimationPlayState = 'running';
+      }
+      
+      // Force repaint again after a slight delay
+      setTimeout(() => {
+        if (containerRef.current) {
+          containerRef.current.style.opacity = '0.99';
+          setTimeout(() => {
+            if (containerRef.current) {
+              containerRef.current.style.opacity = '1';
+            }
+          }, 50);
+        }
+      }, 100);
+    }, 50);
+  }, [isIOS, isIPhone15]);
 
   // We need only one sequence with AND MORE... at the end
   // The CSS animation will handle the looping
@@ -11,8 +100,23 @@ const ImageSlider = ({ assets }) => {
     "more-text" // Special marker for the "AND MORE..." text
   ];
 
+  // Additional inline styles for iPhone 15
+  const containerStyle = isIPhone15 ? {
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    top: 'auto',
+    transform: 'none',
+    WebkitTransform: 'none',
+    height: '60px',
+    zIndex: 9999,
+    backgroundColor: 'rgba(0, 0, 0, 0.95)',
+    marginBottom: '50px'
+  } : {};
+
   return (
-    <div className="image-slider-container">
+    <div ref={containerRef} className="image-slider-container" style={containerStyle}>
       <div ref={sliderRef} className="image-slider">
         {/* First copy of sequence, starting with logos */}
         {sliderItems.map((item, index) => (

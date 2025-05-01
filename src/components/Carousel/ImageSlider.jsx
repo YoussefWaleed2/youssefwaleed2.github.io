@@ -22,8 +22,32 @@ const ImageSlider = ({ assets }) => {
     
     if (iPhone15Check) {
       console.log("iPhone 15 detected - applying specific fixes");
+      
+      // Try to force proper positioning after page is fully loaded
+      setTimeout(() => {
+        const safeAreaBottom = getSafeAreaBottom();
+        console.log("Safe area bottom:", safeAreaBottom);
+        if (containerRef.current) {
+          containerRef.current.style.position = 'fixed';
+          containerRef.current.style.bottom = '0px';
+          // Try using env() if supported
+          containerRef.current.style.paddingBottom = 'env(safe-area-inset-bottom, 0px)';
+        }
+      }, 500);
     }
   }, []);
+  
+  // Get safe area bottom inset
+  const getSafeAreaBottom = () => {
+    if (typeof window === 'undefined') return 0;
+    
+    // Try to get iOS safe area
+    const computedStyle = window.getComputedStyle(document.documentElement);
+    const safeAreaBottom = computedStyle.getPropertyValue('--safe-area-inset-bottom');
+    if (safeAreaBottom) return parseInt(safeAreaBottom, 10);
+    
+    return 0;
+  };
   
   // Fix for iOS devices
   useEffect(() => {
@@ -37,7 +61,7 @@ const ImageSlider = ({ assets }) => {
       // Apply direct styles for iPhone 15
       const container = containerRef.current;
       container.style.position = 'fixed';
-      container.style.bottom = '50px';
+      container.style.bottom = '0';
       container.style.left = '0';
       container.style.right = '0';
       container.style.top = 'auto';
@@ -51,7 +75,7 @@ const ImageSlider = ({ assets }) => {
       const fixPosition = () => {
         if (containerRef.current) {
           containerRef.current.style.position = 'fixed';
-          containerRef.current.style.bottom = '50px';
+          containerRef.current.style.bottom = '0';
         }
       };
       

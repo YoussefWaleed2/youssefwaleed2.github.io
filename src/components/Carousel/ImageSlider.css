@@ -104,7 +104,7 @@
 @media only screen and (device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) {
   .image-slider-container {
     position: fixed !important;
-    bottom: 50px !important;
+    bottom: 0 !important;
     top: auto !important;
     height: 60px !important;
     background-color: rgba(0, 0, 0, 0.95) !important;
@@ -121,6 +121,7 @@
     box-sizing: border-box !important;
     margin: 0 !important;
     padding: 0 !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
     -webkit-transform: translate3d(0, 0, 0) !important;
     transform: translate3d(0, 0, 0) !important;
     /* Force hardware acceleration */
@@ -133,7 +134,7 @@
   #root .image-slider-container,
   *[class*="container"] .image-slider-container {
     position: fixed !important;
-    bottom: 50px !important;
+    bottom: 0 !important;
     top: auto !important;
     transform: none !important;
     -webkit-transform: none !important;
@@ -158,6 +159,11 @@
   .slider-more-text {
     opacity: 1 !important;
     color: white !important;
+  }
+  
+  /* Handle height properly to include safe area */
+  html {
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
   }
 }
 

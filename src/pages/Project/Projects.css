@@ -852,7 +852,7 @@ html, body, #root {
   .project-container .image-slider-container {
     position: fixed !important;
     top: auto !important;
-    bottom: 50px !important; /* Position at the very bottom of screen */
+    bottom: 0 !important; /* Absolute bottom position */
     left: 0 !important;
     right: 0 !important;
     transform: none !important;
@@ -860,6 +860,7 @@ html, body, #root {
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important; /* Use safe area */
     z-index: 9999 !important;
     background-color: rgba(0, 0, 0, 0.95) !important;
     -webkit-transform: translate3d(0, 0, 0) !important;
@@ -886,12 +887,22 @@ html, body, #root {
     html .image-slider-container,
     #root .image-slider-container,
     .project-container .image-slider-container {
-      bottom: 50px !important; /* Position at the very bottom of screen */
+      bottom: 0 !important; /* Absolute bottom position */
       top: auto !important;
       left: 0 !important;
       right: 0 !important;
       transform: none !important;
       -webkit-transform: none !important;
+    }
+  }
+  
+  /* Add viewport-fit=cover meta tag support */
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    body .image-slider-container,
+    html .image-slider-container,
+    #root .image-slider-container,
+    .project-container .image-slider-container {
+      padding-bottom: env(safe-area-inset-bottom) !important;
     }
   }
 }

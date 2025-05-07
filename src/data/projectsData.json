@@ -8,27 +8,30 @@
           "sections": [
             {
               "type": "media",
-              "media": "/project/Single-project-Assets/Branding/ÉPOS/146.webp",
+              "media": "/project/Single-project-Assets/Branding/EPOS/01-EPOS.webp",
               "alt": "Épos main branding"
             },
             {
               "type": "text",
-              "title": "About Épos",
-              "content": "Épos is a modern brand that focuses on minimalistic design and functionality. Our branding team worked closely with the client to develop a visual identity that reflects the essence of the brand."
+              "backgroundColor": "#000000",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
             },
             {
               "type": "media",
-              "imageName": "/project/Single-project-Assets/Branding/ÉPOS/147.webp",
+              "imageName": "/project/Single-project-Assets/Branding/EPOS/02-EPOS.webp",
               "alt": "Épos branding details"
             },
             {
               "type": "media",
-              "imageName": "/project/Single-project-Assets/Branding/ÉPOS/148.webp",
+              "imageName": "/project/Single-project-Assets/Branding/EPOS/03-EPOS.webp",
               "alt": "Épos color palette"
             },
             {
               "type": "media",
-              "imageName": "/project/Single-project-Assets/Branding/ÉPOS/149.webp",
+              "imageName": "/project/Single-project-Assets/Branding/EPOS/04-EPOS.webp",
               "alt": "Épos typography"
             }
           ]
@@ -37,7 +40,36 @@
       {
         "title": "Shawerma El Reem",
         "media": "/project/Project-Assets/Branding/SHAWERMA EL REEM.webp",
-        "mediaType": "image"
+        "mediaType": "image",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Branding/SHAWERMA EL REEM/01-SER.webp",
+              "alt": "Shawerma El Reem main branding"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/SHAWERMA EL REEM/02-SER.webp",
+              "alt": "Shawerma El Reem branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/SHAWERMA EL REEM/03-SER.webp",
+              "alt": "Shawerma El Reem color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/SHAWERMA EL REEM/04-SER.webp",
+              "alt": "Shawerma El Reem typography"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/SHAWERMA EL REEM/05-SER.webp",
+              "alt": "Shawerma El Reem typography"
+            }
+          ]
+        }
       },
       {
         "title": "Venti",
@@ -145,7 +177,29 @@
         "title": "Emit x Leopelle",
         "media": "/project/Project-Assets/Advertising/Emit x Leopelle.webm",
         "mediaType": "video",
-        "thumbnail": "/project/Project-Assets/Advertising/Emit x Leopelle-thumb.jpg"
+        "thumbnail": "/project/Project-Assets/Advertising/Emit x Leopelle-thumb.jpg",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Project-Assets/Advertising/Emit x Leopelle.webm",
+              "alt": "Emit x Leopelle video"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#1E4554",
+              "slogan": "FROM THE SHORE TO THE BOLD TURNING WAVES INTO STATEMENTS",
+              "fieldName": "FASHION PRODUCT",
+              "services": "ADVERTISING",
+              "text": "THIS LIFESTYLE SHOOT TAKES YOU ON A JOURNEY OF SELF-DISCOVERY, WHERE FREEDOM, INDULGENCE, AND INDIVIDUALITY COME TOGETHER. WE USED THE BEAUTY OF NATURE, SUNLIGHT, THE SEA, AND LEATHER TO CREATE AN EXPERIENCE THAT RESONATES ON A DEEPER LEVEL. EMIT'S ICONIC BOARD SHORTS REPRESENT FREEDOM AND THE CAREFULLY CRAFTED LEATHER BAGS ARE AT THE HEART OF IT ALL, TELLING A STORY OF PURPOSE AND TRANSFORMATION."
+            },
+            {
+              "type": "media",
+              "media": "/project/Project-Assets/Advertising/Emit x Leopelle-thumb.jpg",
+              "alt": "Emit x Leopelle thumbnail"
+            }
+          ]
+        }
       },
       {
         "title": "Leopelle",

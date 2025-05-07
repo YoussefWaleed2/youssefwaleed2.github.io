@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import "./All-Projects.css";
 import Footer from "../../components/Footer/Footer";
 import Transition from "../../components/Transition/Transition";
@@ -12,6 +12,7 @@ import projectsData from "../../data/projectsData.json";
 const AllProjects = () => {
   const { category } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const containerRef = useRef(null);
   const videoRef = useRef(null);
@@ -190,6 +191,15 @@ const AllProjects = () => {
     }
   };
 
+  // Handle click on a project to navigate to its detail page
+  const handleProjectClick = (project) => {
+    const projectName = project.title.toLowerCase().replace(/ /g, '-');
+    const categoryPath = category || 'all';
+    
+    // Navigate to the Single Project page
+    navigate(`/all-projects/${categoryPath}/${projectName}`);
+  };
+
   const renderMedia = (project, index) => {
     if (project.mediaType === 'video') {
       return (
@@ -249,6 +259,7 @@ const AllProjects = () => {
                 style={{
                   '--delay': `${index * 0.1}s`
                 }}
+                onClick={() => handleProjectClick(project)}
               >
                 <div 
                   className="project-video-container"

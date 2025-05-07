@@ -6,7 +6,6 @@ import ReactLenis from "lenis/react";
 import Transition from '../../components/Transition/Transition';
 import { handleOverlay } from "../../utils/overlayManager";
 import projectsData from "../../data/projectsData.json";
-import Footer from "../../components/Footer/Footer";
 import './SingleProject.css';
 
 // Add debounce function for better performance
@@ -392,7 +391,10 @@ const SingleProject = () => {
                 />
               )}
               {section.type === 'text' && (
-                <div className="mobile-project-text" style={{ backgroundColor: section.backgroundColor || 'rgba(30, 30, 30, 0.8)' }}>
+                <div className="mobile-project-text" style={{ 
+                  backgroundColor: section.backgroundColor || 'rgba(30, 30, 30, 0.8)',
+                  color: section.textColor || '#FFFFFF'
+                }}>
                   {section.slogan && <h2 className="text-slogan">{section.slogan}</h2>}
                   <div className="text-content-wrapper">
                     <div className="text-left-column">
@@ -406,7 +408,6 @@ const SingleProject = () => {
             </div>
           ))}
         </div>
-        <Footer />
       </div>
     );
   }
@@ -436,7 +437,10 @@ const SingleProject = () => {
               </div>
             )}
             {section.type === 'text' && (
-              <div className="single-project-text-section" style={{ backgroundColor: section.backgroundColor || '#000' }}>
+              <div className="single-project-text-section" style={{ 
+                backgroundColor: section.backgroundColor || '#000',
+                color: section.textColor || '#FFFFFF'
+              }}>
                 {section.slogan && <div className="text-slogan">{section.slogan}</div>}
                 <div className="text-content-wrapper">
                   <div className="text-left-column">

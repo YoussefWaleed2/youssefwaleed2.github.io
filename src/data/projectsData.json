@@ -3,7 +3,36 @@
       {
         "title": "Épos",
         "media": "/project/Project-Assets/Branding/EPOS.webp",
-        "mediaType": "image"
+        "mediaType": "image",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Branding/ÉPOS/146.webp",
+              "alt": "Épos main branding"
+            },
+            {
+              "type": "text",
+              "title": "About Épos",
+              "content": "Épos is a modern brand that focuses on minimalistic design and functionality. Our branding team worked closely with the client to develop a visual identity that reflects the essence of the brand."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/ÉPOS/147.webp",
+              "alt": "Épos branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/ÉPOS/148.webp",
+              "alt": "Épos color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/ÉPOS/149.webp",
+              "alt": "Épos typography"
+            }
+          ]
+        }
       },
       {
         "title": "Shawerma El Reem",

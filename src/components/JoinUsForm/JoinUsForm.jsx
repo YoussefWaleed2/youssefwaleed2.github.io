@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { emailConfig } from "../../config/emailConfig";
 import Popup from "../Popup/Popup";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import "./JoinUsForm.css";
 import { sendEmail } from '../../utils/email';
 import { generateJoinUsEmail } from '../../utils/emailTemplates';
@@ -12,6 +12,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
   
   const fileInputRef = useRef();
   const scrollContainerRef = useRef();
+  const formRef = useRef();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",

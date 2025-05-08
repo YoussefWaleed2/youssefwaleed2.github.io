@@ -1,210 +1,259 @@
-/* Reset and base styles - make selectors more specific */
-body:has(.single-project-page), 
-html:has(.single-project-page) {
-  overflow: hidden;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
   height: 100%;
-  width: 100%;
 }
 
-/* Mobile and tablet styles - make selectors more specific */
-@media (max-width: 1024px) {
-  body:has(.single-project-page), 
-  html:has(.single-project-page) {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    height: 100% !important;
-  }
-}
-
-/* Use a class-specific prefix for all selectors */
 .single-project-page {
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  position: relative !important;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.5s ease-in-out;
-  
-  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
-  scrollbar-width: none; /* Hide scrollbar for Firefox */
-  scroll-behavior: smooth;
-  touch-action: pan-x;
-  will-change: transform, scroll-position;
-  transform: translate3d(0, 0, 0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  background-color: #000;
-  padding-right: 50px; /* Add padding to ensure we can scroll to the last image */
-  -webkit-overflow-scrolling: touch; /* Add momentum scrolling on iOS */
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-.single-project-page::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
-}
-
-.single-project-page.is-ready {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Prefix all component selectors with .single-project to avoid conflicts */
-.single-project-container {
-  width: max-content !important; /* Allow container to be wider than viewport */
-  height: 100vh !important;
-  display: flex !important;
-  flex-direction: row !important;
   position: relative;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  perspective: 1000px;
-  gap: 0; /* Ensure no gap between sections */
-  font-size: 0; /* Remove any potential whitespace between inline elements */
-  min-width: 100vw; /* Ensure full width */
-  padding-right: 100px; /* Add extra padding at the end */
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  opacity: 1; /* Ensure content is visible immediately */
+  transition: opacity 0.3s ease;
+  z-index: 10; /* Ensure content is above pin-spacer */
 }
 
-.single-project-section {
+/* Horizontal scrolling container */
+.single-project-container {
+  position: relative;
+  display: flex;
+  height: 100vh;
+  transform: translateX(0); /* Start with no transform */
+  will-change: transform; /* Improve performance */
+  z-index: 20; /* Ensure container is visible */
+}
+
+.panel {
+  position: relative;
+  overflow: hidden;
   min-width: 100vw;
   width: 100vw;
-  height: 100vh;
-  position: absolute !important; /* Ensure absolute positioning */
-  flex-shrink: 0;
-  flex-grow: 0;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  font-size: 16px; /* Reset font size for content */
-  display: block;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  opacity: 1 !important;
-  visibility: visible !important;
-  background-color: #000;
-  z-index: 1; /* Base z-index */
-}
-
-/* Ensure last section is visible when scrolling */
-.single-project-section:last-child {
-  margin-right: 100px;
-}
-
-.single-project-image-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
   height: 100%;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  will-change: transform;
+  flex-shrink: 0;
+  opacity: 1; /* Ensure panels are visible */
+  z-index: 1; /* Base z-index for panels */
 }
 
-.single-project-image {
-  position: absolute;
-  top: 0;
-  left: 0;
+.panel img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 1;
-  margin: 0;
-  padding: 0;
-  display: block;
-  transform: translate3d(0, 0, 0);
-  will-change: transform;
 }
 
-/* New text section styling */
-.single-project-text-section {
+/* First panel stays in place */
+.panel:first-child {
+  z-index: 1;
+}
+
+/* All panels have consistent styling */
+.panel {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+}
+
+/* Text panel (typically second panel) */
+.panel:nth-child(2) {
+  border-radius: 106px 0px 0px 106px;
+}
+
+/* Single panel image styling */
+.single-project-image {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.single-project-text-section {
+  position: relative;
+  background-color: #090909;
+  color: #fff;
+  padding: 2rem;
+}
+
+.text-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 4rem;
   display: flex;
   flex-direction: column;
-  padding: 50px 70px;
-  box-sizing: border-box;
-  color: #fff;
-  font-family: "Helvetica Neue", Arial, sans-serif;
   justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.main-text {
+  margin-bottom: 2rem;
+}
+
+.panel-main-title {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.panel-sub-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+}
+
+.paragraphs {
+  margin-bottom: 2rem;
+  max-width: 70%;
+}
+
+.panel-paragraph {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.bottom-info {
+  display: flex;
+  justify-content: space-between;
+  max-width: 40%;
+}
+
+.field-info, .services-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+
+.value {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.services-info .value {
+  font-size: 28px;
+  font-family: "Aboreto", sans-serif;
+}
+
+/* Hide scrollbars */
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Add styles for pin-spacer */
+.pin-spacer {
+  background: transparent !important;
+  z-index: -1 !important; /* Lower z-index to stay behind content */
+}
+
+/* Fix for GSAP-created pin-spacer div */
+div[style*="transform"] > .single-project-page {
+  z-index: 200;
+  position: relative !important;
+}
+
+/* Mobile styles */
+.mobile-single-project {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.mobile-project-content {
+  width: 100%;
+}
+
+.mobile-project-section {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.mobile-project-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.mobile-project-text {
+  padding: 2rem;
+  color: #fff;
 }
 
 .text-slogan {
-  font-size: 2.5rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  line-height: 1.2;
-  padding-right: 30%;
-  letter-spacing: 0.5px;
-  margin-top: 20px;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .text-content-wrapper {
   display: flex;
-  width: 100%;
-  margin-top: auto;
-  padding-bottom: 50px;
+  flex-direction: column;
 }
 
 .text-left-column {
-  flex: 0 0 25%;
-  padding-right: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  margin-bottom: 1.5rem;
 }
 
-.field-name {
-  font-size: 0.95rem;
-  margin-bottom: 50px;
-  text-transform: uppercase;
-  font-weight: 400;
-  letter-spacing: 0.5px;
-  line-height: 1.4;
-}
-
-.services {
-  font-size: 0.95rem;
-  text-transform: uppercase;
-  font-weight: 400;
-  letter-spacing: 0.5px;
-  margin-top: 15px;
-  line-height: 1.4;
+.field-name, .services {
+  margin-bottom: 1rem;
 }
 
 .text-right-column {
-  flex: 0 0 60%;
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.6;
-  padding-right: 30px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
-/* Back button */
-.back-to-projects-btn {
+/* Scroll indicators */
+.scroll-indicators {
   position: fixed;
-  top: 30px;
-  left: 30px;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 30px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  z-index: 1000;
-  transition: all 0.3s ease;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 300; /* Ensure indicators are above other content */
 }
 
-.back-to-projects-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+.scroll-indicator {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transition: background-color 0.3s ease;
+}
+
+.scroll-indicator.active {
+  background-color: #fff;
+}
+
+/* Scroll instructions */
+.scroll-instructions {
+  position: fixed;
+  bottom: 1rem;
+  right: 2rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  z-index: 300; /* Ensure instructions are above other content */
+}
+
+/* Force visibility of content regardless of ready state */
+.single-project-page.is-ready,
+.single-project-page:not(.is-ready) {
+  opacity: 1 !important;
 }
 
 /* Project loading state */
@@ -212,188 +261,8 @@ html:has(.single-project-page) {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100vw;
-  background-color: #000;
-}
-
-.project-loading h2 {
-  font-family: "Helvetica Neue", sans-serif;
-  font-size: 24px;
-  color: #fff;
-}
-
-/* Mobile styles */
-.mobile-single-project {
-  min-height: 100vh;
-  background-color: #000;
-  color: #fff;
-  padding: 20px;
-}
-
-.mobile-project-header {
-  padding: 20px 0;
-  text-align: center;
-  position: relative;
-}
-
-.mobile-project-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.mobile-project-section {
-  margin-bottom: 20px;
-}
-
-.mobile-project-image {
   width: 100%;
-  height: auto;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-.mobile-project-text {
-  padding: 30px 20px;
-  border-radius: 0;
-  margin-top: 10px;
+  height: 100vh;
+  background-color: #000;
   color: #fff;
-}
-
-.mobile-project-text .text-slogan {
-  font-size: 1.8rem;
-  margin-bottom: 30px;
-  text-transform: uppercase;
-}
-
-.mobile-project-text .text-content-wrapper {
-  flex-direction: column;
-}
-
-.mobile-project-text .text-left-column {
-  flex: 1;
-  margin-bottom: 20px;
-  padding-right: 0;
-}
-
-.mobile-project-text .text-right-column {
-  flex: 1;
-  padding-right: 0;
-}
-
-.back-button {
-  display: block;
-  margin-bottom: 15px;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 8px 15px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-}
-
-/* Ensure navigation has mix-blend-mode only for SingleProject page */
-body:has(.single-project-page) .navbar {
-  mix-blend-mode: difference !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-  background: transparent !important;
-}
-
-/* Media queries */
-@media (max-width: 768px) {
-  .mobile-project-header .project-title {
-    font-size: 1.8rem;
-  }
-  
-  .text-slogan {
-    font-size: 1.8rem;
-    padding-right: 0;
-    line-height: 1.3;
-  }
-  
-  .single-project-text-section {
-    padding: 30px 25px;
-  }
-  
-  .text-content-wrapper {
-    flex-direction: column;
-    padding-bottom: 20px;
-  }
-  
-  .text-left-column {
-    flex: 1;
-    margin-bottom: 30px;
-    padding-right: 0;
-  }
-  
-  .field-name {
-    margin-bottom: 30px;
-  }
-  
-  .text-right-column {
-    flex: 1;
-    padding-right: 0;
-  }
-}
-
-/* Scroll navigation indicators for desktop */
-.scroll-indicator {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 8px 16px;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  z-index: 100;
-  opacity: 0.6;
-  transition: opacity 0.3s ease;
-}
-
-.scroll-indicator:hover {
-  opacity: 1;
-}
-
-.scroll-indicator-text {
-  font-size: 12px;
-  color: #fff;
-  font-family: "Helvetica Neue", sans-serif;
-}
-
-.arrow-icon {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Fix for section positioning issues */
-@media screen and (min-width: 1025px) {
-  .single-project-section:nth-child(n+1) {
-    position: absolute !important;
-    left: calc(100vw * (var(--index, 0)));
-  }
-  
-  .single-project-section:nth-child(1) { --index: 0; }
-  .single-project-section:nth-child(2) { --index: 1; }
-  .single-project-section:nth-child(3) { --index: 2; }
-  .single-project-section:nth-child(4) { --index: 3; }
-  .single-project-section:nth-child(5) { --index: 4; }
-  .single-project-section:nth-child(6) { --index: 5; }
-  .single-project-section:nth-child(7) { --index: 6; }
-  .single-project-section:nth-child(8) { --index: 7; }
-  .single-project-section:nth-child(9) { --index: 8; }
-  .single-project-section:nth-child(10) { --index: 9; }
-  .single-project-section:nth-child(11) { --index: 10; }
-  .single-project-section:nth-child(12) { --index: 11; }
-  .single-project-section:nth-child(13) { --index: 12; }
-  .single-project-section:nth-child(14) { --index: 13; }
-  .single-project-section:nth-child(15) { --index: 14; }
 }

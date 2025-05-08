@@ -1,12 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import gsap from "gsap";
-import CustomEase from "gsap/CustomEase";
-import ReactLenis from "lenis/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from '@studio-freight/lenis';
 import Transition from '../../components/Transition/Transition';
 import { handleOverlay } from "../../utils/overlayManager";
 import projectsData from "../../data/projectsData.json";
 import './SingleProject.css';
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
 
 // Add debounce function for better performance
 function debounce(func, wait) {
@@ -31,21 +34,8 @@ const SingleProject = () => {
   
   // Refs
   const containerRef = useRef(null);
-  const pageRef = useRef(null);
-  const titleRef = useRef(null);
-  const imageRefs = useRef([]);
-  
-  // Smooth scrolling refs
-  const targetScrollRef = useRef(0);
-  const currentScrollRef = useRef(0);
-  const scrollRafRef = useRef(null);
-  const isScrollingRef = useRef(false);
-  const lastTouchX = useRef(0);
-  const touchStartX = useRef(0);
-  
-  // Velocity tracking for touch movement
-  const velocityX = useRef(0);
-  const lastTouchTime = useRef(Date.now());
+  const wrapperRef = useRef(null);
+  const lenisRef = useRef(null);
   
   // Debug log to check routing
   console.log("SingleProject loaded with category:", category, "projectName:", projectName, "from path:", location.pathname);
@@ -135,225 +125,190 @@ const SingleProject = () => {
     setProject(projectData);
   }, [category, projectName]);
 
-  // Setup horizontal scrolling for desktop
+  // Add a cleanup effect for GSAP ticker when component unmounts
   useEffect(() => {
-    if (isMobileOrTablet || !project || !project.projectContent || !containerRef.current || !pageRef.current) return;
+    return () => {
+      // Clean up any remaining GSAP animations
+      if (gsap.globalTimeline) {
+        const animations = gsap.globalTimeline.getChildren();
+        animations.forEach(animation => animation.kill());
+      }
+
+      // Kill all ScrollTrigger instances
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      
+      // Kill specific GSAP ticker callbacks related to this component
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+      }
+    };
+  }, []);
+
+  // Setup horizontal scrolling with GSAP and Lenis
+  useEffect(() => {
+    if (isMobileOrTablet || !project || !project.projectContent || !wrapperRef.current || !containerRef.current) return;
     
-    // Register GSAP plugins
-    gsap.registerPlugin(CustomEase);
+    // Set isReady immediately to show content
+    setIsReady(true);
     
-    // Calculate total width precisely
-    const sectionWidth = window.innerWidth;
-    const sections = project.projectContent.sections || [];
-    // Make sure we can see all sections by using a slightly larger width
-    const totalWidth = sectionWidth * sections.length;
+    // Kill any existing ScrollTrigger instances
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    
+    // Get all panels
+    let panels = gsap.utils.toArray(".panel");
+    const panelsToAnimate = panels.slice(1);
+    
+    // Make sure panels are visible
+    gsap.set(panels, { autoAlpha: 1 });
+
+    // Calculate widths for scrolling
+    const totalPanels = panels.length;
+    const windowWidth = window.innerWidth;
+    let containerWidth = (windowWidth * (totalPanels - 1)) - 480;
+    
+    // Add extra buffer to prevent reset issue
+    containerWidth += windowWidth * 0.5;
     
     // Set container width
-    containerRef.current.style.width = `${totalWidth}px`;
+    gsap.set(containerRef.current, { width: containerWidth });
     
-    // Set page element styles
-    pageRef.current.style.overflowX = 'auto';  // Changed from 'scroll' to 'auto' for smoother scrolling
-    pageRef.current.style.overflowY = 'hidden';
-    pageRef.current.style.width = '100vw';
-    pageRef.current.style.height = '100vh';
-    pageRef.current.style.scrollBehavior = 'auto';
+    // Calculate scroll length
+    let scrollLength = containerWidth - windowWidth;
+    gsap.set(wrapperRef.current, { height: scrollLength + "px" });
     
-    // Setup project sections
-    const projectSections = document.querySelectorAll('.single-project-section');
-    if (projectSections && projectSections.length > 0) {
-      projectSections.forEach((section, index) => {
-        if (section) {
-          section.style.width = `${sectionWidth}px`;
-          section.style.margin = '0';
-          section.style.display = 'block';
-          section.style.position = 'absolute';
-          section.style.left = `${index * sectionWidth}px`;
-          section.style.top = '0';
-          section.style.zIndex = index + 10;
-        }
-      });
-    }
+    // Initialize Lenis with scroll limits
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      direction: 'vertical',
+      gestureDirection: 'vertical',
+      smooth: true,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false,
+      wheelMultiplier: 0.8,
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      lerp: 0.1,
+      // Add edgeEasing for smoother behavior at edges
+      edgeEasing: 0.2
+    });
     
-    // Calculate maximum scroll position - add extra padding to ensure last images are reachable
-    const maxScrollPosition = totalWidth;
+    // Store lenis reference for cleanup
+    lenisRef.current = lenis;
     
-    // Smoother wheel scrolling using GSAP
-    const handleWheel = (e) => {
-      if (!pageRef.current) return;
-      
-      e.preventDefault();
-      
-      // Get the delta and determine scroll amount
-      const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-      
-      // Simple scroll amount calculation with gentle multiplier
-      let scrollAmount = delta * 5.5;
-      
-      // Apply smooth scrolling with GSAP
-      gsap.to(pageRef.current, {
-        scrollLeft: pageRef.current.scrollLeft + scrollAmount,
-        duration: 0.5,
-        ease: "power1.out",
-        overwrite: true
-      });
-      
-      // Update current section based on scroll position
-      const newSection = Math.floor(pageRef.current.scrollLeft / sectionWidth);
-      if (newSection !== currentSection) {
-        setCurrentSection(newSection);
-      }
-    };
-    
-    // Smoother touch handling
-    const handleTouchStart = (e) => {
-      if (!pageRef.current) return;
-      touchStartX.current = e.touches[0].clientX;
-      lastTouchX.current = touchStartX.current;
-    };
-    
-    const handleTouchMove = (e) => {
-      if (!pageRef.current) return;
-      
-      const touchX = e.touches[0].clientX;
-      const deltaX = lastTouchX.current - touchX;
-      
-      // Use GSAP for smoother touch scrolling
-      gsap.to(pageRef.current, {
-        scrollLeft: pageRef.current.scrollLeft + deltaX * 1.2,
-        duration: 0.2,
-        ease: "power1.out",
-        overwrite: true
-      });
-      
-      e.preventDefault();
-      lastTouchX.current = touchX;
-      
-      // Update current section based on scroll position
-      const newSection = Math.floor(pageRef.current.scrollLeft / sectionWidth);
-      if (newSection !== currentSection) {
-        setCurrentSection(newSection);
-      }
-    };
-    
-    // Smoother keyboard navigation
-    const handleKeyDown = (e) => {
-      if (!pageRef.current) return;
-      
-      let scrollAmount = 0;
-      
-      // Handle arrow keys with smooth scrolling
-      if (e.key === 'ArrowRight') {
-        scrollAmount = 250;
-        e.preventDefault();
-      } else if (e.key === 'ArrowLeft') {
-        scrollAmount = -250;
-        e.preventDefault();
-      } else if (e.key === 'End') {
-        // Navigate to last section
-        scrollAmount = pageRef.current.scrollWidth - pageRef.current.scrollLeft;
-        e.preventDefault();
-      } else if (e.key === 'Home') {
-        // Navigate to first section
-        scrollAmount = -pageRef.current.scrollLeft;
-        e.preventDefault();
-      } else if (e.key === 'PageDown') {
-        scrollAmount = window.innerWidth * 0.8;
-        e.preventDefault();
-      } else if (e.key === 'PageUp') {
-        scrollAmount = -window.innerWidth * 0.8;
-        e.preventDefault();
-      }
-      
-      if (scrollAmount !== 0) {
-        // Apply smooth scrolling with GSAP
-        gsap.to(pageRef.current, {
-          scrollLeft: pageRef.current.scrollLeft + scrollAmount,
+    // Add scroll boundary check with smooth stopping
+    lenis.on('scroll', ({ scroll }) => {
+      // Handle scroll boundaries with softer limits
+      if (scroll < 0) {
+        // Prevent overscrolling at start, but use a softer approach
+        lenis.scrollTo(0, { 
+          immediate: false,
           duration: 0.5,
-          ease: "power1.out",
-          overwrite: true
+          lock: false // Don't completely lock scrolling
+        });
+      } else if (scroll > scrollLength) {
+        // Prevent overscrolling at end, but use a softer approach
+        lenis.scrollTo(scrollLength, { 
+          immediate: false,
+          duration: 0.5,
+          lock: false // Don't completely lock scrolling
         });
       }
-    };
-    
-    // Simple scroll handler without snapping
-    const handleScroll = () => {
-      if (!pageRef.current) return;
       
-      // Calculate current section based on scroll position
-      const newSection = Math.floor(pageRef.current.scrollLeft / sectionWidth);
-      if (newSection !== currentSection) {
-        setCurrentSection(newSection);
-      }
-    };
+      ScrollTrigger.update();
+    });
     
-    // Add event listeners
-    pageRef.current.addEventListener('wheel', handleWheel, { passive: false });
-    pageRef.current.addEventListener('touchstart', handleTouchStart, { passive: false });
-    pageRef.current.addEventListener('touchmove', handleTouchMove, { passive: false });
-    pageRef.current.addEventListener('keydown', handleKeyDown);
-    pageRef.current.addEventListener('scroll', handleScroll, { passive: true });
+    // Connect GSAP ticker to Lenis
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+    
+    gsap.ticker.lagSmoothing(0);
+    
+    // Create a timeline
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: wrapperRef.current,
+        start: "top top",
+        end: () => "+=" + scrollLength,
+        scrub: 1.5,
+        pin: true,
+        pinSpacing: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        fastScrollEnd: true,
+        preventOverlaps: true,
+        onUpdate: self => {
+          // Force render on every update to prevent jank
+          if (containerRef.current) {
+            const progress = self.progress;
+            if (progress <= 0 || progress >= 1) {
+              // When at extremes, make sure we don't reset
+              return;
+            }
+          }
+        }      }
+    });
+    
+    // Add animations to the timeline with sequential timing
+    tl
+      .to(containerRef.current, {
+        x: () => -scrollLength,
+        ease: "none",
+        duration: 3
+      }, 0)
+      .to(panelsToAnimate, {
+        
+x: "-100%",
+        ease: "none",
+        duration: 3
+      }, 0);
+    
+    // Create initial animations for sections
+    gsap.from(panels, {
+      opacity: 0,
+      y: 20,
+      duration: 0.8,
+      stagger: 0.1,
+      ease: "power2.out"
+    });
     
     // Handle resize
     const handleResize = debounce(() => {
-      const newWidth = window.innerWidth;
-      
-      // If transitioning to mobile, reload
-      if (newWidth <= 1024) {
+      // Check if device is now mobile
+      if (detectMobileOrTablet()) {
         window.location.reload();
         return;
       }
       
       // Recalculate dimensions
-      if (!containerRef.current) return;
+      const newWidth = window.innerWidth;
+      const newContainerWidth = (newWidth * (totalPanels - 1)) - 480;
       
-      const newSectionWidth = newWidth;
-      const newTotalWidth = newSectionWidth * sections.length;
+      // Add extra buffer to prevent reset issue
+      const bufferedWidth = newContainerWidth + (newWidth * 0.5);
       
-      // Update container width
-      containerRef.current.style.width = `${newTotalWidth}px`;
+      const newScrollLength = bufferedWidth - newWidth;
       
-      // Update all section widths and positions
-      if (projectSections && projectSections.length > 0) {
-        projectSections.forEach((section, idx) => {
-          if (section) {
-            section.style.width = `${newSectionWidth}px`;
-            section.style.left = `${idx * newSectionWidth}px`;
-            section.style.zIndex = idx + 10;
-          }
-        });
-      }
+      // Update container dimensions
+      gsap.set(containerRef.current, { width: bufferedWidth });
+      gsap.set(wrapperRef.current, { height: newScrollLength + "px" });
+
+      // Update ScrollTrigger
+      ScrollTrigger.refresh();
     }, 150);
     
     window.addEventListener('resize', handleResize);
     
-    // Initial animations
-    const customEase = CustomEase.create("custom", ".87,0,.13,1");
-    
-    // Set initial state for sections
-    gsap.set(".single-project-section", {
-      opacity: 0
-    });
-    
-    // Animate sections
-    gsap.to(".single-project-section", {
-      opacity: 1,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: "power2.out",
-      delay: 0.5
-    });
-    
     // Cleanup
     return () => {
-      if (pageRef.current) {
-        pageRef.current.removeEventListener('wheel', handleWheel);
-        pageRef.current.removeEventListener('touchstart', handleTouchStart);
-        pageRef.current.removeEventListener('touchmove', handleTouchMove);
-        pageRef.current.removeEventListener('keydown', handleKeyDown);
-        pageRef.current.removeEventListener('scroll', handleScroll);
-      }
-      
       window.removeEventListener('resize', handleResize);
+      
+      if (lenis) {
+        lenis.destroy();
+      }
     };
   }, [project, isMobileOrTablet, currentSection]);
 
@@ -361,11 +316,6 @@ const SingleProject = () => {
   const goBackToProjects = () => {
     navigate(`/all-projects/${category}`);
   };
-
-  // Set ready state
-  useEffect(() => {
-    setIsReady(true);
-  }, []);
 
   // Return loading state if no project found
   if (!project) {
@@ -398,8 +348,8 @@ const SingleProject = () => {
                   {section.slogan && <h2 className="text-slogan">{section.slogan}</h2>}
                   <div className="text-content-wrapper">
                     <div className="text-left-column">
-                      {section.fieldName && <div className="field-name">{section.fieldName}</div>}
-                      {section.services && <div className="services">{section.services}</div>}
+                      {section.fieldName && <div className="field-name">Field Name<br/>{section.fieldName}</div>}
+                      {section.services && <div className="services">SERVICE<br/>{section.services}</div>}
                     </div>
                     {section.text && <div className="text-right-column">{section.text}</div>}
                   </div>
@@ -415,48 +365,72 @@ const SingleProject = () => {
   // Main render for desktop
   return (
     <div 
-      ref={pageRef} 
+      ref={wrapperRef} 
       className={`single-project-page ${isReady ? 'is-ready' : ''}`}
-      tabIndex="0"
     >
       <div ref={containerRef} className="single-project-container">
         {project.projectContent && project.projectContent.sections.map((section, index) => (
           <div 
-            key={index} 
-            ref={el => imageRefs.current[index] = el} 
-            className="single-project-section"
+            key={index}
+            className="panel"
             style={{ backgroundColor: section.backgroundColor || '#000' }}
           >
             {section.type === 'media' && (
-              <div className="single-project-image-container">
-                <img 
-                  src={section.media || section.imageName} 
-                  alt={section.alt || `Project section ${index + 1}`} 
-                  className="single-project-image"
-                />
-              </div>
+              <img 
+                src={section.media || section.imageName} 
+                alt={section.alt || `Project section ${index + 1}`} 
+                className="single-project-image"
+              />
             )}
             {section.type === 'text' && (
-              <div className="single-project-text-section" style={{ 
-                backgroundColor: section.backgroundColor || '#000',
+              <div className="text-content" style={{ 
+                backgroundColor: section.backgroundColor || '#090909',
                 color: section.textColor || '#FFFFFF'
               }}>
-                {section.slogan && <div className="text-slogan">{section.slogan}</div>}
-                <div className="text-content-wrapper">
-                  <div className="text-left-column">
-                    {section.fieldName && <div className="field-name">Field Name<br/>{section.fieldName}</div>}
-                    {section.services && <div className="services">SERVICE<br/>{section.services}</div>}
-                  </div>
-                  {section.text && <div className="text-right-column">{section.text}</div>}
+                <div className="main-text">
+                  {section.slogan && <h2 className="panel-main-title">{section.slogan}</h2>}
+                  {section.subTitle && <h3 className="panel-sub-title">{section.subTitle}</h3>}
+                </div>
+                <div className="paragraphs">
+                  {section.text && <p className="panel-paragraph">{section.text}</p>}
+                </div>
+                <div className="bottom-info">
+                  {section.fieldName && (
+                    <div className="field-info">
+                      <span className="label">Field Name</span>
+                      <span className="value">{section.fieldName}</span>
+                    </div>
+                  )}
+                  {section.services && (
+                    <div className="services-info">
+                      <span className="label">SERVICE</span>
+                      <span className="value">{section.services}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
           </div>
         ))}
       </div>
+      
+      {/* Scroll indicators */}
+      <div className="scroll-indicators">
+        {project.projectContent && project.projectContent.sections.map((_, index) => (
+          <div 
+            key={index} 
+            className={`scroll-indicator ${currentSection === index ? 'active' : ''}`}
+          />
+        ))}
+      </div>
+      
+      {/* Scroll instructions */}
+      <div className="scroll-instructions">
+        Scroll to navigate
+      </div>
     </div>
   );
 };
 
 const SingleProjectPage = Transition(SingleProject);
-export default SingleProjectPage; 
+export default SingleProjectPage;

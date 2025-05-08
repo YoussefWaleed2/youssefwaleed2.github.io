@@ -1,0 +1,268 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+.single-project-page {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  opacity: 1; /* Ensure content is visible immediately */
+  transition: opacity 0.3s ease;
+  z-index: 10; /* Ensure content is above pin-spacer */
+}
+
+/* Horizontal scrolling container */
+.single-project-container {
+  position: relative;
+  display: flex;
+  height: 100vh;
+  transform: translateX(0); /* Start with no transform */
+  will-change: transform; /* Improve performance */
+  z-index: 20; /* Ensure container is visible */
+}
+
+.panel {
+  position: relative;
+  overflow: hidden;
+  min-width: 100vw;
+  width: 100vw;
+  height: 100%;
+  flex-shrink: 0;
+  opacity: 1; /* Ensure panels are visible */
+  z-index: 1; /* Base z-index for panels */
+}
+
+.panel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* First panel stays in place */
+.panel:first-child {
+  z-index: 1;
+}
+
+/* All panels have consistent styling */
+.panel {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+}
+
+/* Text panel (typically second panel) */
+.panel:nth-child(2) {
+  border-radius: 106px 0px 0px 106px;
+}
+
+/* Single panel image styling */
+.single-project-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.single-project-text-section {
+  position: relative;
+  background-color: #090909;
+  color: #fff;
+  padding: 2rem;
+}
+
+.text-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.main-text {
+  margin-bottom: 2rem;
+}
+
+.panel-main-title {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.panel-sub-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+}
+
+.paragraphs {
+  margin-bottom: 2rem;
+  max-width: 70%;
+}
+
+.panel-paragraph {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.bottom-info {
+  display: flex;
+  justify-content: space-between;
+  max-width: 40%;
+}
+
+.field-info, .services-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+
+.value {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.services-info .value {
+  font-size: 28px;
+  font-family: "Aboreto", sans-serif;
+}
+
+/* Hide scrollbars */
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Add styles for pin-spacer */
+.pin-spacer {
+  background: transparent !important;
+  z-index: -1 !important; /* Lower z-index to stay behind content */
+}
+
+/* Fix for GSAP-created pin-spacer div */
+div[style*="transform"] > .single-project-page {
+  z-index: 200;
+  position: relative !important;
+}
+
+/* Mobile styles */
+.mobile-single-project {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.mobile-project-content {
+  width: 100%;
+}
+
+.mobile-project-section {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.mobile-project-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.mobile-project-text {
+  padding: 2rem;
+  color: #fff;
+}
+
+.text-slogan {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.text-content-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.text-left-column {
+  margin-bottom: 1.5rem;
+}
+
+.field-name, .services {
+  margin-bottom: 1rem;
+}
+
+.text-right-column {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Scroll indicators */
+.scroll-indicators {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 300; /* Ensure indicators are above other content */
+}
+
+.scroll-indicator {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transition: background-color 0.3s ease;
+}
+
+.scroll-indicator.active {
+  background-color: #fff;
+}
+
+/* Scroll instructions */
+.scroll-instructions {
+  position: fixed;
+  bottom: 1rem;
+  right: 2rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  z-index: 300; /* Ensure instructions are above other content */
+}
+
+/* Force visibility of content regardless of ready state */
+.single-project-page.is-ready,
+.single-project-page:not(.is-ready) {
+  opacity: 1 !important;
+}
+
+/* Project loading state */
+.project-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: #000;
+  color: #fff;
+}

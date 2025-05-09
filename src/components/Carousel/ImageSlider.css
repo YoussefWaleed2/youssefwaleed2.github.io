@@ -18,6 +18,7 @@
   width: fit-content;
   height: 70px;
   align-items: center;
+  will-change: transform;
 }
 
 .slider-image {
@@ -34,6 +35,14 @@
   }
   100% {
     transform: translateX(-50%);
+  }
+}
+
+/* Fix for WebKit on iOS devices */
+@supports (-webkit-touch-callout: none) {
+  .image-slider {
+    animation-play-state: running !important;
+    -webkit-animation-play-state: running !important;
   }
 }
 
@@ -67,5 +76,115 @@
   .slider-image {
     height: 16px;
     margin: 0 10px;
+  }
+}
+
+/* Additional iOS-specific fixes */
+@media only screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3), 
+       only screen and (device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) {
+  @supports (-webkit-touch-callout: none) {
+    .image-slider-container {
+      position: fixed !important;
+      bottom: 0 !important;
+      height: 50px !important;
+      z-index: 999 !important;
+      width: 100% !important;
+      left: 0 !important;
+      right: 0 !important;
+    }
+    
+    .image-slider {
+      animation: slide 40s linear infinite !important;
+      -webkit-animation: slide 40s linear infinite !important;
+    }
+  }
+}
+
+/* Ultra-specific iPhone 15 Pro override */
+@media only screen and (device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) {
+  .image-slider-container {
+    position: fixed !important;
+    bottom: 0 !important;
+    top: auto !important;
+    height: 60px !important;
+    background-color: rgba(0, 0, 0, 0.95) !important;
+    z-index: 9999 !important;
+    width: 100vw !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+    will-change: transform !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    transform: translate3d(0, 0, 0) !important;
+    /* Force hardware acceleration */
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+  }
+  
+  body .image-slider-container,
+  html .image-slider-container,
+  #root .image-slider-container,
+  *[class*="container"] .image-slider-container {
+    position: fixed !important;
+    bottom: 0 !important;
+    top: auto !important;
+    transform: none !important;
+    -webkit-transform: none !important;
+  }
+  
+  .image-slider {
+    display: flex !important;
+    animation: slide 40s linear infinite !important;
+    -webkit-animation: slide 40s linear infinite !important;
+    animation-play-state: running !important;
+    -webkit-animation-play-state: running !important;
+    height: 60px !important;
+    align-items: center !important;
+  }
+  
+  .slider-image {
+    height: 20px !important;
+    filter: brightness(1) !important;
+    opacity: 1 !important;
+  }
+  
+  .slider-more-text {
+    opacity: 1 !important;
+    color: white !important;
+  }
+  
+  /* Handle height properly to include safe area */
+  html {
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+/* Hardware acceleration for animations on iOS */
+@supports (-webkit-touch-callout: none) {
+  .image-slider {
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  @-webkit-keyframes slide {
+    0% {
+      -webkit-transform: translateX(0);
+      transform: translateX(0);
+    }
+    100% {
+      -webkit-transform: translateX(-50%);
+      transform: translateX(-50%);
+    }
   }
 } 

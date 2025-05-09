@@ -21,7 +21,7 @@
     "@studio-freight/lenis": "^1.0.42",
     "dotenv": "^16.5.0",
     "framer-motion": "^11.11.17",
-    "gsap": "^3.12.7",
+    "gsap": "^3.13.0",
     "lenis": "^1.2.3",
     "lucide-react": "^0.483.0",
     "react": "^19.0.0",

@@ -46,8 +46,8 @@
 
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(4, 300px);
-  gap: 50px;
+  grid-template-columns: repeat(3, 350px);
+  gap: 90px;
   padding: 20px 0;
   position: relative;
   max-width: 1800px;
@@ -63,7 +63,7 @@
   animation-delay: var(--delay);
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 350px;
   height: auto; /* Change this from 600px to auto */
   margin-bottom: 20px; /* Add some controlled spacing between items */
 }
@@ -88,8 +88,8 @@
 }
 
 .project-video-container {
-  width: 300px;
-  height: 300px;
+  width: 350px;
+  height: 350px;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -113,8 +113,8 @@
 
 .project-video-container img,
 .project-video-container video {
-  width: 300px;
-  height: 300px;
+  width: 350px;
+  height: 350px;
   object-fit: cover;
   object-position: center;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -209,8 +209,19 @@
 /* Responsive grid layout for different screen sizes */
 @media (max-width: 1439px) {
   .project-grid {
-    grid-template-columns: repeat(3, 300px);
-    gap: 20px;
+    grid-template-columns: repeat(3, 320px);
+    gap: 40px;
+  }
+  
+  .project-item {
+    width: 320px;
+  }
+  
+  .project-video-container,
+  .project-video-container img,
+  .project-video-container video {
+    width: 320px;
+    height: 320px;
   }
 }
 

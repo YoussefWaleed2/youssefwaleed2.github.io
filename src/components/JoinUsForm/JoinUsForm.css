@@ -109,11 +109,13 @@ body.form-open {
 }
 
 .join-us-form h2 {
-  font-size: 1.25rem;
-  margin-bottom: 2em;
-  font-weight: 400;
+  text-align: center;
+  font-size: 2.5rem;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  font-weight: 300;
   letter-spacing: 0.05em;
-  font-family: "TT-Norms", sans-serif;
+  font-family: "Sprat", sans-serif;
 }
 
 .interest-section {
@@ -155,6 +157,12 @@ body.form-open {
   display: flex;
   gap: 3em;
   margin-bottom: 1em;
+}
+.join-us-form-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5em;
 }
 
 .form-group-joinus {
@@ -352,6 +360,9 @@ body.form-open {
   .join-us-form-header {
     padding-top: 1em;
   }
+  .join-us-form-header h2{
+    font-size: 2rem;
+  }
 
   .close-button {
     position: fixed;
@@ -369,13 +380,15 @@ body.form-open {
   }
 
   .phone-input-container {
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: row;
+    gap: 10px;
+    align-items: flex-end;
   }
 
   .country-code-select {
-    width: 100%;
-    min-width: 100%;
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
   }
 
   .phone-input {

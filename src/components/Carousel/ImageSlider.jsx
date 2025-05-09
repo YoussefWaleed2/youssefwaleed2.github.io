@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import './ImageSlider.css';
 
 const ImageSlider = ({ assets }) => {
@@ -76,12 +76,6 @@ const ImageSlider = ({ assets }) => {
         if (containerRef.current) {
           containerRef.current.style.position = 'fixed';
           containerRef.current.style.bottom = '0';
-          
-          // Ensure it's visible on any page
-          containerRef.current.style.zIndex = '9999';
-          containerRef.current.style.width = '100%';
-          containerRef.current.style.left = '0';
-          containerRef.current.style.right = '0';
         }
       };
       
@@ -130,8 +124,23 @@ const ImageSlider = ({ assets }) => {
     "more-text" // Special marker for the "AND MORE..." text
   ];
 
+  // Additional inline styles for iPhone 15
+  const containerStyle = isIPhone15 ? {
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    top: 'auto',
+    transform: 'none',
+    WebkitTransform: 'none',
+    height: '60px',
+    zIndex: 9999,
+    backgroundColor: 'rgba(0, 0, 0, 0.95)',
+    marginBottom: '50px'
+  } : {};
+
   return (
-    <div className="image-slider-container">
+    <div ref={containerRef} className="image-slider-container" style={containerStyle}>
       <div ref={sliderRef} className="image-slider">
         {/* First copy of sequence, starting with logos */}
         {sliderItems.map((item, index) => (

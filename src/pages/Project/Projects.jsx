@@ -22,7 +22,7 @@ const Projects = () => {
   const counterRef = useRef(null);
 
   // Define categories with memoization to avoid recreation on each render
-  const categories = useMemo(() => ["BRANDING", "MARKETING", "ADVERTISING"], []);
+  const categories = useMemo(() => ["BRANDING", "MARKETING", "ADVERTISEMENT"], []);
   
   // Client images for the slider
   const clientImages = [
@@ -30,14 +30,14 @@ const Projects = () => {
     "/project/Asset 3.webp",
     "/project/Asset 4.webp",
     "/project/Asset 5.webp",
-    "/project/Asset 6.webp",
     "/project/Asset 7.webp",
+    "/project/Asset 6.webp",
+    "/project/Asset 13.webp",
     "/project/Asset 8.webp",
-    "/project/Asset 9.webp",
-    "/project/Asset 10.webp",
-    "/project/Asset 11.webp",
     "/project/Asset 12.webp",
-    "/project/Asset 13.webp"
+    "/project/Asset 11.webp",
+    "/project/Asset 10.webp",
+    "/project/Asset 9.webp"
   ];
   
   useEffect(() => {
@@ -181,7 +181,12 @@ const Projects = () => {
   const handleCategoryClick = (category) => {
     if (!isAnimating) {
       // Format the category for the URL
-      let urlCategory = category.toLowerCase().replace(" ", "-");
+      let urlCategory = category.toLowerCase().replace(/ /g, "-");
+      
+      // Special case for advertising/advertisement
+      if (urlCategory === "advertising") {
+        urlCategory = "advertising";
+      }
       
       // Navigate to all-projects with current category
       navigate(`/all-projects/${urlCategory}`);
@@ -363,6 +368,9 @@ const Projects = () => {
       // Don't process if animation is already in progress
       if (isAnimating) return;
       
+      // Skip handling on mobile devices
+      if (isMobile) return;
+      
       // Determine scroll direction (positive = down, negative = up)
       const direction = e.deltaY > 0 ? 'next' : 'prev';
       
@@ -384,6 +392,9 @@ const Projects = () => {
     // Throttle function to prevent too many wheel events
     let timeout;
     const throttledWheel = (e) => {
+      // Skip handling on mobile devices
+      if (isMobile) return;
+      
       if (timeout) return;
       timeout = setTimeout(() => {
         handleWheel(e);
@@ -404,42 +415,85 @@ const Projects = () => {
       }
       clearTimeout(timeout);
     };
-  }, [currentIndex, isAnimating, categories.length]);
+  }, [currentIndex, isAnimating, categories.length, isMobile]);
 
   // Add touch swipe detection for mobile
   useEffect(() => {
     let touchStartY = 0;
     let touchEndY = 0;
-    const minSwipeDistance = 50;
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let touchStartTime = 0;
+    const minSwipeDistance = 50; // Minimum distance for swipe detection
+    const maxTapDuration = 300; // Maximum duration for a tap in milliseconds
+    let isTouchScrolling = false;
+    
+    // Prevent page scrolling
+    const preventPageScroll = (e) => {
+      // Allow scrolling only within .text-container
+      if (!e.target.closest('.text-container')) {
+        e.preventDefault();
+      }
+    };
+    
+    // Add event listeners to prevent page scrolling
+    document.addEventListener('touchmove', preventPageScroll, { passive: false });
     
     const handleTouchStart = (e) => {
       if (isAnimating) return;
+      // Record start position and time
       touchStartY = e.touches[0].clientY;
+      touchStartX = e.touches[0].clientX;
+      touchStartTime = Date.now();
+      isTouchScrolling = false;
     };
     
     const handleTouchMove = (e) => {
       if (isAnimating) return;
+      // Update end position
       touchEndY = e.touches[0].clientY;
+      touchEndX = e.touches[0].clientX;
+      
+      // Determine if this is a vertical scroll
+      const verticalDistance = Math.abs(touchEndY - touchStartY);
+      const horizontalDistance = Math.abs(touchEndX - touchStartX);
+      
+      // If vertical movement is significantly greater than horizontal, mark as scrolling
+      if (verticalDistance > horizontalDistance * 1.5 && verticalDistance > 10) {
+        isTouchScrolling = true;
+      }
     };
     
-    const handleTouchEnd = () => {
+    const handleTouchEnd = (e) => {
       if (isAnimating) return;
       
-      const swipeDistance = touchStartY - touchEndY;
+      const touchDuration = Date.now() - touchStartTime;
       
-      if (Math.abs(swipeDistance) > minSwipeDistance) {
-        if (swipeDistance > 0) {
-          // Swipe up - go to next
-          handleNext();
-        } else {
-          // Swipe down - go to previous
-          handlePrev();
+      // If this was a tap/click on a category element, handle it as a click
+      if (e.target.closest('.category-text') && !isTouchScrolling && touchDuration < maxTapDuration) {
+        // This will be handled by the onClick handler, so just return
+        return;
+      }
+      
+      // If we're scrolling the container, don't process as a swipe
+      if (isTouchScrolling) {
+        const swipeDistance = touchStartY - touchEndY;
+        
+        // Only process if it's a significant swipe gesture
+        if (Math.abs(swipeDistance) > minSwipeDistance) {
+          if (swipeDistance > 0) {
+            // Swipe up - go to next
+            handleNext();
+          } else {
+            // Swipe down - go to previous
+            handlePrev();
+          }
         }
       }
     };
     
     const textContainer = document.querySelector('.text-container');
-    if (textContainer) {
+    if (textContainer && isMobile) {
       textContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
       textContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
       textContainer.addEventListener('touchend', handleTouchEnd);
@@ -451,11 +505,12 @@ const Projects = () => {
         textContainer.removeEventListener('touchmove', handleTouchMove);
         textContainer.removeEventListener('touchend', handleTouchEnd);
       }
+      document.removeEventListener('touchmove', preventPageScroll);
     };
-  }, [isAnimating, handleNext, handlePrev]);
+  }, [isAnimating, isMobile, handleNext, handlePrev]);
 
   return (
-    <ReactLenis root>
+    <ReactLenis root options={{ smooth: false, gestureOrientation: 'vertical', syncTouch: true }}>
       <div className="project-container">
         <div className="project-content">
           <div className="project-navigation left-nav">

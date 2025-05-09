@@ -175,7 +175,7 @@ html, body {
   font-weight: 400;
   text-transform: none;
   font-size: 3rem;
-  margin: 0 0.5rem;
+  margin: 0 0.2rem;
   position: relative;
   z-index: 2;
   color: #ffffff;
@@ -440,26 +440,33 @@ html, body {
 }
 
 .member-title {
-  margin: 1.5rem auto 0.5rem auto;
+  margin: 1rem 0;
   text-align: center;
-  padding: 0;
-  width: 100%;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
 .member-title .heading-text {
   font-size: 1.8rem;
-  white-space: normal;
-  word-wrap: break-word;
-  word-break: break-word;
-  max-width: 100%;
-  padding: 0 10px;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  margin: 0.3rem 0;
+  font-weight: 500;
   text-align: center;
-  margin: 0 auto;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Role title styling */
+.member-title .heading-text.role-title {
+  font-size: 1.2rem;
+  letter-spacing: 0.05rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+  text-transform: uppercase;
 }
 
 .member-text {

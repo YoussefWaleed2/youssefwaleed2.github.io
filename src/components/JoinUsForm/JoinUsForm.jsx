@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import "./JoinUsForm.css";
 import { sendEmail } from '../../utils/email';
 import { generateJoinUsEmail } from '../../utils/emailTemplates';
-import { countryCodes } from '../../utils/countryCodes';
 import CountryCodeSelect from '../CountryCodeSelect/CountryCodeSelect';
 
 const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
@@ -14,8 +13,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
   const scrollContainerRef = useRef();
   const formRef = useRef();
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
+    fullName: "",
     email: "",
     phone: "",
     countryCode: "+971",
@@ -154,7 +152,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
     setPopup({ show: false, message: "", type: "" });
 
     // Validate all inputs before submission
-    for (const [ value] of Object.entries(form)) {
+    for (const [value] of Object.entries(form)) {
       if (typeof value === 'string' && !validateInput(value)) {
         setPopup({
           show: true,
@@ -210,8 +208,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
 
       // Prepare the form data for the template
       const sanitizedForm = {
-        firstName: sanitize(form.firstName),
-        lastName: sanitize(form.lastName),
+        fullName: sanitize(form.fullName),
         email: sanitize(form.email),
         phone: `${sanitize(form.countryCode)} ${sanitize(form.phone)}`, // Include country code
         jobTitle: sanitize(form.jobTitle),
@@ -248,8 +245,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
       
       // Reset the form
       setForm({
-        firstName: "",
-        lastName: "",
+        fullName: "",
         email: "",
         phone: "",
         countryCode: "+971", // Reset to default UAE code
@@ -398,78 +394,62 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
             
             <div className="join-us-form-inner" ref={scrollContainerRef}>
               <div className="join-us-form-header">
-                <h2>{selectedJob ? `JOIN AS ${selectedJob.toUpperCase()}` : "SEND EMAIL"}</h2>
+                <h2>{selectedJob ? `JOIN AS ${selectedJob.toUpperCase()}` : "JOIN US"}</h2>
               </div>
 
-              <form ref={formRef} onSubmit={handleSubmit}>
+              <form className="join-us-form-content" ref={formRef} onSubmit={handleSubmit}>
                 <div className="form-group-joinus">
-                  <label>JOB TITLE</label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={form.fullName}
+                    onChange={handleChange}
+                    placeholder="FULL NAME"
+                    required
+                  />
+                </div>
+
+                <div className="form-group-joinus">
+                  <input
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="EMAIL"
+                    required
+                  />
+                </div>
+
+                <div className="form-group-joinus">
+                  <div className="phone-input-container">
+                    <CountryCodeSelect 
+                      value={form.countryCode}
+                      onChange={handleChange}
+                    />
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      className="phone-input"
+                      placeholder="PHONE NUMBER"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group-joinus">
                   <input
                     type="text"
                     name="jobTitle"
                     value={form.jobTitle}
                     onChange={handleChange}
-                    placeholder="ENTER JOB TITLE"
+                    placeholder="JOB TITLE"
                     required
                   />
                 </div>
 
-                  <div className="form-group-joinus">
-                    <label>FIRST NAME</label>
-                    <input
-                      type="text"
-                      name="firstName"
-                      value={form.firstName}
-                      onChange={handleChange}
-                      placeholder="NAME"
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group-joinus">
-                    <label>LAST NAME</label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={form.lastName}
-                      onChange={handleChange}
-                      placeholder="NAME"
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group-joinus">
-                    <label>EMAIL</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      placeholder="EMAIL"
-                      required
-                    />
-                  </div>
-
-                  <div className="form-group-joinus">
-                    <label>PHONE NUMBER</label>
-                    <div className="phone-input-container">
-                      <CountryCodeSelect 
-                        value={form.countryCode}
-                        onChange={handleChange}
-                      />
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={form.phone}
-                        onChange={handleChange}
-                        className="phone-input"
-                        placeholder="PHONE NUMBER"
-                        required
-                      />
-                    </div>
-                  </div>
                 <div className="form-group-joinus">
-                  <label>CV / Portfolio</label>
                   <div 
                     className="file-input-label"
                     onClick={() => fileInputRef.current.click()}

@@ -243,12 +243,13 @@ body:has(.horizontal-scroll-wrapper) .img-logo {
     position: relative;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
     font-family: "Helvetica Neue", sans-serif;
+    height: auto;
 }
 
 .menu-link a {
     position: relative;
     display: inline-block;
-    transform: translateY(100%);
+    transform: translateY(120%); /* Match the reset value in JavaScript */
     will-change: transform;
     color: var(--copy);
     text-decoration: none;
@@ -258,11 +259,12 @@ body:has(.horizontal-scroll-wrapper) .img-logo {
 .menu-overlay h1 {
     text-transform: uppercase;
     font-weight: 100;
-    line-height: 0.85;
+    line-height: 1.2; /* Increase line height to give more room */
     color: var(--copy);
     margin: 0;
     font-family: "Helvetica Neue", sans-serif;
     letter-spacing: 0.05rem;
+    padding: 5px 0; /* Add padding above/below text */
 }
 
 /* Transform States */

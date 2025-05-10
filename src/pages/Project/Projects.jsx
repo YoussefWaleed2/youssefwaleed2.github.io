@@ -43,6 +43,9 @@ const Projects = () => {
   useEffect(() => {
     document.title = "Projects | VZBL";
     
+    // Add projects-page class to body
+    document.body.classList.add('projects-page');
+    
     // Check if device is mobile
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -57,6 +60,9 @@ const Projects = () => {
     // Cleanup
     return () => {
       window.removeEventListener('resize', checkMobile);
+      
+      // Remove projects-page class when component unmounts
+      document.body.classList.remove('projects-page');
     };
   }, []);
   

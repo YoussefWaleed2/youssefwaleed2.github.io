@@ -1,7 +1,26 @@
 @import url('../../fonts.css');
 
-body {
+/* Scope these styles to only affect the Projects page */
+body.projects-page {
   overflow: hidden;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  height: 100%;
+}
+
+/* Only apply fixed positioning when on the Projects page */
+body.projects-page html, 
+body.projects-page body, 
+body.projects-page #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: fixed; /* Lock the page in place */
+}
+
+/* Original styles that apply to all pages */
+body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -11,7 +30,6 @@ body {
 html, body, #root {
   height: 100%;
   width: 100%;
-  overflow: hidden;
 }
 
 .project-container {
@@ -750,10 +768,31 @@ html, body, #root {
 }
 
 @media (max-width: 768px) {
-  .project-container {
-    padding: 1rem;
-    min-height: 100vh;
+  body.projects-page .text-container {
+    overflow-y: auto !important; /* Allow vertical scrolling */
+    touch-action: pan-y !important; /* Enable touch scrolling vertically */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
     height: 100%;
-    justify-content: center;
+    padding: 10% 0; /* Add padding for better scrolling area */
+    overscroll-behavior: contain; /* Prevent scroll chaining */
+    max-height: 70vh; /* Limit height to prevent page scrolling */
+  }
+  
+  body.projects-page .category-text {
+    margin: 20px 0; /* Increase vertical spacing between items */
+    touch-action: manipulation; /* Improve touch behavior */
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+  }
+  
+  body.projects-page .project-content {
+    touch-action: pan-y !important; /* Allow only vertical touch actions */
+    overflow: hidden;
+  }
+  
+  /* ReactLenis specific adjustments */
+  body.projects-page .lenis.lenis-smooth {
+    -webkit-overflow-scrolling: auto !important;
+    scroll-behavior: auto !important;
+    overscroll-behavior: none;
   }
 }

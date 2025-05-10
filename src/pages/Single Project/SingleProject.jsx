@@ -6,6 +6,7 @@ import Transition from '../../components/Transition/Transition';
 import { handleOverlay } from "../../utils/overlayManager";
 import projectsData from "../../data/projectsData.json";
 import './SingleProject.css';
+import SingleProjectMobile from "./SingleProjectMobile";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -536,38 +537,7 @@ const SingleProject = () => {
 
   // Render mobile version for mobile/tablet devices
   if (isMobileOrTablet) {
-    return (
-      <div className="mobile-single-project">
-        <div className="mobile-project-content">
-          {project.projectContent && project.projectContent.sections.map((section, index) => (
-            <div key={index} className="mobile-project-section">
-              {section.type === 'media' && (
-                <img 
-                  src={section.media || section.imageName} 
-                  alt={section.alt || `Project section ${index + 1}`} 
-                  className="mobile-project-image"
-                />
-              )}
-              {section.type === 'text' && (
-                <div className="mobile-project-text" style={{ 
-                  backgroundColor: section.backgroundColor || 'rgba(30, 30, 30, 0.8)',
-                  color: section.textColor || '#FFFFFF'
-                }}>
-                  {section.slogan && <h2 className="text-slogan">{section.slogan}</h2>}
-                  <div className="text-content-wrapper">
-                    <div className="text-left-column">
-                      {section.fieldName && <div className="field-name">Field Name<br/>{section.fieldName}</div>}
-                      {section.services && <div className="services">SERVICE<br/>{section.services}</div>}
-                    </div>
-                    {section.text && <div className="text-right-column">{section.text}</div>}
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    return <SingleProjectMobile project={project} />;
   }
 
   // Main render for desktop
@@ -580,7 +550,7 @@ const SingleProject = () => {
         {project.projectContent && project.projectContent.sections.map((section, index) => (
           <div 
             key={index}
-            className="panel"
+            className={`panel${index === 0 ? ' first-panel' : ''}${index === 1 ? ' second-panel' : ''}`}
             style={{ backgroundColor: section.backgroundColor || '#000' }}
           >
             {section.type === 'media' && (
@@ -590,18 +560,30 @@ const SingleProject = () => {
                   alt={section.alt || `Project section ${index + 1}`} 
                   className="single-project-image"
                 />
-                {/* Scroll indicators within the image */}
-                <div className="scroll-indicators panel-indicators">
-                  {project.projectContent && project.projectContent.sections.map((_, i) => (
-                    <div 
-                      key={i} 
-                      className={`scroll-indicator ${currentSection === i ? 'active' : ''}`}
-                      onClick={() => {
-                        const sectionWidth = window.innerWidth;
-                        smoothScrollTo(i * sectionWidth);
-                      }}
-                    />
-                  ))}
+                {/* Custom navigation arrows on all panels */}
+                <div className="image-nav-arrows">
+                  <button
+                    className="image-nav-arrow"
+                    onClick={() => {
+                      const sectionWidth = window.innerWidth;
+                      smoothScrollTo((currentSection - 1) * sectionWidth);
+                    }}
+                    disabled={currentSection === 0}
+                    aria-label="Previous section"
+                  >
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" stroke="none" fill="none"/><polyline points="14 8 10 12 14 16"/></svg>
+                  </button>
+                  <button
+                    className="image-nav-arrow"
+                    onClick={() => {
+                      const sectionWidth = window.innerWidth;
+                      smoothScrollTo((currentSection + 1) * sectionWidth);
+                    }}
+                    disabled={currentSection === project.projectContent.sections.length - 1}
+                    aria-label="Next section"
+                  >
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" stroke="none" fill="none"/><polyline points="10 8 14 12 10 16"/></svg>
+                  </button>
                 </div>
               </div>
             )}
@@ -631,40 +613,36 @@ const SingleProject = () => {
                     </div>
                   )}
                 </div>
-                {/* Scroll indicators within the text content */}
-                <div className="scroll-indicators panel-indicators">
-                  {project.projectContent && project.projectContent.sections.map((_, i) => (
-                    <div 
-                      key={i} 
-                      className={`scroll-indicator ${currentSection === i ? 'active' : ''}`}
-                      onClick={() => {
-                        const sectionWidth = window.innerWidth;
-                        smoothScrollTo(i * sectionWidth);
-                      }}
-                    />
-                  ))}
+                {/* Custom navigation arrows on all panels */}
+                <div className="image-nav-arrows">
+                  <button
+                    className="image-nav-arrow"
+                    onClick={() => {
+                      const sectionWidth = window.innerWidth;
+                      smoothScrollTo((currentSection - 1) * sectionWidth);
+                    }}
+                    disabled={currentSection === 0}
+                    aria-label="Previous section"
+                  >
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" stroke="none" fill="none"/><polyline points="14 8 10 12 14 16"/></svg>
+                  </button>
+                  <button
+                    className="image-nav-arrow"
+                    onClick={() => {
+                      const sectionWidth = window.innerWidth;
+                      smoothScrollTo((currentSection + 1) * sectionWidth);
+                    }}
+                    disabled={currentSection === project.projectContent.sections.length - 1}
+                    aria-label="Next section"
+                  >
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" stroke="none" fill="none"/><polyline points="10 8 14 12 10 16"/></svg>
+                  </button>
                 </div>
               </div>
             )}
           </div>
         ))}
       </div>
-      
-      {/* Main scroll indicators at bottom of screen - kept for backward compatibility */}
-      <div className="scroll-indicators main-indicators">
-        {project.projectContent && project.projectContent.sections.map((_, index) => (
-          <div 
-            key={index} 
-            className={`scroll-indicator ${currentSection === index ? 'active' : ''}`}
-            onClick={() => {
-              const sectionWidth = window.innerWidth;
-              smoothScrollTo(index * sectionWidth);
-            }}
-          />
-        ))}
-      </div>
-      
-      {/* Removing navigation controls */}
       
       {/* Scroll instructions */}
       <div className="scroll-instructions">

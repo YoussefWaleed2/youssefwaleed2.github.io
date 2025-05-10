@@ -364,3 +364,89 @@ html {
     font-size: 0.8rem;
   }
 }
+
+.panel.second-panel {
+  border-radius: 106px 0 0 106px;
+  z-index: 30;
+  overflow: hidden;
+  position: relative;
+}
+
+.panel.first-panel {
+  z-index: 20;
+}
+
+/* Navigator inside second panel */
+.panel.second-panel .scroll-indicators.panel-indicators {
+  position: absolute;
+  left: 2rem;
+  bottom: 2rem;
+  top: auto;
+  right: auto;
+  flex-direction: row;
+  gap: 1rem;
+  z-index: 40;
+}
+
+.scroll-indicator {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #fff;
+  opacity: 0.5;
+  transition: opacity 0.3s, border-color 0.3s;
+  box-sizing: border-box;
+}
+
+.scroll-indicator.active {
+  opacity: 1;
+  border-color: #fff;
+  background: transparent;
+}
+
+.scroll-indicator:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.image-nav-arrows {
+  position: absolute;
+  left: 2rem;
+  bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  z-index: 50;
+}
+
+.image-nav-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  padding: 0;
+}
+
+.image-nav-arrow svg {
+  width: 18px;
+  height: 18px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.image-nav-arrow:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: #fff;
+}
+
+.image-nav-arrow:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

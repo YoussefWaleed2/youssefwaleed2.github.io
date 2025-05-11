@@ -185,55 +185,123 @@ const SingleProject = () => {
     };
   }, []);
 
-  // Smooth scroll to function - similar to About.jsx
+  // Update smoothScrollTo function to prevent scrolling past last panel
   const smoothScrollTo = (targetX) => {
-    if (!pageRef.current) return;
+    if (!pageRef.current || !project?.projectContent?.sections) return;
     
-    // Set target scroll position
-    targetScrollRef.current = targetX;
+    // Calculate max scroll position
+    const sectionWidth = window.innerWidth;
+    const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
     
-    // If animation is already running, just update the target
+    // Strictly enforce limits with Math.min/max
+    const boundedTarget = Math.min(Math.max(0, targetX), maxScroll);
+    targetScrollRef.current = boundedTarget;
+    
     if (isScrollingRef.current) return;
-    
-    // Set scrolling state
     isScrollingRef.current = true;
     
-    // Start smooth scroll animation
     const animateScroll = () => {
-      // Cancel any existing animation
-      if (scrollRafRef.current) {
-        cancelAnimationFrame(scrollRafRef.current);
-      }
-      
-      // Current scroll position
       currentScrollRef.current = pageRef.current.scrollLeft;
-      
-      // Calculate distance to target
       const distance = targetScrollRef.current - currentScrollRef.current;
       
-      // If we're close enough to target, snap to it and stop
+      // Immediately stop if we're at the end and trying to go further
+      if (currentScrollRef.current >= maxScroll && distance > 0) {
+        isScrollingRef.current = false;
+        pageRef.current.scrollLeft = maxScroll; // Force to max
+        return;
+      }
+      
+      // Immediately stop if we're at the beginning and trying to go back
+      if (currentScrollRef.current <= 0 && distance < 0) {
+        isScrollingRef.current = false;
+        pageRef.current.scrollLeft = 0; // Force to start
+        return;
+      }
+      
       if (Math.abs(distance) < 0.5) {
+        // Snap exactly to target
         pageRef.current.scrollLeft = targetScrollRef.current;
         isScrollingRef.current = false;
         return;
       }
       
-      // Ease toward target (increased for even faster scrolling)
-      const move = distance * 0.25; // Significantly increased for much faster movement
+      const move = distance * 0.18;
       
-      // Update scroll position
-      pageRef.current.scrollLeft += move;
+      // Apply bounded scroll position with extra checks
+      const newScrollLeft = currentScrollRef.current + move;
       
-      // Update section tracking
-      updateCurrentSection();
+      // Extra boundary protection
+      if (newScrollLeft < 0) {
+        pageRef.current.scrollLeft = 0;
+      } else if (newScrollLeft > maxScroll) {
+        pageRef.current.scrollLeft = maxScroll;
+      } else {
+        pageRef.current.scrollLeft = newScrollLeft;
+      }
       
-      // Continue animation
       scrollRafRef.current = requestAnimationFrame(animateScroll);
     };
     
-    // Start animation
     scrollRafRef.current = requestAnimationFrame(animateScroll);
   };
+
+  // About.jsx-style smooth scroll and overlay effect
+  useEffect(() => {
+    if (isMobileOrTablet || !project?.projectContent?.sections) return;
+    const sectionWidth = window.innerWidth;
+    const panels = document.querySelectorAll('.panel');
+    if (!panels.length) return;
+
+    // Set up absolute positioning for overlay effect
+    panels.forEach((panel, index) => {
+      panel.style.position = 'absolute';
+      panel.style.left = `${index * sectionWidth}px`;
+      panel.style.top = '0';
+      panel.style.width = `${sectionWidth}px`;
+      panel.style.zIndex = index + 10;
+      panel.style.transition = 'transform 0.2s ease-out';
+      panel.style.willChange = 'transform';
+    });
+
+    // Animation loop for overlay effect
+    const animateOverlay = () => {
+      // Get panels starting from third
+      const thirdAndBeyond = Array.from(panels).slice(2);
+      const scrollPastSecond = Math.max(0, currentScrollRef.current - sectionWidth + 200);
+      const moveAmount = -Math.min(scrollPastSecond * 0.7, sectionWidth * 0.7);
+      gsap.to(thirdAndBeyond, {
+        x: moveAmount,
+        duration: 0.15,
+        ease: 'power1.out',
+        overwrite: true
+      });
+      scrollRafRef.current = requestAnimationFrame(animateOverlay);
+    };
+    scrollRafRef.current = requestAnimationFrame(animateOverlay);
+
+    // Wheel event for smooth scroll
+    const handleWheel = (e) => {
+      if (!pageRef.current || !project?.projectContent?.sections) return;
+      
+      e.preventDefault();
+      const delta = e.deltaY || e.deltaX;
+      const sectionWidth = window.innerWidth;
+      const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
+      
+      // Get current position and enforce bounds
+      const currentPos = pageRef.current.scrollLeft;
+      const targetPos = Math.min(Math.max(0, currentPos + delta), maxScroll);
+      
+      smoothScrollTo(targetPos);
+    };
+    pageRef.current.addEventListener('wheel', handleWheel, { passive: false });
+
+    // Cleanup
+    return () => {
+      if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current);
+      if (pageRef.current) pageRef.current.removeEventListener('wheel', handleWheel);
+    };
+  }, [isMobileOrTablet, project]);
 
   // Add a function to update indicator styles
   const updateIndicatorStyles = () => {
@@ -279,6 +347,9 @@ const SingleProject = () => {
     const sectionCount = project.projectContent.sections.length;
     const totalWidth = sectionWidth * sectionCount;
     
+    // Set CSS variable for panel count
+    document.documentElement.style.setProperty('--panel-count', sectionCount);
+
     // Set container width
     containerRef.current.style.width = `${totalWidth}px`;
     
@@ -329,7 +400,7 @@ const SingleProject = () => {
     
     // Wheel event handler with significantly increased speed
     const handleWheel = (e) => {
-      if (!pageRef.current) return;
+      if (!pageRef.current || !project?.projectContent?.sections) return;
       
       e.preventDefault();
       
@@ -351,23 +422,22 @@ const SingleProject = () => {
     };
     
     const handleTouchMove = (e) => {
-      if (!pageRef.current) return;
+      if (!pageRef.current || !project?.projectContent?.sections) return;
       
       const touchX = e.touches[0].clientX;
       const deltaX = lastTouchX.current - touchX;
+      const sectionWidth = window.innerWidth;
+      const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
       
-      // Update scroll position directly with significantly increased multiplier
-      pageRef.current.scrollLeft += deltaX * 4.0; // 4x multiplier for much faster touch scrolling
+      // Update scroll position with bounds check
+      const newScrollLeft = Math.min(Math.max(0, pageRef.current.scrollLeft + deltaX * 4.0), maxScroll);
+      pageRef.current.scrollLeft = newScrollLeft;
       
-      // Update tracking variables
       lastTouchX.current = touchX;
       currentScrollRef.current = pageRef.current.scrollLeft;
       targetScrollRef.current = pageRef.current.scrollLeft;
       
-      // Update current section
       updateCurrentSection();
-      
-      // Prevent default to avoid browser scroll
       e.preventDefault();
     };
     
@@ -498,6 +568,36 @@ const SingleProject = () => {
       }
     });
     
+    // Add a direct scroll event listener to prevent scrolling past bounds
+    const enforceScrollBounds = () => {
+      if (!pageRef.current || !project?.projectContent?.sections) return;
+      
+      const sectionWidth = window.innerWidth;
+      const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
+      
+      // Simple direct correction if we go beyond limits
+      if (pageRef.current.scrollLeft > maxScroll) {
+        pageRef.current.scrollLeft = maxScroll;
+      }
+    };
+    
+    // Add both passive and non-passive listeners to ensure this always runs
+    pageRef.current.addEventListener('scroll', enforceScrollBounds, { passive: true });
+    pageRef.current.addEventListener('scroll', enforceScrollBounds, { passive: false });
+    
+    // Add keyboard navigation after touch events and scroll are set up
+    const handleKeyDown = (e) => {
+      // Handle left/right arrow keys
+      if (e.key === 'ArrowLeft' && currentSection > 0) {
+        smoothScrollTo((currentSection - 1) * sectionWidth);
+      } else if (e.key === 'ArrowRight' && currentSection < project.projectContent.sections.length - 1) {
+        smoothScrollTo((currentSection + 1) * sectionWidth);
+      }
+    };
+
+    // Add keyboard listener
+    window.addEventListener('keydown', handleKeyDown);
+    
     // Cleanup
     return () => {
       if (pageRef.current) {
@@ -514,10 +614,15 @@ const SingleProject = () => {
       });
       
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('keydown', handleKeyDown);
       
       if (scrollRafRef.current) {
         cancelAnimationFrame(scrollRafRef.current);
       }
+      
+      // Remove scroll event listeners
+      pageRef.current.removeEventListener('scroll', enforceScrollBounds, { passive: true });
+      pageRef.current.removeEventListener('scroll', enforceScrollBounds, { passive: false });
     };
   }, [project, isMobileOrTablet]);
 
@@ -550,7 +655,7 @@ const SingleProject = () => {
         {project.projectContent && project.projectContent.sections.map((section, index) => (
           <div 
             key={index}
-            className={`panel${index === 0 ? ' first-panel' : ''}${index === 1 ? ' second-panel' : ''}`}
+            className={`panel${index === 0 ? ' first-panel' : ''}${index === 1 ? ' second-panel' : ''}${index === 2 ? ' third-panel' : ''}`}
             style={{ backgroundColor: section.backgroundColor || '#000' }}
           >
             {section.type === 'media' && (
@@ -560,31 +665,6 @@ const SingleProject = () => {
                   alt={section.alt || `Project section ${index + 1}`} 
                   className="single-project-image"
                 />
-                {/* Custom navigation arrows on all panels */}
-                <div className="image-nav-arrows">
-                  <button
-                    className="image-nav-arrow"
-                    onClick={() => {
-                      const sectionWidth = window.innerWidth;
-                      smoothScrollTo((currentSection - 1) * sectionWidth);
-                    }}
-                    disabled={currentSection === 0}
-                    aria-label="Previous section"
-                  >
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" stroke="none" fill="none"/><polyline points="14 8 10 12 14 16"/></svg>
-                  </button>
-                  <button
-                    className="image-nav-arrow"
-                    onClick={() => {
-                      const sectionWidth = window.innerWidth;
-                      smoothScrollTo((currentSection + 1) * sectionWidth);
-                    }}
-                    disabled={currentSection === project.projectContent.sections.length - 1}
-                    aria-label="Next section"
-                  >
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" stroke="none" fill="none"/><polyline points="10 8 14 12 10 16"/></svg>
-                  </button>
-                </div>
               </div>
             )}
             {section.type === 'text' && (
@@ -612,31 +692,6 @@ const SingleProject = () => {
                       <span className="value">{section.services}</span>
                     </div>
                   )}
-                </div>
-                {/* Custom navigation arrows on all panels */}
-                <div className="image-nav-arrows">
-                  <button
-                    className="image-nav-arrow"
-                    onClick={() => {
-                      const sectionWidth = window.innerWidth;
-                      smoothScrollTo((currentSection - 1) * sectionWidth);
-                    }}
-                    disabled={currentSection === 0}
-                    aria-label="Previous section"
-                  >
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" stroke="none" fill="none"/><polyline points="14 8 10 12 14 16"/></svg>
-                  </button>
-                  <button
-                    className="image-nav-arrow"
-                    onClick={() => {
-                      const sectionWidth = window.innerWidth;
-                      smoothScrollTo((currentSection + 1) * sectionWidth);
-                    }}
-                    disabled={currentSection === project.projectContent.sections.length - 1}
-                    aria-label="Next section"
-                  >
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" stroke="none" fill="none"/><polyline points="10 8 14 12 10 16"/></svg>
-                  </button>
                 </div>
               </div>
             )}

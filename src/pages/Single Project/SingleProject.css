@@ -417,6 +417,7 @@ html {
   display: flex;
   gap: 1rem;
   z-index: 50;
+  pointer-events: auto;
 }
 
 .image-nav-arrow {
@@ -431,6 +432,7 @@ html {
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
   padding: 0;
+  pointer-events: auto;
 }
 
 .image-nav-arrow svg {
@@ -449,4 +451,106 @@ html {
 .image-nav-arrow:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+  pointer-events: none;
+}
+
+body:has(.single-project-page) .navbar {
+  mix-blend-mode: difference !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.panel.third-panel {
+  z-index: 40;
+  overflow: visible;
+  position: relative;
+}
+
+.panel.third-panel .single-project-image {
+  border-radius: 106px 0px 0px 106px !important;
+  overflow: hidden;
+  position: relative;
+  z-index: 41;
+}
+
+.panel.third-panel .image-container {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Remove navigation arrows since they're now removed */
+.image-nav-arrows {
+  display: none;
+}
+
+/* Remove border-radius from the container */
+.panel:nth-child(3) {
+  border-radius: 0 !important;
+}
+
+/* Remove border-radius for later panels */
+.panel:nth-child(n+4) .single-project-image {
+  border-radius: 0 !important;
+}
+
+.panel:nth-child(n+4) .image-container {
+  border-radius: 0 !important;
+}
+
+/* Reset all border radius for third panel */
+.panel.third-panel,
+.panel:nth-child(3) {
+  z-index: 40 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+
+/* Apply border radius to the image itself */
+.panel:nth-child(3) img,
+.panel.third-panel img,
+.panel.third-panel .single-project-image {
+  border-radius: 106px 0 0 106px !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+/* Additional container styles */
+.panel:nth-child(3) .image-container,
+.panel.third-panel .image-container {
+  overflow: hidden !important;
+  border-radius: 106px 0 0 106px !important;
+  position: relative !important;
+  z-index: 41 !important;
+}
+
+/* Set panel 2 z-index lower than panel 3 for proper overlay */
+.panel:nth-child(2),
+.panel.second-panel {
+  z-index: 30 !important;
+  position: relative !important;
+}
+
+/* Force all other panels to have no border radius */
+.panel:nth-child(n+4),
+.panel:nth-child(n+4) .image-container,
+.panel:nth-child(n+4) img,
+.panel:nth-child(n+4) .single-project-image {
+  border-radius: 0 !important;
+}
+
+/* Ensure navigation buttons are easily clickable */
+.image-nav-arrows {
+  position: absolute !important;
+  left: 2rem !important;
+  bottom: 2rem !important;
+  display: flex !important;
+  gap: 1rem !important;
+  z-index: 999 !important; 
+  pointer-events: auto !important;
+}
+
+.image-nav-arrow {
+  pointer-events: auto !important;
+  cursor: pointer !important;
 }

@@ -14,12 +14,12 @@ const SingleProjectMobile = ({ project }) => {
     <div className="mobile-single-project">
       <div className="mobile-project-content">
         {/* Project Title/Header */}
-        <div className="mobile-project-header" style={{ padding: "2rem 1rem 1rem 1rem", background: "#111", color: "#fff" }}>
+        <div className="mobile-project-header" style={{ padding: "3.5rem 1rem 1rem 1rem", background: "#111", color: "#fff", marginTop: "1rem" }}>
           <h1 style={{ fontFamily: "Aboreto, serif", fontSize: "2.2rem", marginBottom: "0.5rem" }}>
             {project.title}
           </h1>
           <div style={{ fontSize: "1rem", opacity: 0.7, marginBottom: "0.5rem" }}>
-            {project.projectContent?.sections?.[0]?.fieldName || "Project Type"}
+           
           </div>
           <div style={{ fontSize: "1.1rem", fontWeight: 400 }}>
             {project.projectContent?.sections?.[0]?.services || ""}

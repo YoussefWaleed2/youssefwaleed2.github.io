@@ -9,11 +9,44 @@ import { CustomEase } from "gsap/CustomEase";
 import { handleOverlay } from "../../utils/overlayManager";
 import projectsData from "../../data/projectsData.json";
 
+// Force mobile scrolling to work
+if (typeof window !== 'undefined') {
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+  
+  if (isMobile) {
+    // Apply these styles immediately
+    document.documentElement.style.overflowY = 'auto';
+    document.documentElement.style.height = 'auto';
+    document.body.style.overflowY = 'auto';
+    document.body.style.height = 'auto';
+    document.body.style.touchAction = 'auto';
+    
+    // Remove any scroll blockers
+    const existingStyle = document.getElementById('scroll-fix');
+    if (!existingStyle) {
+      const style = document.createElement('style');
+      style.id = 'scroll-fix';
+      style.innerHTML = `
+        html, body { 
+          overflow-y: auto !important; 
+          height: auto !important;
+          position: static !important;
+          touch-action: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+        }
+        .ReactLenis { overflow: visible !important; }
+      `;
+      document.head.appendChild(style);
+    }
+  }
+}
+
 const AllProjects = () => {
   const { category } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);
   const videoRef = useRef(null);
   const titleRef = useRef(null);
@@ -21,6 +54,30 @@ const AllProjects = () => {
 
   // Debug log to check routing
   console.log("All-Projects loaded with category:", category, "from path:", location.pathname);
+  
+  // Check if mobile on component mount
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+      setIsMobile(mobile);
+      
+      if (mobile) {
+        // Force scroll to top when component mounts on mobile
+        window.scrollTo(0, 0);
+        
+        // Add mobile class to body
+        document.body.classList.add('mobile-view-active');
+      }
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      document.body.classList.remove('mobile-view-active');
+    };
+  }, []);
 
   // Handle overlay on mount and unmount
   useEffect(() => {
@@ -93,80 +150,87 @@ const AllProjects = () => {
     const projectsByCategory = getProjectsByCategory();
     setProjects(projectsByCategory);
     
-    // Start animations
-    const customEase = CustomEase.create("custom", ".87,0,.13,1");
-
-    // Set initial states
-    gsap.set([".all-projects-container", "footer"], {
-      opacity: 0
-    });
-
-    gsap.set(".all-projects-container", {
-      clipPath: "polygon(0% 0%, 0% 0%, 0% 0%, 0% 0%)",
-      scale: 0,
-      rotation: 25,
-    });
-
-    // Animate the video background
-    if (videoRef.current) {
-      gsap.to(videoRef.current, {
-        filter: "blur(150px)",
-        duration: 1,
-        ease: "power2.inOut"
+    // Different animations based on device type
+    if (isMobile) {
+      // No animations on mobile
+      gsap.set(".all-projects-container", { opacity: 1 });
+      gsap.set(".category-title .char", { opacity: 1, y: 0 });
+      gsap.set("footer", { opacity: 1 });
+    } else {
+      // Start animations for desktop
+      const customEase = CustomEase.create("custom", ".87,0,.13,1");
+  
+      // Set initial states
+      gsap.set([".all-projects-container", "footer"], {
+        opacity: 0
       });
-    }
-
-    // Create entrance animation sequence
-    const tl = gsap.timeline();
-
-    // First clip-path animation
-    tl.to(".all-projects-container", {
-      clipPath: "polygon(0% 45%, 25% 45%, 25% 55%, 0% 55%)",
-      duration: 0,
-      ease: customEase,
-    })
-    // Second clip-path animation
-    .to(".all-projects-container", {
-      clipPath: "polygon(0% 45%, 100% 45%, 100% 55%, 0% 55%)",
-      duration: 0,
-      ease: customEase
-    })
-    // Final reveal animation
-    .to(".all-projects-container", {
-      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-      scale: 1,
-      rotation: 0,
-      opacity: 1,
-      duration: 1.5,
-      ease: customEase,
-      onStart: () => {
-        // Animate title characters
-        gsap.to(".category-title .char", {
-          y: 0,
-          opacity: 1,
-          duration: 1.8,
-          stagger: 0.05,
-          delay: 0.5,
-          ease: customEase,
+  
+      gsap.set(".all-projects-container", {
+        clipPath: "polygon(0% 0%, 0% 0%, 0% 0%, 0% 0%)",
+        scale: 0,
+        rotation: 25,
+      });
+  
+      // Animate the video background
+      if (videoRef.current) {
+        gsap.to(videoRef.current, {
+          filter: "blur(150px)",
+          duration: 1,
+          ease: "power2.inOut"
         });
-      },onComplete: () =>{
-        gsap.to("footer", {
-          opacity: 1,
-          duration: 0.5,
-          ease: "power2.out"
-        })
       }
-    })
-    // Animate project items
-    .from(".project-grid .project-item", {
-      y: 50,
-      opacity: 0,
-      stagger: 0.1,
-      duration: 0.8,
-      ease: "power3.out"
-    }, "-=0.5")
-
-  }, [category, location.pathname]);
+  
+      // Create entrance animation sequence
+      const tl = gsap.timeline();
+  
+      // First clip-path animation
+      tl.to(".all-projects-container", {
+        clipPath: "polygon(0% 45%, 25% 45%, 25% 55%, 0% 55%)",
+        duration: 0,
+        ease: customEase,
+      })
+      // Second clip-path animation
+      .to(".all-projects-container", {
+        clipPath: "polygon(0% 45%, 100% 45%, 100% 55%, 0% 55%)",
+        duration: 0,
+        ease: customEase
+      })
+      // Final reveal animation
+      .to(".all-projects-container", {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        scale: 1,
+        rotation: 0,
+        opacity: 1,
+        duration: 1.5,
+        ease: customEase,
+        onStart: () => {
+          // Animate title characters
+          gsap.to(".category-title .char", {
+            y: 0,
+            opacity: 1,
+            duration: 1.8,
+            stagger: 0.05,
+            delay: 0.5,
+            ease: customEase,
+          });
+        },onComplete: () =>{
+          gsap.to("footer", {
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out"
+          })
+        }
+      })
+      // Animate project items
+      .from(".project-grid .project-item", {
+        y: 50,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 0.8,
+        ease: "power3.out"
+      }, "-=0.5")
+    }
+  }, [category, location.pathname, isMobile]);
 
   // Split title into characters for animation
   const renderTitle = (title) => {
@@ -245,42 +309,74 @@ const AllProjects = () => {
 
   return (
     <>
-      <ReactLenis root>
-        <div className="all-projects-container" ref={containerRef}>
-          <h1 className="category-title" ref={titleRef}>
-            {renderTitle(category ? category.replace("-", " ").toUpperCase() : "ALL")}
-          </h1>
-          
-          <div className="project-grid">
-            {projects.map((project, index) => (
-              <div 
-                className="project-item" 
-                key={index}
-                style={{
-                  '--delay': `${index * 0.1}s`
-                }}
-                onClick={() => handleProjectClick(project)}
-              >
+      {isMobile ? (
+        <div className="mobile-projects-view">
+          <div className="mobile-projects-content">
+            <h1 className="mobile-category-title">
+              {category ? category.replace("-", " ").toUpperCase() : "ALL PROJECTS"}
+            </h1>
+            
+            <div className="mobile-projects-grid">
+              {projects.map((project, index) => (
                 <div 
-                  className="project-video-container"
-                  onMouseEnter={() => handleVideoHover(index, true)}
-                  onMouseLeave={() => handleVideoHover(index, false)}
+                  key={index}
+                  className="mobile-project-item"
+                  onClick={() => handleProjectClick(project)}
                 >
-                  {renderMedia(project, index)}
-                </div>
-                <div className="project-info">
-                  <div className="project-number">
-                    {(index + 1).toString().padStart(2, '0')}.
+                  <div className="mobile-media-container">
+                    {project.mediaType === 'video' ? (
+                      <img src={project.thumbnail} alt={project.title} />
+                    ) : (
+                      <img src={project.media} alt={project.title} />
+                    )}
                   </div>
-                  <h3>{project.title.toUpperCase()}</h3>
-                  {project.description && <p>{project.description}</p>}
+                  <div className="mobile-project-info">
+                    <div className="mobile-project-number">{(index + 1).toString().padStart(2, '0')}.</div>
+                    <h3>{project.title.toUpperCase()}</h3>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+          <Footer />
         </div>
-        <Footer />
-      </ReactLenis>
+      ) : (
+        <ReactLenis root>
+          <div className="all-projects-container" ref={containerRef}>
+            <h1 className="category-title" ref={titleRef}>
+              {renderTitle(category ? category.replace("-", " ").toUpperCase() : "ALL")}
+            </h1>
+            <div className="project-grid">
+              {projects.map((project, index) => (
+                <div 
+                  className="project-item"
+                  key={index}
+                  style={{
+                    '--delay': `${index * 0.1}s`
+                  }}
+                  onClick={() => handleProjectClick(project)}
+                >
+                  <div 
+                    className="project-video-container"
+                    onMouseEnter={() => handleVideoHover(index, true)}
+                    onMouseLeave={() => handleVideoHover(index, false)}
+                  >
+                    {renderMedia(project, index)}
+                  </div>
+                  <div className="project-info">
+                    <div className="project-number">
+                      {(index + 1).toString().padStart(2, '0')}.
+                    </div>
+                    <h3>{project.title.toUpperCase()}</h3>
+                    {project.description && <p>{project.description}</p>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <Footer />
+        </ReactLenis>
+      )}
     </>
   );
 };

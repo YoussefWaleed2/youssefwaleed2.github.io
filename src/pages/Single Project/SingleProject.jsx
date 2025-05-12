@@ -45,6 +45,9 @@ const SingleProject = () => {
   const lastTouchX = useRef(0);
   const touchStartX = useRef(0);
   
+  // Store indicator click handlers to properly remove them
+  const indicatorHandlersRef = useRef([]);
+  
   // Debug log to check routing
   console.log("SingleProject loaded with category:", category, "projectName:", projectName, "from path:", location.pathname);
 
@@ -490,7 +493,9 @@ const SingleProject = () => {
     // Add event listeners to scroll indicators
     const indicators = document.querySelectorAll('.scroll-indicator');
     indicators.forEach((indicator, index) => {
-      indicator.addEventListener('click', () => handleIndicatorClick(index));
+      const handler = () => handleIndicatorClick(index);
+      indicator.addEventListener('click', handler);
+      indicatorHandlersRef.current.push(handler);
     });
     
     // Add event listeners
@@ -606,12 +611,22 @@ const SingleProject = () => {
         pageRef.current.removeEventListener('touchstart', handleTouchStart);
         pageRef.current.removeEventListener('touchmove', handleTouchMove);
         pageRef.current.removeEventListener('touchend', handleTouchEnd);
+        
+        // Remove scroll event listeners
+        pageRef.current.removeEventListener('scroll', enforceScrollBounds, { passive: true });
+        pageRef.current.removeEventListener('scroll', enforceScrollBounds, { passive: false });
       }
       
       // Remove indicator click listeners
+      const indicators = document.querySelectorAll('.scroll-indicator');
       indicators.forEach((indicator, index) => {
-        indicator.removeEventListener('click', () => handleIndicatorClick(index));
+        if (indicator && indicatorHandlersRef.current[index]) {
+          indicator.removeEventListener('click', indicatorHandlersRef.current[index]);
+        }
       });
+      
+      // Clear the handlers array
+      indicatorHandlersRef.current = [];
       
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('keydown', handleKeyDown);
@@ -619,10 +634,6 @@ const SingleProject = () => {
       if (scrollRafRef.current) {
         cancelAnimationFrame(scrollRafRef.current);
       }
-      
-      // Remove scroll event listeners
-      pageRef.current.removeEventListener('scroll', enforceScrollBounds, { passive: true });
-      pageRef.current.removeEventListener('scroll', enforceScrollBounds, { passive: false });
     };
   }, [project, isMobileOrTablet]);
 
@@ -652,7 +663,7 @@ const SingleProject = () => {
       className={`single-project-page ${isReady ? 'is-ready' : ''}`}
     >
       <div ref={containerRef} className="single-project-container">
-        {project.projectContent && project.projectContent.sections.map((section, index) => (
+        {project.projectContent && project.projectContent.sections && project.projectContent.sections.map((section, index) => (
           <div 
             key={index}
             className={`panel${index === 0 ? ' first-panel' : ''}${index === 1 ? ' second-panel' : ''}${index === 2 ? ' third-panel' : ''}`}

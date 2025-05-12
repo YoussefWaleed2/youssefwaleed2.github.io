@@ -79,7 +79,30 @@ const SingleProject = () => {
   // Check if mobile on mount and window resize
   useEffect(() => {
     const handleResize = debounce(() => {
-      setIsMobileOrTablet(detectMobileOrTablet());
+      const wasMobile = isMobileOrTablet;
+      const isMobileNow = detectMobileOrTablet();
+      
+      if (wasMobile !== isMobileNow) {
+        // View type is changing (mobile to desktop or desktop to mobile)
+        setIsMobileOrTablet(isMobileNow);
+        
+        // Reset state for clean transition
+        if (!isMobileNow && project) {
+          // We're switching from mobile to desktop
+          setTimeout(() => {
+            if (pageRef.current) {
+              pageRef.current.scrollLeft = 0;
+              setCurrentSection(0);
+            }
+            // Force re-render with a state update
+            setIsReady(false);
+            setTimeout(() => setIsReady(true), 50);
+          }, 100);
+        }
+      } else {
+        // Just a regular resize, update state
+        setIsMobileOrTablet(isMobileNow);
+      }
     }, 300);
     
     handleResize();
@@ -88,7 +111,7 @@ const SingleProject = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [isMobileOrTablet, project]);
 
   // Set page title
   useEffect(() => {
@@ -524,10 +547,16 @@ const SingleProject = () => {
     // Handle resize
     const handleResize = debounce(() => {
       // Check if device is now mobile
-      if (detectMobileOrTablet()) {
-        window.location.reload();
-        return;
+      const isMobileNow = detectMobileOrTablet();
+      
+      // If changing between desktop and mobile view, handle the transition
+      if (isMobileNow !== isMobileOrTablet) {
+        setIsMobileOrTablet(isMobileNow);
+        return; // Let the component re-render with new state
       }
+      
+      // Only continue if we're in desktop view
+      if (isMobileOrTablet) return;
       
       // Recalculate dimensions
       const newWidth = window.innerWidth;

@@ -211,7 +211,7 @@ const SingleProject = () => {
     };
   }, []);
 
-  // Update smoothScrollTo function to prevent scrolling past last panel
+  // Update smoothScrollTo function to match About.jsx's smoother scrolling
   const smoothScrollTo = (targetX) => {
     if (!pageRef.current || !project?.projectContent?.sections) return;
     
@@ -223,35 +223,29 @@ const SingleProject = () => {
     const boundedTarget = Math.min(Math.max(0, targetX), maxScroll);
     targetScrollRef.current = boundedTarget;
     
+    // If animation is already running, just update the target
     if (isScrollingRef.current) return;
+    
+    // Set scrolling state
     isScrollingRef.current = true;
     
+    // Start smooth scroll animation - using smaller easing factor for smoother motion
     const animateScroll = () => {
+      // Current scroll position
       currentScrollRef.current = pageRef.current.scrollLeft;
+      
+      // Calculate distance to target
       const distance = targetScrollRef.current - currentScrollRef.current;
       
-      // Immediately stop if we're at the end and trying to go further
-      if (currentScrollRef.current >= maxScroll && distance > 0) {
-        isScrollingRef.current = false;
-        pageRef.current.scrollLeft = maxScroll; // Force to max
-        return;
-      }
-      
-      // Immediately stop if we're at the beginning and trying to go back
-      if (currentScrollRef.current <= 0 && distance < 0) {
-        isScrollingRef.current = false;
-        pageRef.current.scrollLeft = 0; // Force to start
-        return;
-      }
-      
+      // If we're close enough to target, snap to it and stop
       if (Math.abs(distance) < 0.5) {
-        // Snap exactly to target
         pageRef.current.scrollLeft = targetScrollRef.current;
         isScrollingRef.current = false;
         return;
       }
       
-      const move = distance * 0.18;
+      // Ease toward target (reduced for smoother scrolling)
+      const move = distance * 0.04; // Reduced easing factor for smoother movement (same as About.jsx)
       
       // Apply bounded scroll position with extra checks
       const newScrollLeft = currentScrollRef.current + move;
@@ -265,9 +259,11 @@ const SingleProject = () => {
         pageRef.current.scrollLeft = newScrollLeft;
       }
       
+      // Continue animation
       scrollRafRef.current = requestAnimationFrame(animateScroll);
     };
     
+    // Start animation
     scrollRafRef.current = requestAnimationFrame(animateScroll);
   };
 
@@ -289,35 +285,136 @@ const SingleProject = () => {
       panel.style.willChange = 'transform';
     });
 
-    // Animation loop for overlay effect
+    // Animation loop for overlay effect with ultra-smooth transitions
     const animateOverlay = () => {
-      // Get panels starting from third
+      // Update current scroll position for precise animations
+      currentScrollRef.current = pageRef.current?.scrollLeft || 0;
+      
+      // Get panels for animation
       const thirdAndBeyond = Array.from(panels).slice(2);
-      const scrollPastSecond = Math.max(0, currentScrollRef.current - sectionWidth + 200);
-      const moveAmount = -Math.min(scrollPastSecond * 0.7, sectionWidth * 0.7);
+      const secondPanel = Array.from(panels)[1];
+      
+      // Calculate how far we've scrolled as a percentage of section width
+      // Use a wider transition window for smoother feel
+      const scrollProgress = Math.min(1, currentScrollRef.current / (sectionWidth * 0.95));
+      
+      // Apply multiple easing curves for more natural movement
+      // This combines an initial acceleration, main movement, and final deceleration
+      
+      // Start with slow acceleration (ease-in)
+      const easeInCubic = scrollProgress * scrollProgress * scrollProgress;
+      
+      // Then use custom sinusoidal easing for main movement
+      // This creates a fluid, wave-like motion that feels natural
+      const easeInOutSine = -(Math.cos(Math.PI * scrollProgress) - 1) / 2;
+      
+      // Combine ease curves for final effect (more weight to sine curve)
+      const combinedEase = easeInCubic * 0.3 + easeInOutSine * 0.7;
+      
+      // Move the second panel (text panel) with the custom easing
+      if (secondPanel) {
+        // Apply movement with higher max displacement for more dramatic effect
+        const secondPanelMoveAmount = -Math.min(combinedEase * sectionWidth * 0.5, sectionWidth * 0.5);
+        
+        gsap.to(secondPanel, {
+          x: secondPanelMoveAmount,
+          duration: 0.2, // Longer duration for smoother feel
+          ease: "sine.out", // Use sine easing for most natural transition
+          overwrite: true
+        });
+      }
+      
+      // Move third panel and beyond with stronger effect
+      // Use more aggressive displacement for dramatic visual
+      const thirdPanelMoveAmount = -Math.min(combinedEase * sectionWidth * 0.95, sectionWidth * 0.95);
+      
       gsap.to(thirdAndBeyond, {
-        x: moveAmount,
-        duration: 0.15,
-        ease: 'power1.out',
+        x: thirdPanelMoveAmount,
+        duration: 0.2, // Match duration for consistent movement
+        ease: "sine.out",
         overwrite: true
       });
+      
+      // Continue animation loop
       scrollRafRef.current = requestAnimationFrame(animateOverlay);
     };
     scrollRafRef.current = requestAnimationFrame(animateOverlay);
 
-    // Wheel event for smooth scroll
+    // Wheel event handler with enhanced momentum for smooth scrolling
     const handleWheel = (e) => {
       if (!pageRef.current || !project?.projectContent?.sections) return;
       
       e.preventDefault();
-      const delta = e.deltaY || e.deltaX;
+      
+      // Get current scroll position and timestamp for velocity tracking
+      currentScrollRef.current = pageRef.current.scrollLeft;
+      const now = Date.now();
+      
+      // Create or update wheel tracking for momentum calculation
+      if (!window.wheelTracking) {
+        window.wheelTracking = {
+          lastEvent: now,
+          lastDelta: 0,
+          momentum: 0
+        };
+      }
+      
+      // Adapt scaling based on deltaMode for consistent behavior
+      let deltaPixels;
+      if (e.deltaMode === 1) { // Line mode
+        deltaPixels = e.deltaY * 25; // Approximate line height
+      } else if (e.deltaMode === 2) { // Page mode
+        deltaPixels = e.deltaY * window.innerHeight * 0.5;
+      } else { // Pixel mode (most common)
+        deltaPixels = e.deltaY * 1.8; // Slightly reduced sensitivity for smoother control
+      }
+      
+      // Calculate time since last wheel event to detect continuous scrolling
+      const timeDelta = now - window.wheelTracking.lastEvent;
+      const isContinuousScroll = timeDelta < 150; // Less than 150ms between events
+      
+      // Apply acceleration based on continuous scrolling
+      let finalDelta;
+      
+      if (isContinuousScroll) {
+        // For continuous movements, gradually build momentum
+        // Direction changes should have immediate effect though
+        const sameDirection = Math.sign(deltaPixels) === Math.sign(window.wheelTracking.lastDelta);
+        
+        if (sameDirection) {
+          // Continuous scroll in same direction - build momentum gradually
+          // Limit maximum momentum gain for predictable behavior
+          const momentumGain = Math.min(
+            Math.abs(deltaPixels), 
+            Math.abs(window.wheelTracking.momentum) * 0.3
+          );
+          
+          // Update momentum with new input (smooth acceleration)
+          window.wheelTracking.momentum = 
+            window.wheelTracking.momentum * 0.8 + // Keep 80% of existing momentum
+            Math.sign(deltaPixels) * momentumGain; // Add new momentum
+        } else {
+          // Direction change - respond quickly but with controlled initial speed
+          window.wheelTracking.momentum = deltaPixels * 0.7;
+        }
+      } else {
+        // New scroll event after pause - start with modest momentum
+        window.wheelTracking.momentum = deltaPixels * 0.5;
+      }
+      
+      // Apply the momentum with a multiplier for desired speed
+      finalDelta = window.wheelTracking.momentum * 1.1;
+      
+      // Update tracking values for next event
+      window.wheelTracking.lastEvent = now;
+      window.wheelTracking.lastDelta = deltaPixels;
+      
+      // Calculate target position with bounds checking
       const sectionWidth = window.innerWidth;
       const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
+      const targetPos = Math.min(Math.max(0, currentScrollRef.current + finalDelta), maxScroll);
       
-      // Get current position and enforce bounds
-      const currentPos = pageRef.current.scrollLeft;
-      const targetPos = Math.min(Math.max(0, currentPos + delta), maxScroll);
-      
+      // Apply the smooth scrolling
       smoothScrollTo(targetPos);
     };
     pageRef.current.addEventListener('wheel', handleWheel, { passive: false });
@@ -392,12 +489,24 @@ const SingleProject = () => {
           section.style.position = 'absolute';
           section.style.left = `${index * sectionWidth}px`;
           section.style.top = '0';
-          section.style.zIndex = index + 10;
+          
+          // Set z-index to create proper layering
+          // First panel at the back, second panel in the middle, third+ panels on top
+          if (index === 0) {
+            section.style.zIndex = 10; // First panel (background)
+          } else if (index === 1) {
+            section.style.zIndex = 20; // Second panel (text)
+          } else {
+            section.style.zIndex = 30 + (index - 2); // Third and beyond (images)
+          }
           
           // Add transform properties for hardware acceleration
           section.style.willChange = 'transform';
           section.style.transform = 'translateZ(0)';
           section.style.backfaceVisibility = 'hidden';
+          
+          // Ensure transitions for the panels are smooth
+          section.style.transition = 'transform 0.05s linear';
         }
       });
     }
@@ -438,10 +547,29 @@ const SingleProject = () => {
       smoothScrollTo(newTarget);
     };
     
-    // Touch events for mobile-like swipe on desktop with increased sensitivity
+    // Touch events with enhanced physics-based momentum
     const handleTouchStart = (e) => {
       touchStartX.current = e.touches[0].clientX;
       lastTouchX.current = e.touches[0].clientX;
+      
+      // Initialize touch tracking for physics-based scrolling
+      window.touchTracking = {
+        positions: [], // Track position history for velocity calculation
+        startTime: Date.now(),
+        lastTime: Date.now()
+      };
+      
+      // Add initial position
+      window.touchTracking.positions.push({
+        x: touchStartX.current,
+        time: window.touchTracking.startTime
+      });
+      
+      // Cancel any ongoing animations for immediate response
+      if (scrollRafRef.current) {
+        cancelAnimationFrame(scrollRafRef.current);
+        isScrollingRef.current = false;
+      }
       
       // Prevent default to stop browser navigation
       e.preventDefault();
@@ -452,49 +580,97 @@ const SingleProject = () => {
       
       const touchX = e.touches[0].clientX;
       const deltaX = lastTouchX.current - touchX;
+      const now = Date.now();
+      
+      // Track position for velocity calculation (limit to 5 most recent)
+      window.touchTracking.positions.unshift({ x: touchX, time: now });
+      if (window.touchTracking.positions.length > 5) {
+        window.touchTracking.positions.pop();
+      }
+      
+      // Calculate a smoothed version of the delta to avoid jitter
+      let smoothedDelta = deltaX;
+      if (window.touchTracking.positions.length >= 3) {
+        // Average recent movement for smoother response
+        const recentDeltas = [];
+        for (let i = 1; i < Math.min(3, window.touchTracking.positions.length); i++) {
+          const older = window.touchTracking.positions[i];
+          const newer = window.touchTracking.positions[i-1];
+          const posDelta = older.x - newer.x;
+          recentDeltas.push(posDelta);
+        }
+        
+        // Calculate weighted average (favor most recent)
+        let totalWeight = 0;
+        let weightedSum = 0;
+        for (let i = 0; i < recentDeltas.length; i++) {
+          const weight = recentDeltas.length - i;
+          weightedSum += recentDeltas[i] * weight;
+          totalWeight += weight;
+        }
+        
+        // Use weighted average for smoother feel
+        smoothedDelta = totalWeight > 0 ? weightedSum / totalWeight : deltaX;
+      }
+      
       const sectionWidth = window.innerWidth;
       const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
       
-      // Update scroll position with bounds check
-      const newScrollLeft = Math.min(Math.max(0, pageRef.current.scrollLeft + deltaX * 4.0), maxScroll);
+      // Apply with enhanced sensitivity and smooth response
+      const scrollMultiplier = 2.5; // Responsive but not too twitchy
+      const newScrollLeft = Math.min(Math.max(0, pageRef.current.scrollLeft + smoothedDelta * scrollMultiplier), maxScroll);
+      
+      // Update scroll position directly for touch movement
       pageRef.current.scrollLeft = newScrollLeft;
       
+      // Update tracking
       lastTouchX.current = touchX;
+      window.touchTracking.lastTime = now;
       currentScrollRef.current = pageRef.current.scrollLeft;
-      targetScrollRef.current = pageRef.current.scrollLeft;
+      targetScrollRef.current = currentScrollRef.current;
       
       updateCurrentSection();
       e.preventDefault();
     };
     
     const handleTouchEnd = (e) => {
-      if (!pageRef.current) return;
+      if (!pageRef.current || !window.touchTracking || window.touchTracking.positions.length < 2) return;
       
-      // Calculate if this was a swipe or tap
       const touchEndX = e.changedTouches[0].clientX;
-      const totalDeltaX = touchStartX.current - touchEndX;
+      const touchEndTime = Date.now();
       
-      // For small movements, snap to nearest section
-      if (Math.abs(totalDeltaX) < 50) {
+      // Calculate velocity from position history (pixels per ms)
+      // Use the most recent movements for more accurate final velocity
+      const recentPositions = window.touchTracking.positions.slice(0, Math.min(3, window.touchTracking.positions.length));
+      const oldestRecent = recentPositions[recentPositions.length - 1];
+      const newestRecent = recentPositions[0];
+      
+      // Calculate velocity (pixels per ms)
+      const touchDuration = newestRecent.time - oldestRecent.time;
+      const touchDistance = oldestRecent.x - newestRecent.x;
+      const velocity = touchDuration > 10 ? touchDistance / touchDuration : 0;
+      
+      // Apply momentum based on velocity and gesture length
+      if (Math.abs(velocity) > 0.1) { // Minimum velocity threshold
         const sectionWidth = window.innerWidth;
-        const currentPos = pageRef.current.scrollLeft;
-        const nearestSection = Math.round(currentPos / sectionWidth);
+        const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
         
-        // Smooth scroll to the nearest section
-        smoothScrollTo(nearestSection * sectionWidth);
-      } else {
-        // For swipes, maintain momentum but ensure we end on a section boundary
-        const direction = totalDeltaX > 0 ? 1 : -1;
-        const sectionWidth = window.innerWidth;
-        const currentPos = pageRef.current.scrollLeft;
-        const currentSection = Math.floor(currentPos / sectionWidth);
-        const targetSection = Math.max(0, Math.min(currentSection + direction, sectionCount - 1));
+        // Calculate momentum with physical decay
+        // Higher velocity = longer slide with quadratic relationship
+        const velocityFactor = Math.min(1.5, Math.abs(velocity) * 5);
+        const baseMomentum = Math.sign(velocity) * (velocityFactor * sectionWidth * 0.6);
         
-        // Smooth scroll to the target section
-        smoothScrollTo(targetSection * sectionWidth);
+        // Add momentum to current position with bounds checking
+        const targetPosition = Math.max(0, Math.min(
+          currentScrollRef.current + baseMomentum,
+          maxScroll
+        ));
+        
+        // Apply smooth scrolling with the calculated momentum
+        smoothScrollTo(targetPosition);
       }
     };
-    
+
     // Native scroll handler
     const handleScroll = () => {
       if (!pageRef.current || isScrollingRef.current) return;

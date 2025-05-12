@@ -313,3 +313,87 @@
   backface-visibility: hidden;
   will-change: transform;
 }
+
+/* Mobile view specific styles */
+.mobile-view-active {
+  overflow-y: auto !important;
+  height: auto !important;
+  position: static !important;
+  overflow-x: hidden !important;
+}
+
+.mobile-projects-view {
+  background-color: #000;
+  color: #fff;
+  min-height: 100vh;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.mobile-projects-content {
+  padding: 60px 15px;
+  width: 100%;
+}
+
+.mobile-category-title {
+  font-size: 32px;
+  font-family: 'Sprat', serif;
+  margin: 20px 0 40px;
+  font-weight: 300;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.mobile-projects-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding-bottom: 40px;
+}
+
+.mobile-project-item {
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.mobile-media-container {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.mobile-media-container img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+}
+
+.mobile-project-info {
+  text-align: left;
+  padding: 5px 0;
+}
+
+.mobile-project-number {
+  font-family: 'TT Norms', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: white;
+  margin-bottom: 4px;
+  opacity: 0.85;
+}
+
+.mobile-project-info h3 {
+  font-size: 20px;
+  margin: 0 0 8px 0;
+  font-weight: 300;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  font-family: 'Sprat', serif;
+}

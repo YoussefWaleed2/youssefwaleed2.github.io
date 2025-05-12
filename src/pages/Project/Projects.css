@@ -796,3 +796,64 @@ html, body, #root {
     overscroll-behavior: none;
   }
 }
+
+/* Mobile styles for category text */
+@media (max-width: 768px) {
+  .text-container {
+    width: 100%;
+    padding: 0 15px;
+    box-sizing: border-box;
+  }
+  
+  body.projects-page .category-text {
+    font-size: clamp(1.8rem, 5vw, 2.2rem) !important;
+    white-space: normal;
+    text-align: center;
+    width: 100%;
+    letter-spacing: -0.02em;
+  }
+  
+  /* Specific styles for longer category names */
+  body.projects-page .category-text[data-category="advertisement"] {
+    font-size: clamp(1.5rem, 4.5vw, 2rem) !important;
+  }
+  
+  body.projects-page .category-text[data-category="marketing"] {
+    font-size: clamp(1.6rem, 4.8vw, 2.1rem) !important;
+  }
+}
+
+/* Smaller mobile devices */
+@media (max-width: 480px) {
+  body.projects-page .category-text {
+    font-size: clamp(1.5rem, 4.5vw, 1.8rem) !important;
+    letter-spacing: -0.03em;
+  }
+  
+  /* Specific styles for longer category names */
+  body.projects-page .category-text[data-category="advertisement"] {
+    font-size: clamp(1.2rem, 4vw, 1.5rem) !important;
+  }
+  
+  body.projects-page .category-text[data-category="marketing"] {
+    font-size: clamp(1.3rem, 4.2vw, 1.6rem) !important;
+  }
+}
+
+/* Very small devices */
+@media (max-width: 375px) {
+  body.projects-page .category-text {
+    font-size: clamp(1.2rem, 4vw, 1.5rem) !important;
+  }
+  
+  /* Specific styles for longer category names */
+  body.projects-page .category-text[data-category="advertisement"] {
+    font-size: clamp(1rem, 3.5vw, 1.3rem) !important;
+    letter-spacing: -0.05em;
+  }
+  
+  body.projects-page .category-text[data-category="marketing"] {
+    font-size: clamp(1.1rem, 3.8vw, 1.4rem) !important;
+    letter-spacing: -0.04em;
+  }
+}

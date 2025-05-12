@@ -538,14 +538,15 @@ const Projects = () => {
 
           <div className="text-container">
             {categories.map((category, index) => (
-              <div 
+              <div
                 key={index}
-                ref={textRefs.current[index]} 
                 className={`category-text ${index === currentIndex ? 'active' : ''}`}
+                ref={textRefs.current[index]}
                 onClick={() => handleCategoryClick(category)}
-                style={{ 
-                  cursor: 'pointer',
-                  visibility: 'visible'
+                data-category={category.toLowerCase()}
+                style={{
+                  cursor: "pointer",
+                  pointerEvents: isAnimating ? "none" : "auto",
                 }}
               >
                 {category}

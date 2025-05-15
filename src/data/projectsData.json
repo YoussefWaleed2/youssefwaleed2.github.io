@@ -49,6 +49,14 @@
               "alt": "Shawerma El Reem main branding"
             },
             {
+              "type": "text",
+              "backgroundColor": "#E0C8A7",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
               "type": "media",
               "imageName": "/project/Single-project-Assets/Branding/SHAWERMA EL REEM/02-SER.webp",
               "alt": "Shawerma El Reem branding details"
@@ -74,52 +82,392 @@
       {
         "title": "Venti",
         "media": "/project/Project-Assets/Branding/VENTI.webp",
-        "mediaType": "image"
+        "mediaType": "image",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Branding/VENTI/01-VENTI.webp",
+              "alt": "Venti main branding"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#CDC8BF",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/VENTI/02-VENTI.webp",
+              "alt": "Venti branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/VENTI/03-VENTI.webp",
+              "alt": "Venti color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/VENTI/04-VENTI.webp",
+              "alt": "Venti typography"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/VENTI/05-VENTI.webp",
+              "alt": "Venti typography"
+            }
+          ]
+        }
       },
       {
         "title": "L'azurde",
         "media": "/project/Project-Assets/Branding/L'AZURDE.webp",
-        "mediaType": "image"
+        "mediaType": "image",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Branding/L'AZURDE/01-L'AZURDE.webp",
+              "alt": "L'azurde main branding"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#CDC8BF",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/L'AZURDE/02-L'AZURDE.webp",
+              "alt": "L'azurde branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/L'AZURDE/03-L'AZURDE.webp",
+              "alt": "L'azurde color palette"
+            }
+          ]
+        }
       },
       {
         "title": "Telofill",
         "media": "/project/Project-Assets/Branding/TELOFILL.webp",
-        "mediaType": "image"
+        "mediaType": "image",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Branding/TELOFILL/01-TELOFILL.webp",
+              "alt": "Telofill main branding"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#CDC8BF",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/TELOFILL/02-TELOFILL.webp",
+              "alt": "Telofill branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/TELOFILL/03-TELOFILL.webp",
+              "alt": "Telofill color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/TELOFILL/04-TELOFILL.webp",
+              "alt": "Telofill typography"
+            }
+          ]
+        }
       },
       {
         "title": "Dippy's",
         "media": "/project/Project-Assets/Branding/DIPPY'S.webp",
-        "mediaType": "image"
+        "mediaType": "image",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Branding/DIPPY'S/01-DIPPY'S.webp",
+              "alt": "Dippy's main branding"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#CDC8BF",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/DIPPY'S/02-DIPPY'S.webp",
+              "alt": "Dippy's branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/DIPPY'S/03-DIPPY'S.webp",
+              "alt": "Dippy's color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/DIPPY'S/04-DIPPY'S.webp",
+              "alt": "Dippy's typography"
+            }
+          ]
+        }
       },
       {
         "title": "NotFound",
         "media": "/project/Project-Assets/Branding/NotFound.webp",
-        "mediaType": "image"
+        "mediaType": "image",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Branding/NOTFOUND/01-NOTFOUND.webp",
+              "alt": "NotFound main branding"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#CDC8BF",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/NOTFOUND/02-NOTFOUND.webp",
+              "alt": "NotFound branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/NOTFOUND/03-NOTFOUND.webp",
+              "alt": "NotFound color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/NOTFOUND/04-NOTFOUND.webp",
+              "alt": "NotFound typography"
+            }
+          ]
+        }
       },
       {
         "title": "Hlep",
         "media": "/project/Project-Assets/Branding/HLEP.webp",
-        "mediaType": "image"
+        "mediaType": "image",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Branding/HLEP/01-HLEP.webp",
+              "alt": "Hlep main branding"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#CDC8BF",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/HLEP/02-HLEP.webp",
+              "alt": "Hlep branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/HLEP/03-HLEP.webp",
+              "alt": "Hlep color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/HLEP/04-HLEP.webp",
+              "alt": "Hlep typography"
+            }
+          ]
+        }
       },
       {
         "title": "Merkur",
         "media": "/project/Project-Assets/Branding/MERKUR.webp",
-        "mediaType": "image"
+        "mediaType": "image",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Branding/MERKUR/01-MERKUR.webp",
+              "alt": "Merkur main branding"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#CDC8BF",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/MERKUR/02-MERKUR.webp",
+              "alt": "Merkur branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/MERKUR/03-MERKUR.webp",
+              "alt": "Merkur color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/MERKUR/04-MERKUR.webp",
+              "alt": "Merkur typography"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/MERKUR/05-MERKUR.webp",
+              "alt": "Merkur typography"
+            }
+          ]
+        }
       },
       {
         "title": "Ozirea",
         "media": "/project/Project-Assets/Branding/OZIREA.webp",
-        "mediaType": "image"
+        "mediaType": "image",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Branding/OZIREA/01-OZIREA.webp",
+              "alt": "Ozirea main branding"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#CDC8BF",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/OZIREA/02-OZIREA.webp",
+              "alt": "Ozirea branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/OZIREA/03-OZIREA.webp",
+              "alt": "Ozirea color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/OZIREA/04-OZIREA.webp",
+              "alt": "Ozirea typography"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/OZIREA/05-OZIREA.webp",
+              "alt": "Ozirea typography"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/OZIREA/06-OZIREA.webp",
+              "alt": "Ozirea branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/OZIREA/07-OZIREA.webp",
+              "alt": "Ozirea color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/OZIREA/08-OZIREA.webp",
+              "alt": "Ozirea typography"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/OZIREA/09-OZIREA.webp",
+              "alt": "Ozirea typography"
+            }
+          ]
+        }
       },
       {
         "title": "Invesco",
         "media": "/project/Project-Assets/Branding/INVESCO.webp",
-        "mediaType": "image"
+        "mediaType": "image",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Branding/INVESCO/01-INVESCO.webp",
+              "alt": "Invesco main branding"    
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#CDC8BF",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/INVESCO/02-INVESCO.webp",
+              "alt": "Invesco branding details"
+            }
+          ]
+        }
       },
       {
         "title": "Ever mark",
         "media": "/project/Project-Assets/Branding/EVER MARK.webp",
-        "mediaType": "image"
+        "mediaType": "image",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Branding/EVER MARK/01-EVER MARK.webp",
+              "alt": "Ever mark main branding"    
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#CDC8BF",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/EVER MARK/02-EVER MARK.webp",
+              "alt": "Ever mark branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/EVER MARK/03-EVER MARK.webp",
+              "alt": "Ever mark color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Branding/EVER MARK/04-EVER MARK.webp",
+              "alt": "Ever mark typography"
+            }
+          ]
+        }
       }
 
     ],
@@ -128,7 +476,49 @@
         "title": "Bunker",
         "media": "/project/Project-Assets/Marketing/Bunker.webm",
         "mediaType": "video",
-        "thumbnail": "/project/Project-Assets/Marketing/Bunker-thumb.webp"
+        "thumbnail": "/project/Project-Assets/Marketing/Bunker-thumb.webp",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Marketing/Bunker/01-Bunker.webp",
+              "alt": "Bunker video"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#000000",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Bunker/02-Bunker.webp",
+              "alt": "Bunker branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Bunker/03-Bunker.webp",
+              "alt": "Bunker color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Bunker/04-Bunker.webp",
+              "alt": "Bunker typography"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Bunker/05-Bunker.webp",
+              "alt": "Bunker typography"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Bunker/06-Bunker.webp",
+              "alt": "Bunker typography"
+            }
+          ]
+        }
       },
       {
         "title": "Bouchée",

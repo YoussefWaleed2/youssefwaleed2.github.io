@@ -524,36 +524,268 @@
         "title": "Bouchée",
         "media": "/project/Project-Assets/Marketing/BOUCHÉE.webm",
         "mediaType": "video",
-        "thumbnail": "/project/Project-Assets/Marketing/BOUCHÉE-thumb.webp"
+        "thumbnail": "/project/Project-Assets/Marketing/BOUCHÉE-thumb.webp",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Marketing/Bouchée/01-Bouchée.webp",
+              "alt": "Bouchée video"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#000000",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Bouchée/02-Bouchée.webp",
+              "alt": "Bouchée branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Bouchée/03-Bouchée.webp",
+              "alt": "Bouchée color palette"
+            }
+          ]
+        }
       },
       {
         "title": "Munch & Shake",
         "media": "/project/Project-Assets/Marketing/Munch & Shake.webm",
         "mediaType": "video",
-        "thumbnail": "/project/Project-Assets/Marketing/Munch & Shake-thumb.webp"
+        "thumbnail": "/project/Project-Assets/Marketing/Munch & Shake-thumb.webp",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Marketing/Munch & Shake/01-Munch & Shake.webp",
+              "alt": "Munch & Shake video"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#000000",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Munch & Shake/02-Munch & Shake.webp",
+              "alt": "Munch & Shake branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Munch & Shake/03-Munch & Shake.webp",
+              "alt": "Munch & Shake color palette"
+            }
+          ]
+        }
       },
       {
         "title": "CRMBZ",
         "media": "/project/Project-Assets/Marketing/CRMBZ.webm",
         "mediaType": "video",
-        "thumbnail": "/project/Project-Assets/Marketing/CRMBZ-thumb.webp"
+        "thumbnail": "/project/Project-Assets/Marketing/CRMBZ-thumb.webp",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Marketing/CRMBZ/01-CRMBZ.webp",
+              "alt": "CRMBZ video"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#000000",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/CRMBZ/02-CRMBZ.webp",
+              "alt": "CRMBZ branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/CRMBZ/03-CRMBZ.webp",
+              "alt": "CRMBZ color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/CRMBZ/04-CRMBZ.webp",
+              "alt": "CRMBZ branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/CRMBZ/05-CRMBZ.webp",
+              "alt": "CRMBZ color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/CRMBZ/06-CRMBZ.webp",
+              "alt": "CRMBZ branding details"
+            }
+          ]
+        }
       },
       {
         "title": "Momochi",
         "media": "/project/Service-img-2.webp",
-        "mediaType": "image"
+        "mediaType": "image",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Marketing/Momochi/01-Momochi.webp",
+              "alt": "Momochi video"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#000000",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Momochi/02-Momochi.webp",
+              "alt": "Momochi branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Momochi/03-Momochi.webp",
+              "alt": "Momochi color palette"
+            },
+            {
+            "type": "media",
+            "imageName": "/project/Single-project-Assets/Marketing/Momochi/04-Momochi.webp",
+            "alt": "Momochi branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Momochi/05-Momochi.webp",
+              "alt": "Momochi color palette"
+            },
+            {
+              "type": "media",
+                "imageName": "/project/Single-project-Assets/Marketing/Momochi/06-Momochi.webp",
+                "alt": "Momochi color palette"
+            }
+          ]
+        }
       },
       {
         "title": "NEV",
         "media": "/project/Project-Assets/Marketing/Nev.webm",
         "mediaType": "video",
-        "thumbnail": "/project/Project-Assets/Marketing/Nev-thumb.webp"
+        "thumbnail": "/project/Project-Assets/Marketing/Nev-thumb.webp",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Marketing/NEV/01-NEV.webp",
+              "alt": "Nev video"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#000000",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/NEV/02-NEV.webp",
+              "alt": "Nev branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/NEV/03-NEV.webp",
+              "alt": "Nev color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/NEV/04-NEV.webp",
+              "alt": "Nev branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/NEV/05-NEV.webp",
+              "alt": "Nev color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/NEV/06-NEV.webp",
+              "alt": "Nev branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/NEV/07-NEV.webp",
+              "alt": "Nev color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/NEV/08-NEV.webp",
+              "alt": "Nev branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/NEV/09-NEV.webp",
+              "alt": "Nev branding details"
+            }
+          ]
+        }
       },
       {
         "title": "Pyramids",
         "media": "/project/Project-Assets/Marketing/Pyramids.webm",
         "mediaType": "video",
-        "thumbnail": "/project/Project-Assets/Marketing/Pyramids-thumb.webp"
+        "thumbnail": "/project/Project-Assets/Marketing/Pyramids-thumb.webp",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Marketing/Pyramids/01-Pyramids.webp",
+              "alt": "Pyramids video"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#000000",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Pyramids/02-Pyramids.webp",
+              "alt": "Pyramids branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Pyramids/03-Pyramids.webp",
+              "alt": "Pyramids color palette"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Pyramids/04-Pyramids.webp",
+              "alt": "Pyramids branding details"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Marketing/Pyramids/05-Pyramids.webp",
+              "alt": "Pyramids color palette"
+            }
+          ]
+        }
       }
     ],
     "Advertising": [
@@ -561,7 +793,34 @@
         "title": "Apero with Emit (Porsche Edition)",
         "media": "/project/Project-Assets/Advertising/Apero with Emit.webm",
         "mediaType": "video",
-        "thumbnail": "/project/Project-Assets/Advertising/Apero with Emit-thumb.webp"
+        "thumbnail": "/project/Project-Assets/Advertising/Apero with Emit-thumb.webp",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Advertising/Apero with Emit (Porsche Edition)/01-Apero with Emit (Porsche Edition).webp",
+              "alt": "Apero with Emit video"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#000000",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Advertising/Apero with Emit (Porsche Edition)/02-Apero with Emit (Porsche Edition).webp",
+              "alt": "Apero with Emit thumbnail"
+            },
+            {
+              "type": "media",
+              "imageName": "/project/Single-project-Assets/Advertising/Apero with Emit (Porsche Edition)/03-Apero with Emit (Porsche Edition).webp",
+              "alt": "Apero with Emit thumbnail"
+            }
+          ]
+        }
       },
       {
         "title": "Emit x Leopelle",
@@ -572,8 +831,8 @@
           "sections": [
             {
               "type": "media",
-              "media": "/project/Project-Assets/Advertising/Emit x Leopelle.webm",
-              "alt": "Emit x Leopelle video"
+              "media": "/project/Single-project-Assets/Advertising/Emit x Leopelle/01-Emit x Leopelle.webp",
+              "alt": "Leopelle video"
             },
             {
               "type": "text",
@@ -585,8 +844,18 @@
             },
             {
               "type": "media",
-              "media": "/project/Project-Assets/Advertising/Emit x Leopelle-thumb.jpg",
-              "alt": "Emit x Leopelle thumbnail"
+              "media": "/project/Single-project-Assets/Advertising/Emit x Leopelle/02-Emit x Leopelle.webp",
+              "alt": "Leopelle thumbnail"
+            },
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Advertising/Emit x Leopelle/03-Emit x Leopelle.webp",
+              "alt": "Leopelle thumbnail"
+            },
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Advertising/Emit x Leopelle/04-Emit x Leopelle.webp",
+              "alt": "Leopelle thumbnail"
             }
           ]
         }
@@ -595,19 +864,92 @@
         "title": "Leopelle",
         "media": "/project/Project-Assets/Advertising/Leopelle.webm",
         "mediaType": "video",
-        "thumbnail": "/project/Project-Assets/Advertising/Leopelle-thumb.webp"
+        "thumbnail": "/project/Project-Assets/Advertising/Leopelle-thumb.webp",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Advertising/Leopelle/01-Leopelle.webp",
+              "alt": "Leopelle video"
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#1E4554",
+              "slogan": "FROM THE SHORE TO THE BOLD TURNING WAVES INTO STATEMENTS",
+              "fieldName": "FASHION PRODUCT",
+              "services": "ADVERTISING",
+              "text": "THIS LIFESTYLE SHOOT TAKES YOU ON A JOURNEY OF SELF-DISCOVERY, WHERE FREEDOM, INDULGENCE, AND INDIVIDUALITY COME TOGETHER. WE USED THE BEAUTY OF NATURE, SUNLIGHT, THE SEA, AND LEATHER TO CREATE AN EXPERIENCE THAT RESONATES ON A DEEPER LEVEL. EMIT'S ICONIC BOARD SHORTS REPRESENT FREEDOM AND THE CAREFULLY CRAFTED LEATHER BAGS ARE AT THE HEART OF IT ALL, TELLING A STORY OF PURPOSE AND TRANSFORMATION."
+            },
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Advertising/Leopelle/02-Leopelle.webp",
+              "alt": "Leopelle thumbnail"
+            },
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Advertising/Leopelle/03-Leopelle.webp",
+              "alt": "Leopelle thumbnail"
+            },
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Advertising/Leopelle/04-Leopelle.webp",
+              "alt": "Leopelle thumbnail"
+            },
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Advertising/Leopelle/05-Leopelle.webp",
+              "alt": "Leopelle thumbnail"
+            },
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Advertising/Leopelle/06-Leopelle.webp",
+              "alt": "Leopelle thumbnail"
+            }
+          ]
+        }
       },
       {
         "title": "Yazi's World",
         "media": "/project/Project-Assets/Advertising/Yazi's World.webm",
         "mediaType": "video",
-        "thumbnail": "/project/Project-Assets/Advertising/Yazi's World-thumb.webp"
-      },
-      {
-        "title": "Shawerma El Reem",
-        "media": "/project/Project-Assets/Advertising/SHAWERMA EL REEM.webm",
-        "mediaType": "video",
-        "thumbnail": "/project/Project-Assets/Advertising/SHAWERMA EL REEM-thumb.webp"
+        "thumbnail": "/project/Project-Assets/Advertising/Yazi's World-thumb.webp",
+        "projectContent": {
+          "sections": [
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Advertising/Yazi's World/01-Yazi's World.webp",
+              "alt": "Yazi's World video" 
+            },
+            {
+              "type": "text",
+              "backgroundColor": "#000000",
+              "slogan": "CURATED HIGH END ARCHITECTURE INTERIORS, LANDSCAPE, CONSULTANCY",
+              "fieldName": "ENVIRONMENTAL DESIGN",
+              "services": "BRAND IDENTITY",
+              "text": "ÉPOS IS BUILT ON THE SEAMLESS COLLABORATION OF THREE VISIONARY PARTNERS, REFLECTED IN ITS INTERCONNECTED TYPOGRAPHY. THE ELEGANT SERIF FONT EMBODIES LUXURY AND TIMELESSNESS, WHILE ITS ELONGATED LETTERFORMS ECHO ARCHITECTURAL GRANDEUR AND PRECISION. ROOTED IN INTERIOR DESIGN, LANDSCAPE, AND ARCHITECTURE, ÉPOS CRAFTS SPACES THAT MERGE SOPHISTICATION WITH INNOVATION. WITH A RICH, EARTHY PALETTE REINFORCING ITS EXCLUSIVITY, ÉPOS TRANSFORMS EVERY PROJECT INTO A NARRATIVE OF REFINED ARTISTRY, HUMAN CONNECTION, AND SPATIAL HARMONY."
+            },
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Advertising/Yazi's World/02-Yazi's World.webp",
+              "alt": "Yazi's World thumbnail"
+            },
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Advertising/Yazi's World/03-Yazi's World.webp",
+              "alt": "Yazi's World thumbnail"
+            } ,
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Advertising/Yazi's World/04-Yazi's World.webp",
+              "alt": "Yazi's World thumbnail"
+            },
+            {
+              "type": "media",
+              "media": "/project/Single-project-Assets/Advertising/Yazi's World/05-Yazi's World.webp",
+              "alt": "Yazi's World thumbnail"
+            }
+          ]
+        }
       }
     ]
 }

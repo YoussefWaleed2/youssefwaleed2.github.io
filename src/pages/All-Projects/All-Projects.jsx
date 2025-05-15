@@ -35,6 +35,16 @@ if (typeof window !== 'undefined') {
           -webkit-overflow-scrolling: touch !important;
         }
         .ReactLenis { overflow: visible !important; }
+        .mobile-projects-view {
+          min-height: 100vh;
+          height: auto !important;
+          position: relative !important;
+          overflow-y: auto !important;
+        }
+        .mobile-projects-grid {
+          height: auto !important;
+          padding-bottom: 100px !important;
+        }
       `;
       document.head.appendChild(style);
     }
@@ -47,6 +57,7 @@ const AllProjects = () => {
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
   const containerRef = useRef(null);
   const videoRef = useRef(null);
   const titleRef = useRef(null);
@@ -62,22 +73,41 @@ const AllProjects = () => {
       setIsMobile(mobile);
       
       if (mobile) {
-        // Force scroll to top when component mounts on mobile
-        window.scrollTo(0, 0);
+        // Force scroll to top when component mounts on mobile, but only once
+        if (!sessionStorage.getItem('hasScrolledToTop')) {
+          window.scrollTo(0, 0);
+          sessionStorage.setItem('hasScrolledToTop', 'true');
+        }
         
         // Add mobile class to body
         document.body.classList.add('mobile-view-active');
+        
+        // Set overflow on body for mobile
+        document.body.style.overflowY = 'auto';
+        document.body.style.height = 'auto';
+        document.documentElement.style.overflowY = 'auto';
+        document.documentElement.style.height = 'auto';
       }
     };
     
     checkMobile();
     window.addEventListener('resize', checkMobile);
     
+    // Add scroll prevention
+    const handleScroll = () => {
+      if (isScrolling) return;
+      setIsScrolling(true);
+      setTimeout(() => setIsScrolling(false), 100);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
     return () => {
       window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('scroll', handleScroll);
       document.body.classList.remove('mobile-view-active');
     };
-  }, []);
+  }, [isScrolling]);
 
   // Handle overlay on mount and unmount
   useEffect(() => {

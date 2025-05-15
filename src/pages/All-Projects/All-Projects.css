@@ -317,83 +317,119 @@
 /* Mobile view specific styles */
 .mobile-view-active {
   overflow-y: auto !important;
+  overflow-x: hidden !important;
   height: auto !important;
   position: static !important;
-  overflow-x: hidden !important;
+  touch-action: auto !important;
+  -webkit-overflow-scrolling: touch !important;
 }
 
 .mobile-projects-view {
-  background-color: #000;
-  color: #fff;
-  min-height: 100vh;
   width: 100%;
-  padding: 0;
-  margin: 0;
+  min-height: 100vh;
+  height: auto;
+  background-color: #0a0a0a;
+  color: #ffffff;
+  padding: 80px 20px 50px 20px;
   overflow-y: auto;
-  overflow-x: hidden;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+  touch-action: auto;
 }
 
 .mobile-projects-content {
-  padding: 60px 15px;
   width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding-bottom: 60px;
 }
 
 .mobile-category-title {
-  font-size: 32px;
-  font-family: 'Sprat', serif;
-  margin: 20px 0 40px;
+  font-size: 28px;
   font-weight: 300;
-  text-transform: uppercase;
   text-align: center;
+  margin-bottom: 30px;
+  margin-top: 10px;
+  font-family: 'Sprat', serif;
+  letter-spacing: 1px;
+  color: white;
 }
 
 .mobile-projects-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  padding-bottom: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+  padding-bottom: 70px;
+  height: auto;
+  position: relative;
 }
 
 .mobile-project-item {
-  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
+  transition: transform 0.3s ease;
+  margin-bottom: 15px;
 }
 
 .mobile-media-container {
   width: 100%;
-  position: relative;
+  aspect-ratio: 1;
   overflow: hidden;
+  position: relative;
+  background-color: #1a1a1a;
   margin-bottom: 10px;
 }
 
 .mobile-media-container img {
   width: 100%;
-  height: auto;
-  aspect-ratio: 1/1;
+  height: 100%;
   object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s ease;
 }
 
 .mobile-project-info {
-  text-align: left;
-  padding: 5px 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
 }
 
 .mobile-project-number {
-  font-family: 'TT Norms', sans-serif;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 400;
-  color: white;
-  margin-bottom: 4px;
-  opacity: 0.85;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 5px;
+  font-family: 'TT Norms', sans-serif;
 }
 
 .mobile-project-info h3 {
-  font-size: 20px;
-  margin: 0 0 8px 0;
+  font-size: 16px;
   font-weight: 300;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  line-height: 1.2;
+  margin: 0;
+  color: white;
   font-family: 'Sprat', serif;
+  letter-spacing: 0.5px;
+}
+
+/* iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .mobile-projects-view {
+    height: auto;
+    min-height: 100%;
+    min-height: -webkit-fill-available;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  .mobile-projects-grid {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+  
+  .mobile-media-container {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
 }

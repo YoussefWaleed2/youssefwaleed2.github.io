@@ -55,7 +55,10 @@ const MobileMenu = () => {
     );
   }
 
-  const handleCloseMenu = () => {
+  const handleCloseMenu = (e) => {
+    // Stop event propagation to prevent any conflicts
+    if (e) e.stopPropagation();
+
     if (
       !menuOverlayBarRef.current ||
       !menuCloseBtnRef.current ||
@@ -137,7 +140,10 @@ const MobileMenu = () => {
     }
   };
 
-  const handleOpenMenu = () => {
+  const handleOpenMenu = (e) => {
+    // Stop event propagation to prevent any conflicts
+    if (e) e.stopPropagation();
+
     if (
       !navRef.current ||
       !menuOpenBtnRef.current ||
@@ -230,12 +236,40 @@ const MobileMenu = () => {
       });
     }
 
+    const handleOpenMenuWrapper = (e) => {
+      if (e) e.stopPropagation();
+      handleOpenMenu();
+    };
+
+    const handleCloseMenuWrapper = (e) => {
+      if (e) e.stopPropagation();
+      handleCloseMenu(e);
+    };
+
     if (openBtn) {
-      openBtn.addEventListener("click", handleOpenMenu);
+      openBtn.addEventListener("click", handleOpenMenuWrapper);
+      // Add touch events for mobile
+      openBtn.addEventListener("touchend", handleOpenMenuWrapper, { passive: false });
     }
 
     if (closeBtn) {
-      closeBtn.addEventListener("click", handleCloseMenu);
+      closeBtn.addEventListener("click", handleCloseMenuWrapper);
+      // Add touch events for mobile
+      closeBtn.addEventListener("touchend", handleCloseMenuWrapper, { passive: false });
+      
+      // Add additional event listeners to ensure the close button works on mobile
+      const svg = closeBtn.querySelector('svg');
+      if (svg) {
+        svg.addEventListener("click", handleCloseMenuWrapper);
+        svg.addEventListener("touchend", handleCloseMenuWrapper, { passive: false });
+        
+        // Add click event listeners to all paths in the SVG
+        const paths = svg.querySelectorAll('path');
+        paths.forEach(path => {
+          path.addEventListener("click", handleCloseMenuWrapper);
+          path.addEventListener("touchend", handleCloseMenuWrapper, { passive: false });
+        });
+      }
     }
 
     // Listen for route changes
@@ -248,11 +282,27 @@ const MobileMenu = () => {
 
     return () => {
       if (openBtn) {
-        openBtn.removeEventListener("click", handleOpenMenu);
+        openBtn.removeEventListener("click", handleOpenMenuWrapper);
+        openBtn.removeEventListener("touchend", handleOpenMenuWrapper);
       }
 
       if (closeBtn) {
-        closeBtn.removeEventListener("click", handleCloseMenu);
+        closeBtn.removeEventListener("click", handleCloseMenuWrapper);
+        closeBtn.removeEventListener("touchend", handleCloseMenuWrapper);
+        
+        // Clean up additional event listeners
+        const svg = closeBtn.querySelector('svg');
+        if (svg) {
+          svg.removeEventListener("click", handleCloseMenuWrapper);
+          svg.removeEventListener("touchend", handleCloseMenuWrapper);
+          
+          // Remove click event listeners from all paths
+          const paths = svg.querySelectorAll('path');
+          paths.forEach(path => {
+            path.removeEventListener("click", handleCloseMenuWrapper);
+            path.removeEventListener("touchend", handleCloseMenuWrapper);
+          });
+        }
       }
 
       // Remove event listener for route changes
@@ -276,7 +326,11 @@ const MobileMenu = () => {
   return (
     <>
       <nav ref={navRef}>
-        <div className="menu-toggle-open" ref={menuOpenBtnRef} onClick={handleOpenMenu}>
+        <div className="menu-toggle-open" ref={menuOpenBtnRef} onClick={handleOpenMenu} style={{ 
+          padding: "10px", 
+          cursor: "pointer",
+          touchAction: "manipulation"
+        }}>
           <svg className="open-btn" width="24" height="24" viewBox="0 0 24 24" fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg">
           <path d="M3 7H21" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round"/>
           <path d="M9.49023 12H21.0002" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round"/>
@@ -294,8 +348,20 @@ const MobileMenu = () => {
         <div className="menu-overlay-bar" ref={menuOverlayBarRef}>
           <div className="logo">
           </div>
-          <div className="menu-toggle-close" ref={menuCloseBtnRef} onClick={handleCloseMenu}>
-            <svg className="close-btn" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <div className="menu-toggle-close" 
+            ref={menuCloseBtnRef} 
+            onClick={handleCloseMenu}
+            style={{ 
+              padding: "15px", 
+              cursor: "pointer",
+              touchAction: "manipulation",
+              WebkitTapHighlightColor: "transparent",
+              userSelect: "none",
+              WebkitUserSelect: "none"
+            }}
+          >
+            <svg className="close-btn" width="36" height="36" viewBox="0 0 24 24" fill="rgba(255,255,255,0.01)" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="24" height="24" fill="rgba(255,255,255,0.01)" />
             <path d="M13.9902 10.0099L14.8302 9.16992" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M9.16992 14.8301L11.9199 12.0801" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M14.8299 14.8299L9.16992 9.16992" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

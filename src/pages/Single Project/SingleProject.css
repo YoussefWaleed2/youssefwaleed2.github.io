@@ -619,3 +619,42 @@ body:has(.single-project-page) .navbar {
 .smooth-transition {
   transition: transform 0.2s ease-out !important;
 }
+
+/* Make sure these styles only apply to SingleProject page */
+body:not(:has(.about-page)) .panel img,
+body:not(:has(.about-page)) .image-container {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  background-color: #000 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Prevent SingleProject styles from affecting About page */
+body:has(.about-page) .image-container,
+body:has(.about-page) .background-image {
+  border-radius: inherit; /* Inherit any border-radius set by About.css */
+}
+
+/* Better CSS scoping with specific body class */
+body.single-project-page-active .image-container {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  background-color: #000 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Ensure these styles don't affect About Us page */
+body:not(.single-project-page-active) .panel .image-container,
+body:not(.single-project-page-active) .panel .background-image {
+  display: block; /* Reset display property */
+}

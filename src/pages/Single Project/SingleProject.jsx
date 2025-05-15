@@ -117,6 +117,14 @@ const SingleProject = () => {
   useEffect(() => {
     if (project) {
       document.title = `${project.title} | VZBL`;
+      
+      // Add class to body for CSS scoping
+      document.body.classList.add('single-project-page-active');
+      
+      // Clean up function
+      return () => {
+        document.body.classList.remove('single-project-page-active');
+      };
     }
   }, [project]);
 

@@ -752,7 +752,21 @@ body:has(.about-page) .navbar {
   background: transparent !important;
 }
 .about-section:nth-child(3) .background-image{
-  border-radius: 106px 0px 0px 106px;
+  border-radius: 106px 0px 0px 106px !important;
+  overflow: hidden !important;
+}
+
+/* Ensure the container for the image also has border radius */
+.about-section:nth-child(3) .image-container {
+  border-radius: 106px 0px 0px 106px !important;
+  overflow: hidden !important;
+}
+
+/* Add stronger specificity to override any other styles */
+body:has(.about-page) .about-section:nth-child(3) .background-image,
+body:has(.about-page) .about-section:nth-child(3) .image-container {
+  border-radius: 106px 0px 0px 106px !important;
+  overflow: hidden !important;
 }
 
 /* Remove border radius that can cause visual gaps */

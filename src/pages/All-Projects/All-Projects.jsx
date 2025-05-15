@@ -167,16 +167,16 @@ const AllProjects = () => {
   
       gsap.set(".all-projects-container", {
         clipPath: "polygon(0% 0%, 0% 0%, 0% 0%, 0% 0%)",
-        scale: 0.95,
-        rotation: 10,
+        scale: 0,
+        rotation: 25,
       });
   
       // Animate the video background
       if (videoRef.current) {
         gsap.to(videoRef.current, {
           filter: "blur(150px)",
-          duration: 0.5,
-          ease: "power3.inOut"
+          duration: 1,
+          ease: "power2.inOut"
         });
       }
   
@@ -186,14 +186,14 @@ const AllProjects = () => {
       // First clip-path animation
       tl.to(".all-projects-container", {
         clipPath: "polygon(0% 45%, 25% 45%, 25% 55%, 0% 55%)",
-        duration: 0.2,
-        ease: "power2.inOut",
+        duration: 0,
+        ease: customEase,
       })
       // Second clip-path animation
       .to(".all-projects-container", {
         clipPath: "polygon(0% 45%, 100% 45%, 100% 55%, 0% 55%)",
-        duration: 0.2,
-        ease: "power2.inOut"
+        duration: 0,
+        ease: customEase
       })
       // Final reveal animation
       .to(".all-projects-container", {
@@ -201,34 +201,34 @@ const AllProjects = () => {
         scale: 1,
         rotation: 0,
         opacity: 1,
-        duration: 0.5,
-        ease: "power3.out",
+        duration: 1.5,
+        ease: customEase,
         onStart: () => {
           // Animate title characters
           gsap.to(".category-title .char", {
             y: 0,
             opacity: 1,
-            duration: 0.5,
-            stagger: 0.02,
-            delay: 0.1,
-            ease: "power2.out",
+            duration: 1.8,
+            stagger: 0.05,
+            delay: 0.5,
+            ease: customEase,
           });
         },onComplete: () =>{
           gsap.to("footer", {
             opacity: 1,
-            duration: 0.3,
+            duration: 0.5,
             ease: "power2.out"
           })
         }
       })
       // Animate project items
       .from(".project-grid .project-item", {
-        y: 30,
+        y: 50,
         opacity: 0,
-        stagger: 0.04,
-        duration: 0.5,
-        ease: "power2.out"
-      }, "-=0.4")
+        stagger: 0.1,
+        duration: 0.8,
+        ease: "power3.out"
+      }, "-=0.5")
     }
   }, [category, location.pathname, isMobile]);
 

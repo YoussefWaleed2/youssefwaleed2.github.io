@@ -652,7 +652,8 @@ const SingleProject = () => {
       positions: [], // Track position history for velocity calculation
       startTime: Date.now(),
       lastTime: Date.now(),
-      velocity: 0 // Track velocity for smoother deceleration
+      velocity: 0, // Track velocity for smoother deceleration
+      isFirstMove: true // Flag to handle first movement differently
     };
     
     // Add initial position
@@ -667,8 +668,8 @@ const SingleProject = () => {
       isScrollingRef.current = false;
     }
     
-    // Prevent default to stop browser navigation
-    e.preventDefault();
+    // IMPORTANT: Don't prevent default on touchstart for better native feel
+    // Only prevent on move if needed
   };
 
   const handleTouchMove = (e) => {
@@ -678,62 +679,123 @@ const SingleProject = () => {
     const deltaX = lastTouchX.current - touchX;
     const now = Date.now();
     
-    // Track position for velocity calculation (limit to 5 most recent)
+    // Handle first touch movement differently to eliminate lag
+    if (window.touchTracking.isFirstMove) {
+      // For first move, only respond if delta is significant
+      if (Math.abs(deltaX) < 3) {
+        // Very small movement - ignore to avoid jerky start
+        lastTouchX.current = touchX;
+        return;
+      }
+      
+      // Clear the first move flag
+      window.touchTracking.isFirstMove = false;
+      
+      // Use a smaller multiplier for the first move for a smoother start
+      const firstMoveScrollMultiplier = 1.8;
+      const newScrollLeft = Math.min(
+        Math.max(0, pageRef.current.scrollLeft + deltaX * firstMoveScrollMultiplier),
+        window.innerWidth * (project.projectContent.sections.length - 1)
+      );
+      
+      // Update scroll position directly for the first movement
+      pageRef.current.scrollLeft = newScrollLeft;
+      currentScrollRef.current = newScrollLeft;
+      targetScrollRef.current = newScrollLeft;
+      lastTouchX.current = touchX;
+      
+      // Immediately update position tracking
+      window.touchTracking.positions.unshift({ x: touchX, time: now });
+      if (window.touchTracking.positions.length > 5) {
+        window.touchTracking.positions.pop();
+      }
+      
+      updateCurrentSection();
+      e.preventDefault();
+      return;
+    }
+    
+    // Normal touch tracking after first move
     window.touchTracking.positions.unshift({ x: touchX, time: now });
     if (window.touchTracking.positions.length > 5) {
       window.touchTracking.positions.pop();
     }
     
-    // Calculate a smoothed version of the delta to avoid jitter
+    // Enhanced smooth delta calculation with touch prediction
+    // Uses a lower-pass filter for smoother, more responsive touch control
     let smoothedDelta = deltaX;
     if (window.touchTracking.positions.length >= 3) {
-      // Average recent movement for smoother response
+      // Get a trend from the last few positions
       const recentDeltas = [];
       for (let i = 1; i < Math.min(3, window.touchTracking.positions.length); i++) {
         const older = window.touchTracking.positions[i];
         const newer = window.touchTracking.positions[i-1];
         const posDelta = older.x - newer.x;
-        recentDeltas.push(posDelta);
+        const timeDelta = older.time - newer.time;
+        // Normalize by time for consistent response regardless of swipe speed
+        if (timeDelta > 0) {
+          recentDeltas.push(posDelta * (16 / timeDelta)); // Normalize to ~60fps
+        } else {
+          recentDeltas.push(posDelta);
+        }
       }
       
-      // Calculate weighted average (favor most recent)
+      // Advanced weighted average with momentum preservation
       let totalWeight = 0;
       let weightedSum = 0;
       for (let i = 0; i < recentDeltas.length; i++) {
-        const weight = recentDeltas.length - i;
+        // Exponential weighting for more responsive feel
+        const weight = Math.pow(1.5, recentDeltas.length - i);
         weightedSum += recentDeltas[i] * weight;
         totalWeight += weight;
       }
       
-      // Use weighted average for smoother feel
       smoothedDelta = totalWeight > 0 ? weightedSum / totalWeight : deltaX;
     }
     
     const sectionWidth = window.innerWidth;
     const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
     
-    // Apply with enhanced sensitivity for faster response
-    const scrollMultiplier = 3.5; // Increased from 2.5 for faster touch scrolling
-    const newScrollLeft = Math.min(Math.max(0, pageRef.current.scrollLeft + smoothedDelta * scrollMultiplier), maxScroll);
+    // Dynamic multiplier - faster for fast swipes, more control for slow ones
+    const velocity = Math.abs(smoothedDelta);
+    let scrollMultiplier;
     
-    // Update scroll position directly for touch movement
+    if (velocity < 0.5) {
+      scrollMultiplier = 2.0; // Slower, more precise control
+    } else if (velocity < 2) {
+      scrollMultiplier = 2.5; // Medium speed
+    } else {
+      scrollMultiplier = 3.0; // Fast response for rapid swipes
+    }
+    
+    const newScrollLeft = Math.min(
+      Math.max(0, pageRef.current.scrollLeft + smoothedDelta * scrollMultiplier), 
+      maxScroll
+    );
+    
+    // Update scroll position with immediate response
     pageRef.current.scrollLeft = newScrollLeft;
     
-    // Calculate current velocity for momentum
+    // Higher-precision velocity calculation for momentum
     if (window.touchTracking.positions.length >= 2) {
       const newest = window.touchTracking.positions[0];
       const older = window.touchTracking.positions[window.touchTracking.positions.length - 1];
       const timeSpan = newest.time - older.time;
+      
       if (timeSpan > 0) {
-        window.touchTracking.velocity = (older.x - newest.x) / timeSpan;
+        // Calculate main velocity
+        const rawVelocity = (older.x - newest.x) / timeSpan;
+        
+        // Apply smoothing to velocity for more consistent feel
+        window.touchTracking.velocity = (window.touchTracking.velocity * 0.7) + (rawVelocity * 0.3);
       }
     }
     
-    // Update tracking
+    // Update tracking state
     lastTouchX.current = touchX;
     window.touchTracking.lastTime = now;
-    currentScrollRef.current = pageRef.current.scrollLeft;
-    targetScrollRef.current = currentScrollRef.current;
+    currentScrollRef.current = newScrollLeft;
+    targetScrollRef.current = newScrollLeft;
     
     updateCurrentSection();
     e.preventDefault();
@@ -744,27 +806,71 @@ const SingleProject = () => {
     
     const now = Date.now();
     
-    // Use stored velocity for more consistent momentum
+    // Get final touch position and velocity
     const velocity = window.touchTracking.velocity;
     
-    // Apply momentum based on velocity
-    if (Math.abs(velocity) > 0.1) { // Minimum velocity threshold
+    // Enhanced inertial scrolling with snap behavior
+    if (Math.abs(velocity) > 0.05) { // Lower threshold for more responsive feel
       const sectionWidth = window.innerWidth;
       const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
+      const currentSection = Math.round(currentScrollRef.current / sectionWidth);
       
-      // Calculate momentum with enhanced physics
-      // Higher velocity = longer slide with quadratic relationship
-      const velocityFactor = Math.min(2.5, Math.abs(velocity) * 8); // Increased factors for faster scrolling
-      const baseMomentum = Math.sign(velocity) * (velocityFactor * sectionWidth * 0.7); // Increased from 0.6
+      // Calculate momentum with natural physics feel
+      // Apply exponential scale for more natural feel at different speeds
+      const velocityAbs = Math.abs(velocity);
+      let velocityFactor;
       
-      // Add momentum to current position with bounds checking
-      const targetPosition = Math.max(0, Math.min(
-        currentScrollRef.current + baseMomentum,
-        maxScroll
-      ));
+      // Dynamic scaling based on velocity magnitude
+      if (velocityAbs < 0.5) {
+        // Low velocity - gentle movement
+        velocityFactor = velocityAbs * 4;
+      } else if (velocityAbs < 1.0) {
+        // Medium velocity - moderate movement
+        velocityFactor = 2 + (velocityAbs * 3);
+      } else {
+        // High velocity - more dramatic movement with diminishing returns
+        velocityFactor = 5 + (Math.min(velocityAbs, 3) * 2);
+      }
       
-      // Apply smooth scrolling with the calculated momentum
+      // Calculate raw momentum
+      const momentumDistance = Math.sign(velocity) * velocityFactor * sectionWidth * 0.6;
+      
+      // Calculate proposed target position
+      let rawTargetPosition = currentScrollRef.current + momentumDistance;
+      
+      // Snap to closest section for more natural feel
+      const snapToSection = Math.round(rawTargetPosition / sectionWidth);
+      const snappedPosition = snapToSection * sectionWidth;
+      
+      // For very slow swipes, bias toward the direction of movement
+      if (Math.abs(momentumDistance) < sectionWidth * 0.35) {
+        const currentSectionPos = currentSection * sectionWidth;
+        // If we're already mostly through a section, snap to next in direction of swipe
+        if (Math.abs(currentScrollRef.current - currentSectionPos) > sectionWidth * 0.3) {
+          const nextSection = currentSection + Math.sign(velocity);
+          const nextSectionPos = nextSection * sectionWidth;
+          // Only if it's within bounds
+          if (nextSectionPos >= 0 && nextSectionPos <= maxScroll) {
+            rawTargetPosition = nextSectionPos;
+          }
+        }
+      }
+      
+      // Enforce bounds
+      const targetPosition = Math.max(0, Math.min(rawTargetPosition, maxScroll));
+      
+      // Apply smooth scrolling with extra easing for touch
       smoothScrollTo(targetPosition);
+    } else {
+      // For very small movements, snap to nearest section
+      const sectionWidth = window.innerWidth;
+      const nearestSection = Math.round(currentScrollRef.current / sectionWidth);
+      smoothScrollTo(nearestSection * sectionWidth);
+    }
+    
+    // Reset first move flag for next touch sequence
+    if (window.touchTracking) {
+      window.touchTracking.isFirstMove = true;
     }
   };
 

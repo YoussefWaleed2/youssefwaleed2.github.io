@@ -30,6 +30,10 @@ html, body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  background-color: #000;
+  font-size: 0;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* Hide scrollbar for smoother appearance */
@@ -47,7 +51,7 @@ html, body {
 /* Horizontal scrolling container */
 .single-project-container {
   position: relative;
-  width: max-content !important; /* Allow container to be wider than viewport */
+  width: max-content !important;
   height: 100vh;
   display: flex;
   flex-direction: row;
@@ -58,35 +62,57 @@ html, body {
   z-index: 20;
   perspective: 1000px;
   -webkit-perspective: 1000px;
-  gap: 0; /* Ensure no gap between sections */
-  font-size: 0; /* Remove any potential whitespace between inline elements */
-  transition: transform 0.05s linear; /* Very small transition for smoother movement */
-  min-width: 100vw; /* Ensure full width */
+  gap: 0;
+  font-size: 0;
+  transition: transform 0.05s linear;
+  min-width: 100vw;
+  isolation: isolate;
+  background-color: #000;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box;
 }
 
-.panel {
-  position: relative;
+/* Remove any potential gaps by setting special overflow and display properties */
+body:has(.single-project-page),
+html:has(.single-project-page) {
   overflow: hidden;
-  min-width: 100vw;
-  width: 100vw;
-  height: 100%;
-  flex-shrink: 0;
-  z-index: 1;
   background-color: #000;
-  /* Hardware acceleration */
-  will-change: transform, opacity;
+}
+
+/* Force all panels to fill space with no gaps */
+.panel {
+  position: absolute !important;
+  min-width: 100vw !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  flex-shrink: 0;
+  background-color: #000 !important;
+  will-change: transform;
   transform: translate3d(0, 0, 0);
-  -webkit-transform: translate3d(0, 0, 0);
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  outline: none !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  font-size: 16px;
 }
 
 .panel img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
   /* Hardware acceleration for images */
   will-change: transform;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* Panel positioning */
@@ -101,25 +127,29 @@ html, body {
 
 /* Single panel image styling */
 .single-project-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
   object-position: center;
   /* Hardware acceleration for images */
   will-change: transform;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .text-content {
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 4rem;
+  padding: 7rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-evenly;
   box-sizing: border-box;
+  margin: 0 auto;
   /* Hardware acceleration */
   will-change: transform;
   transform: translateZ(0);
@@ -131,7 +161,8 @@ html, body {
 }
 
 .panel-main-title {
-  font-size: 3rem;
+  font-size: 2.5rem;
+  font-family: "Aboreto", sans-serif;
   margin-bottom: 1rem;
   font-weight: 600;
 }
@@ -251,9 +282,15 @@ html {
 
 /* Image container for proper positioning of indicators */
 .image-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  background-color: #000 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 /* Scroll indicators - different positions based on class */
@@ -366,10 +403,11 @@ html {
 }
 
 .panel.second-panel {
-  border-radius: 106px 0 0 106px;
-  z-index: 30;
+  border-radius: 106px 0 0 106px;  
+  z-index: 30 !important;
   overflow: hidden;
   position: relative;
+  width: 85vw !important; /* Reduced from 100vw to 85vw */
 }
 
 .panel.first-panel {
@@ -391,7 +429,8 @@ html {
 .scroll-indicator {
   width: 18px;
   height: 18px;
-  border-radius: 50%;
+  border-radius
+: 50%;
   background: #fff;
   border: 2px solid #fff;
   opacity: 0.5;
@@ -501,42 +540,63 @@ body:has(.single-project-page) .navbar {
 /* Reset all border radius for third panel */
 .panel.third-panel,
 .panel:nth-child(3) {
-  z-index: 40 !important;
+  z-index: 30 !important; /* Same z-index as second panel to appear as one unit */
   border-radius: 0 !important;
   overflow: visible !important;
+  transform-style: preserve-3d !important; /* Ensure 3D transforms are preserved */
 }
 
-/* Apply border radius to the image itself */
+/* Fourth panel (second image) specific styling */
+.panel:nth-child(4) {
+  left: 300vw !important;
+  z-index: 40 !important;
+  position: absolute !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  transform-style: preserve-3d !important;
+  transition: transform 0.2s linear !important;
+}
+
+/* Fifth panel and beyond */
+.panel:nth-child(n+5) {
+  z-index: 40 !important; /* Higher z-index for panels further back */
+  transform-style: preserve-3d !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  left: 0; /* Ensure it's aligned with the left edge */
+}
+
+/* Remove border radius from third panel image */
 .panel:nth-child(3) img,
 .panel.third-panel img,
 .panel.third-panel .single-project-image {
-  border-radius: 106px 0 0 106px !important;
+  border-radius: 0 !important;
   overflow: hidden !important;
   position: relative !important;
 }
 
-/* Additional container styles */
+/* Additional container styles - no border radius */
 .panel:nth-child(3) .image-container,
 .panel.third-panel .image-container {
   overflow: hidden !important;
-  border-radius: 106px 0 0 106px !important;
+  border-radius: 0 !important;
   position: relative !important;
   z-index: 41 !important;
 }
 
-/* Set panel 2 z-index lower than panel 3 for proper overlay */
+/* Set panel 2 z-index same as panel 3 for unified movement */
 .panel:nth-child(2),
 .panel.second-panel {
   z-index: 30 !important;
   position: relative !important;
+  transform-style: preserve-3d !important; /* Ensure 3D transforms are preserved */
 }
 
-/* Force all other panels to have no border radius */
-.panel:nth-child(n+4),
-.panel:nth-child(n+4) .image-container,
-.panel:nth-child(n+4) img,
-.panel:nth-child(n+4) .single-project-image {
-  border-radius: 0 !important;
+/* Fourth panel and beyond - higher z-index for proper layering */
+.panel:nth-child(n+4) {
+  z-index: 40 !important;
+  transform-style: preserve-3d !important;
+  left: 0; /* Ensure it's aligned with the left edge */
 }
 
 /* Ensure navigation buttons are easily clickable */
@@ -553,4 +613,9 @@ body:has(.single-project-page) .navbar {
 .image-nav-arrow {
   pointer-events: auto !important;
   cursor: pointer !important;
+}
+
+/* Transition helper class to ensure smooth movement */
+.smooth-transition {
+  transition: transform 0.2s ease-out !important;
 }

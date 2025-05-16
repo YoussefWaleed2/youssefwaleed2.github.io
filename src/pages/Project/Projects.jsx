@@ -19,7 +19,6 @@ const Projects = () => {
   const prevBtnRef = useRef(null);
   const nextBtnRef = useRef(null);
   const textRefs = useRef([useRef(null), useRef(null), useRef(null)]);
-  const counterRef = useRef(null);
 
   // Define categories with memoization to avoid recreation on each render
   const categories = useMemo(() => ["BRANDING", "MARKETING", "ADVERTISEMENT"], []);
@@ -155,23 +154,6 @@ const Projects = () => {
       }
     }
     
-    // Update counter
-    gsap.to(counterRef.current.querySelector("span:first-child"), {
-      opacity: 0,
-      y: -10,
-      duration: 0.3,
-      ease: "power2.out",
-      onComplete: () => {
-        counterRef.current.querySelector("span:first-child").textContent = (toIndex + 1);
-        gsap.to(counterRef.current.querySelector("span:first-child"), {
-          opacity: 1,
-          y: 0,
-          duration: 0.3,
-          ease: "power2.out"
-        });
-      }
-    });
-    
     // End animation state
     setTimeout(() => {
       setIsAnimating(false);
@@ -195,14 +177,13 @@ const Projects = () => {
 
   useEffect(() => {
     // Set initial states for UI elements
-    gsap.set([counterRef.current], {
+    gsap.set([prevBtnRef.current, nextBtnRef.current], {
       opacity: 0
     });
 
     // Store ref values to use in cleanup
     const prevBtn = prevBtnRef.current;
     const nextBtn = nextBtnRef.current;
-    const counter = counterRef.current;
     const textRefElements = textRefs.current.map(ref => ref.current);
 
     // Wait a short delay to ensure transition has completed
@@ -218,11 +199,6 @@ const Projects = () => {
         y: 50, 
         visibility: "visible",
         opacity: 0
-      });
-      
-      gsap.set(counter, { 
-        y: 30, 
-        visibility: "visible" 
       });
 
       // Initialize text elements - same for mobile and desktop
@@ -268,12 +244,6 @@ const Projects = () => {
         opacity: 0.7,
         duration: 0.5, 
         ease: "power2.out"
-      }, "-=0.3")
-      .to(counter, {
-        y: 0,
-        opacity: 1,
-        duration: 0.5,
-        ease: "power2.out"
       }, "-=0.3");
     }, 200);
     
@@ -282,7 +252,6 @@ const Projects = () => {
       gsap.killTweensOf([
         prevBtn,
         nextBtn,
-        counter,
         ...textRefElements
       ]);
     };
@@ -553,13 +522,9 @@ const Projects = () => {
               </div>
             ))}
           </div>
-
+          
           <div className="project-navigation right-nav">
-            <div ref={counterRef} className="project-counter">
-              <span>1</span>
-              <span>/</span>
-              <span>3</span>
-            </div>
+            {/* Empty div to maintain layout balance */}
           </div>
         </div>
         

@@ -9,6 +9,20 @@ html, body {
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease;
+}
+
+/* Make sure transitions are clean between pages and panels */
+html {
+  transition: background-color 0.3s ease;
+}
+
+/* Force all panels to match body background */
+body.single-project-page-active,
+body.single-project-page-active .single-project-page,
+body.single-project-page-active .single-project-container,
+body.single-project-page-active .panel {
+  transition: background-color 0.3s ease;
 }
 
 .single-project-page {
@@ -19,7 +33,7 @@ html, body {
   overflow-y: hidden;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease, background-color 0.3s ease;
   z-index: 10;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -30,10 +44,10 @@ html, body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  background-color: #000;
   font-size: 0;
   margin: 0 !important;
   padding: 0 !important;
+  background-color: inherit; /* Inherit from body */
 }
 
 /* Hide scrollbar for smoother appearance */
@@ -64,10 +78,10 @@ html, body {
   -webkit-perspective: 1000px;
   gap: 0;
   font-size: 0;
-  transition: transform 0.05s linear;
+  transition: transform 0.05s linear, background-color 0.3s ease;
   min-width: 100vw;
   isolation: isolate;
-  background-color: #000;
+  background-color: inherit; /* Inherit from parent */
   margin: 0 !important;
   padding: 0 !important;
   box-sizing: border-box;
@@ -77,7 +91,7 @@ html, body {
 body:has(.single-project-page),
 html:has(.single-project-page) {
   overflow: hidden;
-  background-color: #000;
+  background-color: inherit; /* Inherit from body */
 }
 
 /* Force all panels to fill space with no gaps */
@@ -87,7 +101,6 @@ html:has(.single-project-page) {
   width: 100vw !important;
   height: 100vh !important;
   flex-shrink: 0;
-  background-color: #000 !important;
   will-change: transform;
   transform: translate3d(0, 0, 0);
   display: flex !important;
@@ -100,6 +113,8 @@ html:has(.single-project-page) {
   overflow: hidden !important;
   box-sizing: border-box !important;
   font-size: 16px;
+  background-color: inherit !important; /* Inherit from container */
+  transition: transform 0.2s linear, background-color 0.3s ease;
 }
 
 .panel img {
@@ -123,6 +138,7 @@ html:has(.single-project-page) {
 /* Text panel (typically second panel) */
 .panel:nth-child(2) {
   border-radius: 0;
+  background-color: inherit !important;
 }
 
 /* Single panel image styling */
@@ -154,6 +170,8 @@ html:has(.single-project-page) {
   will-change: transform;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
+  background-color: inherit !important; /* Inherit background color from parent */
+  transition: background-color 0.3s ease;
 }
 
 .main-text {
@@ -288,7 +306,7 @@ html {
   justify-content: center !important;
   align-items: center !important;
   overflow: hidden !important;
-  background-color: #000 !important;
+  background-color: inherit !important; /* Inherit from parent panel */
   margin: 0 !important;
   padding: 0 !important;
 }
@@ -408,6 +426,7 @@ html {
   overflow: hidden;
   position: relative;
   width: 85vw !important; /* Reduced from 100vw to 85vw */
+  background-color: inherit !important;
 }
 
 .panel.first-panel {
@@ -657,4 +676,59 @@ body.single-project-page-active .image-container {
 body:not(.single-project-page-active) .panel .image-container,
 body:not(.single-project-page-active) .panel .background-image {
   display: block; /* Reset display property */
+}
+
+/* Background color styling */
+body.dark-background {
+  color: #FFFFFF;
+}
+
+body.dark-background .panel-text h2,
+body.dark-background .panel-text h3,
+body.dark-background .panel-text p,
+body.dark-background .indicator-container .indicator {
+  color: #FFFFFF;
+}
+
+body.dark-background .indicator-container .indicator {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+body.dark-background .indicator-container .indicator.active {
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
+}
+
+body.light-background {
+  color: #1A1A1A;
+}
+
+body.light-background .panel-text h2,
+body.light-background .panel-text h3,
+body.light-background .panel-text p,
+body.light-background .indicator-container .indicator {
+  color: #1A1A1A;
+}
+
+body.light-background .indicator-container .indicator {
+  border-color: rgba(26, 26, 26, 0.5);
+}
+
+body.light-background .indicator-container .indicator.active {
+  background-color: #1A1A1A;
+  border-color: #1A1A1A;
+}
+
+/* Transition for background color changes */
+body {
+  transition: background-color 0.5s ease-in-out;
+}
+
+/* Force all panel backgrounds to match */
+.panel, 
+.panel.first-panel, 
+.panel.second-panel, 
+.panel.third-panel, 
+.panel:nth-child(n+4) {
+  background-color: inherit !important;
 }

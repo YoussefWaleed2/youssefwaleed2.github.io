@@ -58,6 +58,18 @@ const MobileMenu = () => {
   const handleCloseMenu = (e) => {
     // Stop event propagation to prevent any conflicts
     if (e) e.stopPropagation();
+    
+    // Reset any SingleProject styles that might interfere with menu
+    document.body.style.touchAction = '';
+    document.body.classList.remove('single-project-page-active');
+    document.body.classList.remove('dark-background');
+    document.body.classList.remove('light-background');
+    
+    // Immediately hide menu visually for better UX
+    if (menuOverlayRef.current) {
+      // Add immediate visual feedback
+      menuOverlayRef.current.style.opacity = "0.95";
+    }
 
     if (
       !menuOverlayBarRef.current ||
@@ -115,9 +127,17 @@ const MobileMenu = () => {
           gsap.set(menuOverlayRef.current, {
             pointerEvents: "none",
             clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-            top: "-100vh"
+            top: "-100vh",
+            opacity: "1" // Reset opacity
           });
         }
+        
+        // Cleanup for SingleProject related styles
+        document.body.style.backgroundColor = '';
+        document.body.classList.remove('single-project-page-active');
+        document.body.classList.remove('dark-background');
+        document.body.classList.remove('light-background');
+        document.body.style.touchAction = '';
       },
     });
 
@@ -313,14 +333,44 @@ const MobileMenu = () => {
   const handleNavigation = (e, path) => {
     e.preventDefault();
 
+    // If clicking on the active page link, just close the menu
     if (pathname === path) {
       handleCloseMenu();
       return;
     }
 
-    handleCloseMenu();
-    navigate(path);
-    slideInOut();
+    // First, ensure the SingleProjects page cleans up
+    // by resetting body styles that might block touch events
+    document.body.style.touchAction = '';
+    document.body.classList.remove('single-project-page-active');
+    document.body.classList.remove('dark-background');
+    document.body.classList.remove('light-background');
+    
+    // Next, manually reset the menu overlay styles to hide it immediately
+    if (menuOverlayRef.current) {
+      // Kill any active GSAP animations on menu elements first
+      gsap.killTweensOf(menuOverlayRef.current);
+      gsap.killTweensOf(document.querySelectorAll(".menu-link a"));
+      
+      // Remove the menu
+      menuOverlayRef.current.style.clipPath = "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)";
+      menuOverlayRef.current.style.top = "-100vh";
+      menuOverlayRef.current.style.pointerEvents = "none";
+    }
+    
+    // Ensure pointerEvents are reset on nav
+    if (navRef.current) {
+      navRef.current.style.pointerEvents = "all";
+    }
+    
+    // Reset background color
+    document.body.style.backgroundColor = '';
+    
+    // Finally, navigate after a small delay to ensure menu is gone
+    setTimeout(() => {
+      navigate(path);
+      slideInOut();
+    }, 50);
   };
 
   return (
@@ -352,27 +402,42 @@ const MobileMenu = () => {
             ref={menuCloseBtnRef} 
             onClick={handleCloseMenu}
             style={{ 
-              padding: "15px", 
+              padding: "20px", 
               cursor: "pointer",
-              touchAction: "manipulation",
+              touchAction: "auto",
               WebkitTapHighlightColor: "transparent",
               userSelect: "none",
-              WebkitUserSelect: "none"
+              WebkitUserSelect: "none",
+              position: "absolute",
+              right: "10px",
+              top: "10px",
+              zIndex: "9999",
+              transform: "translateZ(0)",
+              background: "rgba(0,0,0,0.1)",
+              borderRadius: "50%",
+              width: "60px",
+              height: "60px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
             }}
           >
-            <svg className="close-btn" width="36" height="36" viewBox="0 0 24 24" fill="rgba(255,255,255,0.01)" xmlns="http://www.w3.org/2000/svg">
+            <svg className="close-btn" width="36" height="36" viewBox="0 0 24 24" fill="rgba(255,255,255,0.01)" xmlns="http://www.w3.org/2000/svg" style={{
+              pointerEvents: "auto",
+              touchAction: "auto"
+            }}>
             <rect x="0" y="0" width="24" height="24" fill="rgba(255,255,255,0.01)" />
-            <path d="M13.9902 10.0099L14.8302 9.16992" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M9.16992 14.8301L11.9199 12.0801" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M14.8299 14.8299L9.16992 9.16992" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M4 6C2.75 7.67 2 9.75 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2C10.57 2 9.2 2.3 7.97 2.85" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M13.9902 10.0099L14.8302 9.16992" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M9.16992 14.8301L11.9199 12.0801" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M14.8299 14.8299L9.16992 9.16992" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M4 6C2.75 7.67 2 9.75 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2C10.57 2 9.2 2.3 7.97 2.85" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
         </div>
 
         <div className="menu-links">
           <div className="menu-link">
-            <Link to="/" onClick={(e) => handleNavigation(e, "/")}>
+            <Link to="/" onClick={(e) => handleNavigation(e, "/")} style={{ marginTop: "60px" }}>
               <h1>Home</h1>
             </Link>
           </div>

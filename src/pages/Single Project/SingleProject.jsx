@@ -113,7 +113,7 @@ const SingleProject = () => {
     };
   }, [isMobileOrTablet, project]);
 
-  // Set page title
+  // Set page title and background color
   useEffect(() => {
     if (project) {
       document.title = `${project.title} | VZBL`;
@@ -121,12 +121,63 @@ const SingleProject = () => {
       // Add class to body for CSS scoping
       document.body.classList.add('single-project-page-active');
       
+      // Apply background color from project data if available
+      const bgColor = project.backgroundColor || '#000000';
+      document.body.style.backgroundColor = bgColor;
+      
+      // Also set HTML background to match for smooth scrolling
+      document.documentElement.style.backgroundColor = bgColor;
+      
+      // For text contrast, determine if background is dark or light
+      const rgb = hexToRgb(bgColor);
+      if (rgb) {
+        // Simple luminance formula (perceived brightness)
+        const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+        
+        if (luminance < 0.5) {
+          // Dark background, use light text
+          document.body.classList.add('dark-background');
+          document.body.classList.remove('light-background');
+        } else {
+          // Light background, use dark text
+          document.body.classList.add('light-background');
+          document.body.classList.remove('dark-background');
+        }
+      }
+      
       // Clean up function
       return () => {
         document.body.classList.remove('single-project-page-active');
+        document.body.classList.remove('dark-background');
+        document.body.classList.remove('light-background');
+        document.body.style.backgroundColor = '';
+        
+        // Force reset overflow properties
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+        document.documentElement.style.backgroundColor = '';
+        
+        // Clean up any remaining GSAP animations
+        if (gsap.globalTimeline) {
+          const animations = gsap.globalTimeline.getChildren();
+          animations.forEach(animation => animation.kill());
+        }
       };
     }
   }, [project]);
+
+  // Helper function to convert hex color to RGB
+  const hexToRgb = (hex) => {
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+    
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
+  };
 
   // Find the project data based on URL parameters
   useEffect(() => {
@@ -554,6 +605,13 @@ const SingleProject = () => {
     if (scrollPosition < sectionWidth * 0.4) {
       if (currentSection !== 0) {
         setCurrentSection(0);
+        
+        // Update background color based on current section
+        const currentSectionData = project.projectContent.sections[0];
+        const bgColor = currentSectionData?.backgroundColor || project.backgroundColor || '#000000';
+        document.body.style.backgroundColor = bgColor;
+        document.documentElement.style.backgroundColor = bgColor;
+        
         setTimeout(updateIndicatorStyles, 10);
       }
       return;
@@ -563,6 +621,13 @@ const SingleProject = () => {
     
     if (newSection !== currentSection && newSection >= 0 && newSection < project.projectContent.sections.length) {
       setCurrentSection(newSection);
+      
+      // Update background color based on new section
+      const newSectionData = project.projectContent.sections[newSection];
+      const bgColor = newSectionData?.backgroundColor || project.backgroundColor || '#000000';
+      document.body.style.backgroundColor = bgColor;
+      document.documentElement.style.backgroundColor = bgColor;
+      
       setTimeout(updateIndicatorStyles, 10);
     }
   };
@@ -845,7 +910,7 @@ const SingleProject = () => {
             )}
             {section.type === 'text' && (
               <div className="text-content" style={{ 
-                backgroundColor: section.backgroundColor || '#090909',
+                backgroundColor: section.backgroundColor || project.backgroundColor || '#090909',
                 color: section.textColor || '#FFFFFF'
               }}>
                 <div className="main-text">

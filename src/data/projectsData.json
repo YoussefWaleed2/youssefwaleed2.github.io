@@ -4,6 +4,7 @@
         "title": "Épos",
         "media": "/project/Project-Assets/Branding/EPOS.webp",
         "mediaType": "image",
+        "backgroundColor": "#1A1A1A",
         "projectContent": {
           "sections": [
             {
@@ -41,6 +42,7 @@
         "title": "Shawerma El Reem",
         "media": "/project/Project-Assets/Branding/SHAWERMA EL REEM.webp",
         "mediaType": "image",
+        "backgroundColor": "#E0C8A7",
         "projectContent": {
           "sections": [
             {
@@ -83,6 +85,7 @@
         "title": "Venti",
         "media": "/project/Project-Assets/Branding/VENTI.webp",
         "mediaType": "image",
+        "backgroundColor": "#CDC8BF",
         "projectContent": {
           "sections": [
             {
@@ -686,6 +689,7 @@
         "media": "/project/Project-Assets/Marketing/Nev.webm",
         "mediaType": "video",
         "thumbnail": "/project/Project-Assets/Marketing/Nev-thumb.webp",
+        "backgroundColor": "#004D40",
         "projectContent": {
           "sections": [
             {

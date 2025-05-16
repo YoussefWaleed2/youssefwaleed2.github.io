@@ -3,10 +3,19 @@ body, html {
   margin: 0;
   padding: 0;
   overflow-x: hidden; /* Prevent horizontal scrolling */
+  -webkit-overflow-scrolling: touch; /* Improve scrolling on iOS */
 }
 
 .page.home {
-  overflow-x: hidden; /* Ensure no horizontal overflow on the home page */
+  overflow: hidden !important; /* Ensure no overflow on the home page */
+  height: 100vh;
+  height: 100svh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 /* .hero-video {
@@ -190,16 +199,32 @@ body, html {
   left: 0;
   width: 100%;
   height: 100vh;
+  height: 100svh;
   z-index: -1;
   overflow: hidden;
-  background-color: var(--bg);
+  background-color: black;
+  will-change: transform; /* Improve performance */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  transition: none; /* Prevent any unwanted transitions */
+}
+
+.video-wrapper.video-error {
+  background-color: #000;
 }
 
 .video-wrapper video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 0.5s ease-in-out;
+  transition: none; /* Remove transition to prevent sizing animation */
+  /* Hardware acceleration */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000;
 }
 
 .video-placeholder {
@@ -209,11 +234,222 @@ body, html {
   width: 100%;
   height: 100%;
   z-index: 1;
-  background-color: var(--bg);
+  background-color: black;
 }
 
 .video-placeholder img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.video-fallback {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.fallback-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .page.home {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    height: 100vh;
+    height: 100svh;
+    width: 100vw;
+    max-height: 100vh;
+    max-width: 100vw;
+    
+  }
+  
+  .video-wrapper {
+    height: 100vh;
+    height: 100svh;
+    height: -webkit-fill-available; /* iOS height fix */
+    transition: none;
+    transform: none !important;
+    max-width: 100vw;
+    max-height: 100vh;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  .video-wrapper video, 
+  .fallback-image {
+    object-position: center;
+    transition: none;
+    width: 100% !important;
+    height: 100% !important;
+    transform: none !important;
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+  
+  /* Add iOS-specific fixes */
+  @supports (-webkit-touch-callout: none) {
+    .video-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: -webkit-fill-available;
+      transform: none !important;
+      transition: none;
+    }
+    
+    .video-wrapper video {
+      transform: none !important;
+      transition: none;
+    }
+  }
+}
+
+/* iPhone-specific fixes */
+@media only screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3), 
+       only screen and (device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) {
+  .video-wrapper {
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: none !important;
+    transition: none;
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+  
+  .video-wrapper video {
+    transform: none !important;
+    transition: none;
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+}
+
+/* Add no-scroll class for the body when on home page */
+body.no-scroll,
+html.no-scroll {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: none !important;
+  -ms-touch-action: none !important;
+  -webkit-touch-callout: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+/* iOS-specific scroll fixes */
+@supports (-webkit-touch-callout: none) {
+  .page.home {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    -webkit-overflow-scrolling: none;
+  }
+  
+  body.no-scroll,
+  html.no-scroll {
+    position: fixed;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    -webkit-overflow-scrolling: none;
+    overscroll-behavior: none;
+  }
+  
+  /* Specifically allow touch events on the menu */
+  .menu,
+  .menu *,
+  nav,
+  nav *,
+  button,
+  .menu-button,
+  .navigation-menu,
+  .navigation-menu *,
+  .menu-toggle-close,
+  .menu-toggle-close *,
+  .close-btn,
+  .close-btn *,
+  .menu-overlay,
+  .menu-overlay *,
+  .menu-overlay-bar,
+  .menu-links {
+    touch-action: auto !important;
+    pointer-events: auto !important;
+    z-index: 9999 !important;
+  }
+}
+
+/* Prevent page bouncing on iOS */
+@media screen and (orientation:portrait) {
+  html, body {
+    position: fixed;
+    overflow: hidden;
+    height: 100%;
+    overscroll-behavior: none;
+  }
+  
+  /* Specifically allow touch events on the menu */
+  .menu,
+  .menu *,
+  nav,
+  nav *,
+  button,
+  .menu-button,
+  .navigation-menu,
+  .navigation-menu *,
+  .menu-toggle-close,
+  .menu-toggle-close *,
+  .close-btn,
+  .close-btn *,
+  .menu-overlay,
+  .menu-overlay *,
+  .menu-overlay-bar,
+  .menu-links {
+    touch-action: auto !important;
+    pointer-events: auto !important;
+    z-index: 9999 !important;
+  }
+}
+
+/* Add specific styles for the close button to ensure it works */
+.menu-toggle-close {
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
 }

@@ -925,6 +925,18 @@ const SingleProject = () => {
 
   // Function to handle navigation back to projects
   const handleBackToProjects = () => {
+    // First remove transitions before navigation to prevent flash
+    document.documentElement.classList.add('no-transition');
+    document.body.style.transition = 'none';
+    document.documentElement.style.transition = 'none';
+    document.body.style.backgroundColor = '';
+    document.documentElement.style.backgroundColor = '';
+    
+    // Remove classes immediately
+    document.body.classList.remove('dark-background');
+    document.body.classList.remove('light-background');
+    document.body.classList.remove('single-project-page-active');
+    
     // Navigate to the specific category page with correct URL pattern
     navigate(`/all-projects/${category}`);
   };
@@ -1087,7 +1099,13 @@ const SingleProject = () => {
                   {section.subTitle && <h3 className="panel-sub-title">{section.subTitle}</h3>}
                 </div>
                 <div className="paragraphs">
-                  {section.text && <p className="panel-paragraph">{section.text}</p>}
+                  {section.text && (
+                    Array.isArray(section.text) ? 
+                    section.text.map((paragraph, i) => (
+                      <p key={i} className="panel-paragraph">{paragraph}</p>
+                    )) : 
+                    <p className="panel-paragraph">{section.text}</p>
+                  )}
                 </div>
                 <div className="bottom-info">
                   <div className="info-row label-row">
@@ -1131,6 +1149,17 @@ const SingleProject = () => {
               }}>
                 <div className="centered-text">
                   {section.text && (
+                    Array.isArray(section.text) ? 
+                    section.text.map((paragraph, i) => (
+                      <p key={i} className="text-section-paragraph" style={{
+                        maxWidth: '600px',
+                        margin: i === 0 ? '0 auto' : '20px auto 0',
+                        lineHeight: '1.5',
+                        letterSpacing: '0.05em'
+                      }}>
+                        {paragraph}
+                      </p>
+                    )) : 
                     <p className="text-section-paragraph" style={{
                       maxWidth: '600px',
                       margin: '0 auto',

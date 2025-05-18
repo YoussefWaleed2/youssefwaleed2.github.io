@@ -251,6 +251,14 @@ html:has(.single-project-page) {
   font-family: "Aboreto", sans-serif;
 }
 
+.value-subtext {
+  display: block;
+  font-size: 16px;
+  margin-top: 4px;
+  font-family: "Aboreto", sans-serif;
+  line-height: 1;
+}
+
 /* Hide scrollbars */
 ::-webkit-scrollbar {
   display: none;
@@ -946,8 +954,8 @@ body.single-project-page-active .panel {
 
 /* Back to Projects Button */
 .back-to-projects-btn {
-  position: fixed;
-  bottom: 2rem;
+  position: relative;
+  bottom: 4rem;
   left: 2rem;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.7);
@@ -974,7 +982,7 @@ body.single-project-page-active .panel {
 /* Mobile specific button styles */
 @media (max-width: 1024px) {
   .back-to-projects-btn {
-    position: fixed;
+    position: relative;
     bottom: 1.5rem;
     left: 50%;
     transform: translateX(-50%);
@@ -987,12 +995,6 @@ body.single-project-page-active .panel {
     background-color: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.7);
   }
-  
-  /* Add padding to bottom of content area to prevent button overlap */
-  .mobile-project-content {
-    padding-bottom: 4rem !important;
-  }
-  
   /* Extra space for last element in mobile content */
   .mobile-project-section:last-child {
     margin-bottom: 3.5rem !important;
@@ -1025,4 +1027,27 @@ body.single-project-page-active .panel {
   margin: 0 auto;
   font-weight: 400;
   text-transform: uppercase;
+}
+
+.value-subtext-mobile {
+  font-size: 0.8rem;
+  margin-top: 4px;
+  font-family: "Aboreto", sans-serif;
+  opacity: 0.9;
+  display: block;
+}
+
+/* Add no-transition utility class */
+.no-transition,
+.no-transition * {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Force all panels to match body background */
+body.single-project-page-active,
+body.single-project-page-active .single-project-page,
+body.single-project-page-active .single-project-container,
+body.single-project-page-active .panel {
+  transition: background-color 0.3s ease;
 }

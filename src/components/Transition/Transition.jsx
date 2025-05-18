@@ -98,6 +98,20 @@ const Transition = (_WrappedComponent) => {
         const link = e.target.closest('a');
         if (link && link.getAttribute('href')?.startsWith('/')) {
           e.preventDefault();
+          
+          // Check if it's a navigation from a single project page in menu
+          const isFromSingleProject = location.pathname.includes('/projects/') || location.pathname.includes('/project/');
+          const isFromMobileMenu = e.target.closest('.menu-overlay') !== null;
+          
+          // Skip animation for single project mobile menu navigation
+          if (isFromSingleProject && isFromMobileMenu) {
+            // Just navigate without animation
+            const path = link.getAttribute('href');
+            navigate(path);
+            return;
+          }
+          
+          // Normal navigation with animation
           const path = link.getAttribute('href');
           navigate(path);
         }
@@ -105,7 +119,7 @@ const Transition = (_WrappedComponent) => {
 
       document.addEventListener('click', handleClick);
       return () => document.removeEventListener('click', handleClick);
-    }, [navigate]);
+    }, [navigate, location]);
 
     return (
       <_Motion.div

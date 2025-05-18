@@ -39,10 +39,6 @@ const SingleProjectMobile = ({ project }) => {
 
   // Function to handle navigation back to projects
   const handleBackToProjects = () => {
-    // First remove transitions before navigation to prevent flash
-    document.body.style.transition = 'none';
-    document.documentElement.style.transition = 'none';
-    document.body.style.backgroundColor = '';
     document.documentElement.style.backgroundColor = '';
     
     // Remove classes immediately
@@ -59,9 +55,6 @@ const SingleProjectMobile = ({ project }) => {
     // Ensure we're scrolled to top
     window.scrollTo(0, 0);
     
-    // Reset any overflow issues
-    document.body.style.overflow = "auto";
-    document.documentElement.style.overflow = "auto";
     
     // Apply background color from project data if available
     const bgColor = project?.backgroundColor || '#000000';
@@ -232,8 +225,7 @@ const SingleProjectMobile = ({ project }) => {
                 style={{
                   backgroundColor: section.backgroundColor || headerBgColor,
                   color: section.textColor || getTextColor(section.backgroundColor || headerBgColor),
-                  padding: "2rem 1rem",
-                  textAlign: "center"
+                  padding: "2rem 1rem"
                 }}
               >
                 {section.slogan && (
@@ -247,8 +239,47 @@ const SingleProjectMobile = ({ project }) => {
                   </div>
                 )}
                 {section.text && (
-                  <div className="text-right-column" style={{ fontSize: "1rem", lineHeight: 1.6, maxWidth: "600px", margin: "0 auto" }}>
-                    {section.text}
+                  <div className="text-right-column" style={{ fontSize: "1rem", lineHeight: 1.6 }}>
+                    {Array.isArray(section.text) ? 
+                      section.text.map((paragraph, i) => (
+                        <p key={i} style={{ marginBottom: i < section.text.length - 1 ? '1rem' : 0 }}>
+                          {paragraph}
+                        </p>
+                      )) : 
+                      section.text
+                    }
+                  </div>
+                )}
+              </div>
+            )}
+            {section.type === "text-section" && (
+              <div
+                className="mobile-project-text-section"
+                style={{
+                  backgroundColor: section.backgroundColor || headerBgColor,
+                  color: section.textColor || getTextColor(section.backgroundColor || headerBgColor),
+                  padding: "4rem 1.5rem",
+                  textAlign: "center"
+                }}
+              >
+                {section.text && (
+                  <div className="text-section-content-mobile">
+                    {Array.isArray(section.text) ? 
+                      section.text.map((paragraph, i) => (
+                        <p 
+                          key={i} 
+                          className="text-section-paragraph-mobile" 
+                          style={{ 
+                            marginBottom: i < section.text.length - 1 ? '1.5rem' : 0 
+                          }}
+                        >
+                          {paragraph}
+                        </p>
+                      )) : 
+                      <p className="text-section-paragraph-mobile">
+                        {section.text}
+                      </p>
+                    }
                   </div>
                 )}
               </div>

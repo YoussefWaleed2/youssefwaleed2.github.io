@@ -442,17 +442,17 @@ const SingleProject = () => {
         const distanceAbs = Math.abs(distance);
         if (distanceAbs > sectionWidth * 0.7) {
           // Large distance (page transitions) - faster easing
-          easeFactor = 0.12;
+          easeFactor = 0.25; // Increased from 0.12 for faster scrolling
         } else if (distanceAbs > sectionWidth * 0.2) {
           // Medium distance - moderate easing
-          easeFactor = 0.1;
+          easeFactor = 0.22; // Increased from 0.1 for faster scrolling
         } else {
           // Small distance - more precise easing
-          easeFactor = 0.085;
+          easeFactor = 0.18; // Increased from 0.085 for faster scrolling
         }
       } else {
         // Windows/Linux standard easing
-        easeFactor = 0.08; // Increased from 0.04 for faster movement
+        easeFactor = 0.15; // Increased from 0.08 for faster movement
       }
       
       // Apply bounded scroll position with extra checks
@@ -614,20 +614,20 @@ const SingleProject = () => {
           
           if (isLikelyTouchpad) {
             // For Mac touchpads, apply more consistent scaling and smoother damping
-            deltaPixels = e.deltaY * 2.5;
+            deltaPixels = e.deltaY * 6.5; // Increased from 2.5 for faster scrolling
             
             // Also check horizontal scroll component for diagonal gestures
             if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.8) {
               // This is likely a diagonal gesture, soften the vertical component
-              deltaPixels *= 0.7;
+              deltaPixels *= 0.8; // Increased from 0.7 for more response
             }
           } else {
             // Probably a mouse on Mac, use standard scaling
-            deltaPixels = e.deltaY * 2.8;
+            deltaPixels = e.deltaY * 5.0; // Increased from 2.8 for faster scrolling
           }
         } else {
           // Windows/Linux standard handling
-          deltaPixels = e.deltaY * 3;
+          deltaPixels = e.deltaY * 4.0; // Increased from 3.0 for faster scrolling
         }
       }
       
@@ -646,13 +646,13 @@ const SingleProject = () => {
         if (sameDirection) {
           // Continuous scroll in same direction - build momentum gradually
           // Mac-specific momentum tuning for touchpads
-          const momentumMultiplier = isMac ? 0.9 : 1.2;
-          const momentumRetention = isMac ? 0.75 : 0.85;
+          const momentumMultiplier = isMac ? 1.8 : 1.2; // Increased from 0.9 for Mac
+          const momentumRetention = isMac ? 0.85 : 0.85; // Increased from 0.75 for Mac
           
           // Limit maximum momentum gain for predictable behavior
           const momentumGain = Math.min(
             Math.abs(deltaPixels) * momentumMultiplier,
-            Math.abs(window.wheelTracking.momentum) * (isMac ? 0.3 : 0.4)
+            Math.abs(window.wheelTracking.momentum) * (isMac ? 0.5 : 0.4) // Increased from 0.3 for Mac
           );
           
           // Update momentum with new input (smooth acceleration)
@@ -670,7 +670,7 @@ const SingleProject = () => {
       
       // Apply the momentum with a multiplier for desired speed
       // Use a different multiplier for Mac touchpads
-      finalDelta = window.wheelTracking.momentum * (isMac ? 1.3 : 1.5);
+      finalDelta = window.wheelTracking.momentum * (isMac ? 2.5 : 1.5); // Increased from 1.3 for Mac
       
       // Update tracking values for next event
       window.wheelTracking.lastEvent = now;
@@ -992,10 +992,10 @@ const SingleProject = () => {
       if (isMac) {
         if (isTrackpadGesture) {
           // For Mac trackpad two-finger gestures - more controlled momentum
-          velocityFactor = Math.min(1.8, Math.abs(velocity) * 6);
+          velocityFactor = Math.min(3.0, Math.abs(velocity) * 10); // Increased from 1.8 and 6
         } else {
           // Regular touch on Mac
-          velocityFactor = Math.min(2.2, Math.abs(velocity) * 7);
+          velocityFactor = Math.min(3.5, Math.abs(velocity) * 12); // Increased from 2.2 and 7
         }
       } else {
         // Non-Mac devices - standard momentum calculation
@@ -1003,7 +1003,7 @@ const SingleProject = () => {
       }
       
       // Calculate base momentum, adjusted for device type
-      const momentumMultiplier = isMac ? (isTrackpadGesture ? 0.55 : 0.65) : 0.7;
+      const momentumMultiplier = isMac ? (isTrackpadGesture ? 1.2 : 1.4) : 0.7; // Increased from 0.55/0.65 for Mac
       const baseMomentum = Math.sign(velocity) * (velocityFactor * sectionWidth * momentumMultiplier);
       
       // Add momentum to current position with bounds checking

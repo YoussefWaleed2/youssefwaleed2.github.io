@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Transition from '../../components/Transition/Transition';
@@ -24,8 +24,8 @@ function debounce(func, wait) {
 const SingleProject = () => {
   const { category, projectName } = useParams();
   const location = useLocation();
-  // navigate is not used since navigation functions were removed
-  // const navigate = useNavigate();
+  // Add navigate for navigation functionality
+  const navigate = useNavigate();
   
   // State variables
   const [project, setProject] = useState(null);
@@ -314,6 +314,88 @@ const SingleProject = () => {
       }
     };
   }, []);
+
+  // Effect to fix panel positioning and remove gaps
+  useEffect(() => {
+    if (isReady && project && containerRef.current) {
+      const panels = document.querySelectorAll('.panel');
+      if (!panels.length) return;
+
+      // Reset panel positions after videos load
+      const resetPanelPositions = () => {
+        let currentLeft = 0;
+        panels.forEach((panel, index) => {
+          // Set absolute positioning
+          panel.style.position = 'absolute';
+          panel.style.left = `${currentLeft}px`;
+          panel.style.top = '0';
+          
+          // For video panels, let them naturally size
+          const hasVideo = panel.querySelector('video');
+          if (hasVideo) {
+            // For video panels, ensure the container is properly sized
+            const vidContainer = panel.querySelector('.video-container-single-project');
+            if (vidContainer) {
+              vidContainer.style.width = 'auto';
+              vidContainer.style.height = 'auto';
+              vidContainer.style.minHeight = '100%';
+            }
+          }
+          
+          // Get the panel width (important for proper spacing)
+          const panelWidth = panel.offsetWidth || window.innerWidth;
+          
+          // Update left position for the next panel
+          currentLeft += panelWidth;
+        });
+        
+        // Update container width to accommodate all panels
+        if (containerRef.current) {
+          containerRef.current.style.width = `${currentLeft}px`;
+        }
+      };
+      
+      // Initial positioning
+      resetPanelPositions();
+      
+      // Wait for videos to load then reposition panels
+      const videos = document.querySelectorAll('video');
+      let loadedVideos = 0;
+      const totalVideos = videos.length;
+      
+      const checkAllVideosLoaded = () => {
+        loadedVideos++;
+        if (loadedVideos === totalVideos) {
+          // All videos loaded, reset positions
+          resetPanelPositions();
+        }
+      };
+      
+      if (totalVideos > 0) {
+        videos.forEach(video => {
+          if (video.readyState >= 3) { // HAVE_FUTURE_DATA or greater
+            checkAllVideosLoaded();
+          } else {
+            video.addEventListener('loadeddata', checkAllVideosLoaded);
+          }
+        });
+      }
+      
+      // Also reset on window resize
+      const handleResize = debounce(() => {
+        resetPanelPositions();
+      }, 200);
+      
+      window.addEventListener('resize', handleResize);
+      
+      return () => {
+        videos.forEach(video => {
+          video.removeEventListener('loadeddata', checkAllVideosLoaded);
+        });
+        window.removeEventListener('resize', handleResize);
+      };
+    }
+  }, [isReady, project]);
 
   // Update smoothScrollTo function for improved performance
   const smoothScrollTo = (targetX) => {
@@ -841,6 +923,12 @@ const SingleProject = () => {
     }
   };
 
+  // Function to handle navigation back to projects
+  const handleBackToProjects = () => {
+    // Navigate to the specific category page with correct URL pattern
+    navigate(`/all-projects/${category}`);
+  };
+
   // Return loading state if no project found
   if (!project) {
     return (
@@ -870,43 +958,124 @@ const SingleProject = () => {
             style={{ backgroundColor: section.backgroundColor || '#000' }}
             data-section-type={section.type}
           >
-            {section.type === 'media' && (
-              <div className="image-container">
-                <img 
-                  src={section.media || section.imageName} 
-                  alt={section.alt || `Project section ${index + 1}`} 
-                  className="single-project-image"
-                  onLoad={(e) => {
-                    // Adjust container size to match image's natural dimensions
-                    const img = e.target;
-                    const container = img.parentElement;
-                    const panel = container.parentElement;
-                    
-                    if (img && container) {
-                      // Use the image's natural dimensions
-                      const imgWidth = img.naturalWidth;
-                      const imgHeight = img.naturalHeight;
-                      
-                      // Set container width/height to match image dimensions
-                      if (imgWidth && imgHeight) {
-                        // Calculate aspect ratio
-                        const imgRatio = imgWidth / imgHeight;
-                        const viewportHeight = window.innerHeight;
-                        const viewportWidth = window.innerWidth;
+            {/* Handle both media and Video types */}
+            {(section.type === 'media' || section.type === 'Video') && (
+              <>
+                {section.type === "Video" || (section.media && (section.media.endsWith('.mp4') || section.media.endsWith('.webm'))) ? (
+                  <div className="video-container-single-project">
+                    <video 
+                      src={section.media}
+                      alt={section.alt || `Project section ${index + 1}`}
+                      className="single-project-video"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      style={{
+                        maxWidth: '100%',
+                        maxHeight: '100vh',
+                        width: 'auto',
+                        height: 'auto',
+                        margin: '0 auto',
+                        display: 'block',
+                        objectFit: 'contain'
+                      }}
+                      onLoadedMetadata={(e) => {
+                        // Detect if video is portrait or landscape
+                        const video = e.target;
+                        const isPortrait = video.videoHeight > video.videoWidth;
+                        const aspectRatio = video.videoWidth / video.videoHeight;
                         
-                        // Make sure images always fill the panel completely
-                        img.style.width = '100%';
-                        img.style.height = '100%';
-                        img.style.objectFit = 'cover';
+                        // Get relevant parent elements
+                        const videoContainer = video.closest('.video-container-single-project');
+                        const panel = video.closest('.panel');
                         
-                        // Make container fill the panel
-                        container.style.width = '100%';
-                        container.style.height = '100%';
-                      }
-                    }
-                  }}
-                />
-              </div>
+                        if (isPortrait) {
+                          // For portrait videos
+                          video.setAttribute('style', 'portrait: true; max-height: 100vh !important; width: auto !important; height: auto !important; object-fit: contain !important; margin: 0 auto !important;');
+                          video.setAttribute('data-orientation', 'portrait');
+                          
+                          if (panel) {
+                            // Adjust panel to fit the video
+                            panel.style.width = 'auto';
+                            panel.style.minWidth = '100vw';
+                            panel.style.display = 'flex';
+                            panel.style.justifyContent = 'center';
+                            panel.style.alignItems = 'center';
+                            panel.style.backgroundColor = 'transparent';
+                          }
+                          
+                          if (videoContainer) {
+                            // Adjust container to match video
+                            videoContainer.style.width = 'auto';
+                            videoContainer.style.height = 'auto';
+                            videoContainer.style.backgroundColor = 'transparent';
+                          }
+                        } else {
+                          // For landscape videos
+                          video.setAttribute('style', 'max-width: 100% !important; max-height: 100vh !important; width: auto !important; height: auto !important; object-fit: contain !important; margin: 0 auto !important;');
+                          video.setAttribute('data-orientation', 'landscape');
+                          
+                          if (panel) {
+                            // For landscape, we still want it to fit well in the viewport
+                            panel.style.width = '100vw';
+                            panel.style.height = '100vh';
+                            panel.style.backgroundColor = 'transparent';
+                          }
+                          
+                          if (videoContainer) {
+                            // For landscape, container should fill panel width
+                            videoContainer.style.width = '100%';
+                            videoContainer.style.height = '100%';
+                          }
+                        }
+                        
+                        // Force browser to recalculate layout
+                        setTimeout(() => {
+                          if (panel) panel.style.display = 'flex';
+                        }, 50);
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="image-container">
+                    <img 
+                      src={section.media || section.imageName} 
+                      alt={section.alt || `Project section ${index + 1}`} 
+                      className="single-project-image"
+                      onLoad={(e) => {
+                        // Adjust container size to match image's natural dimensions
+                        const img = e.target;
+                        const container = img.parentElement;
+                        const panel = container.parentElement;
+                        
+                        if (img && container) {
+                          // Use the image's natural dimensions
+                          const imgWidth = img.naturalWidth;
+                          const imgHeight = img.naturalHeight;
+                          
+                          // Set container width/height to match image dimensions
+                          if (imgWidth && imgHeight) {
+                            // Calculate aspect ratio
+                            const imgRatio = imgWidth / imgHeight;
+                            const viewportHeight = window.innerHeight;
+                            const viewportWidth = window.innerWidth;
+                            
+                            // Make sure images always fill the panel completely
+                            img.style.width = '100%';
+                            img.style.height = '100%';
+                            img.style.objectFit = 'cover';
+                            
+                            // Make container fill the panel
+                            container.style.width = '100%';
+                            container.style.height = '100%';
+                          }
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+              </>
             )}
             {section.type === 'text' && (
               <div className="text-content" style={{ 
@@ -921,17 +1090,55 @@ const SingleProject = () => {
                   {section.text && <p className="panel-paragraph">{section.text}</p>}
                 </div>
                 <div className="bottom-info">
-                  {section.fieldName && (
-                    <div className="field-info">
-                      <span className="label">Field Name</span>
-                      <span className="value">{section.fieldName}</span>
-                    </div>
-                  )}
-                  {section.services && (
-                    <div className="services-info">
-                      <span className="label">SERVICE</span>
-                      <span className="value">{section.services}</span>
-                    </div>
+                  <div className="info-row label-row">
+                    {section.fieldName && (
+                      <div className="field-info">
+                        <span className="label">Field Name</span>
+                      </div>
+                    )}
+                    {section.services && (
+                      <div className="services-info">
+                        <span className="label">SERVICE</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="info-row value-row">
+                    {section.fieldName && (
+                      <div className="field-info">
+                        <span className="value">{section.fieldName}</span>
+                      </div>
+                    )}
+                    {section.services && (
+                      <div className="services-info">
+                        <span className="value">{section.services}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+            {section.type === 'text-section' && (
+              <div className="text-section-content" style={{ 
+                backgroundColor: section.backgroundColor || project.backgroundColor || '#000000',
+                color: section.textColor || '#FFFFFF',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%',
+                padding: '0 20%',
+                textAlign: 'center'
+              }}>
+                <div className="centered-text">
+                  {section.text && (
+                    <p className="text-section-paragraph" style={{
+                      maxWidth: '600px',
+                      margin: '0 auto',
+                      lineHeight: '1.5',
+                      letterSpacing: '0.05em'
+                    }}>
+                      {section.text}
+                    </p>
                   )}
                 </div>
               </div>
@@ -939,6 +1146,13 @@ const SingleProject = () => {
           </div>
         ))}
       </div>
+      {/* Back to Projects button */}
+      <button 
+        className="back-to-projects-btn" 
+        onClick={handleBackToProjects}
+      >
+        Back to Projects
+      </button>
     </div>
   );
 };

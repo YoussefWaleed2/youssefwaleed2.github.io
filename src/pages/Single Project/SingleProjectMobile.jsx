@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import "./SingleProject.css";
+import Footer from "../../components/Footer/Footer";
 
 // Helper function to determine text color based on background brightness
 const getTextColor = (bgColor) => {
@@ -30,6 +32,28 @@ const getTextColor = (bgColor) => {
 };
 
 const SingleProjectMobile = ({ project }) => {
+  // Add navigate for navigation functionality
+  const navigate = useNavigate();
+  // Get category from URL params
+  const { category } = useParams();
+
+  // Function to handle navigation back to projects
+  const handleBackToProjects = () => {
+    // First remove transitions before navigation to prevent flash
+    document.body.style.transition = 'none';
+    document.documentElement.style.transition = 'none';
+    document.body.style.backgroundColor = '';
+    document.documentElement.style.backgroundColor = '';
+    
+    // Remove classes immediately
+    document.body.classList.remove('dark-background');
+    document.body.classList.remove('light-background');
+    document.body.classList.remove('single-project-page-active');
+    
+    // Navigate to the specific category page with correct URL pattern
+    navigate(`/all-projects/${category}`);
+  };
+
   // Add a useEffect to fix any possible scroll issues and apply background color
   useEffect(() => {
     // Ensure we're scrolled to top
@@ -56,13 +80,24 @@ const SingleProjectMobile = ({ project }) => {
     }
     
     return () => {
-      // Clean up when unmounting
+      // Disable transitions during cleanup to prevent flash
+      document.body.style.transition = 'none';
+      document.documentElement.style.transition = 'none';
+      
+      // Clean up when unmounting - set immediate styles without transitions
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
       document.body.style.backgroundColor = "";
       document.documentElement.style.backgroundColor = "";
       document.body.classList.remove('dark-background');
       document.body.classList.remove('light-background');
+      document.body.classList.remove('single-project-page-active');
+      
+      // Allow transitions again after a small delay (after navigation completes)
+      setTimeout(() => {
+        document.body.style.transition = '';
+        document.documentElement.style.transition = '';
+      }, 300);
     };
   }, [project]);
 
@@ -128,7 +163,8 @@ const SingleProjectMobile = ({ project }) => {
           padding: "3.5rem 1rem 1rem 1rem", 
           background: headerBgColor, 
           color: headerTextColor, 
-          marginTop: "1rem" 
+          marginTop: "1rem",
+          textAlign: "center"
         }}>
           <h1 style={{ fontFamily: "Aboreto, serif", fontSize: "2.2rem", marginBottom: "0.5rem" }}>
             {project.title}
@@ -142,14 +178,53 @@ const SingleProjectMobile = ({ project }) => {
         </div>
         {/* Sections */}
         {project.projectContent.sections.map((section, index) => (
-          <div key={index} className="mobile-project-section">
-            {section.type === "media" && (
-              <img
-                src={section.media || section.imageName}
-                alt={section.alt || `Project section ${index + 1}`}
-                className="mobile-project-image"
-                style={{ width: "100%", height: "auto", display: "block" }}
-              />
+          <div 
+            key={index} 
+            className="mobile-project-section"
+            style={{ 
+              marginBottom: index === project.projectContent.sections.length - 1 ? '0' : '0'
+            }}
+          >
+            {/* Handle both media and Video types */}
+            {(section.type === "media" || section.type === "Video") && (
+              <>
+                {/* Check if it's a video section or has a video file extension */}
+                {section.type === "Video" || (section.media && (section.media.endsWith('.mp4') || section.media.endsWith('.webm'))) ? (
+                  <div className="mobile-project-video-container" style={{ 
+                    width: "100%", 
+                    display: "block", 
+                    padding: "0",
+                    margin: "0",
+                    overflow: "hidden"
+                  }}>
+                    <video 
+                      src={section.media}
+                      alt={section.alt || `Project section ${index + 1}`}
+                      className="mobile-project-video"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      controls={false}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        margin: "0",
+                        padding: "0",
+                        display: "block",
+                        objectFit: "cover"
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <img
+                    src={section.media || section.imageName}
+                    alt={section.alt || `Project section ${index + 1}`}
+                    className="mobile-project-image"
+                    style={{ width: "100%", height: "auto", display: "block" }}
+                  />
+                )}
+              </>
             )}
             {section.type === "text" && (
               <div
@@ -157,7 +232,8 @@ const SingleProjectMobile = ({ project }) => {
                 style={{
                   backgroundColor: section.backgroundColor || headerBgColor,
                   color: section.textColor || getTextColor(section.backgroundColor || headerBgColor),
-                  padding: "2rem 1rem"
+                  padding: "2rem 1rem",
+                  textAlign: "center"
                 }}
               >
                 {section.slogan && (
@@ -171,7 +247,7 @@ const SingleProjectMobile = ({ project }) => {
                   </div>
                 )}
                 {section.text && (
-                  <div className="text-right-column" style={{ fontSize: "1rem", lineHeight: 1.6 }}>
+                  <div className="text-right-column" style={{ fontSize: "1rem", lineHeight: 1.6, maxWidth: "600px", margin: "0 auto" }}>
                     {section.text}
                   </div>
                 )}
@@ -180,6 +256,14 @@ const SingleProjectMobile = ({ project }) => {
           </div>
         ))}
       </div>
+      {/* Back to Projects button */}
+      <button 
+        className="back-to-projects-btn" 
+        onClick={handleBackToProjects}
+      >
+        Back to Projects
+      </button>
+      <Footer />
     </div>
   );
 };

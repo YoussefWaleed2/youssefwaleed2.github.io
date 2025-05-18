@@ -415,6 +415,9 @@ const SingleProject = () => {
     // Set scrolling state
     isScrollingRef.current = true;
     
+    // Detect if user is on macOS
+    const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+    
     // Start smooth scroll animation with improved easing
     const animateScroll = () => {
       // Current scroll position
@@ -431,10 +434,29 @@ const SingleProject = () => {
       }
       
       // Improved easing factor for smoother but faster scrolling
-      // Increased from 0.04 to 0.08 for faster movement
-      const move = distance * 0.08;
+      // Mac-specific easing for better touchpad feel
+      let easeFactor;
+      if (isMac) {
+        // For Mac, use adaptive easing based on distance
+        // This provides more precision for small movements and speed for large ones
+        const distanceAbs = Math.abs(distance);
+        if (distanceAbs > sectionWidth * 0.7) {
+          // Large distance (page transitions) - faster easing
+          easeFactor = 0.12;
+        } else if (distanceAbs > sectionWidth * 0.2) {
+          // Medium distance - moderate easing
+          easeFactor = 0.1;
+        } else {
+          // Small distance - more precise easing
+          easeFactor = 0.085;
+        }
+      } else {
+        // Windows/Linux standard easing
+        easeFactor = 0.08; // Increased from 0.04 for faster movement
+      }
       
       // Apply bounded scroll position with extra checks
+      const move = distance * easeFactor;
       const newScrollLeft = currentScrollRef.current + move;
       
       // Extra boundary protection
@@ -564,12 +586,16 @@ const SingleProject = () => {
       currentScrollRef.current = pageRef.current.scrollLeft;
       const now = Date.now();
       
+      // Detect if user is on macOS for touchpad-specific optimizations
+      const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+      
       // Create or update wheel tracking for momentum calculation
       if (!window.wheelTracking) {
         window.wheelTracking = {
           lastEvent: now,
           lastDelta: 0,
-          momentum: 0
+          momentum: 0,
+          isMac: isMac
         };
       }
       
@@ -580,12 +606,34 @@ const SingleProject = () => {
       } else if (e.deltaMode === 2) { // Page mode
         deltaPixels = e.deltaY * window.innerHeight * 0.7;
       } else { // Pixel mode (most common)
-        deltaPixels = e.deltaY * 3; // Increased for faster scrolling
+        // Mac-specific handling for smoother touchpad scrolling
+        if (isMac) {
+          // For Mac touchpads, we need gentler acceleration but better precision
+          // Also check if this is likely a Magic Trackpad/built-in touchpad vs. regular mouse
+          const isLikelyTouchpad = Math.abs(e.deltaX) > 0 || Math.abs(e.deltaY) <= 10;
+          
+          if (isLikelyTouchpad) {
+            // For Mac touchpads, apply more consistent scaling and smoother damping
+            deltaPixels = e.deltaY * 2.5;
+            
+            // Also check horizontal scroll component for diagonal gestures
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.8) {
+              // This is likely a diagonal gesture, soften the vertical component
+              deltaPixels *= 0.7;
+            }
+          } else {
+            // Probably a mouse on Mac, use standard scaling
+            deltaPixels = e.deltaY * 2.8;
+          }
+        } else {
+          // Windows/Linux standard handling
+          deltaPixels = e.deltaY * 3;
+        }
       }
       
       // Calculate time since last wheel event to detect continuous scrolling
       const timeDelta = now - window.wheelTracking.lastEvent;
-      const isContinuousScroll = timeDelta < 150;
+      const isContinuousScroll = timeDelta < (isMac ? 80 : 150); // Shorter window for Mac
       
       // Apply acceleration based on continuous scrolling
       let finalDelta;
@@ -597,27 +645,32 @@ const SingleProject = () => {
         
         if (sameDirection) {
           // Continuous scroll in same direction - build momentum gradually
+          // Mac-specific momentum tuning for touchpads
+          const momentumMultiplier = isMac ? 0.9 : 1.2;
+          const momentumRetention = isMac ? 0.75 : 0.85;
+          
           // Limit maximum momentum gain for predictable behavior
           const momentumGain = Math.min(
-            Math.abs(deltaPixels) * 1.2,
-            Math.abs(window.wheelTracking.momentum) * 0.4
+            Math.abs(deltaPixels) * momentumMultiplier,
+            Math.abs(window.wheelTracking.momentum) * (isMac ? 0.3 : 0.4)
           );
           
           // Update momentum with new input (smooth acceleration)
           window.wheelTracking.momentum = 
-            window.wheelTracking.momentum * 0.85 +
+            window.wheelTracking.momentum * momentumRetention +
             Math.sign(deltaPixels) * momentumGain;
         } else {
           // Direction change - respond quickly but with controlled initial speed
-          window.wheelTracking.momentum = deltaPixels * 0.8;
+          window.wheelTracking.momentum = deltaPixels * (isMac ? 0.6 : 0.8);
         }
       } else {
         // New scroll event after pause - start with modest momentum
-        window.wheelTracking.momentum = deltaPixels * 0.6;
+        window.wheelTracking.momentum = deltaPixels * (isMac ? 0.5 : 0.6);
       }
       
       // Apply the momentum with a multiplier for desired speed
-      finalDelta = window.wheelTracking.momentum * 1.5;
+      // Use a different multiplier for Mac touchpads
+      finalDelta = window.wheelTracking.momentum * (isMac ? 1.3 : 1.5);
       
       // Update tracking values for next event
       window.wheelTracking.lastEvent = now;
@@ -802,12 +855,18 @@ const SingleProject = () => {
     touchStartX.current = e.touches[0].clientX;
     lastTouchX.current = e.touches[0].clientX;
     
+    // Detect if user is on macOS
+    const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+    
     // Initialize touch tracking for physics-based scrolling
     window.touchTracking = {
       positions: [], // Track position history for velocity calculation
       startTime: Date.now(),
       lastTime: Date.now(),
-      velocity: 0 // Track velocity for smoother deceleration
+      velocity: 0, // Track velocity for smoother deceleration
+      isMac: isMac, // Store platform info
+      // Detect if this is likely a trackpad two-finger gesture on Mac
+      isTrackpadGesture: isMac && e.touches.length === 2 && Math.abs(e.touches[0].clientX - e.touches[1].clientX) < 50
     };
     
     // Add initial position
@@ -867,8 +926,26 @@ const SingleProject = () => {
     const sectionWidth = window.innerWidth;
     const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
     
-    // Apply with enhanced sensitivity for faster response
-    const scrollMultiplier = 3.5; // Increased from 2.5 for faster touch scrolling
+    // Apply with sensitivity optimized for the device/input method
+    let scrollMultiplier = 3.5; // Base multiplier
+    
+    // Adjust for Mac trackpad if detected
+    if (window.touchTracking.isMac) {
+      // For Mac trackpads, we need more precise control
+      if (window.touchTracking.isTrackpadGesture) {
+        // Two-finger gesture on Mac trackpad - high precision mode
+        scrollMultiplier = 2.0;
+        
+        // For trackpad gestures, also introduce a small threshold to filter out tiny movements
+        if (Math.abs(smoothedDelta) < 0.7) {
+          smoothedDelta = 0;
+        }
+      } else {
+        // Regular touch on Mac - slightly lower multiplier for better control
+        scrollMultiplier = 3.0;
+      }
+    }
+    
     const newScrollLeft = Math.min(Math.max(0, pageRef.current.scrollLeft + smoothedDelta * scrollMultiplier), maxScroll);
     
     // Update scroll position directly for touch movement
@@ -897,7 +974,9 @@ const SingleProject = () => {
   const handleTouchEnd = (e) => {
     if (!pageRef.current || !window.touchTracking || window.touchTracking.positions.length < 2) return;
     
-    const now = Date.now();
+    // Get platform info from saved tracking
+    const isMac = window.touchTracking.isMac;
+    const isTrackpadGesture = window.touchTracking.isTrackpadGesture;
     
     // Use stored velocity for more consistent momentum
     const velocity = window.touchTracking.velocity;
@@ -907,10 +986,25 @@ const SingleProject = () => {
       const sectionWidth = window.innerWidth;
       const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
       
-      // Calculate momentum with enhanced physics
-      // Higher velocity = longer slide with quadratic relationship
-      const velocityFactor = Math.min(2.5, Math.abs(velocity) * 8); // Increased factors for faster scrolling
-      const baseMomentum = Math.sign(velocity) * (velocityFactor * sectionWidth * 0.7); // Increased from 0.6
+      // Calculate momentum with enhanced physics, tuned for the device
+      let velocityFactor;
+      
+      if (isMac) {
+        if (isTrackpadGesture) {
+          // For Mac trackpad two-finger gestures - more controlled momentum
+          velocityFactor = Math.min(1.8, Math.abs(velocity) * 6);
+        } else {
+          // Regular touch on Mac
+          velocityFactor = Math.min(2.2, Math.abs(velocity) * 7);
+        }
+      } else {
+        // Non-Mac devices - standard momentum calculation
+        velocityFactor = Math.min(2.5, Math.abs(velocity) * 8);
+      }
+      
+      // Calculate base momentum, adjusted for device type
+      const momentumMultiplier = isMac ? (isTrackpadGesture ? 0.55 : 0.65) : 0.7;
+      const baseMomentum = Math.sign(velocity) * (velocityFactor * sectionWidth * momentumMultiplier);
       
       // Add momentum to current position with bounds checking
       const targetPosition = Math.max(0, Math.min(
@@ -953,232 +1047,239 @@ const SingleProject = () => {
 
   // Main render for desktop
   return (
-    <div 
-      ref={pageRef} 
-      className={`single-project-page ${isReady ? 'is-ready' : ''}`}
-      style={{ backgroundColor: '#000' }}
-    >
-      <div ref={containerRef} className="single-project-container">
-        {project.projectContent && project.projectContent.sections && project.projectContent.sections.map((section, index) => (
-          <div 
-            key={index}
-            className={`panel${index === 0 ? ' first-panel' : ''}${index === 1 ? ' second-panel' : ''}${index === 2 ? ' third-panel' : ''}`}
-            style={{ backgroundColor: section.backgroundColor || '#000' }}
-            data-section-type={section.type}
-          >
-            {/* Handle both media and Video types */}
-            {(section.type === 'media' || section.type === 'Video') && (
-              <>
-                {section.type === "Video" || (section.media && (section.media.endsWith('.mp4') || section.media.endsWith('.webm'))) ? (
-                  <div className="video-container-single-project">
-                    <video 
-                      src={section.media}
-                      alt={section.alt || `Project section ${index + 1}`}
-                      className="single-project-video"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      style={{
-                        maxWidth: '100%',
-                        maxHeight: '100vh',
-                        width: 'auto',
-                        height: 'auto',
-                        margin: '0 auto',
-                        display: 'block',
-                        objectFit: 'contain'
-                      }}
-                      onLoadedMetadata={(e) => {
-                        // Detect if video is portrait or landscape
-                        const video = e.target;
-                        const isPortrait = video.videoHeight > video.videoWidth;
-                        const aspectRatio = video.videoWidth / video.videoHeight;
-                        
-                        // Get relevant parent elements
-                        const videoContainer = video.closest('.video-container-single-project');
-                        const panel = video.closest('.panel');
-                        
-                        if (isPortrait) {
-                          // For portrait videos
-                          video.setAttribute('style', 'portrait: true; max-height: 100vh !important; width: auto !important; height: auto !important; object-fit: contain !important; margin: 0 auto !important;');
-                          video.setAttribute('data-orientation', 'portrait');
-                          
-                          if (panel) {
-                            // Adjust panel to fit the video
-                            panel.style.width = 'auto';
-                            panel.style.minWidth = '100vw';
-                            panel.style.display = 'flex';
-                            panel.style.justifyContent = 'center';
-                            panel.style.alignItems = 'center';
-                            panel.style.backgroundColor = 'transparent';
-                          }
-                          
-                          if (videoContainer) {
-                            // Adjust container to match video
-                            videoContainer.style.width = 'auto';
-                            videoContainer.style.height = 'auto';
-                            videoContainer.style.backgroundColor = 'transparent';
-                          }
-                        } else {
-                          // For landscape videos
-                          video.setAttribute('style', 'max-width: 100% !important; max-height: 100vh !important; width: auto !important; height: auto !important; object-fit: contain !important; margin: 0 auto !important;');
-                          video.setAttribute('data-orientation', 'landscape');
-                          
-                          if (panel) {
-                            // For landscape, we still want it to fit well in the viewport
-                            panel.style.width = '100vw';
-                            panel.style.height = '100vh';
-                            panel.style.backgroundColor = 'transparent';
-                          }
-                          
-                          if (videoContainer) {
-                            // For landscape, container should fill panel width
-                            videoContainer.style.width = '100%';
-                            videoContainer.style.height = '100%';
-                          }
-                        }
-                        
-                        // Force browser to recalculate layout
-                        setTimeout(() => {
-                          if (panel) panel.style.display = 'flex';
-                        }, 50);
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <div className="image-container">
-                    <img 
-                      src={section.media || section.imageName} 
-                      alt={section.alt || `Project section ${index + 1}`} 
-                      className="single-project-image"
-                      onLoad={(e) => {
-                        // Adjust container size to match image's natural dimensions
-                        const img = e.target;
-                        const container = img.parentElement;
-                        const panel = container.parentElement;
-                        
-                        if (img && container) {
-                          // Use the image's natural dimensions
-                          const imgWidth = img.naturalWidth;
-                          const imgHeight = img.naturalHeight;
-                          
-                          // Set container width/height to match image dimensions
-                          if (imgWidth && imgHeight) {
-                            // Calculate aspect ratio
-                            const imgRatio = imgWidth / imgHeight;
-                            const viewportHeight = window.innerHeight;
-                            const viewportWidth = window.innerWidth;
-                            
-                            // Make sure images always fill the panel completely
-                            img.style.width = '100%';
-                            img.style.height = '100%';
-                            img.style.objectFit = 'cover';
-                            
-                            // Make container fill the panel
-                            container.style.width = '100%';
-                            container.style.height = '100%';
-                          }
-                        }
-                      }}
-                    />
-                  </div>
-                )}
-              </>
-            )}
-            {section.type === 'text' && (
-              <div className="text-content" style={{ 
-                backgroundColor: section.backgroundColor || project.backgroundColor || '#090909',
-                color: section.textColor || '#FFFFFF'
-              }}>
-                <div className="main-text">
-                  {section.slogan && <h2 className="panel-main-title">{section.slogan}</h2>}
-                  {section.subTitle && <h3 className="panel-sub-title">{section.subTitle}</h3>}
-                </div>
-                <div className="paragraphs">
-                  {section.text && (
-                    Array.isArray(section.text) ? 
-                    section.text.map((paragraph, i) => (
-                      <p key={i} className="panel-paragraph">{paragraph}</p>
-                    )) : 
-                    <p className="panel-paragraph">{section.text}</p>
-                  )}
-                </div>
-                <div className="bottom-info">
-                  <div className="info-row label-row">
-                    {section.fieldName && (
-                      <div className="field-info">
-                        <span className="label">Field Name</span>
-                      </div>
-                    )}
-                    {section.services && (
-                      <div className="services-info">
-                        <span className="label">SERVICE</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="info-row value-row">
-                    {section.fieldName && (
-                      <div className="field-info">
-                        <span className="value">{section.fieldName}</span>
-                      </div>
-                    )}
-                    {section.services && (
-                      <div className="services-info">
-                        <span className="value">{section.services}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-            {section.type === 'text-section' && (
-              <div className="text-section-content" style={{ 
-                backgroundColor: section.backgroundColor || project.backgroundColor || '#000000',
-                color: section.textColor || '#FFFFFF',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100%',
-                padding: '0 20%',
-                textAlign: 'center'
-              }}>
-                <div className="centered-text">
-                  {section.text && (
-                    Array.isArray(section.text) ? 
-                    section.text.map((paragraph, i) => (
-                      <p key={i} className="text-section-paragraph" style={{
-                        maxWidth: '600px',
-                        margin: i === 0 ? '0 auto' : '20px auto 0',
-                        lineHeight: '1.5',
-                        letterSpacing: '0.05em'
-                      }}>
-                        {paragraph}
-                      </p>
-                    )) : 
-                    <p className="text-section-paragraph" style={{
-                      maxWidth: '600px',
-                      margin: '0 auto',
-                      lineHeight: '1.5',
-                      letterSpacing: '0.05em'
-                    }}>
-                      {section.text}
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-      {/* Back to Projects button */}
+    <>
+      {/* Back to Projects button - moved outside container to ensure it's always visible */}
       <button 
         className="back-to-projects-btn" 
         onClick={handleBackToProjects}
+        aria-label="Back to projects"
       >
-        Back to Projects
+        <svg width="30" height="20" viewBox="0 0 30 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 1L1 10L10 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M1 10H29" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
       </button>
-    </div>
+      
+      <div 
+        ref={pageRef} 
+        className={`single-project-page ${isReady ? 'is-ready' : ''}`}
+        style={{ backgroundColor: '#000' }}
+      >
+        <div ref={containerRef} className="single-project-container">
+          {project.projectContent && project.projectContent.sections && project.projectContent.sections.map((section, index) => (
+            <div 
+              key={index}
+              className={`panel${index === 0 ? ' first-panel' : ''}${index === 1 ? ' second-panel' : ''}${index === 2 ? ' third-panel' : ''}`}
+              style={{ backgroundColor: section.backgroundColor || '#000' }}
+              data-section-type={section.type}
+            >
+              {/* Handle both media and Video types */}
+              {(section.type === 'media' || section.type === 'Video') && (
+                <>
+                  {section.type === "Video" || (section.media && (section.media.endsWith('.mp4') || section.media.endsWith('.webm'))) ? (
+                    <div className="video-container-single-project">
+                      <video 
+                        src={section.media}
+                        alt={section.alt || `Project section ${index + 1}`}
+                        className="single-project-video"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        style={{
+                          maxWidth: '100%',
+                          maxHeight: '100vh',
+                          width: 'auto',
+                          height: 'auto',
+                          margin: '0 auto',
+                          display: 'block',
+                          objectFit: 'contain'
+                        }}
+                        onLoadedMetadata={(e) => {
+                          // Detect if video is portrait or landscape
+                          const video = e.target;
+                          const isPortrait = video.videoHeight > video.videoWidth;
+                          const aspectRatio = video.videoWidth / video.videoHeight;
+                          
+                          // Get relevant parent elements
+                          const videoContainer = video.closest('.video-container-single-project');
+                          const panel = video.closest('.panel');
+                          
+                          if (isPortrait) {
+                            // For portrait videos
+                            video.setAttribute('style', 'portrait: true; max-height: 100vh !important; width: auto !important; height: auto !important; object-fit: contain !important; margin: 0 auto !important;');
+                            video.setAttribute('data-orientation', 'portrait');
+                            
+                            if (panel) {
+                              // Adjust panel to fit the video
+                              panel.style.width = 'auto';
+                              panel.style.minWidth = '100vw';
+                              panel.style.display = 'flex';
+                              panel.style.justifyContent = 'center';
+                              panel.style.alignItems = 'center';
+                              panel.style.backgroundColor = 'transparent';
+                            }
+                            
+                            if (videoContainer) {
+                              // Adjust container to match video
+                              videoContainer.style.width = 'auto';
+                              videoContainer.style.height = 'auto';
+                              videoContainer.style.backgroundColor = 'transparent';
+                            }
+                          } else {
+                            // For landscape videos
+                            video.setAttribute('style', 'max-width: 100% !important; max-height: 100vh !important; width: auto !important; height: auto !important; object-fit: contain !important; margin: 0 auto !important;');
+                            video.setAttribute('data-orientation', 'landscape');
+                            
+                            if (panel) {
+                              // For landscape, we still want it to fit well in the viewport
+                              panel.style.width = '100vw';
+                              panel.style.height = '100vh';
+                              panel.style.backgroundColor = 'transparent';
+                            }
+                            
+                            if (videoContainer) {
+                              // For landscape, container should fill panel width
+                              videoContainer.style.width = '100%';
+                              videoContainer.style.height = '100%';
+                            }
+                          }
+                          
+                          // Force browser to recalculate layout
+                          setTimeout(() => {
+                            if (panel) panel.style.display = 'flex';
+                          }, 50);
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="image-container">
+                      <img 
+                        src={section.media || section.imageName} 
+                        alt={section.alt || `Project section ${index + 1}`} 
+                        className="single-project-image"
+                        onLoad={(e) => {
+                          // Adjust container size to match image's natural dimensions
+                          const img = e.target;
+                          const container = img.parentElement;
+                          const panel = container.parentElement;
+                          
+                          if (img && container) {
+                            // Use the image's natural dimensions
+                            const imgWidth = img.naturalWidth;
+                            const imgHeight = img.naturalHeight;
+                            
+                            // Set container width/height to match image dimensions
+                            if (imgWidth && imgHeight) {
+                              // Calculate aspect ratio
+                              const imgRatio = imgWidth / imgHeight;
+                              const viewportHeight = window.innerHeight;
+                              const viewportWidth = window.innerWidth;
+                              
+                              // Make sure images always fill the panel completely
+                              img.style.width = '100%';
+                              img.style.height = '100%';
+                              img.style.objectFit = 'cover';
+                              
+                              // Make container fill the panel
+                              container.style.width = '100%';
+                              container.style.height = '100%';
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+              {section.type === 'text' && (
+                <div className="text-content" style={{ 
+                  backgroundColor: section.backgroundColor || project.backgroundColor || '#090909',
+                  color: section.textColor || '#FFFFFF'
+                }}>
+                  <div className="main-text">
+                    {section.slogan && <h2 className="panel-main-title">{section.slogan}</h2>}
+                    {section.subTitle && <h3 className="panel-sub-title">{section.subTitle}</h3>}
+                  </div>
+                  <div className="paragraphs">
+                    {section.text && (
+                      Array.isArray(section.text) ? 
+                      section.text.map((paragraph, i) => (
+                        <p key={i} className="panel-paragraph">{paragraph}</p>
+                      )) : 
+                      <p className="panel-paragraph">{section.text}</p>
+                    )}
+                  </div>
+                  <div className="bottom-info">
+                    <div className="info-row label-row">
+                      {section.fieldName && (
+                        <div className="field-info">
+                          <span className="label">Field Name</span>
+                        </div>
+                      )}
+                      {section.services && (
+                        <div className="services-info">
+                          <span className="label">SERVICE</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="info-row value-row">
+                      {section.fieldName && (
+                        <div className="field-info">
+                          <span className="value">{section.fieldName}</span>
+                        </div>
+                      )}
+                      {section.services && (
+                        <div className="services-info">
+                          <span className="value">{section.services}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {section.type === 'text-section' && (
+                <div className="text-section-content" style={{ 
+                  backgroundColor: section.backgroundColor || project.backgroundColor || '#000000',
+                  color: section.textColor || '#FFFFFF',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100%',
+                  padding: '0 20%',
+                  textAlign: 'center'
+                }}>
+                  <div className="centered-text">
+                    {section.text && (
+                      Array.isArray(section.text) ? 
+                      section.text.map((paragraph, i) => (
+                        <p key={i} className="text-section-paragraph" style={{
+                          maxWidth: '600px',
+                          margin: i === 0 ? '0 auto' : '20px auto 0',
+                          lineHeight: '1.5',
+                          letterSpacing: '0.05em'
+                        }}>
+                          {paragraph}
+                        </p>
+                      )) : 
+                      <p className="text-section-paragraph" style={{
+                        maxWidth: '600px',
+                        margin: '0 auto',
+                        lineHeight: '1.5',
+                        letterSpacing: '0.05em'
+                      }}>
+                        {section.text}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 

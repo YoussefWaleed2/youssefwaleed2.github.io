@@ -954,50 +954,63 @@ body.single-project-page-active .panel {
 
 /* Back to Projects Button */
 .back-to-projects-btn {
-  position: relative;
-  bottom: 4rem;
-  left: 2rem;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  position: fixed; /* Changed back to fixed to ensure it's always visible */
+  top: 30px;
+  left: 30px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   color: #fff;
-  font-family: "Aboreto", sans-serif;
   font-size: 0.9rem;
-  padding: 0.8rem 1.5rem;
-  border-radius: 30px;
+  padding: 12px;
+  border-radius: 50%;
   cursor: pointer;
   z-index: 500;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
   mix-blend-mode: difference;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  font-weight: 400;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 .back-to-projects-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 1);
+  transform: scale(1.05);
 }
 
 /* Mobile specific button styles */
 @media (max-width: 1024px) {
   .back-to-projects-btn {
-    position: relative;
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.75rem;
-    padding: 0.6rem 1.2rem;
+    position: fixed;
+    top: 80px;
+    left: 10px; /* Moved further left to avoid text conflicts */
+    width: 34px; /* Smaller size */
+    height: 34px; /* Smaller size */
+    padding: 6px; /* Smaller padding */
     z-index: 999;
-    width: auto;
-    max-width: 80%;
-    text-align: center;
+    /* Keep it as an arrow on mobile too */
+    transform: none;
     background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.7);
   }
+  
   /* Extra space for last element in mobile content */
   .mobile-project-section:last-child {
     margin-bottom: 3.5rem !important;
+  }
+  
+  /* Make sure SVG is properly sized for mobile */
+  .back-to-projects-btn svg {
+    width: 20px; /* Smaller icon */
+    height: 14px; /* Smaller icon */
+  }
+  
+  /* Mobile single project specific adjustments */
+  .mobile-single-project .back-to-projects-btn {
+    position: fixed;
+    margin-top: 0;
   }
 }
 

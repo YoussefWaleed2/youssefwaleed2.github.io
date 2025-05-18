@@ -925,10 +925,6 @@ const SingleProject = () => {
 
   // Function to handle navigation back to projects
   const handleBackToProjects = () => {
-    // First remove transitions before navigation to prevent flash
-    document.documentElement.classList.add('no-transition');
-    document.body.style.transition = 'none';
-    document.documentElement.style.transition = 'none';
     document.body.style.backgroundColor = '';
     document.documentElement.style.backgroundColor = '';
     

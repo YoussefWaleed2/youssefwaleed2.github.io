@@ -45,11 +45,90 @@ const SingleProject = () => {
   const lastTouchX = useRef(0);
   const touchStartX = useRef(0);
   
-  // Store indicator click handlers to properly remove them
-  const indicatorHandlersRef = useRef([]);
-  
   // Debug log to check routing
   console.log("SingleProject loaded with category:", category, "projectName:", projectName, "from path:", location.pathname);
+
+  // Helper functions for media handling
+  // Handle video loaded metadata
+  const handleVideoLoaded = (e) => {
+    // Detect if video is portrait or landscape
+    const video = e.target;
+    const isPortrait = video.videoHeight > video.videoWidth;
+    
+    // Get relevant parent elements
+    const videoContainer = video.closest('.video-container-single-project');
+    const panel = video.closest('.panel');
+    
+    if (isPortrait) {
+      // For portrait videos
+      video.setAttribute('style', 'portrait: true; max-height: 100vh !important; width: auto !important; height: auto !important; object-fit: contain !important; margin: 0 auto !important;');
+      video.setAttribute('data-orientation', 'portrait');
+      
+      if (panel) {
+        // Adjust panel to fit the video
+        panel.style.width = 'auto';
+        panel.style.minWidth = '100vw';
+        panel.style.display = 'flex';
+        panel.style.justifyContent = 'center';
+        panel.style.alignItems = 'center';
+        panel.style.backgroundColor = 'transparent';
+      }
+      
+      if (videoContainer) {
+        // Adjust container to match video
+        videoContainer.style.width = 'auto';
+        videoContainer.style.height = 'auto';
+        videoContainer.style.backgroundColor = 'transparent';
+      }
+    } else {
+      // For landscape videos
+      video.setAttribute('style', 'max-width: 100% !important; max-height: 100vh !important; width: auto !important; height: auto !important; object-fit: contain !important; margin: 0 auto !important;');
+      video.setAttribute('data-orientation', 'landscape');
+      
+      if (panel) {
+        // For landscape, we still want it to fit well in the viewport
+        panel.style.width = '100vw';
+        panel.style.height = '100vh';
+        panel.style.backgroundColor = 'transparent';
+      }
+      
+      if (videoContainer) {
+        // For landscape, container should fill panel width
+        videoContainer.style.width = '100%';
+        videoContainer.style.height = '100%';
+      }
+    }
+    
+    // Force browser to recalculate layout
+    setTimeout(() => {
+      if (panel) panel.style.display = 'flex';
+    }, 50);
+  };
+  
+  // Handle image load
+  const handleImageLoad = (e) => {
+    // Adjust container size to match image's natural dimensions
+    const img = e.target;
+    const container = img.parentElement;
+    
+    if (img && container) {
+      // Use the image's natural dimensions
+      const imgWidth = img.naturalWidth;
+      const imgHeight = img.naturalHeight;
+      
+      // Set container width/height to match image dimensions
+      if (imgWidth && imgHeight) {
+        // Make sure images always fill the panel completely
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        
+        // Make container fill the panel
+        container.style.width = '100%';
+        container.style.height = '100%';
+      }
+    }
+  };
 
   // Mobile detection function
   const detectMobileOrTablet = () => {
@@ -324,7 +403,7 @@ const SingleProject = () => {
       // Reset panel positions after videos load
       const resetPanelPositions = () => {
         let currentLeft = 0;
-        panels.forEach((panel, index) => {
+        panels.forEach((panel) => {
           // Set absolute positioning
           panel.style.position = 'absolute';
           panel.style.left = `${currentLeft}px`;
@@ -599,12 +678,19 @@ const SingleProject = () => {
         };
       }
       
+      // For Mac devices, prioritize horizontal gestures (deltaX) over vertical ones (deltaY)
+      let deltaToUse = e.deltaY;
+      if (isMac && Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.5) {
+        // This is likely a horizontal gesture on Mac, prioritize deltaX
+        deltaToUse = e.deltaX;
+      }
+      
       // Adapt scaling based on deltaMode for consistent behavior
       let deltaPixels;
       if (e.deltaMode === 1) { // Line mode
-        deltaPixels = e.deltaY * 35; // Increased for faster scrolling
+        deltaPixels = deltaToUse * 35; // Increased for faster scrolling
       } else if (e.deltaMode === 2) { // Page mode
-        deltaPixels = e.deltaY * window.innerHeight * 0.7;
+        deltaPixels = deltaToUse * window.innerHeight * 0.7;
       } else { // Pixel mode (most common)
         // Mac-specific handling for smoother touchpad scrolling
         if (isMac) {
@@ -614,20 +700,14 @@ const SingleProject = () => {
           
           if (isLikelyTouchpad) {
             // For Mac touchpads, apply more consistent scaling and smoother damping
-            deltaPixels = e.deltaY * 6.5; // Increased from 2.5 for faster scrolling
-            
-            // Also check horizontal scroll component for diagonal gestures
-            if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.8) {
-              // This is likely a diagonal gesture, soften the vertical component
-              deltaPixels *= 0.8; // Increased from 0.7 for more response
-            }
+            deltaPixels = deltaToUse * 6.5; // Increased from 2.5 for faster scrolling
           } else {
             // Probably a mouse on Mac, use standard scaling
-            deltaPixels = e.deltaY * 5.0; // Increased from 2.8 for faster scrolling
+            deltaPixels = deltaToUse * 5.0; // Increased from 2.8 for faster scrolling
           }
         } else {
           // Windows/Linux standard handling
-          deltaPixels = e.deltaY * 4.0; // Increased from 3.0 for faster scrolling
+          deltaPixels = deltaToUse * 4.0; // Increased from 3.0 for faster scrolling
         }
       }
       
@@ -927,22 +1007,23 @@ const SingleProject = () => {
     const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
     
     // Apply with sensitivity optimized for the device/input method
+    // For MacBook, increase sensitivity for better horizontal gesture response
     let scrollMultiplier = 3.5; // Base multiplier
     
     // Adjust for Mac trackpad if detected
     if (window.touchTracking.isMac) {
-      // For Mac trackpads, we need more precise control
+      // For Mac trackpads, we need more precise control but higher sensitivity for side gestures
       if (window.touchTracking.isTrackpadGesture) {
-        // Two-finger gesture on Mac trackpad - high precision mode
-        scrollMultiplier = 2.0;
+        // Two-finger gesture on Mac trackpad - optimize for horizontal swipes
+        scrollMultiplier = 2.8; // Increased for better side-to-side response
         
         // For trackpad gestures, also introduce a small threshold to filter out tiny movements
-        if (Math.abs(smoothedDelta) < 0.7) {
+        if (Math.abs(smoothedDelta) < 0.5) { // Lower threshold for more responsiveness
           smoothedDelta = 0;
         }
       } else {
-        // Regular touch on Mac - slightly lower multiplier for better control
-        scrollMultiplier = 3.0;
+        // Regular touch on Mac - slightly higher multiplier for better side gesture detection
+        scrollMultiplier = 3.2;
       }
     }
     
@@ -971,7 +1052,7 @@ const SingleProject = () => {
     e.preventDefault();
   };
 
-  const handleTouchEnd = (e) => {
+  const handleTouchEnd = () => {
     if (!pageRef.current || !window.touchTracking || window.touchTracking.positions.length < 2) return;
     
     // Get platform info from saved tracking
@@ -991,11 +1072,11 @@ const SingleProject = () => {
       
       if (isMac) {
         if (isTrackpadGesture) {
-          // For Mac trackpad two-finger gestures - more controlled momentum
-          velocityFactor = Math.min(3.0, Math.abs(velocity) * 10); // Increased from 1.8 and 6
+          // For Mac trackpad two-finger gestures - improved horizontal momentum
+          velocityFactor = Math.min(4.0, Math.abs(velocity) * 12); // Increased for better side-to-side gestures
         } else {
           // Regular touch on Mac
-          velocityFactor = Math.min(3.5, Math.abs(velocity) * 12); // Increased from 2.2 and 7
+          velocityFactor = Math.min(3.5, Math.abs(velocity) * 12);
         }
       } else {
         // Non-Mac devices - standard momentum calculation
@@ -1003,7 +1084,7 @@ const SingleProject = () => {
       }
       
       // Calculate base momentum, adjusted for device type
-      const momentumMultiplier = isMac ? (isTrackpadGesture ? 1.2 : 1.4) : 0.7; // Increased from 0.55/0.65 for Mac
+      const momentumMultiplier = isMac ? (isTrackpadGesture ? 1.5 : 1.4) : 0.7; // Increased for Mac trackpad
       const baseMomentum = Math.sign(velocity) * (velocityFactor * sectionWidth * momentumMultiplier);
       
       // Add momentum to current position with bounds checking
@@ -1095,61 +1176,7 @@ const SingleProject = () => {
                           display: 'block',
                           objectFit: 'contain'
                         }}
-                        onLoadedMetadata={(e) => {
-                          // Detect if video is portrait or landscape
-                          const video = e.target;
-                          const isPortrait = video.videoHeight > video.videoWidth;
-                          const aspectRatio = video.videoWidth / video.videoHeight;
-                          
-                          // Get relevant parent elements
-                          const videoContainer = video.closest('.video-container-single-project');
-                          const panel = video.closest('.panel');
-                          
-                          if (isPortrait) {
-                            // For portrait videos
-                            video.setAttribute('style', 'portrait: true; max-height: 100vh !important; width: auto !important; height: auto !important; object-fit: contain !important; margin: 0 auto !important;');
-                            video.setAttribute('data-orientation', 'portrait');
-                            
-                            if (panel) {
-                              // Adjust panel to fit the video
-                              panel.style.width = 'auto';
-                              panel.style.minWidth = '100vw';
-                              panel.style.display = 'flex';
-                              panel.style.justifyContent = 'center';
-                              panel.style.alignItems = 'center';
-                              panel.style.backgroundColor = 'transparent';
-                            }
-                            
-                            if (videoContainer) {
-                              // Adjust container to match video
-                              videoContainer.style.width = 'auto';
-                              videoContainer.style.height = 'auto';
-                              videoContainer.style.backgroundColor = 'transparent';
-                            }
-                          } else {
-                            // For landscape videos
-                            video.setAttribute('style', 'max-width: 100% !important; max-height: 100vh !important; width: auto !important; height: auto !important; object-fit: contain !important; margin: 0 auto !important;');
-                            video.setAttribute('data-orientation', 'landscape');
-                            
-                            if (panel) {
-                              // For landscape, we still want it to fit well in the viewport
-                              panel.style.width = '100vw';
-                              panel.style.height = '100vh';
-                              panel.style.backgroundColor = 'transparent';
-                            }
-                            
-                            if (videoContainer) {
-                              // For landscape, container should fill panel width
-                              videoContainer.style.width = '100%';
-                              videoContainer.style.height = '100%';
-                            }
-                          }
-                          
-                          // Force browser to recalculate layout
-                          setTimeout(() => {
-                            if (panel) panel.style.display = 'flex';
-                          }, 50);
-                        }}
+                        onLoadedMetadata={handleVideoLoaded}
                       />
                     </div>
                   ) : (
@@ -1158,35 +1185,7 @@ const SingleProject = () => {
                         src={section.media || section.imageName} 
                         alt={section.alt || `Project section ${index + 1}`} 
                         className="single-project-image"
-                        onLoad={(e) => {
-                          // Adjust container size to match image's natural dimensions
-                          const img = e.target;
-                          const container = img.parentElement;
-                          const panel = container.parentElement;
-                          
-                          if (img && container) {
-                            // Use the image's natural dimensions
-                            const imgWidth = img.naturalWidth;
-                            const imgHeight = img.naturalHeight;
-                            
-                            // Set container width/height to match image dimensions
-                            if (imgWidth && imgHeight) {
-                              // Calculate aspect ratio
-                              const imgRatio = imgWidth / imgHeight;
-                              const viewportHeight = window.innerHeight;
-                              const viewportWidth = window.innerWidth;
-                              
-                              // Make sure images always fill the panel completely
-                              img.style.width = '100%';
-                              img.style.height = '100%';
-                              img.style.objectFit = 'cover';
-                              
-                              // Make container fill the panel
-                              container.style.width = '100%';
-                              container.style.height = '100%';
-                            }
-                          }
-                        }}
+                        onLoad={handleImageLoad}
                       />
                     </div>
                   )}

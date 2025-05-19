@@ -1452,26 +1452,16 @@ const SingleProject = () => {
                     )}
                   </div>
                   <div className="bottom-info">
-                    <div className="info-row label-row">
+                    <div className="info-row">
                       {section.fieldName && (
                         <div className="field-info">
-                          <span className="label">Field Name</span>
-                        </div>
-                      )}
-                      {section.services && (
-                        <div className="services-info">
-                          <span className="label">SERVICE</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="info-row value-row">
-                      {section.fieldName && (
-                        <div className="field-info">
+                          <span className="label">FIELD</span>
                           <span className="value">{section.fieldName}</span>
                         </div>
                       )}
                       {section.services && (
                         <div className="services-info">
+                          <span className="label">SERVICE</span>
                           <span className="value">{section.services}</span>
                         </div>
                       )}

@@ -536,22 +536,6 @@ const SingleProject = () => {
           // Add the class to apply the CSS
           panel.classList.add('panel-curved-left');
           
-          // Also directly style with !important to override any conflicting styles
-          panel.style.cssText += `
-            border-radius: 106px 0px 0px 106px !important;
-            overflow: hidden !important;
-            position: absolute !important;
-          `;
-          
-          // Move panel left for overlap effect - increase the overlap amount
-          const sectionWidth = window.innerWidth;
-          const overlayAmount = 120; // pixels to overlap (increased from 50)
-          const originalLeftValue = parseFloat(panel.style.left) || i * sectionWidth;
-          panel.style.left = `${originalLeftValue - overlayAmount}px`;
-          
-          // Set z-index high to ensure it appears on top of previous panel
-          panel.style.zIndex = `${50 + i}`;
-          
           // Force style on direct image containers
           const imageContainers = panel.querySelectorAll('.image-container');
           imageContainers.forEach(container => {
@@ -572,7 +556,7 @@ const SingleProject = () => {
           });
           
           // Ensure this panel's width is properly set
-          panel.style.width = `${sectionWidth}px`;
+          panel.style.width = `${window.innerWidth}px`;
         }
       }
     }
@@ -594,14 +578,14 @@ const SingleProject = () => {
     };
   }, [isMobileOrTablet, project, isReady]);
 
-  // New effect specifically to fix the 4th panel overlay issue
+  // Effect to ensure 4th panel is properly positioned with correct radius
   useEffect(() => {
     if (isMobileOrTablet || !project?.projectContent?.sections) return;
     
     // Check if we have enough panels
     setTimeout(() => {
       // Use setTimeout to ensure this runs after other layout code
-      console.log("Fixing 4th panel overlay");
+      console.log("Ensuring proper 4th panel positioning");
       const panels = document.querySelectorAll('.panel');
       
       if (panels.length >= 4) {
@@ -609,23 +593,23 @@ const SingleProject = () => {
         const fourthPanel = panels[3];
         
         if (fourthPanel) {
-          console.log("Found 4th panel, applying overlap fix");
+          console.log("Found 4th panel, ensuring correct position");
           
-          // Set extremely high z-index
-          fourthPanel.style.zIndex = "9999";
+          // Set appropriate z-index
+          fourthPanel.style.zIndex = "28";
           
-          // Get current left position and adjust it
-          const currentLeft = parseFloat(fourthPanel.style.left) || 3 * window.innerWidth;
-          const newLeft = currentLeft - 150; // Move 150px to the left
+          // Set the correct position without overlap
+          const sectionWidth = window.innerWidth;
           
-          // Apply the new position with !important
+          // Apply the correct position with !important
           fourthPanel.style.cssText += `
-            left: ${newLeft}px !important;
-            z-index: 9999 !important;
+            left: ${3 * sectionWidth}px !important;
             position: absolute !important;
+            border-radius: 106px 0px 0px 106px !important;
+            overflow: hidden !important;
           `;
           
-          console.log(`4th panel position: ${fourthPanel.style.left}, z-index: ${fourthPanel.style.zIndex}`);
+          console.log(`4th panel positioned at: ${fourthPanel.style.left}`);
         }
       }
     }, 1000); // Wait 1 second to ensure other layout code has run
@@ -1039,7 +1023,9 @@ const SingleProject = () => {
             
             // Apply text panel specific styling if this is a text section
             if (section.querySelector('.text-content') || section.querySelector('.text-section-content')) {
-              section.style.backgroundColor = section.style.backgroundColor || '#000';
+              // For text sections, get background from projectsData.json
+              const sectionData = project.projectContent.sections[index];
+              section.style.backgroundColor = sectionData?.backgroundColor || project.backgroundColor || '#000';
               
               // Add any specific text panel styling here
               section.dataset.isPanelType = 'text';
@@ -1252,6 +1238,122 @@ const SingleProject = () => {
     navigate(`/all-projects/${category}`);
   };
 
+  // Effect to set background color from data attributes
+  useEffect(() => {
+    if (!project || !isReady) return;
+    
+    // Find all elements with data-bg-color attribute
+    const elementsWithBgColor = document.querySelectorAll('[data-bg-color]');
+    
+    // Apply the background color from the data attribute
+    elementsWithBgColor.forEach(element => {
+      const bgColor = element.getAttribute('data-bg-color');
+      if (bgColor) {
+        element.style.backgroundColor = bgColor;
+        
+        // If this is the main page container, also update body and documentElement
+        if (element.classList.contains('single-project-page')) {
+          document.body.style.backgroundColor = bgColor;
+          document.documentElement.style.backgroundColor = bgColor;
+        }
+      }
+    });
+  }, [project, isReady, currentSection]);
+
+  // Add this to the component before the return statement
+  useEffect(() => {
+    if (!project) return;
+    
+    console.log("Applying project colors directly");
+    
+    // Function to apply colors to all elements
+    const applyProjectColors = () => {
+      // Get the project background color
+      const projectBgColor = project.backgroundColor || '#000000';
+      console.log("Applying project color:", projectBgColor);
+      
+      const allPanels = document.querySelectorAll('.panel');
+      
+      // First set all panels to the project background color
+      allPanels.forEach((panel, index) => {
+        // Determine the correct background color for this panel/section
+        let bgColor = projectBgColor;
+        
+        // Check if we have section-specific color
+        if (project.projectContent && 
+            project.projectContent.sections && 
+            index < project.projectContent.sections.length) {
+          const sectionData = project.projectContent.sections[index];
+          if (sectionData && sectionData.backgroundColor) {
+            bgColor = sectionData.backgroundColor;
+          }
+        }
+        
+        // Apply directly to panel with !important
+        panel.style.cssText += `background-color: ${bgColor} !important;`;
+        
+        // Apply to text content if this panel has it
+        const textContent = panel.querySelector('.text-content, .text-section-content');
+        if (textContent) {
+          textContent.style.cssText = `background-color: ${bgColor} !important;`;
+          
+          // Adjust text color based on background lightness
+          try {
+            const rgb = hexToRgb(bgColor);
+            if (rgb) {
+              // Calculate brightness (0-255)
+              const brightness = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b);
+              
+              // If background is light, use dark text; if dark, use light text
+              if (brightness > 160) {
+                // Light background - use dark text
+                textContent.style.color = '#000000';
+              } else {
+                // Dark background - use light text
+                textContent.style.color = '#FFFFFF';
+              }
+            }
+          } catch (err) {
+            console.log("Error calculating text color:", err);
+            // Default to white text
+            textContent.style.color = '#FFFFFF';
+          }
+        }
+      });
+      
+      // Also apply to main container
+      const mainContainer = document.querySelector('.single-project-page');
+      if (mainContainer) {
+        mainContainer.style.cssText += `background-color: ${projectBgColor} !important;`;
+      }
+      
+      // Apply to document body and HTML
+      document.body.style.cssText += `background-color: ${projectBgColor} !important;`;
+      document.documentElement.style.cssText += `background-color: ${projectBgColor} !important;`;
+    };
+    
+    // Apply initially with a delay to ensure DOM is ready
+    setTimeout(applyProjectColors, 800);
+    
+    // Also apply on scroll
+    const handleScroll = debounce(() => {
+      applyProjectColors();
+    }, 200);
+    
+    // Add scroll event listener
+    if (pageRef.current) {
+      pageRef.current.addEventListener('scroll', handleScroll);
+    }
+    
+    // Clean up
+    return () => {
+      if (pageRef.current) {
+        pageRef.current.removeEventListener('scroll', handleScroll);
+      }
+    };
+    
+  }, [project, isReady]);
+
   // Return loading state if no project found
   if (!project) {
     return (
@@ -1284,7 +1386,11 @@ const SingleProject = () => {
       <div 
         ref={pageRef} 
         className={`single-project-page ${isReady ? 'is-ready' : ''}`}
-        style={{ backgroundColor: '#000' }}
+        data-bg-color={
+          project.backgroundColor || 
+          (project.projectContent?.sections && project.projectContent.sections[0]?.backgroundColor) || 
+          '#000'
+        }
       >
         <div ref={containerRef} className="single-project-container">
           {project.projectContent && project.projectContent.sections && project.projectContent.sections.map((section, index) => (
@@ -1331,11 +1437,7 @@ const SingleProject = () => {
                   )}
                 </>
               )}
-              {section.type === 'text' && (
-                <div className="text-content" style={{ 
-                  backgroundColor: section.backgroundColor || project.backgroundColor || '#090909',
-                  color: section.textColor || '#FFFFFF'
-                }}>
+              {section.type === 'text' && (                <div                   className="text-content"                  data-bg-color={section.backgroundColor || project.backgroundColor || '#090909'}                  style={{                    color: section.textColor || '#FFFFFF'                  }}>
                   <div className="main-text">
                     {section.slogan && <h2 className="panel-main-title">{section.slogan}</h2>}
                     {section.subTitle && <h3 className="panel-sub-title">{section.subTitle}</h3>}
@@ -1377,10 +1479,7 @@ const SingleProject = () => {
                   </div>
                 </div>
               )}
-              {section.type === 'text-section' && (
-                <div className="text-section-content" style={{ 
-                  backgroundColor: section.backgroundColor || project.backgroundColor || '#000000',
-                  color: section.textColor || '#FFFFFF',
+                            {section.type === 'text-section' && (                <div                   className="text-section-content"                   data-bg-color={section.backgroundColor || project.backgroundColor || '#000000'}                  style={{                     color: section.textColor || '#FFFFFF',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',

@@ -1,0 +1,131 @@
+/* 
+ * Compatibility fixes for older devices including MacBook 2019
+ * This file addresses rendering issues on Safari and other browsers
+ */
+
+/* General Safari fixes */
+@supports (-webkit-touch-callout: none) {
+  /* Safari-specific CSS */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* Fix for Safari 3D transforms */
+  .animated-element,
+  .transition-element,
+  [data-animation] {
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+  }
+  
+  /* Safari flexbox fixes */
+  .flex-container {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+  }
+  
+  /* Improve text rendering */
+  h1, h2, h3, h4, h5, p, span, a {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Fixes for MacBook 2019 Retina Display */
+@media screen and (-webkit-min-device-pixel-ratio: 2), 
+       screen and (min-resolution: 192dpi) {
+  /* Sharper text rendering for Retina displays */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Fix for blurry borders on Retina displays */
+  * {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+  
+  /* Improve visibility of small text */
+  .small-text, small, .footnote {
+    font-size: calc(1em + 0.1vw);
+  }
+}
+
+/* Performance optimizations for older devices */
+@media screen and (max-width: 1440px) {
+  /* Reduce animation complexity on older devices */
+  .complex-animation {
+    transition-duration: 0.2s !important;
+    animation-duration: 0.2s !important;
+  }
+  
+  /* Simplify box-shadows for better performance */
+  .shadow-element {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+  }
+  
+  /* Optimize images for older GPUs */
+  img {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+}
+
+/* Fix for About page specific issues on MacBook */
+.about-page-container {
+  /* Fix rendering issues with overflow */
+  overflow: hidden;
+}
+
+.about-page-container .text-content {
+  /* Ensure text remains visible against background */
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  z-index: 2;
+}
+
+/* Fix for vertical scrolling issues on Safari */
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Improve GPU rendering for animations */
+.gsap-animated,
+.framer-animated,
+.animated {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Fix for panel overlapping issues in Safari */
+.panel {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+}
+
+/* Fix for text-content in SingleProject */
+.text-content, .text-section-content {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Safari-specific fix for blend modes */
+@supports (-webkit-hyphens:none) {
+  .mix-blend {
+    isolation: isolate;
+  }
+} 

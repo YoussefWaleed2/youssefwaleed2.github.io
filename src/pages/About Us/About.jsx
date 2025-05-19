@@ -8,6 +8,16 @@ import MobileAbout from './MobileAbout'; // Import the mobile component
 import { handleOverlay } from "./../../utils/overlayManager";
 import { togglePersonBackground } from '../../utils/personDetection';
 
+// Detect Safari browser for specific optimizations
+const isSafari = () => {
+  return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+};
+
+// Detect MacBook specifically
+const isMacBook = () => {
+  return /Mac/i.test(navigator.userAgent) && !(/iPad|iPhone|iPod/.test(navigator.userAgent));
+};
+
 // Add debounce function for better performance
 function debounce(func, wait) {
   let timeout;
@@ -803,9 +813,26 @@ const About = () => {
   
   // Handle image load events
   const handleImageLoad = (index) => {
-    const newImagesLoaded = [...imagesLoaded];
-    newImagesLoaded[index] = true;
-    setImagesLoaded(newImagesLoaded);
+    return () => {
+      const newLoadedState = [...imagesLoaded];
+      newLoadedState[index] = true;
+      setImagesLoaded(newLoadedState);
+      
+      // Apply MacBook/Safari specific optimizations to the loaded image
+      if (isMacBook() || isSafari()) {
+        const imgElement = imageRefs.current[index]?.current;
+        if (imgElement) {
+          // Apply hardware acceleration
+          imgElement.style.transform = "translateZ(0)";
+          imgElement.style.backfaceVisibility = "hidden";
+          
+          // Optimize rendering on Retina displays
+          if (window.devicePixelRatio >= 2) {
+            imgElement.style.imageRendering = "-webkit-optimize-contrast";
+          }
+        }
+      }
+    };
   };
 
   // Make sure document is ready before any processing
@@ -876,6 +903,68 @@ const About = () => {
     };
   }, [currentSection, isMobileOrTablet]);
 
+  // Add MacBook optimization useEffect
+  useEffect(() => {
+    if (isMobileOrTablet) return;
+    
+    // Apply specific optimizations for MacBook and Safari
+    const isMac = isMacBook();
+    const safari = isSafari();
+    
+    if (isMac || safari) {
+      console.log("Applying MacBook/Safari optimizations");
+      
+      // Add class for CSS targeting
+      document.body.classList.add(isMac ? 'is-macbook' : 'is-safari');
+      
+      // Reduce animation complexity
+      gsap.defaults({
+        ease: "power2.out", // Simpler easing function
+        duration: isMac ? 0.4 : 0.6, // Shorter duration for MacBook
+        overwrite: true // Prevent animation conflicts
+      });
+      
+      // Apply GPU acceleration to main container
+      if (containerRef.current) {
+        containerRef.current.style.transform = "translateZ(0)";
+        containerRef.current.style.willChange = "transform";
+        containerRef.current.style.backfaceVisibility = "hidden";
+      }
+      
+      // Optimize image loading strategy
+      const optimizeImages = () => {
+        document.querySelectorAll('.about-image').forEach(img => {
+          img.loading = "lazy";
+          img.decoding = "async";
+          
+          // For Safari/MacBook, limit resolution on initial load
+          if (isMac || safari) {
+            // Store original src
+            const originalSrc = img.src;
+            if (originalSrc && !img.dataset.optimized) {
+              img.dataset.optimized = "true";
+              img.dataset.originalSrc = originalSrc;
+              
+              // Only apply to large images
+              if (img.naturalWidth > 1000) {
+                // Will be replaced with full resolution when in viewport
+                img.style.transform = "translateZ(0)";
+              }
+            }
+          }
+        });
+      };
+      
+      // Run optimization
+      optimizeImages();
+      
+      // Clean up
+      return () => {
+        document.body.classList.remove('is-macbook', 'is-safari');
+      };
+    }
+  }, [isMobileOrTablet]);
+
   // If on mobile/tablet, render the mobile version
   if (isMobileOrTablet) {
     return <MobileAbout images={images} />;
@@ -918,7 +1007,7 @@ const About = () => {
                 src={src} 
                 alt={`About section ${index + 1}`} 
                 className="background-image"
-                onLoad={() => handleImageLoad(index)}
+                onLoad={handleImageLoad(index)}
                 style={{
                   position: 'absolute',
                   top: 0,

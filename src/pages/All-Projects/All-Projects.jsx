@@ -337,8 +337,26 @@ const AllProjects = () => {
     );
   };
 
+  // Handle back to Projects page navigation
+  const handleBackToProjectsMain = () => {
+    // Navigate to main Projects page
+    navigate('/projects');
+  };
+
   return (
     <>
+      {/* Back to Projects button - always visible */}
+      <button 
+        className="back-to-projects-main-btn" 
+        onClick={handleBackToProjectsMain}
+        aria-label="Back to main projects"
+      >
+        <svg width="30" height="20" viewBox="0 0 30 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 1L1 10L10 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M1 10H29" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+      
       {isMobile ? (
         <div className="mobile-projects-view">
           <div className="mobile-projects-content">

@@ -476,6 +476,162 @@ const SingleProject = () => {
     }
   }, [isReady, project]);
 
+  // Effect to style the image panels with border radius and overlay starting from the 4th panel
+  useEffect(() => {
+    if (isMobileOrTablet || !project?.projectContent?.sections) return;
+    
+    const panels = document.querySelectorAll('.panel');
+    if (panels.length < 4) return; // Need at least 4 panels
+    
+    // First, inject a global style directly into the document to ensure our styles have high priority
+    const styleId = 'curved-panel-styles';
+    let styleTag = document.getElementById(styleId);
+    
+    if (!styleTag) {
+      styleTag = document.createElement('style');
+      styleTag.id = styleId;
+      document.head.appendChild(styleTag);
+    }
+    
+    // Define CSS that will be applied globally using the exact border-radius requested
+    styleTag.innerHTML = `
+      .panel-curved-left {
+        border-radius: 106px 0px 0px 106px !important;
+        overflow: hidden !important;
+        box-shadow: -5px 0px 15px rgba(0, 0, 0, 0.3) !important;
+      }
+      
+      .panel-curved-left .image-container {
+        border-radius: 106px 0px 0px 106px !important;
+        overflow: hidden !important;
+      }
+      
+      .panel-curved-left img {
+        border-radius: 106px 0px 0px 106px !important;
+      }
+    `;
+    
+    // Function to check if a panel is an image panel (not video, not text)
+    const isImagePanel = (panel) => {
+      const hasVideo = panel.querySelector('video');
+      const isTextPanel = panel.querySelector('.text-content') || panel.querySelector('.text-section-content');
+      return !hasVideo && !isTextPanel;
+    };
+    
+    // Clear any previous curved-left classes
+    panels.forEach(panel => {
+      panel.classList.remove('panel-curved-left');
+    });
+    
+    // Apply to 4th panel (index 3) and then every even-indexed panel after that
+    for (let i = 3; i < panels.length; i++) {
+      if (i === 3 || (i > 3 && (i - 3) % 2 === 0)) {
+        // i = 3, 5, 7, 9, etc. (4th, 6th, 8th, 10th panels)
+        const panel = panels[i];
+        
+        // Only apply to image panels
+        if (isImagePanel(panel)) {
+          console.log(`Applying curve to panel ${i+1} (index ${i})`);
+          
+          // Add the class to apply the CSS
+          panel.classList.add('panel-curved-left');
+          
+          // Also directly style with !important to override any conflicting styles
+          panel.style.cssText += `
+            border-radius: 106px 0px 0px 106px !important;
+            overflow: hidden !important;
+            position: absolute !important;
+          `;
+          
+          // Move panel left for overlap effect - increase the overlap amount
+          const sectionWidth = window.innerWidth;
+          const overlayAmount = 120; // pixels to overlap (increased from 50)
+          const originalLeftValue = parseFloat(panel.style.left) || i * sectionWidth;
+          panel.style.left = `${originalLeftValue - overlayAmount}px`;
+          
+          // Set z-index high to ensure it appears on top of previous panel
+          panel.style.zIndex = `${50 + i}`;
+          
+          // Force style on direct image containers
+          const imageContainers = panel.querySelectorAll('.image-container');
+          imageContainers.forEach(container => {
+            container.style.cssText += `
+              border-radius: 106px 0px 0px 106px !important;
+              overflow: hidden !important;
+              width: 100% !important;
+              height: 100% !important;
+            `;
+          });
+          
+          // Force style on images
+          const images = panel.querySelectorAll('img');
+          images.forEach(img => {
+            img.style.cssText += `
+              border-radius: 106px 0px 0px 106px !important;
+            `;
+          });
+          
+          // Ensure this panel's width is properly set
+          panel.style.width = `${sectionWidth}px`;
+        }
+      }
+    }
+    
+    // Debug logging to confirm panels are being found and processed
+    console.log('Total panels:', panels.length);
+    console.log('Panels that should get curved edges:', 
+      Array.from(panels)
+        .map((panel, idx) => ({ idx, isImage: isImagePanel(panel) }))
+        .filter(({ idx, isImage }) => isImage && (idx === 3 || (idx > 3 && (idx - 3) % 2 === 0)))
+        .map(({ idx }) => idx + 1)
+    );
+    
+    return () => {
+      // Clean up by removing the style tag when component unmounts
+      if (styleTag) {
+        styleTag.remove();
+      }
+    };
+  }, [isMobileOrTablet, project, isReady]);
+
+  // New effect specifically to fix the 4th panel overlay issue
+  useEffect(() => {
+    if (isMobileOrTablet || !project?.projectContent?.sections) return;
+    
+    // Check if we have enough panels
+    setTimeout(() => {
+      // Use setTimeout to ensure this runs after other layout code
+      console.log("Fixing 4th panel overlay");
+      const panels = document.querySelectorAll('.panel');
+      
+      if (panels.length >= 4) {
+        // Get the 4th panel
+        const fourthPanel = panels[3];
+        
+        if (fourthPanel) {
+          console.log("Found 4th panel, applying overlap fix");
+          
+          // Set extremely high z-index
+          fourthPanel.style.zIndex = "9999";
+          
+          // Get current left position and adjust it
+          const currentLeft = parseFloat(fourthPanel.style.left) || 3 * window.innerWidth;
+          const newLeft = currentLeft - 150; // Move 150px to the left
+          
+          // Apply the new position with !important
+          fourthPanel.style.cssText += `
+            left: ${newLeft}px !important;
+            z-index: 9999 !important;
+            position: absolute !important;
+          `;
+          
+          console.log(`4th panel position: ${fourthPanel.style.left}, z-index: ${fourthPanel.style.zIndex}`);
+        }
+      }
+    }, 1000); // Wait 1 second to ensure other layout code has run
+    
+  }, [isMobileOrTablet, project, isReady]);
+
   // Update smoothScrollTo function for improved performance
   const smoothScrollTo = (targetX) => {
     if (!pageRef.current || !project?.projectContent?.sections) return;
@@ -521,17 +677,17 @@ const SingleProject = () => {
         const distanceAbs = Math.abs(distance);
         if (distanceAbs > sectionWidth * 0.7) {
           // Large distance (page transitions) - faster easing
-          easeFactor = 0.25; // Increased from 0.12 for faster scrolling
+          easeFactor = 0.25; // Increased from 0.15 for faster scrolling
         } else if (distanceAbs > sectionWidth * 0.2) {
           // Medium distance - moderate easing
-          easeFactor = 0.22; // Increased from 0.1 for faster scrolling
+          easeFactor = 0.22; // Increased from 0.12 for faster scrolling
         } else {
           // Small distance - more precise easing
-          easeFactor = 0.18; // Increased from 0.085 for faster scrolling
+          easeFactor = 0.18; // Increased from 0.10 for faster scrolling
         }
       } else {
         // Windows/Linux standard easing
-        easeFactor = 0.15; // Increased from 0.08 for faster movement
+        easeFactor = 0.15; // Increased from 0.08 for faster scrolling
       }
       
       // Apply bounded scroll position with extra checks
@@ -572,12 +728,13 @@ const SingleProject = () => {
       // Set z-index to create proper layering
       if (index === 0) {
         panel.style.zIndex = '10'; // First panel
-      } else if (index === 1) {
+      } else if (index % 2 === 1) {
+        // All odd-indexed panels (2nd, 4th, 6th, etc.) get higher z-index
         panel.style.zIndex = '40'; // Text panel
       } else {
-        // All panels after text panel should move together
+        // All other panels should stack behind the text panels
         // Decreasing z-index for proper stacking
-        panel.style.zIndex = `${40 - (index - 1)}`;
+        panel.style.zIndex = `${30 - Math.floor(index / 2)}`;
       }
       
       // Apply transition properties to all panels for smooth movement
@@ -618,8 +775,6 @@ const SingleProject = () => {
       const panels = document.querySelectorAll('.panel');
       if (!panels.length) return;
       
-      const secondPanel = panels[1]; // Text panel
-      
       // Calculate how far we've scrolled as a percentage of section width
       const scrollProgress = Math.min(1, currentScrollRef.current / (sectionWidth * 0.95));
       
@@ -634,20 +789,19 @@ const SingleProject = () => {
       // Calculate movement amount for text panel (second panel)
       const textPanelMoveAmount = -Math.min(combinedEase * sectionWidth * 0.55, sectionWidth * 0.55);
       
-      // Use direct DOM manipulation instead of GSAP for better performance
-      // This reduces the overhead of GSAP for simple transform operations
-      if (secondPanel) {
-        secondPanel.style.transform = `translateX(${textPanelMoveAmount}px)`;
-      }
-      
-      // Move ALL image panels (third and beyond) together with the text panel
-      for (let i = 2; i < panels.length; i++) {
-        const panel = panels[i];
-        if (panel) {
-          // Direct DOM manipulation for performance
+      // Apply the transform to all odd-indexed panels (2nd, 4th, 6th, etc.)
+      panels.forEach((panel, index) => {
+        if (index % 2 === 1) {
+          // Use direct DOM manipulation instead of GSAP for better performance
           panel.style.transform = `translateX(${textPanelMoveAmount}px)`;
+          
+          // Also move the next panel (if it exists) with the same transform
+          // to maintain the overlay effect for image panels following each text panel
+          if (panels[index + 1]) {
+            panels[index + 1].style.transform = `translateX(${textPanelMoveAmount}px)`;
+          }
         }
-      }
+      });
       
       // Continue animation loop - use high priority requestAnimationFrame
       // for smoother animation, especially during scrolling
@@ -688,9 +842,9 @@ const SingleProject = () => {
       // Adapt scaling based on deltaMode for consistent behavior
       let deltaPixels;
       if (e.deltaMode === 1) { // Line mode
-        deltaPixels = deltaToUse * 35; // Increased for faster scrolling
+        deltaPixels = deltaToUse * 35; // Increased from 20 for faster scrolling
       } else if (e.deltaMode === 2) { // Page mode
-        deltaPixels = deltaToUse * window.innerHeight * 0.7;
+        deltaPixels = deltaToUse * window.innerHeight * 0.7; // Increased from 0.4 for faster scrolling
       } else { // Pixel mode (most common)
         // Mac-specific handling for smoother touchpad scrolling
         if (isMac) {
@@ -700,14 +854,14 @@ const SingleProject = () => {
           
           if (isLikelyTouchpad) {
             // For Mac touchpads, apply more consistent scaling and smoother damping
-            deltaPixels = deltaToUse * 6.5; // Increased from 2.5 for faster scrolling
+            deltaPixels = deltaToUse * 6.5; // Increased from 3.5 for faster scrolling
           } else {
             // Probably a mouse on Mac, use standard scaling
-            deltaPixels = deltaToUse * 5.0; // Increased from 2.8 for faster scrolling
+            deltaPixels = deltaToUse * 5.0; // Increased from 3.0 for faster scrolling
           }
         } else {
           // Windows/Linux standard handling
-          deltaPixels = deltaToUse * 4.0; // Increased from 3.0 for faster scrolling
+          deltaPixels = deltaToUse * 4.0; // Increased from 2.5 for faster scrolling
         }
       }
       
@@ -726,13 +880,13 @@ const SingleProject = () => {
         if (sameDirection) {
           // Continuous scroll in same direction - build momentum gradually
           // Mac-specific momentum tuning for touchpads
-          const momentumMultiplier = isMac ? 1.8 : 1.2; // Increased from 0.9 for Mac
-          const momentumRetention = isMac ? 0.85 : 0.85; // Increased from 0.75 for Mac
+          const momentumMultiplier = isMac ? 1.8 : 0.8; // Increased from 1.2 for Mac, faster scrolling
+          const momentumRetention = isMac ? 0.85 : 0.65; // Increased from 0.65 for faster scrolling
           
           // Limit maximum momentum gain for predictable behavior
           const momentumGain = Math.min(
             Math.abs(deltaPixels) * momentumMultiplier,
-            Math.abs(window.wheelTracking.momentum) * (isMac ? 0.5 : 0.4) // Increased from 0.3 for Mac
+            Math.abs(window.wheelTracking.momentum) * (isMac ? 0.3 : 0.4) // Adjusted for faster scrolling
           );
           
           // Update momentum with new input (smooth acceleration)
@@ -741,16 +895,16 @@ const SingleProject = () => {
             Math.sign(deltaPixels) * momentumGain;
         } else {
           // Direction change - respond quickly but with controlled initial speed
-          window.wheelTracking.momentum = deltaPixels * (isMac ? 0.6 : 0.8);
+          window.wheelTracking.momentum = deltaPixels * (isMac ? 0.8 : 0.8); // Increased from 0.6 for faster scrolling
         }
       } else {
         // New scroll event after pause - start with modest momentum
-        window.wheelTracking.momentum = deltaPixels * (isMac ? 0.5 : 0.6);
+        window.wheelTracking.momentum = deltaPixels * (isMac ? 0.7 : 0.6); // Increased from 0.5 for faster scrolling
       }
       
       // Apply the momentum with a multiplier for desired speed
       // Use a different multiplier for Mac touchpads
-      finalDelta = window.wheelTracking.momentum * (isMac ? 2.5 : 1.5); // Increased from 1.3 for Mac
+      finalDelta = window.wheelTracking.momentum * (isMac ? 2.5 : 1.0); // Increased from 1.5 for Mac, faster scrolling
       
       // Update tracking values for next event
       window.wheelTracking.lastEvent = now;
@@ -875,16 +1029,28 @@ const SingleProject = () => {
           section.style.height = '100%'; // Ensure full height
           section.style.backgroundColor = '#000'; // Ensure background color
           
-          // Add specific fix for panel 3 and 4 (where the gap appears)
-          if (index === 3) {
-            section.style.left = `${3 * sectionWidth}px`; // Force correct position
-            section.style.zIndex = 40; // Higher z-index
-            section.style.margin = '0';
-            section.style.padding = '0';
-            // Set overflow to hidden to prevent potential gaps
-            section.style.overflow = 'hidden';
+          // Set z-index to create proper layering with more gradual progression
+          // Handle even-numbered panels after the first panel with special styling
+          if (index === 0) {
+            section.style.zIndex = 10; // First panel (background)
+          } else if (index % 2 === 1) {
+            // All odd-indexed panels (text panels - 2nd, 4th, 6th, etc.)
+            section.style.zIndex = 40; // Higher z-index for text panels
             
-            // Force this panel's image container to fill completely
+            // Apply text panel specific styling if this is a text section
+            if (section.querySelector('.text-content') || section.querySelector('.text-section-content')) {
+              section.style.backgroundColor = section.style.backgroundColor || '#000';
+              
+              // Add any specific text panel styling here
+              section.dataset.isPanelType = 'text';
+            }
+          } else {
+            // Even-indexed panels after the first are typically image/media panels
+            // Each one gets a decreasing z-index for proper stacking
+            section.style.zIndex = 30 - Math.floor(index / 2);
+            section.dataset.isPanelType = 'media';
+            
+            // Force proper styling for media panels
             const imageContainer = section.querySelector('.image-container');
             if (imageContainer) {
               imageContainer.style.width = '100%';
@@ -892,33 +1058,7 @@ const SingleProject = () => {
               imageContainer.style.margin = '0';
               imageContainer.style.padding = '0';
               imageContainer.style.overflow = 'hidden';
-              imageContainer.style.backgroundColor = '#000';
             }
-            
-            // Force the image to fill its container
-            const img = section.querySelector('img');
-            if (img) {
-              img.style.width = '100%';
-              img.style.height = '100%';
-              img.style.objectFit = 'cover';
-              img.style.margin = '0';
-              img.style.padding = '0';
-              img.style.display = 'block';
-            }
-          }
-          
-          // Set z-index to create proper layering with more gradual progression
-          // This helps prevent sudden overlapping issues
-          if (index === 0) {
-            section.style.zIndex = 10; // First panel (background)
-          } else if (index === 1) {
-            section.style.zIndex = 20; // Second panel (text)
-          } else if (index === 2) {
-            section.style.zIndex = 20; // Third panel (first image) - same as text
-          } else if (index === 3) {
-            section.style.zIndex = 40; // Fourth panel (second image) - higher for no gap
-          } else {
-            section.style.zIndex = 40 + (index - 3); // Fifth and beyond with incremental z-index
           }
         }
       });
@@ -1008,14 +1148,14 @@ const SingleProject = () => {
     
     // Apply with sensitivity optimized for the device/input method
     // For MacBook, increase sensitivity for better horizontal gesture response
-    let scrollMultiplier = 3.5; // Base multiplier
+    let scrollMultiplier = 2.0; // Reduced from 3.5 for slower scrolling
     
     // Adjust for Mac trackpad if detected
     if (window.touchTracking.isMac) {
       // For Mac trackpads, we need more precise control but higher sensitivity for side gestures
       if (window.touchTracking.isTrackpadGesture) {
         // Two-finger gesture on Mac trackpad - optimize for horizontal swipes
-        scrollMultiplier = 2.8; // Increased for better side-to-side response
+        scrollMultiplier = 1.8; // Reduced from 2.8 for slower scrolling
         
         // For trackpad gestures, also introduce a small threshold to filter out tiny movements
         if (Math.abs(smoothedDelta) < 0.5) { // Lower threshold for more responsiveness
@@ -1023,7 +1163,7 @@ const SingleProject = () => {
         }
       } else {
         // Regular touch on Mac - slightly higher multiplier for better side gesture detection
-        scrollMultiplier = 3.2;
+        scrollMultiplier = 2.0; // Reduced from 3.2 for slower scrolling
       }
     }
     

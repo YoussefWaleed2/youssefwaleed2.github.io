@@ -1,4 +1,5 @@
 @import "./fonts.css";
+@import "./compatibility.css";
 
 :root {
   --bg: #000000;

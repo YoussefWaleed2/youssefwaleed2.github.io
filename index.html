@@ -9,6 +9,22 @@
     <link rel="shortcut icon" href="/Favicon32.png" />
     <meta name="theme-color" content="#000000" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Content-Type hint for JavaScript modules -->
+    <meta http-equiv="Content-Type" content="text/javascript; charset=utf-8" />
+    <!-- Add compatibility meta tags for better Safari rendering -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <!-- Fix for loading JS modules properly -->
+    <script type="text/javascript">
+      // For MIME type detection issues in Safari
+      if (
+        /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || 
+        /Mac/i.test(navigator.userAgent)
+      ) {
+        document.documentElement.classList.add('safari-fix');
+      }
+    </script>
     <title>
       VZBL Co.
     </title>
@@ -36,7 +52,7 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.jsx" onerror="console.error('Module loading error:', event)"></script>
     <script>
       if (window.netlifyIdentity) {
         window.netlifyIdentity.on("init", user => {

@@ -918,3 +918,113 @@ body:has(.about-page) .about-section:nth-child(3) .image-container {
   backface-visibility: hidden;
 }
 
+/* MacBook 2019 and Safari-specific compatibility fixes */
+@supports (-webkit-touch-callout: none) {
+  .about-container {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    perspective: 1000;
+    -webkit-perspective: 1000;
+  }
+  
+  /* Fix parallax effect on Safari */
+  .parallax-section, 
+  .parallax-element {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* Fix text animation glitches */
+  .title-char,
+  .subtitle-text,
+  .description-text,
+  .about-text {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+  
+  /* Fix for image rendering on Retina displays */
+  .about-image {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    image-rendering: -webkit-optimize-contrast;
+  }
+  
+  /* Fix for horizontal scrolling section */
+  .horizontal-section {
+    -webkit-overflow-scrolling: touch;
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+  
+  /* Prevent flickering on scroll */
+  .about-title h1,
+  .about-subtitle h2 {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+  
+  /* Fix for sticky elements */
+  .sticky-element {
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    position: -webkit-sticky;
+    position: sticky;
+  }
+  
+  /* Fix for blurriness in Safari */
+  .about-text-container {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+  
+  /* Add GPU acceleration to smooth animations */
+  .gsap-animated {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+    will-change: transform, opacity;
+  }
+}
+
+/* Fixes specifically for MacBook 2019 Retina display */
+@media screen and (-webkit-min-device-pixel-ratio: 2) and (max-width: 1440px) {
+  .about-container {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+  
+  /* Adjust font sizes for better rendering on Retina */
+  .about-title h1 {
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.02em;
+  }
+  
+  .about-description p {
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Fix blur effect for better performance */
+  .blur-effect {
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+  }
+  
+  /* Optimize transformations */
+  .transform-element {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}
+

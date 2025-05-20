@@ -330,18 +330,23 @@
   height: auto;
   background-color: #0a0a0a;
   color: #ffffff;
-  padding: 80px 20px 50px 20px;
+  padding: 80px 0 0 0; /* Removed horizontal padding */
   overflow-y: auto;
   position: relative;
   -webkit-overflow-scrolling: touch;
   touch-action: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .mobile-projects-content {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  padding-bottom: 60px;
+  padding-bottom: 0; 
+  padding-left: 0;
+  padding-right: 0;
+  flex: 1;
 }
 
 .mobile-category-title {
@@ -360,9 +365,10 @@
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
   width: 100%;
-  padding-bottom: 70px;
+  padding: 0 0 20px 0;
   height: auto;
   position: relative;
+  margin: 0;
 }
 
 .mobile-project-item {
@@ -371,6 +377,8 @@
   cursor: pointer;
   transition: transform 0.3s ease;
   margin-bottom: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .mobile-media-container {
@@ -481,4 +489,54 @@
     width: 20px;
     height: 14px;
   }
+}
+
+/* Fix footer in mobile projects view */
+.mobile-projects-view .footer {
+  margin: 0;
+  width: 100%;
+  min-height: auto;
+  padding: 40px 0 20px;
+  box-sizing: border-box;
+}
+
+/* Fix All Projects footer styling */
+.all-projects-container + .footer {
+  margin-top: 0;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .mobile-projects-grid {
+    padding: 0 0 20px 0;
+    margin: 0;
+    width: 100%;
+  }
+  
+  .mobile-projects-view .footer {
+    padding: 40px 0 20px;
+    margin: 0;
+    width: 100%;
+  }
+  
+  .mobile-category-title {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+/* Desktop view wrapper styling */
+.all-projects-wrapper {
+  background-color: #0a0a0a;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.all-projects-wrapper .footer {
+  min-height: auto;
+  padding: 40px 0 20px;
+  margin: 0;
+  width: 100%;
 }

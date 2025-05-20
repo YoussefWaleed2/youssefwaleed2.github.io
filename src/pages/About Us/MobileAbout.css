@@ -3,7 +3,7 @@
   width: 100% !important;
   min-height: 100vh !important;
   overflow-x: hidden !important;
-  background-color: #0a0a0a;
+  background-color: #090909;
   color: #ffffff;
   font-family: 'Helvetica Neue', 'Golden Plains', serif;
   display: block !important;
@@ -441,6 +441,7 @@ html, body {
 
 .member-title {
   margin: 1rem 0;
+  
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -453,7 +454,7 @@ html, body {
   letter-spacing: 0.1rem;
   text-transform: uppercase;
   margin: 0.3rem 0;
-  font-weight: 500;
+  font-weight: 400;
   text-align: center;
   color: #ffffff;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);

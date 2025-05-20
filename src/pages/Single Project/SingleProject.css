@@ -1003,7 +1003,7 @@ body.single-project-page-active .panel {
   
   /* Extra space for last element in mobile content */
   .mobile-project-section:last-child {
-    margin-bottom: 3.5rem !important;
+    margin-bottom: 0 !important;
   }
   
   /* Make sure SVG is properly sized for mobile */

@@ -35,6 +35,19 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
     }
   }, [selectedJob, isOpen]);
 
+  // Handle form open state
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('form-open');
+    } else {
+      document.body.classList.remove('form-open');
+    }
+    
+    return () => {
+      document.body.classList.remove('form-open');
+    };
+  }, [isOpen]);
+
   // Handle wheel events for scrolling
   useEffect(() => {
     const handleWheel = (e) => {
@@ -297,18 +310,6 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
       }
     }
   };
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add('form-open');
-    } else {
-      document.body.classList.remove('form-open');
-    }
-    
-    return () => {
-      document.body.classList.remove('form-open');
-    };
-  }, [isOpen]);
 
   // Focus management for accessibility
   useEffect(() => {

@@ -4,7 +4,7 @@
         "title": "Épos",
         "media": "/project/Project-Assets/Branding/EPOS.webp",
         "mediaType": "image",
-        "backgroundColor": "#1A1A1A",
+        "backgroundColor": "#000000",
         "projectContent": {
           "sections": [
             {
@@ -127,6 +127,7 @@
       {
         "title": "L'azurde",
         "media": "/project/Project-Assets/Branding/L'AZURDE.webp",
+        "backgroundColor": "#F3EFEB",
         "mediaType": "image",
         "projectContent": {
           "sections": [
@@ -159,6 +160,7 @@
       {
         "title": "Telofill",
         "media": "/project/Project-Assets/Branding/TELOFILL.webp",
+        "backgroundColor": "#ceaecb",
         "mediaType": "image",
         "projectContent": {
           "sections": [
@@ -169,7 +171,7 @@
             },
             {
               "type": "text",
-              "backgroundColor": "#CDC8BF",
+              "backgroundColor": "#ceaecb",
               "slogan": "ADVANCED SKIN INNOVATION, REDEFINED WITH ELEGANCE AND PRECISION",
               "fieldName": "BEAUTY & WELLNESS",
               "services": "BRAND IDENTITY",
@@ -197,6 +199,7 @@
         "title": "Dippy's",
         "media": "/project/Project-Assets/Branding/DIPPY'S.webp",
         "mediaType": "image",
+        "backgroundColor": "#7e0102",
         "projectContent": {
           "sections": [
             {
@@ -206,7 +209,7 @@
             },
             {
               "type": "text",
-              "backgroundColor": "#FF0000",
+              "backgroundColor": "#7e0102",
               "slogan": " FLAVOR-LOVING FUN, PACKAGED WITH BOLDNESS AND A SIDE OF CRAVING",
               "fieldName": "FOOD & BEVERAGE",
               "services": "BRAND IDENTITY",
@@ -234,6 +237,7 @@
         "title": "NotFound",
         "media": "/project/Project-Assets/Branding/NotFound.webp",
         "mediaType": "image",
+        "backgroundColor": "#000000",
         "projectContent": {
           "sections": [
             {
@@ -243,7 +247,7 @@
             },
             {
               "type": "text",
-              "backgroundColor": "#CDC8BF",
+              "backgroundColor": "#000000",
               "slogan": "SIMPLICITY WITH PURPOSE, DESIGN WITH IMPACT",
               "fieldName": "FASHION",
               "services": "BRAND IDENTITY",
@@ -271,6 +275,7 @@
         "title": "Hlep",
         "media": "/project/Project-Assets/Branding/HLEP.webp",
         "mediaType": "image",
+        "backgroundColor": "#000",
         "projectContent": {
           "sections": [
             {
@@ -308,6 +313,7 @@
         "title": "Merkur",
         "media": "/project/Project-Assets/Branding/MERKUR.webp",
         "mediaType": "image",
+        "backgroundColor": "#000",
         "projectContent": {
           "sections": [
             {
@@ -317,7 +323,7 @@
             },
             {
               "type": "text",
-              "backgroundColor": "#CDC8BF",
+              "backgroundColor": "#000",
               "slogan": "VISIONARY DESIGN, BUILT TO ENDURE",
               "fieldName": "REAL ESTATE",
               "services": "BRAND IDENTITY",
@@ -350,6 +356,7 @@
         "title": "Ozirea",
         "media": "/project/Project-Assets/Branding/OZIREA.webp",
         "mediaType": "image",
+        "backgroundColor": "#CDC8BF",
         "projectContent": {
           "sections": [
             {
@@ -412,6 +419,7 @@
         "title": "Invesco",
         "media": "/project/Project-Assets/Branding/INVESCO.webp",
         "mediaType": "image",
+        "backgroundColor": "#CDC8BF",
         "projectContent": {
           "sections": [
             {
@@ -439,6 +447,7 @@
         "title": "Ever mark",
         "media": "/project/Project-Assets/Branding/EVER MARK.webp",
         "mediaType": "image",
+        "backgroundColor": "#550105",
         "projectContent": {
           "sections": [
             {
@@ -448,7 +457,7 @@
             },
             {
               "type": "text",
-              "backgroundColor": "#ed0c0c",
+              "backgroundColor": "#550105",
               "slogan": "BUILDING LEGACIES, LEAVING AN IMPACT",
               "fieldName": "REAL ESTATE",
               "services": "BRAND IDENTITY",
@@ -479,6 +488,7 @@
         "title": "Bunker",
         "media": "/project/Project-Assets/Marketing/Bunker.webm",
         "mediaType": "video",
+        "backgroundColor": "#000000",
         "thumbnail": "/project/Project-Assets/Marketing/Bunker-thumb.webp",
         "projectContent": {
           "sections": [
@@ -543,6 +553,7 @@
         "title": "Bouchée",
         "media": "/project/Project-Assets/Marketing/BOUCHÉE.webm",
         "mediaType": "video",
+        "backgroundColor": "#800B1E",
         "thumbnail": "/project/Project-Assets/Marketing/BOUCHÉE-thumb.webp",
         "projectContent": {
           "sections": [
@@ -586,6 +597,7 @@
         "title": "Munch & Shake",
         "media": "/project/Project-Assets/Marketing/Munch & Shake.webm",
         "mediaType": "video",
+        "backgroundColor": "#000000",
         "thumbnail": "/project/Project-Assets/Marketing/Munch & Shake-thumb.webp",
         "projectContent": {
           "sections": [
@@ -596,7 +608,7 @@
             },
             {
               "type": "text",
-              "backgroundColor": "#FF0000",
+              "backgroundColor": "#000000",
               "slogan": "CREATING VISUAL APPETITE, MEDIA THAT MAKES THEM HUNGRY FOR MORE",
               "fieldName": "FOOD & BEVERAGE",
               "services": "MARKETING",
@@ -624,6 +636,7 @@
         "title": "CRMBZ",
         "media": "/project/Project-Assets/Marketing/CRMBZ.webm",
         "mediaType": "video",
+        "backgroundColor": "#FFDB58",
         "thumbnail": "/project/Project-Assets/Marketing/CRMBZ-thumb.webp",
         "projectContent": {
           "sections": [
@@ -635,10 +648,10 @@
             {
               "type": "text",
               "backgroundColor": "#FFDB58",
-              "slogan": "VISUAL DELIGHTS, TASTE BONANZA, MEDIA THAT MAKES YOU CRAVE MORE",
+              "slogan": "VISUAL DELIGHTS, MEDIA THAT MAKES YOU CRAVE MORE",
               "fieldName": "FOOD & BEVERAGE",
               "services": "MARKETING",
-              "text": "FOR CRUMBS, WE CREATED A VIBRANT AND IMMERSIVE MEDIA EXPERIENCE THAT BRINGS THEIR FOOD TO LIFE. OUR MISSION WAS TO CAPTURE THE BRAND’S PLAYFUL SPIRIT AND DELICIOUS OFFERINGS THROUGH HIGH-IMPACT VISUALS AND ENGAGING CONTENT. FROM LUSH PHOTOGRAPHY OF ICONIC ITEMS LIKE THE CLASSIC BURGER AND WING PLATTERS TO DYNAMIC SOCIAL MEDIA CAMPAIGNS THAT SPARK INTERACTION, EVERY ASPECT OF OUR WORK REFLECTS CRUMBS’ COMMITMENT TO FUN AND FLAVOR. WE USED A STRIKING ORANGE COLOR PALETTE AND CLEAN COMPOSITIONS TO ELEVATE THE FOOD’S APPEAL, WHILE ADDING ELEMENTS LIKE GAMES AND SURPRISES TO KEEP AUDIENCES ENGAGED. OUR MEDIA PRODUCTION EFFORTS TRANSFORMED SIMPLE MEALS INTO MEMORABLE MOMENTS, MAKING CRUMBS NOT JUST A RESTAURANT, BUT AN EXPERIENCE."
+              "text": "FOR CRMBZ, WE CREATED A VIBRANT AND IMMERSIVE MEDIA EXPERIENCE THAT BRINGS THEIR FOOD TO LIFE. OUR MISSION WAS TO CAPTURE THE BRAND’S PLAYFUL SPIRIT AND DELICIOUS OFFERINGS THROUGH HIGH-IMPACT VISUALS AND ENGAGING CONTENT. FROM LUSH PHOTOGRAPHY OF ICONIC ITEMS LIKE THE CLASSIC BURGER AND WING PLATTERS TO DYNAMIC SOCIAL MEDIA CAMPAIGNS THAT SPARK INTERACTION, EVERY ASPECT OF OUR WORK REFLECTS CRUMBS’ COMMITMENT TO FUN AND FLAVOR. WE USED A STRIKING ORANGE COLOR PALETTE AND CLEAN COMPOSITIONS TO ELEVATE THE FOOD’S APPEAL, WHILE ADDING ELEMENTS LIKE GAMES AND SURPRISES TO KEEP AUDIENCES ENGAGED. OUR MEDIA PRODUCTION EFFORTS TRANSFORMED SIMPLE MEALS INTO MEMORABLE MOMENTS, MAKING CRUMBS NOT JUST A RESTAURANT, BUT AN EXPERIENCE."
             },
             {
               "type": "media",
@@ -677,6 +690,7 @@
         "title": "Momochi",
         "media": "/project/Service-img-2.webp",
         "mediaType": "image",
+        "backgroundColor": "#87CEEB",
         "projectContent": {
           "sections": [
             {
@@ -686,7 +700,7 @@
             },
             {
               "type": "text",
-              "backgroundColor": "#FF4d00",
+              "backgroundColor": "#87CEEB",
               "slogan": "EVERY SEASON HAS A STORY — AND WE BRING IT TO LIFE",
               "fieldName": "FOOD & BEVERAGE",
               "services": "MARKETING",
@@ -725,7 +739,7 @@
         "media": "/project/Project-Assets/Marketing/Nev.webm",
         "mediaType": "video",
         "thumbnail": "/project/Project-Assets/Marketing/Nev-thumb.webp",
-        "backgroundColor": "#004D40",
+        "backgroundColor": "#FFFFFF",
         "projectContent": {
           "sections": [
             {
@@ -735,7 +749,7 @@
             },
             {
               "type": "text",
-              "backgroundColor": "#004D40",
+              "backgroundColor": "#FFFFFF",
               "slogan": "TAILORED ESCAPES, TIMELESS CALM, THE SPA EXPERIENCE REIMAGINED",
               "fieldName": "SPA & WELLNESS",
               "services": "MARKETING",
@@ -796,6 +810,7 @@
         "title": "Pyramids",
         "media": "/project/Project-Assets/Marketing/Pyramids.webm",
         "mediaType": "video",
+        "backgroundColor": "#C2B280",
         "thumbnail": "/project/Project-Assets/Marketing/Pyramids-thumb.webp",
         "projectContent": {
           "sections": [
@@ -806,7 +821,7 @@
             },
             {
               "type": "text",
-              "backgroundColor": "#000000",
+              "backgroundColor": "#C2B280",
               "slogan": "WHERE HISTORY MEETS LUXURY, A JOURNEY OF SELF-DISCOVERY",
               "fieldName": "LUXURY RESORT",
               "services": "MARKETING",
@@ -846,6 +861,7 @@
         "title": "Apero with Emit (Porsche Edition)",
         "media": "/project/Project-Assets/Advertising/Apero with Emit.webm",
         "mediaType": "video",
+        "backgroundColor": "#000000",
         "thumbnail": "/project/Project-Assets/Advertising/Apero with Emit-thumb.webp",
         "projectContent": {
           "sections": [
@@ -887,6 +903,7 @@
         "title": "Emit x Leopelle",
         "media": "/project/Project-Assets/Advertising/Emit x Leopelle.webm",
         "mediaType": "video",
+        "backgroundColor": "#71a1cc",
         "thumbnail": "/project/Project-Assets/Advertising/Emit x Leopelle-thumb.jpg",
         "projectContent": {
           "sections": [
@@ -897,7 +914,7 @@
             },
             {
               "type": "text",
-              "backgroundColor": "#57cdfa",
+              "backgroundColor": "#71a1cc",
               "slogan": "FROM THE SHORE TO THE BOLD TURNING WAVES INTO STATEMENTS",
               "fieldName": "LIFESTYLE",
               "services": "ADVERTISEMENT",
@@ -928,6 +945,7 @@
         "title": "Leopelle",
         "media": "/project/Project-Assets/Advertising/Leopelle.webm",
         "mediaType": "video",
+        "backgroundColor": "#113041",
         "thumbnail": "/project/Project-Assets/Advertising/Leopelle-thumb.webp",
         "projectContent": {
           "sections": [
@@ -981,6 +999,7 @@
         "title": "Yazi's World",
         "media": "/project/Project-Assets/Advertising/Yazi's World.webm",
         "mediaType": "video",
+        "backgroundColor": "#000000",
         "thumbnail": "/project/Project-Assets/Advertising/Yazi's World-thumb.webp",
         "projectContent": {
           "sections": [

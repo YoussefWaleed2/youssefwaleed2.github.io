@@ -476,146 +476,6 @@ const SingleProject = () => {
     }
   }, [isReady, project]);
 
-  // Effect to style the image panels with border radius and overlay starting from the 4th panel
-  useEffect(() => {
-    if (isMobileOrTablet || !project?.projectContent?.sections) return;
-    
-    const panels = document.querySelectorAll('.panel');
-    if (panels.length < 4) return; // Need at least 4 panels
-    
-    // First, inject a global style directly into the document to ensure our styles have high priority
-    const styleId = 'curved-panel-styles';
-    let styleTag = document.getElementById(styleId);
-    
-    if (!styleTag) {
-      styleTag = document.createElement('style');
-      styleTag.id = styleId;
-      document.head.appendChild(styleTag);
-    }
-    
-    // Define CSS that will be applied globally using the exact border-radius requested
-    styleTag.innerHTML = `
-      .panel-curved-left {
-        border-radius: 106px 0px 0px 106px !important;
-        overflow: hidden !important;
-        box-shadow: -5px 0px 15px rgba(0, 0, 0, 0.3) !important;
-      }
-      
-      .panel-curved-left .image-container {
-        border-radius: 106px 0px 0px 106px !important;
-        overflow: hidden !important;
-      }
-      
-      .panel-curved-left img {
-        border-radius: 106px 0px 0px 106px !important;
-      }
-    `;
-    
-    // Function to check if a panel is an image panel (not video, not text)
-    const isImagePanel = (panel) => {
-      const hasVideo = panel.querySelector('video');
-      const isTextPanel = panel.querySelector('.text-content') || panel.querySelector('.text-section-content');
-      return !hasVideo && !isTextPanel;
-    };
-    
-    // Clear any previous curved-left classes
-    panels.forEach(panel => {
-      panel.classList.remove('panel-curved-left');
-    });
-    
-    // Apply to 4th panel (index 3) and then every even-indexed panel after that
-    for (let i = 3; i < panels.length; i++) {
-      if (i === 3 || (i > 3 && (i - 3) % 2 === 0)) {
-        // i = 3, 5, 7, 9, etc. (4th, 6th, 8th, 10th panels)
-        const panel = panels[i];
-        
-        // Only apply to image panels
-        if (isImagePanel(panel)) {
-          console.log(`Applying curve to panel ${i+1} (index ${i})`);
-          
-          // Add the class to apply the CSS
-          panel.classList.add('panel-curved-left');
-          
-          // Force style on direct image containers
-          const imageContainers = panel.querySelectorAll('.image-container');
-          imageContainers.forEach(container => {
-            container.style.cssText += `
-              border-radius: 106px 0px 0px 106px !important;
-              overflow: hidden !important;
-              width: 100% !important;
-              height: 100% !important;
-            `;
-          });
-          
-          // Force style on images
-          const images = panel.querySelectorAll('img');
-          images.forEach(img => {
-            img.style.cssText += `
-              border-radius: 106px 0px 0px 106px !important;
-            `;
-          });
-          
-          // Ensure this panel's width is properly set
-          panel.style.width = `${window.innerWidth}px`;
-        }
-      }
-    }
-    
-    // Debug logging to confirm panels are being found and processed
-    console.log('Total panels:', panels.length);
-    console.log('Panels that should get curved edges:', 
-      Array.from(panels)
-        .map((panel, idx) => ({ idx, isImage: isImagePanel(panel) }))
-        .filter(({ idx, isImage }) => isImage && (idx === 3 || (idx > 3 && (idx - 3) % 2 === 0)))
-        .map(({ idx }) => idx + 1)
-    );
-    
-    return () => {
-      // Clean up by removing the style tag when component unmounts
-      if (styleTag) {
-        styleTag.remove();
-      }
-    };
-  }, [isMobileOrTablet, project, isReady]);
-
-  // Effect to ensure 4th panel is properly positioned with correct radius
-  useEffect(() => {
-    if (isMobileOrTablet || !project?.projectContent?.sections) return;
-    
-    // Check if we have enough panels
-    setTimeout(() => {
-      // Use setTimeout to ensure this runs after other layout code
-      console.log("Ensuring proper 4th panel positioning");
-      const panels = document.querySelectorAll('.panel');
-      
-      if (panels.length >= 4) {
-        // Get the 4th panel
-        const fourthPanel = panels[3];
-        
-        if (fourthPanel) {
-          console.log("Found 4th panel, ensuring correct position");
-          
-          // Set appropriate z-index
-          fourthPanel.style.zIndex = "28";
-          
-          // Set the correct position without overlap
-          const sectionWidth = window.innerWidth;
-          
-          // Apply the correct position with !important
-          fourthPanel.style.cssText += `
-            left: ${3 * sectionWidth}px !important;
-            position: absolute !important;
-            border-radius: 106px 0px 0px 106px !important;
-            overflow: hidden !important;
-          `;
-          
-          console.log(`4th panel positioned at: ${fourthPanel.style.left}`);
-        }
-      }
-    }, 1000); // Wait 1 second to ensure other layout code has run
-    
-  }, [isMobileOrTablet, project, isReady]);
-
   // Update smoothScrollTo function for improved performance
   const smoothScrollTo = (targetX) => {
     if (!pageRef.current || !project?.projectContent?.sections) return;
@@ -652,29 +512,25 @@ const SingleProject = () => {
         return;
       }
       
-      // Improved easing factor for smoother but faster scrolling
-      // Mac-specific easing for better touchpad feel
+      // More consistent easing factor for smoother scrolling
+      // Uses a standardized approach that works well across devices
       let easeFactor;
-      if (isMac) {
-        // For Mac, use adaptive easing based on distance
-        // This provides more precision for small movements and speed for large ones
-        const distanceAbs = Math.abs(distance);
-        if (distanceAbs > sectionWidth * 0.7) {
-          // Large distance (page transitions) - faster easing
-          easeFactor = 0.25; // Increased from 0.15 for faster scrolling
-        } else if (distanceAbs > sectionWidth * 0.2) {
-          // Medium distance - moderate easing
-          easeFactor = 0.22; // Increased from 0.12 for faster scrolling
-        } else {
-          // Small distance - more precise easing
-          easeFactor = 0.18; // Increased from 0.10 for faster scrolling
-        }
+      
+      // Base the ease factor on distance to create more natural deceleration
+      const distanceAbs = Math.abs(distance);
+      
+      if (distanceAbs > sectionWidth * 0.7) {
+        // For long distances - moderate speed for consistent movement
+        easeFactor = 0.12;
+      } else if (distanceAbs > sectionWidth * 0.3) {
+        // Medium distance - slightly gentler easing
+        easeFactor = 0.10;
       } else {
-        // Windows/Linux standard easing
-        easeFactor = 0.15; // Increased from 0.08 for faster scrolling
+        // Small distance - precise easing for final positioning
+        easeFactor = 0.08;
       }
       
-      // Apply bounded scroll position with extra checks
+      // Apply bounded scroll position with smooth interpolation
       const move = distance * easeFactor;
       const newScrollLeft = currentScrollRef.current + move;
       
@@ -695,7 +551,7 @@ const SingleProject = () => {
     scrollRafRef.current = requestAnimationFrame(animateScroll);
   };
 
-  // About.jsx-style smooth scroll and overlay effect
+  // Effect for desktop horizontal scrolling with improved touchpad handling
   useEffect(() => {
     if (isMobileOrTablet || !project?.projectContent?.sections) return;
     const sectionWidth = window.innerWidth;
@@ -793,125 +649,302 @@ const SingleProject = () => {
     };
     scrollRafRef.current = requestAnimationFrame(animateOverlay);
 
-    // Wheel event handler with enhanced momentum for smooth scrolling
-    const handleWheel = (e) => {
-      if (!pageRef.current || !project?.projectContent?.sections) return;
+    // Create a more advanced scroll manager with gesture queue
+    const scrollManager = {
+      // Core state
+      isScrolling: false,
+      targetX: 0,
+      currentX: 0,
+      gestureQueue: [],
+      lastWheelTime: 0,
       
-      e.preventDefault();
+      // Animation frame reference
+      rafId: null,
       
-      // Get current scroll position and timestamp for velocity tracking
-      currentScrollRef.current = pageRef.current.scrollLeft;
-      const now = Date.now();
+      // Platform detection
+      isMac: /Mac|iPod|iPhone|iPad/.test(navigator.platform),
       
-      // Detect if user is on macOS for touchpad-specific optimizations
-      const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+      // Momentum and velocity tracking
+      velocity: 0,
+      lastScrollX: 0,
+      lastScrollTime: 0,
       
-      // Create or update wheel tracking for momentum calculation
-      if (!window.wheelTracking) {
-        window.wheelTracking = {
-          lastEvent: now,
-          lastDelta: 0,
-          momentum: 0,
-          isMac: isMac
-        };
-      }
+      // Advanced configuration
+      options: {
+        baseFriction: 0.89,  // Base deceleration rate (lower = faster stop)
+        minMomentumValue: 0.1, // When to stop momentum scrolling
+        maxVelocity: 80, // Maximum velocity cap to prevent extreme scrolling
+        smoothing: 0.65, // How much to smooth changes in velocity (higher = smoother but less responsive)
+        bounceStrength: 0.15, // How strong the bounce effect is at boundaries
+        bounceThreshold: 300, // The distance from edge where bounce starts to be applied
+      },
       
-      // For Mac devices, prioritize horizontal gestures (deltaX) over vertical ones (deltaY)
-      let deltaToUse = e.deltaY;
-      if (isMac && Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.5) {
-        // This is likely a horizontal gesture on Mac, prioritize deltaX
-        deltaToUse = e.deltaX;
-      }
-      
-      // Adapt scaling based on deltaMode for consistent behavior
-      let deltaPixels;
-      if (e.deltaMode === 1) { // Line mode
-        deltaPixels = deltaToUse * 35; // Increased from 20 for faster scrolling
-      } else if (e.deltaMode === 2) { // Page mode
-        deltaPixels = deltaToUse * window.innerHeight * 0.7; // Increased from 0.4 for faster scrolling
-      } else { // Pixel mode (most common)
-        // Mac-specific handling for smoother touchpad scrolling
-        if (isMac) {
-          // For Mac touchpads, we need gentler acceleration but better precision
-          // Also check if this is likely a Magic Trackpad/built-in touchpad vs. regular mouse
-          const isLikelyTouchpad = Math.abs(e.deltaX) > 0 || Math.abs(e.deltaY) <= 10;
-          
-          if (isLikelyTouchpad) {
-            // For Mac touchpads, apply more consistent scaling and smoother damping
-            deltaPixels = deltaToUse * 6.5; // Increased from 3.5 for faster scrolling
-          } else {
-            // Probably a mouse on Mac, use standard scaling
-            deltaPixels = deltaToUse * 5.0; // Increased from 3.0 for faster scrolling
-          }
-        } else {
-          // Windows/Linux standard handling
-          deltaPixels = deltaToUse * 4.0; // Increased from 2.5 for faster scrolling
-        }
-      }
-      
-      // Calculate time since last wheel event to detect continuous scrolling
-      const timeDelta = now - window.wheelTracking.lastEvent;
-      const isContinuousScroll = timeDelta < (isMac ? 80 : 150); // Shorter window for Mac
-      
-      // Apply acceleration based on continuous scrolling
-      let finalDelta;
-      
-      if (isContinuousScroll) {
-        // For continuous movements, gradually build momentum
-        // Direction changes should have immediate effect though
-        const sameDirection = Math.sign(deltaPixels) === Math.sign(window.wheelTracking.lastDelta);
+      // Queue a new scroll gesture request
+      queueGesture(deltaX, deltaY, isTrackpad) {
+        const now = Date.now();
+        const timeSinceLastWheel = now - this.lastWheelTime;
+        this.lastWheelTime = now;
         
-        if (sameDirection) {
-          // Continuous scroll in same direction - build momentum gradually
-          // Mac-specific momentum tuning for touchpads
-          const momentumMultiplier = isMac ? 1.8 : 0.8; // Increased from 1.2 for Mac, faster scrolling
-          const momentumRetention = isMac ? 0.85 : 0.65; // Increased from 0.65 for faster scrolling
-          
-          // Limit maximum momentum gain for predictable behavior
-          const momentumGain = Math.min(
-            Math.abs(deltaPixels) * momentumMultiplier,
-            Math.abs(window.wheelTracking.momentum) * (isMac ? 0.3 : 0.4) // Adjusted for faster scrolling
-          );
-          
-          // Update momentum with new input (smooth acceleration)
-          window.wheelTracking.momentum = 
-            window.wheelTracking.momentum * momentumRetention +
-            Math.sign(deltaPixels) * momentumGain;
-        } else {
-          // Direction change - respond quickly but with controlled initial speed
-          window.wheelTracking.momentum = deltaPixels * (isMac ? 0.8 : 0.8); // Increased from 0.6 for faster scrolling
+        // Determine primary delta to use (horizontal or vertical)
+        let delta = deltaY;
+        
+        // For Mac devices, prioritize horizontal gestures on trackpads
+        if (this.isMac && isTrackpad && Math.abs(deltaX) > Math.abs(deltaY) * 0.5) {
+          delta = deltaX;
         }
-      } else {
-        // New scroll event after pause - start with modest momentum
-        window.wheelTracking.momentum = deltaPixels * (isMac ? 0.7 : 0.6); // Increased from 0.5 for faster scrolling
+        
+        // Scale deltas to reasonable values based on device and input type
+        let scaledDelta;
+        
+        if (isTrackpad) {
+          // For trackpad, use gentler scaling with better precision
+          scaledDelta = this.isMac ? delta * 2 : delta * 1.75;
+        } else {
+          // For mouse wheels - stronger scaling
+          scaledDelta = delta * 3.5;
+        }
+        
+        // Calculate how much influence this gesture should have
+        // If gestures are very close together, blend them more smoothly
+        let influence = 1;
+        if (timeSinceLastWheel < 150) {
+          // For rapid gestures, blend more smoothly to prevent stopping
+          influence = Math.min(1, 0.5 + (timeSinceLastWheel / 300));
+        }
+        
+        // Calculate the precise target position with bounds checking
+        const maxScrollX = (project.projectContent.sections.length - 1) * window.innerWidth;
+        
+        // Get current position for calculation
+        const currentX = pageRef.current?.scrollLeft || 0;
+        
+        // Update velocity based on this gesture (with smoothing)
+        if (this.lastScrollTime > 0) {
+          const timeDelta = now - this.lastScrollTime;
+          if (timeDelta > 0) {
+            // Calculate raw velocity
+            const instantVelocity = scaledDelta / (timeDelta / 16); // Normalize to per-frame velocity
+            
+            // Apply smoothing to velocity changes
+            this.velocity = (this.velocity * this.options.smoothing) + 
+                          (instantVelocity * (1 - this.options.smoothing));
+            
+            // Cap velocity to reasonable values
+            this.velocity = Math.max(-this.options.maxVelocity, 
+                              Math.min(this.options.maxVelocity, this.velocity));
+          }
+        }
+        
+        // Update last position and time for next velocity calculation
+        this.lastScrollTime = now;
+        
+        // Calculate new target based on current position, delta, and momentum
+        const newTarget = Math.max(0, Math.min(currentX + scaledDelta, maxScrollX));
+        
+        // Update target considering influence
+        if (influence >= 1) {
+          // Full influence - directly set target
+          this.targetX = newTarget;
+        } else {
+          // Partial influence - blend with current target
+          this.targetX = (this.targetX * (1 - influence)) + (newTarget * influence);
+        }
+        
+        // Start animation loop if not already running
+        if (!this.isScrolling) {
+          this.isScrolling = true;
+          this.animate();
+        }
+      },
+      
+      // Main animation loop - runs continuously while scrolling
+      animate() {
+        // Get current scroll position
+        this.currentX = pageRef.current?.scrollLeft || 0;
+        
+        // Calculate distance to target
+        const distanceToTarget = this.targetX - this.currentX;
+        const absDistance = Math.abs(distanceToTarget);
+        
+        // Check if we need to apply bouncing at edges
+        const maxScrollX = (project.projectContent.sections.length - 1) * window.innerWidth;
+        let bounceEffect = 0;
+        
+        if (this.currentX <= 0 && distanceToTarget < 0) {
+          // At left edge, trying to scroll more left
+          bounceEffect = Math.abs(distanceToTarget) * this.options.bounceStrength;
+        } else if (this.currentX >= maxScrollX && distanceToTarget > 0) {
+          // At right edge, trying to scroll more right
+          bounceEffect = -Math.abs(distanceToTarget) * this.options.bounceStrength;
+        }
+        
+        // If we're very close to target and no momentum/bounce, snap to position and stop
+        if (absDistance < 0.5 && Math.abs(this.velocity) < this.options.minMomentumValue && bounceEffect === 0) {
+          pageRef.current.scrollLeft = this.targetX;
+          
+          // Check if there's no more scrolling to do
+          if (this.gestureQueue.length === 0) {
+            this.isScrolling = false;
+            this.velocity = 0;
+            updateCurrentSection();
+            return; // Exit animation loop
+          }
+        }
+        
+        // Apply easing based on distance - smoother for larger distances
+        let easeFactor;
+        
+        if (absDistance > window.innerWidth * 0.6) {
+          easeFactor = 0.1; // Large distance - moderate speed
+        } else if (absDistance > window.innerWidth * 0.3) {
+          easeFactor = 0.09; // Medium distance
+        } else {
+          easeFactor = 0.08; // Small distance - more precise
+        }
+        
+        // Calculate momentum and friction
+        if (Math.abs(this.velocity) > this.options.minMomentumValue) {
+          // Apply consistent deceleration
+          this.velocity *= this.options.baseFriction;
+          
+          // If we're close to target, reduce velocity more quickly to prevent overshooting
+          if (absDistance < window.innerWidth * 0.2) {
+            this.velocity *= 0.9;
+          }
+          
+          // Apply momentum to target position
+          this.targetX += this.velocity;
+          
+          // Bound target to valid range
+          this.targetX = Math.max(0, Math.min(this.targetX, maxScrollX));
+        }
+        
+        // Calculate final move amount (includes regular easing + bouncing if needed)
+        const move = (distanceToTarget * easeFactor) + bounceEffect;
+        
+        // Apply the scroll with bound checking
+        if (pageRef.current) {
+          pageRef.current.scrollLeft = Math.max(0, Math.min(this.currentX + move, maxScrollX));
+        }
+        
+        // Update section indicator if needed
+        updateCurrentSection();
+        
+        // Continue animation loop
+        this.rafId = requestAnimationFrame(() => this.animate());
+      },
+      
+      // Handle wheel event
+      handleWheel(e) {
+        e.preventDefault();
+        
+        // Detect if this is likely a trackpad
+        const isTrackpad = Math.abs(e.deltaX) > 0 || Math.abs(e.deltaY) < 10 || e.deltaMode === 0;
+        
+        // Queue this gesture
+        this.queueGesture(e.deltaX, e.deltaY, isTrackpad);
+      },
+      
+      // Handle touch start
+      handleTouchStart(e) {
+        touchStartX.current = e.touches[0].clientX;
+        lastTouchX.current = e.touches[0].clientX;
+        
+        // Reset velocity and gesture tracking
+        this.velocity = 0;
+        this.lastScrollTime = Date.now();
+        this.lastScrollX = pageRef.current?.scrollLeft || 0;
+        
+        // Cancel any ongoing animations for immediate response
+        if (this.rafId) {
+          cancelAnimationFrame(this.rafId);
+        }
+        
+        e.preventDefault();
+      },
+      
+      // Handle touch move
+      handleTouchMove(e) {
+        const touchX = e.touches[0].clientX;
+        const deltaX = lastTouchX.current - touchX;
+        const now = Date.now();
+        
+        // Calculate instantaneous velocity
+        const timeDelta = now - this.lastScrollTime;
+        if (timeDelta > 0) {
+          const instantVelocity = deltaX / (timeDelta / 16); // Normalize to per-frame velocity
+          
+          // Apply smoothing to velocity changes
+          this.velocity = (this.velocity * 0.7) + (instantVelocity * 0.3);
+        }
+        
+        // Update scroll position directly - mobile touch needs immediate feedback
+        if (pageRef.current) {
+          const maxScrollX = (project.projectContent.sections.length - 1) * window.innerWidth;
+          const newScrollX = Math.max(0, Math.min(
+            pageRef.current.scrollLeft + deltaX * 1.2, 
+            maxScrollX
+          ));
+          
+          pageRef.current.scrollLeft = newScrollX;
+          this.targetX = newScrollX; // Set target to current position
+        }
+        
+        // Update tracking
+        lastTouchX.current = touchX;
+        this.lastScrollTime = now;
+        this.lastScrollX = pageRef.current?.scrollLeft || 0;
+        
+        updateCurrentSection();
+        e.preventDefault();
+      },
+      
+      // Handle touch end
+      handleTouchEnd(e) {
+        // Apply momentum based on final velocity
+        if (Math.abs(this.velocity) > 0.5) {
+          const momentumFactor = 12; // Strength of momentum
+          
+          // Calculate target based on velocity and cap it
+          const maxScrollX = (project.projectContent.sections.length - 1) * window.innerWidth;
+          const momentumDistance = this.velocity * momentumFactor;
+          
+          // Set new target position with momentum
+          this.targetX = Math.max(0, Math.min(
+            pageRef.current?.scrollLeft + momentumDistance,
+            maxScrollX
+          ));
+          
+          // Start animation if not already running
+          if (!this.isScrolling) {
+            this.isScrolling = true;
+            this.animate();
+          }
+        }
+      },
+      
+      // Clean up resources
+      destroy() {
+        if (this.rafId) {
+          cancelAnimationFrame(this.rafId);
+        }
       }
-      
-      // Apply the momentum with a multiplier for desired speed
-      // Use a different multiplier for Mac touchpads
-      finalDelta = window.wheelTracking.momentum * (isMac ? 2.5 : 1.0); // Increased from 1.5 for Mac, faster scrolling
-      
-      // Update tracking values for next event
-      window.wheelTracking.lastEvent = now;
-      window.wheelTracking.lastDelta = deltaPixels;
-      
-      // Calculate target position with bounds checking
-      const sectionWidth = window.innerWidth;
-      const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
-      const targetPos = Math.min(Math.max(0, currentScrollRef.current + finalDelta), maxScroll);
-      
-      // Apply the smooth scrolling
-      smoothScrollTo(targetPos);
     };
     
-    // Add event listeners with optimized options for performance
+    // Add event listeners with the new scroll manager
     if (pageRef.current) {
       // Add wheel handler
-      pageRef.current.addEventListener('wheel', handleWheel, { passive: false });
+      const wheelHandler = (e) => scrollManager.handleWheel(e);
+      pageRef.current.addEventListener('wheel', wheelHandler, { passive: false });
       
-      // Add touch handlers for better mobile performance
-      pageRef.current.addEventListener('touchstart', handleTouchStart, { passive: false });
-      pageRef.current.addEventListener('touchmove', handleTouchMove, { passive: false });
-      pageRef.current.addEventListener('touchend', handleTouchEnd);
+      // Add touch handlers
+      const touchStartHandler = (e) => scrollManager.handleTouchStart(e);
+      const touchMoveHandler = (e) => scrollManager.handleTouchMove(e);
+      const touchEndHandler = (e) => scrollManager.handleTouchEnd(e);
+      
+      pageRef.current.addEventListener('touchstart', touchStartHandler, { passive: false });
+      pageRef.current.addEventListener('touchmove', touchMoveHandler, { passive: false });
+      pageRef.current.addEventListener('touchend', touchEndHandler);
       
       // Apply styles for improved scrolling performance
       pageRef.current.style.overflowX = 'auto';
@@ -926,12 +959,13 @@ const SingleProject = () => {
     // Cleanup function
     return () => {
       if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current);
+      scrollManager.destroy();
       
       if (pageRef.current) {
-        pageRef.current.removeEventListener('wheel', handleWheel);
-        pageRef.current.removeEventListener('touchstart', handleTouchStart);
-        pageRef.current.removeEventListener('touchmove', handleTouchMove);
-        pageRef.current.removeEventListener('touchend', handleTouchEnd);
+        pageRef.current.removeEventListener('wheel', (e) => scrollManager.handleWheel(e));
+        pageRef.current.removeEventListener('touchstart', (e) => scrollManager.handleTouchStart(e));
+        pageRef.current.removeEventListener('touchmove', (e) => scrollManager.handleTouchMove(e));
+        pageRef.current.removeEventListener('touchend', (e) => scrollManager.handleTouchEnd(e));
       }
     };
   }, [isMobileOrTablet, project]);
@@ -1055,174 +1089,6 @@ const SingleProject = () => {
   useEffect(() => {
     updateIndicatorStyles();
   }, [currentSection]);
-
-  // Touch events with enhanced physics-based momentum
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-    lastTouchX.current = e.touches[0].clientX;
-    
-    // Detect if user is on macOS
-    const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
-    
-    // Initialize touch tracking for physics-based scrolling
-    window.touchTracking = {
-      positions: [], // Track position history for velocity calculation
-      startTime: Date.now(),
-      lastTime: Date.now(),
-      velocity: 0, // Track velocity for smoother deceleration
-      isMac: isMac, // Store platform info
-      // Detect if this is likely a trackpad two-finger gesture on Mac
-      isTrackpadGesture: isMac && e.touches.length === 2 && Math.abs(e.touches[0].clientX - e.touches[1].clientX) < 50
-    };
-    
-    // Add initial position
-    window.touchTracking.positions.push({
-      x: touchStartX.current,
-      time: window.touchTracking.startTime
-    });
-    
-    // Cancel any ongoing animations for immediate response
-    if (scrollRafRef.current) {
-      cancelAnimationFrame(scrollRafRef.current);
-      isScrollingRef.current = false;
-    }
-    
-    // Prevent default to stop browser navigation
-    e.preventDefault();
-  };
-
-  const handleTouchMove = (e) => {
-    if (!pageRef.current || !project?.projectContent?.sections) return;
-    
-    const touchX = e.touches[0].clientX;
-    const deltaX = lastTouchX.current - touchX;
-    const now = Date.now();
-    
-    // Track position for velocity calculation (limit to 5 most recent)
-    window.touchTracking.positions.unshift({ x: touchX, time: now });
-    if (window.touchTracking.positions.length > 5) {
-      window.touchTracking.positions.pop();
-    }
-    
-    // Calculate a smoothed version of the delta to avoid jitter
-    let smoothedDelta = deltaX;
-    if (window.touchTracking.positions.length >= 3) {
-      // Average recent movement for smoother response
-      const recentDeltas = [];
-      for (let i = 1; i < Math.min(3, window.touchTracking.positions.length); i++) {
-        const older = window.touchTracking.positions[i];
-        const newer = window.touchTracking.positions[i-1];
-        const posDelta = older.x - newer.x;
-        recentDeltas.push(posDelta);
-      }
-      
-      // Calculate weighted average (favor most recent)
-      let totalWeight = 0;
-      let weightedSum = 0;
-      for (let i = 0; i < recentDeltas.length; i++) {
-        const weight = recentDeltas.length - i;
-        weightedSum += recentDeltas[i] * weight;
-        totalWeight += weight;
-      }
-      
-      // Use weighted average for smoother feel
-      smoothedDelta = totalWeight > 0 ? weightedSum / totalWeight : deltaX;
-    }
-    
-    const sectionWidth = window.innerWidth;
-    const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
-    
-    // Apply with sensitivity optimized for the device/input method
-    // For MacBook, increase sensitivity for better horizontal gesture response
-    let scrollMultiplier = 2.0; // Reduced from 3.5 for slower scrolling
-    
-    // Adjust for Mac trackpad if detected
-    if (window.touchTracking.isMac) {
-      // For Mac trackpads, we need more precise control but higher sensitivity for side gestures
-      if (window.touchTracking.isTrackpadGesture) {
-        // Two-finger gesture on Mac trackpad - optimize for horizontal swipes
-        scrollMultiplier = 1.8; // Reduced from 2.8 for slower scrolling
-        
-        // For trackpad gestures, also introduce a small threshold to filter out tiny movements
-        if (Math.abs(smoothedDelta) < 0.5) { // Lower threshold for more responsiveness
-          smoothedDelta = 0;
-        }
-      } else {
-        // Regular touch on Mac - slightly higher multiplier for better side gesture detection
-        scrollMultiplier = 2.0; // Reduced from 3.2 for slower scrolling
-      }
-    }
-    
-    const newScrollLeft = Math.min(Math.max(0, pageRef.current.scrollLeft + smoothedDelta * scrollMultiplier), maxScroll);
-    
-    // Update scroll position directly for touch movement
-    pageRef.current.scrollLeft = newScrollLeft;
-    
-    // Calculate current velocity for momentum
-    if (window.touchTracking.positions.length >= 2) {
-      const newest = window.touchTracking.positions[0];
-      const older = window.touchTracking.positions[window.touchTracking.positions.length - 1];
-      const timeSpan = newest.time - older.time;
-      if (timeSpan > 0) {
-        window.touchTracking.velocity = (older.x - newest.x) / timeSpan;
-      }
-    }
-    
-    // Update tracking
-    lastTouchX.current = touchX;
-    window.touchTracking.lastTime = now;
-    currentScrollRef.current = pageRef.current.scrollLeft;
-    targetScrollRef.current = currentScrollRef.current;
-    
-    updateCurrentSection();
-    e.preventDefault();
-  };
-
-  const handleTouchEnd = () => {
-    if (!pageRef.current || !window.touchTracking || window.touchTracking.positions.length < 2) return;
-    
-    // Get platform info from saved tracking
-    const isMac = window.touchTracking.isMac;
-    const isTrackpadGesture = window.touchTracking.isTrackpadGesture;
-    
-    // Use stored velocity for more consistent momentum
-    const velocity = window.touchTracking.velocity;
-    
-    // Apply momentum based on velocity
-    if (Math.abs(velocity) > 0.1) { // Minimum velocity threshold
-      const sectionWidth = window.innerWidth;
-      const maxScroll = sectionWidth * (project.projectContent.sections.length - 1);
-      
-      // Calculate momentum with enhanced physics, tuned for the device
-      let velocityFactor;
-      
-      if (isMac) {
-        if (isTrackpadGesture) {
-          // For Mac trackpad two-finger gestures - improved horizontal momentum
-          velocityFactor = Math.min(4.0, Math.abs(velocity) * 12); // Increased for better side-to-side gestures
-        } else {
-          // Regular touch on Mac
-          velocityFactor = Math.min(3.5, Math.abs(velocity) * 12);
-        }
-      } else {
-        // Non-Mac devices - standard momentum calculation
-        velocityFactor = Math.min(2.5, Math.abs(velocity) * 8);
-      }
-      
-      // Calculate base momentum, adjusted for device type
-      const momentumMultiplier = isMac ? (isTrackpadGesture ? 1.5 : 1.4) : 0.7; // Increased for Mac trackpad
-      const baseMomentum = Math.sign(velocity) * (velocityFactor * sectionWidth * momentumMultiplier);
-      
-      // Add momentum to current position with bounds checking
-      const targetPosition = Math.max(0, Math.min(
-        currentScrollRef.current + baseMomentum,
-        maxScroll
-      ));
-      
-      // Apply smooth scrolling with the calculated momentum
-      smoothScrollTo(targetPosition);
-    }
-  };
 
   // Function to handle navigation back to projects
   const handleBackToProjects = () => {
@@ -1354,13 +1220,9 @@ const SingleProject = () => {
     
   }, [project, isReady]);
 
-  // Return loading state if no project found
+  // Return null if no project found
   if (!project) {
-    return (
-      <div className="project-loading">
-        <h2>Loading project...</h2>
-      </div>
-    );
+    return null;
   }
 
   // Render mobile version for mobile/tablet devices

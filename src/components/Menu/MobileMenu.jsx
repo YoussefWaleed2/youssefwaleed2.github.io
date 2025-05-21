@@ -60,6 +60,55 @@ const MobileMenu = () => {
     );
   }
 
+  // Helper function to reset all menu elements to their initial state
+  const resetMenuElements = () => {
+    // Reset menu overlay
+    if (menuOverlayRef.current) {
+      gsap.set(menuOverlayRef.current, {
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+        top: "-100vh",
+        pointerEvents: "none",
+        opacity: 1,
+        scale: 1,
+        zIndex: "auto"
+      });
+    }
+
+    // Reset menu links
+    const menuLinks = document.querySelectorAll(".menu-link a");
+    if (menuLinks.length > 0) {
+      gsap.set(menuLinks, { y: "120%" });
+    }
+
+    // Reset overlay elements
+    const overlayBarLink = menuOverlayBarRef.current?.querySelector("a");
+    const closeBtnText = menuCloseBtnRef.current?.querySelector("svg");
+    if (overlayBarLink) gsap.set(overlayBarLink, { y: 40 });
+    if (closeBtnText) gsap.set(closeBtnText, { y: 50 });
+
+    // Reset nav elements
+    const navLink = navRef.current?.querySelector("a");
+    const menuOpenText = menuOpenBtnRef.current?.querySelector("svg");
+    if (navLink) gsap.set(navLink, { y: 0 });
+    if (menuOpenText) gsap.set(menuOpenText, { y: 0 });
+
+    // Ensure nav and menu open button are interactive
+    if (navRef.current) {
+      gsap.set(navRef.current, { 
+        pointerEvents: "all",
+        opacity: 1
+      });
+    }
+    
+    if (menuOpenBtnRef.current) {
+      gsap.set(menuOpenBtnRef.current, {
+        pointerEvents: "auto",
+        cursor: "pointer",
+        opacity: 1
+      });
+    }
+  };
+
   const handleCloseMenu = () => {
     if (
       !menuOverlayBarRef.current ||
@@ -82,7 +131,7 @@ const MobileMenu = () => {
     
     if (elementsToAnimate.length > 0) {
       gsap.to(elementsToAnimate, {
-        y: -40,
+        y: -100,
         duration: 1.2,
         stagger: 0.1,
         ease: CustomEase.create("", ".76,0,.2,1"),
@@ -112,14 +161,8 @@ const MobileMenu = () => {
       delay: 0.5,
       ease: CustomEase.create("", ".76,0,.2,1"),
       onComplete: () => {
-        if (navRef.current) gsap.set(navRef.current, { pointerEvents: "all" });
-        if (menuOverlayRef.current) {
-          gsap.set(menuOverlayRef.current, {
-            pointerEvents: "none",
-            clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-            top: "-100vh"
-          });
-        }
+        // Reset all menu elements to initial state
+        resetMenuElements();
       },
     });
 
@@ -142,6 +185,86 @@ const MobileMenu = () => {
     }
   };
 
+  const handleCloseMenuForNavigation = () => {
+    if (
+      !menuOverlayBarRef.current ||
+      !menuCloseBtnRef.current ||
+      !navRef.current ||
+      !menuOpenBtnRef.current ||
+      !menuOverlayRef.current
+    ) {
+      console.log("Some refs are missing for navigation close");
+      return;
+    }
+
+    // Ensure open button is clickable immediately
+    if (navRef.current) {
+      gsap.set(navRef.current, { 
+        pointerEvents: "all",
+        opacity: 1
+      });
+    }
+    
+    if (menuOpenBtnRef.current) {
+      gsap.set(menuOpenBtnRef.current, {
+        pointerEvents: "auto",
+        cursor: "pointer",
+        opacity: 1
+      });
+    }
+
+    // Check if elements exist before animating
+    const overlayBarLink = menuOverlayBarRef.current.querySelector("a");
+    const closeBtnText = menuCloseBtnRef.current.querySelector("svg");
+    
+    const elementsToAnimate = [];
+    if (overlayBarLink) elementsToAnimate.push(overlayBarLink);
+    if (closeBtnText) elementsToAnimate.push(closeBtnText);
+    
+    if (elementsToAnimate.length > 0) {
+      gsap.to(elementsToAnimate, {
+        y: -100,
+        duration: 1, // Changed from 0.5 to 1 to match the menu overlay animation
+        stagger: 0.05,
+        ease: CustomEase.create("", ".76,0,.2,1"),
+      });
+    }
+
+    // Animate menu links
+    const menuLinks = document.querySelectorAll(".menu-link a");
+    if (menuLinks.length > 0) {
+      gsap.to(menuLinks, {
+        y: "-10000%",
+        duration: 1, // Changed from 0.5 to 1 to match the overlay animation
+        stagger: 0.05,
+        ease: "power4.in"
+      });
+    }
+
+    // Immediately make the menu overlay non-interactive
+    if (menuOverlayRef.current) {
+      gsap.set(menuOverlayRef.current, {
+        pointerEvents: "none"
+      });
+    }
+
+    // Animate menu overlay
+    gsap.to(menuOverlayRef.current, {
+      clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+      duration: 1, // Changed from 0.5 to 1
+      ease: CustomEase.create("", ".76,0,.2,1"),
+      onComplete: () => {
+        // Reset all menu elements to initial state
+        resetMenuElements();
+        
+        // Add a slight delay to ensure everything is reset
+        setTimeout(() => {
+          resetMenuElements();
+        }, 200);
+      },
+    });
+  };
+
   const handleOpenMenu = () => {
     if (
       !navRef.current ||
@@ -153,6 +276,9 @@ const MobileMenu = () => {
       console.log("Some refs are missing");
       return;
     }
+
+    // First reset all elements to ensure we start from a clean state
+    resetMenuElements();
 
     // Check if elements exist before animating
     const navLink = navRef.current.querySelector("a");
@@ -174,8 +300,20 @@ const MobileMenu = () => {
       );
     }
 
-    // First reset the menu position
+    // Set top to 0 to bring overlay into view
     gsap.set(menuOverlayRef.current, { top: 0 });
+
+    // Set initial positions for menu links
+    const menuLinks = document.querySelectorAll(".menu-link a");
+    if (menuLinks.length > 0) {
+      gsap.set(menuLinks, { y: "120%" });
+    }
+
+    // Set initial positions for overlay elements
+    const overlayBarLink = menuOverlayBarRef.current.querySelector("a");
+    const closeBtnText = menuCloseBtnRef.current.querySelector("svg");
+    if (overlayBarLink) gsap.set(overlayBarLink, { y: 40 });
+    if (closeBtnText) gsap.set(closeBtnText, { y: 50 });
 
     // Animate the menu overlay
     gsap.to(menuOverlayRef.current, {
@@ -189,7 +327,6 @@ const MobileMenu = () => {
     });
 
     // Animate menu links
-    const menuLinks = document.querySelectorAll(".menu-link a");
     if (menuLinks.length > 0) {
       gsap.to(menuLinks, {
         y: "-5%",
@@ -201,9 +338,6 @@ const MobileMenu = () => {
     }
 
     // Animate overlay elements
-    const overlayBarLink = menuOverlayBarRef.current.querySelector("a");
-    const closeBtnText = menuCloseBtnRef.current.querySelector("svg");
-    
     const elementsToAnimate = [];
     if (overlayBarLink) elementsToAnimate.push(overlayBarLink);
     if (closeBtnText) elementsToAnimate.push(closeBtnText);
@@ -222,18 +356,12 @@ const MobileMenu = () => {
   useEffect(() => {
     gsap.registerPlugin(CustomEase);
 
+    // Initialize by resetting all menu elements
+    resetMenuElements();
+
     // Save references to the current DOM elements
     const openBtn = menuOpenBtnRef.current;
     const closeBtn = menuCloseBtnRef.current;
-    
-    // Set initial menu state
-    if (menuOverlayRef.current) {
-      gsap.set(menuOverlayRef.current, {
-        clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-        top: "-100vh",
-        pointerEvents: "none"
-      });
-    }
 
     if (openBtn) {
       openBtn.addEventListener("click", handleOpenMenu);
@@ -245,7 +373,7 @@ const MobileMenu = () => {
 
     // Listen for route changes
     const handleRouteChange = () => {
-      handleCloseMenu();
+      handleCloseMenuForNavigation();
     };
 
     // Add event listener for route changes
@@ -273,9 +401,16 @@ const MobileMenu = () => {
       return;
     }
 
-    handleCloseMenu();
-    navigate(path);
-    slideInOut();
+    handleCloseMenuForNavigation();
+    
+    // Adjust navigation delay to account for the longer animation duration
+    setTimeout(() => {
+      navigate(path);
+      slideInOut();
+      
+      // Reset menu elements after navigation
+      setTimeout(resetMenuElements, 100);
+    }, 500); // Increased from 300 to 500 to account for longer animation
   };
 
   return (
@@ -291,11 +426,7 @@ const MobileMenu = () => {
         </div>
       </nav>
 
-      <div className="menu-overlay" ref={menuOverlayRef} style={{ 
-        clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-        top: "-100vh",
-        pointerEvents: "none"
-      }}>
+      <div className="menu-overlay" ref={menuOverlayRef}>
         <div className="menu-overlay-bar" ref={menuOverlayBarRef}>
           <div className="logo">
           </div>

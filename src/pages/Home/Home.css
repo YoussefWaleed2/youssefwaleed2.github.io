@@ -389,26 +389,4 @@ html.no-scroll {
     -webkit-overflow-scrolling: none;
     overscroll-behavior: none;
   }
-  
-  /* Specifically allow touch events on the menu */
-  .menu,
-  .menu *,
-  nav,
-  nav *,
-  button,
-  .menu-button,
-  .navigation-menu,
-  .navigation-menu *,
-  .menu-toggle-close,
-  .menu-toggle-close *,
-  .close-btn,
-  .close-btn *,
-  .menu-overlay,
-  .menu-overlay *,
-  .menu-overlay-bar,
-  .menu-links {
-    touch-action: auto !important;
-    pointer-events: auto !important;
-    z-index: 9999 !important;
-  }
 }

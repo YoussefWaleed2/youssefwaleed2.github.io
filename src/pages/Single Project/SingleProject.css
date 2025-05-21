@@ -160,13 +160,12 @@ html:has(.single-project-page) {
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 7rem;
+  padding: 6rem;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   box-sizing: border-box;
   margin: 0 auto;
-  /* Hardware acceleration */
   will-change: transform;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
@@ -181,7 +180,7 @@ html:has(.single-project-page) {
 .panel-main-title {
   font-size: 2.5rem;
   font-family: "Aboreto", sans-serif;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   font-weight: 600;
 }
 
@@ -457,6 +456,15 @@ html {
   background-color: #000;
   color: #fff;
 }
+.mobile-info-section {
+  display: flex;
+  justify-content: center;
+  align-items: centercenter;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  gap: 80px;
+}
+
 
 /* Mobile and tablet media query */
 @media (max-width: 1024px) {
@@ -479,7 +487,7 @@ html {
     gap: 0.5rem;
   }
   
-  .scroll-indicators.panel-indicators {
+  .scroll-indicators.panel-iors {
     bottom: 1rem;
   }
   
@@ -995,7 +1003,7 @@ body.single-project-page-active .panel {
     width: 34px; /* Smaller size */
     height: 34px; /* Smaller size */
     padding: 6px; /* Smaller padding */
-    z-index: 999;
+    z-index: 500;
     /* Keep it as an arrow on mobile too */
     transform: none;
     background-color: rgba(0, 0, 0, 0.5);

@@ -15,6 +15,7 @@ const Transition = (_WrappedComponent) => {
     const isEntering = React.useRef(true);
     const _videoRef = React.useRef(null);
     const { pageVariants: _pageVariants, pageTransition } = usePageTransition();
+    const navigationInProgress = React.useRef(false);
 
     // Dynamic variants based on current page and destination
     const getDynamicVariants = () => {
@@ -85,6 +86,9 @@ const Transition = (_WrappedComponent) => {
         isEntering.current = false;
       }
 
+      // Reset navigation status when location changes
+      navigationInProgress.current = false;
+
       // Cleanup function
       return () => {
         timeline.kill();
@@ -103,11 +107,11 @@ const Transition = (_WrappedComponent) => {
           const isFromSingleProject = location.pathname.includes('/projects/') || location.pathname.includes('/project/');
           const isFromMobileMenu = e.target.closest('.menu-overlay') !== null;
           
-          // Skip animation for single project mobile menu navigation
-          if (isFromSingleProject && isFromMobileMenu) {
-            // Just navigate without animation
-            const path = link.getAttribute('href');
-            navigate(path);
+          // If navigation is already in progress (handled by MobileMenu), don't interfere
+          if (isFromSingleProject && isFromMobileMenu && !navigationInProgress.current) {
+            navigationInProgress.current = true;
+            
+            // Don't navigate here - let the MobileMenu handleNavigation function handle it
             return;
           }
           

@@ -705,6 +705,14 @@ html, body, #root {
 @media (max-width: 768px) {
   .image-slider-container {
     height: 50px;
+    margin-bottom: 8rem; /* Default for Chrome and other browsers */
+  }
+  
+  /* Safari-specific rule */
+  @supports (-webkit-touch-callout: none) and (not (translate: none)) {
+    .image-slider-container {
+      margin-bottom: 5rem; /* Safari-specific value */
+    }
   }
   
   .image-slider, 

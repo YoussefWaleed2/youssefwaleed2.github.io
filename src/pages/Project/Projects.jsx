@@ -528,7 +528,9 @@ const Projects = () => {
           </div>
         </div>
         
-        <ImageSlider assets={clientImages} />
+        <div className="image-slider-bootstrap-wrapper">
+          <ImageSlider assets={clientImages} />
+        </div>
       </div>
     </ReactLenis>
   );

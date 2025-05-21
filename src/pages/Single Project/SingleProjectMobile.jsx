@@ -253,21 +253,17 @@ const SingleProjectMobile = ({ project }) => {
                 
                 {/* Field and Services info displayed vertically */}
                 <div className="mobile-info-section" style={{ 
-                  marginTop: '2rem', 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  alignItems: 'flex-start', 
-                  textAlign: 'left' 
+
                 }}>
                   {section.fieldName && (
-                    <div style={{ marginBottom: '1.5rem' }}>
-                      <div style={{ fontSize: '0.8rem', opacity: 0.7, marginBottom: '0.3rem' }}>FIELD</div>
+                    <div>
+                      <div style={{ fontSize: '0.8rem', opacity: 0.7}}>FIELD</div>
                       <div style={{ fontSize: '1rem', fontWeight: 500 }}>{section.fieldName}</div>
                     </div>
                   )}
                   {section.services && (
                     <div>
-                      <div style={{ fontSize: '0.8rem', opacity: 0.7, marginBottom: '0.3rem' }}>SERVICE</div>
+                      <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>SERVICE</div>
                       <div style={{ fontSize: '1.2rem', fontFamily: 'Aboreto, sans-serif' }}>{section.services}</div>
                     </div>
                   )}

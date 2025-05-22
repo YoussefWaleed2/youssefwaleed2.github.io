@@ -24,9 +24,10 @@ body.form-open {
   position: fixed;
   inset: 0;
   margin: auto;
+  margin-top: 6rem;
   width: 95%;
   max-width: 600px;
-  max-height: 90vh;
+  max-height: 85vh;
   height: auto;
   background-color: rgb(18, 18, 18);
   border-radius: 24px;
@@ -309,32 +310,29 @@ body.form-open {
 @media (min-width: 768px) and (max-width: 1024px) {
   .join-us-form {
     padding: 0;
-    width: 100%;
-    height: 100vh;
-    height: 100dvh; /* Use dynamic viewport height where supported */
-    max-height: 100vh;
-    max-height: 100dvh; /* Use dynamic viewport height where supported */
-    margin: 0;
+    width: 90%;
+    height: 85vh;
+    max-height: 85vh;
+    margin: 0 auto;
     position: fixed;
-    top: 0;
-    left: 10%;
+    top: 75px; /* Position below navbar */
+    left: 0;
     right: 0;
-    bottom: 0;
-    border-radius: 0;
+    bottom: auto;
+    border-radius: 20px;
     overflow: hidden;
-    border-radius: 25px;
     z-index: 1000000;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
   }
   
   .join-us-overlay {
     height: 100vh;
-    height: 100dvh; /* Use dynamic viewport height where supported */
+    width: 100vw;
   }
   
   .join-us-form-inner {
-    height: calc(100vh - 60px);
-    height: calc(100dvh - 60px); /* Use dynamic viewport height where supported */
-    padding: 0 2em 2em 2em;
+    height: calc(85vh - 60px);
+    padding: 0 1.5em 1.5em 1.5em;
     overflow-y: auto;
     margin-top: 60px;
   }
@@ -344,49 +342,67 @@ body.form-open {
   }
 
   .close-button {
-    position: fixed;
+    position: absolute;
     top: 1em;
     right: 1em;
     z-index: 1000001;
   }
+  
+  .join-us-form h2 {
+    font-size: 2rem;
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+  }
 }
+
 @media (max-width: 767px) {
   .join-us-form {
     padding: 0;
-    width: 100%;
-    height: 100vh;
-    height: 100dvh; /* Use dynamic viewport height where supported */
-    max-height: 100vh;
-    max-height: 100dvh; /* Use dynamic viewport height where supported */
-    margin: 0;
+    width: 92%;
+    height: 80vh;
+    max-height: 80vh;
+    margin: 0 auto;
     position: fixed;
-    top: 0;
+    top: 70px; /* Position below navbar */
     left: 0;
     right: 0;
-    bottom: 0;
-    border-radius: 0;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
+    bottom: auto;
+    border-radius: 15px;
+    overflow: hidden;
     z-index: 1000000;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
   }
   
   .join-us-overlay {
     height: 100vh;
-    height: 100dvh; /* Use dynamic viewport height where supported */
+    width: 100vw;
+  }
+  
+  .join-us-form-inner {
+    height: calc(80vh - 60px);
+    padding: 0 1.2em 1.2em 1.2em;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 50px;
   }
   
   .join-us-form-header {
-    padding-top: 1em;
+    padding-top: 0.5em;
   }
-  .join-us-form-header h2{
-    font-size: 2rem;
+  
+  .join-us-form-header h2 {
+    font-size: 1.8rem;
+    margin-top: 0.5em;
+    margin-bottom: 1em;
   }
 
   .close-button {
-    position: fixed;
-    top: 1em;
-    right: 1em;
+    position: absolute;
+    top: 0.8em;
+    right: 0.8em;
     z-index: 1000001;
+    width: 32px;
+    height: 32px;
   }
 
   .form-row {
@@ -414,44 +430,97 @@ body.form-open {
     width: 100%;
   }
 
-  .img-logo-form-container{
+  .img-logo-form-container {
     width: 100%;
-    height: 5rem;
+    height: 4rem;
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  .img-logo-form{
-    margin-top: 4rem;
-    width: 8.5rem;
-    height: 8.5rem;
-  }
-}
-
-@media (max-height: 700px) {
-  .join-us-form {
-    height: 95vh;
-    padding: 1.5em;
+    margin-top: 0;
   }
   
-  .interest-section {
-    margin-bottom: 1.5em;
-  }
-  
-  .form-group-joinus {
-    margin-bottom: 1em;
+  .img-logo-form {
+    width: 7rem;
+    height: 7rem;
+    margin-top: 0;
   }
   
   .submit-btn {
-    margin-top: 1em;
+    margin-top: 1.5em;
+    padding: 1em;
+  }
+}
+
+/* For smaller phones */
+@media (max-width: 480px) {
+  .join-us-form {
+    width: 95%;
+    height: 75vh;
+    max-height: 75vh;
+    top: 65px;
+    border-radius: 12px;
+  }
+  
+  .join-us-form-inner {
+    height: calc(75vh - 50px);
+    padding: 0 1em 1em 1em;
+    margin-top: 40px;
+  }
+  
+  .join-us-form-header h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.8em;
+  }
+  
+  .close-button {
+    top: 0.7em;
+    right: 0.7em;
+    width: 28px;
+    height: 28px;
+  }
+  
+  .img-logo-form-container {
+    height: 3.5rem;
+  }
+  
+  .img-logo-form {
+    width: 6rem;
+    height: 6rem;
+  }
+  
+  .submit-btn {
+    padding: 0.9em;
+    font-size: 0.8rem;
+  }
+  
+  .form-group-joinus input::placeholder,
+  .form-group-joinus textarea::placeholder {
+    font-size: 0.9rem;
   }
 }
 
 /* For very small screens */
 @media (max-height: 600px) {
   .join-us-form {
-    height: 98vh;
-    padding: 1.2em;
+    height: 85vh;
+    top: 60px;
+  }
+  
+  .join-us-form-inner {
+    height: calc(85vh - 50px);
+  }
+  
+  .join-us-form-header h2 {
+    font-size: 1.4rem;
+    margin: 0.3em 0 0.6em;
+  }
+  
+  .form-group-joinus {
+    margin-bottom: 0.7em;
+  }
+  
+  .submit-btn {
+    margin-top: 1em;
   }
 }
 

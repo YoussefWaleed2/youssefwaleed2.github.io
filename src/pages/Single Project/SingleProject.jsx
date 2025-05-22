@@ -46,7 +46,6 @@ const SingleProject = () => {
   const touchStartX = useRef(0);
   
   // Debug log to check routing
-  console.log("SingleProject loaded with category:", category, "projectName:", projectName, "from path:", location.pathname);
 
   // Helper functions for media handling
   // Handle video loaded metadata
@@ -289,7 +288,6 @@ const SingleProject = () => {
       }
       
       if (!categoryProjects.length) {
-        console.error(`Category not found: ${formattedCategory}`);
         return null;
       }
       
@@ -299,14 +297,13 @@ const SingleProject = () => {
       );
       
       if (!foundProject) {
-        console.error(`Project not found: ${projectName} in category ${formattedCategory}`);
+        return null;
       }
       
       return foundProject || null;
     };
     
     const projectData = findProject();
-    console.log("Found project data:", projectData);
     
     if (projectData) {
       setProject(projectData);
@@ -1130,13 +1127,10 @@ const SingleProject = () => {
   useEffect(() => {
     if (!project) return;
     
-    console.log("Applying project colors directly");
-    
     // Function to apply colors to all elements
     const applyProjectColors = () => {
       // Get the project background color
       const projectBgColor = project.backgroundColor || '#000000';
-      console.log("Applying project color:", projectBgColor);
       
       const allPanels = document.querySelectorAll('.panel');
       
@@ -1180,7 +1174,6 @@ const SingleProject = () => {
               }
             }
           } catch (err) {
-            console.log("Error calculating text color:", err);
             // Default to white text
             textContent.style.color = '#FFFFFF';
           }

@@ -991,7 +991,26 @@ body.single-project-page-active .panel {
 .back-to-projects-btn:hover {
   background-color: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 1);
-  transform: scale(1.05);
+}
+
+/* Medium-sized screens (tablets and small laptops) */
+@media (min-width: 768px) and (max-width: 1300px) {
+  .back-to-projects-btn {
+    position: fixed;
+    top: 80px;
+    left: 10px;
+    width: 34px;
+    height: 34px;
+    padding: 6px;
+    z-index: 500;
+    transform: none;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .back-to-projects-btn svg {
+    width: 20px;
+    height: 14px;
+  }
 }
 
 /* Mobile specific button styles */

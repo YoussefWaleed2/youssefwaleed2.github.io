@@ -72,7 +72,6 @@ const MobileAbout = () => {
           }
         );
       } catch (error) {
-        console.error("Animation error:", error);
         // Still mark as loaded even if animation fails
         document.body.classList.add('about-page-loaded');
       }

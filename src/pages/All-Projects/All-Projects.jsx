@@ -64,7 +64,6 @@ const AllProjects = () => {
   const videoRefs = useRef({});
 
   // Debug log to check routing
-  console.log("All-Projects loaded with category:", category, "from path:", location.pathname);
   
   // Check if mobile on component mount
   useEffect(() => {
@@ -139,7 +138,6 @@ const AllProjects = () => {
       // Format category name to match projectsData keys
       let formattedCategory = category.replace(/-/g, " ");
       
-      console.log("Processing category:", formattedCategory, "Available categories:", Object.keys(projectsData));
       
       // Map URL categories to data keys exactly as in Projects.jsx
       const categoryMap = {
@@ -156,23 +154,19 @@ const AllProjects = () => {
       
       // Check if category exists in projectsData
       if (projectsData[formattedCategory]) {
-        console.log("Found exact match:", formattedCategory);
         return projectsData[formattedCategory];
       }
       
       // Try uppercase version as fallback
       if (projectsData[formattedCategory.toUpperCase()]) {
-        console.log("Found uppercase match:", formattedCategory.toUpperCase());
         return projectsData[formattedCategory.toUpperCase()];
       }
       
       // Try lowercase version as fallback
       if (projectsData[formattedCategory.toLowerCase()]) {
-        console.log("Found lowercase match:", formattedCategory.toLowerCase());
         return projectsData[formattedCategory.toLowerCase()];
       }
       
-      console.warn(`Category not found: ${formattedCategory}`, "Available categories:", Object.keys(projectsData));
       return [];
     };
 
@@ -276,7 +270,6 @@ const AllProjects = () => {
     if (videoElement) {
       if (isHovering) {
         videoElement.play().catch(err => {
-          console.log("Autoplay prevented:", err);
         });
       } else {
         // Optional: pause when not hovering

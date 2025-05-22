@@ -126,7 +126,7 @@ const SingleProjectMobile = ({ project }) => {
           {project.media && (
             <div className="mobile-project-section">
               <img
-                src={project.media}
+                src={project.mobileMedia || project.media}
                 alt={project.title}
                 className="mobile-project-image"
                 style={{ width: "100%", height: "auto", display: "block" }}
@@ -211,7 +211,7 @@ const SingleProjectMobile = ({ project }) => {
                   </div>
                 ) : (
                   <img
-                    src={section.media || section.imageName}
+                    src={section.mobileMedia || section.media || section.imageName}
                     alt={section.alt || `Project section ${index + 1}`}
                     className="mobile-project-image"
                     style={{ width: "100%", height: "auto", display: "block" }}

@@ -8,6 +8,11 @@
   --fg200: #1f1f1f;
 }
 
+/* Prevent white flash on page load/refresh */
+html, body, #root {
+  background-color: #000000;
+}
+
 * {
   margin: 0;
   padding: 0;

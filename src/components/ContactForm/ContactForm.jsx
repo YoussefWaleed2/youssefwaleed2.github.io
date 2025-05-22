@@ -203,7 +203,6 @@ const ContactForm = ({ formType = 'contact' }) => {
       
       setSelectedService("");
     } catch (error) {
-      console.error("Email sending error:", error);
       setPopup({
         show: true,
         message: "Failed to send message. Please try again later.",

@@ -12,6 +12,7 @@ const Home = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [fadeIn, setFadeIn] = useState(false);
 
   // Check if device is mobile and disable scrolling
   useEffect(() => {
@@ -208,7 +209,6 @@ const Home = () => {
       // Check if splash should be shown
       setShowSplash(shouldShowSplash());
     } catch (error) {
-      console.error("Error determining splash screen visibility:", error);
       // Default to not showing splash on error
       setShowSplash(false);
     }
@@ -224,7 +224,6 @@ const Home = () => {
     try {
       sessionStorage.setItem('hasSeenSplash', 'true');
     } catch (error) {
-      console.error("Error setting sessionStorage:", error);
     }
     setShowSplash(false);
     handleOverlay();
@@ -236,8 +235,9 @@ const Home = () => {
 
     // Add error handler for video
     const handleVideoError = (e) => {
-      console.error("Video error:", e);
       setVideoError(true);
+      // Trigger fade-in for fallback image
+      setTimeout(() => setFadeIn(true), 100);
     };
     
     // Handle successful loading
@@ -251,9 +251,15 @@ const Home = () => {
       }
       
       video.play().catch(error => {
-        console.error("Error playing video:", error);
         setVideoError(true);
+        // Trigger fade-in for fallback image if video fails to play
+        setTimeout(() => setFadeIn(true), 100);
       });
+
+      // Trigger fade-in effect after video starts playing
+      // Note: The actual fade-in is now handled by the Transition component
+      // This is a backup in case that doesn't work
+      setTimeout(() => setFadeIn(true), 100);
     };
     
     // Preload the video
@@ -272,8 +278,9 @@ const Home = () => {
     // Safety timeout for video loading - if not loaded after 4 seconds, show fallback
     const loadTimeout = setTimeout(() => {
       if (!videoLoaded) {
-        console.log("Video loading timeout - showing fallback");
         setVideoError(true);
+        // Trigger fade-in for fallback image after timeout
+        setTimeout(() => setFadeIn(true), 100);
       }
     }, 4000);
     
@@ -295,8 +302,13 @@ const Home = () => {
         {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
         <div 
           ref={videoWrapperRef}
-          className={`video-wrapper ${videoError ? 'video-error' : ''}`}
-          style={{ width: '100%', height: '100%' }}
+          className={`video-wrapper ${videoError ? 'video-error' : ''} ${fadeIn ? 'fade-in' : ''}`}
+          style={{ 
+            width: '100%', 
+            height: '100%',
+            opacity: 0,
+            transition: 'opacity 1.2s ease-in-out'
+          }}
         >
           {!videoError ? (
             <video 
@@ -308,7 +320,11 @@ const Home = () => {
               loop 
               playsInline
               preload="auto"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              style={{ 
+                width: '100%', 
+                height: '100%', 
+                objectFit: 'cover'
+              }}
             >
               <source src={isMobile ? mobileVideoPath : desktopVideoPath} type="video/webm" />
               Your browser does not support the video tag.

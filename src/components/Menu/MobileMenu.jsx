@@ -117,7 +117,6 @@ const MobileMenu = () => {
       !menuOpenBtnRef.current ||
       !menuOverlayRef.current
     ) {
-      console.log("Some refs are missing");
       return;
     }
 
@@ -193,7 +192,6 @@ const MobileMenu = () => {
       !menuOpenBtnRef.current ||
       !menuOverlayRef.current
     ) {
-      console.log("Some refs are missing for navigation close");
       return;
     }
 
@@ -273,7 +271,6 @@ const MobileMenu = () => {
       !menuOverlayBarRef.current ||
       !menuCloseBtnRef.current
     ) {
-      console.log("Some refs are missing");
       return;
     }
 

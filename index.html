@@ -15,6 +15,17 @@
     <!-- Add compatibility meta tags for better Safari rendering -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <!-- Prevent white flash on page refresh -->
+    <style>
+      html, body {
+        background-color: #000 !important;
+        margin: 0;
+        padding: 0;
+      }
+      #root {
+        background-color: #000;
+      }
+    </style>
     <!-- Fix for loading JS modules properly -->
     <script type="text/javascript">
       // For MIME type detection issues in Safari

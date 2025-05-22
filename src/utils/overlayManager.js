@@ -29,7 +29,6 @@ export const handleOverlay = () => {
       });
     }
   } catch (error) {
-    console.error("Error handling overlay:", error);
   }
 };
 
@@ -40,7 +39,6 @@ export const shouldShowSplash = () => {
   try {
     return !sessionStorage.getItem('hasSeenSplash');
   } catch (error) {
-    console.error("Error checking splash status:", error);
     return false;
   }
 };

@@ -3,6 +3,17 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+  z-index: 1;
+}
+
+/* Special handling for home transitions */
+.transition-wrapper.home-transition {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  background-color: transparent;
 }
 
 .page-container {

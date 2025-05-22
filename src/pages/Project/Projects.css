@@ -164,15 +164,17 @@ html, body, #root {
   will-change: transform, opacity;
   color: white;
   text-shadow: none;
+  cursor: pointer;
+  opacity: 0.3 !important;
 }
 
 .category-text.active {
   color: white;
-  opacity: 0.9;
+  opacity: 1 !important;
 }
 
 .category-text:not(.active) {
-  opacity: 0.5;
+  opacity: 0.3 !important;
 }
 
 .project-counter {
@@ -705,7 +707,7 @@ html, body, #root {
 @media (max-width: 768px) {
   .image-slider-container {
     height: 50px;
-    margin-bottom: 8rem; /* Default for Chrome and other browsers */
+    margin-bottom: 6rem; /* Default for Chrome and other browsers */
   }
   
   /* Safari-specific rule */
@@ -777,31 +779,35 @@ html, body, #root {
 
 @media (max-width: 768px) {
   body.projects-page .text-container {
-    overflow-y: auto !important; /* Allow vertical scrolling */
-    touch-action: pan-y !important; /* Enable touch scrolling vertically */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
-    height: 100%;
-    padding: 10% 0; /* Add padding for better scrolling area */
-    overscroll-behavior: contain; /* Prevent scroll chaining */
-    max-height: 70vh; /* Limit height to prevent page scrolling */
+    overflow-y: visible !important;
+    touch-action: none !important;
+    -webkit-overflow-scrolling: auto !important;
+    height: auto !important;
+    padding: 25vh 0 !important;
+    max-height: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
   }
   
   body.projects-page .category-text {
-    margin: 20px 0; /* Increase vertical spacing between items */
-    touch-action: manipulation; /* Improve touch behavior */
-    -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+    position: absolute !important;
+    white-space: nowrap !important;
+    transform-style: preserve-3d !important;
+    backface-visibility: hidden !important;
+    -webkit-font-smoothing: antialiased !important;
+    transition: transform 0.5s !important;
+    will-change: transform !important;
+    opacity: 0.3 !important;
   }
   
-  body.projects-page .project-content {
-    touch-action: pan-y !important; /* Allow only vertical touch actions */
-    overflow: hidden;
+  body.projects-page .category-text.active {
+    opacity: 1 !important;
   }
   
-  /* ReactLenis specific adjustments */
-  body.projects-page .lenis.lenis-smooth {
-    -webkit-overflow-scrolling: auto !important;
-    scroll-behavior: auto !important;
-    overscroll-behavior: none;
+  body.projects-page .category-text:not(.active) {
+    opacity: 0.3 !important;
   }
 }
 

@@ -393,28 +393,46 @@
   }
   
   @media (min-width: 900px) and (max-width: 1024px) {
+      .navbar {
+          min-width: 90%;
+          width: 90vw;
+          left: 5%;
+          padding: 12px 25px;
+          justify-content: space-between;
+      }
+      .menu-overlay h1 {
+        font-size: 7vw;
+      }
       .nav-links {
-          width: 70%;
-          gap: 10px;
-          justify-content: flex-end;
+          width: 75%;
+          gap: 15px;
+          justify-content: center;
+          margin-right: 15px;
       }
       
       .nav-links span {
-          font-size: 12px;
+          font-size: 11px;
           padding: 0 !important;
       }
   
       .nav-links a {
-          min-width: 60px;
+          min-width: 58px;
+          text-align: center;
       }
   
       .contact-button {
-          padding: 8px 16px;
-          font-size: 12px;
+          padding: 7px 15px;
+          font-size: 11px;
+          white-space: nowrap;
+          margin-left: 5px;
       }
   
       .line {
-          margin: 0 10px;
+          margin: 0 15px;
+      }
+  
+      .img-logo {
+          width: 80px;
       }
   }
   

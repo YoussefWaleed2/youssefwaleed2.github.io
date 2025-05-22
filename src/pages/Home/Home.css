@@ -4,6 +4,7 @@ body, html {
   padding: 0;
   overflow-x: hidden; /* Prevent horizontal scrolling */
   -webkit-overflow-scrolling: touch; /* Improve scrolling on iOS */
+  background-color: #000 !important;
 }
 
 .page.home {
@@ -16,6 +17,8 @@ body, html {
   left: 0;
   right: 0;
   bottom: 0;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
 }
 
 /* .hero-video {
@@ -207,6 +210,8 @@ body, html {
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   transition: none; /* Prevent any unwanted transitions */
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
 }
 
 .video-wrapper.video-error {
@@ -390,3 +395,7 @@ html.no-scroll {
     overscroll-behavior: none;
   }
 }
+.video-wrapper.fade-in {
+  opacity: 1 !important;
+}
+

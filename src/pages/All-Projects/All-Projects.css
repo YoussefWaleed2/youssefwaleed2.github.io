@@ -228,7 +228,7 @@
 @media (max-width: 1024px) {
   .project-grid {
     grid-template-columns: repeat(2, 300px);
-    gap: 15px;
+    gap: 60px;
   }
   
   .category-title {
@@ -468,11 +468,10 @@
 .back-to-projects-main-btn:hover {
   background-color: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 1);
-  transform: scale(1.05);
 }
 
-/* Mobile specific button styles */
-@media (max-width: 768px) {
+/* Medium-sized screens (tablets and small laptops) */
+@media (min-width: 768px) and (max-width: 1300px) {
   .back-to-projects-main-btn {
     position: fixed;
     top: 80px;
@@ -488,6 +487,26 @@
   .back-to-projects-main-btn svg {
     width: 20px;
     height: 14px;
+  }
+}
+
+/* Mobile specific button styles */
+@media (max-width: 768px) {
+  .back-to-projects-main-btn {
+    position: fixed;
+    top: 80px;
+    left: 10px; /* Moved further left to avoid text conflicts */
+    width: 34px; /* Smaller size */
+    height: 34px; /* Smaller size */
+    padding: 6px; /* Smaller padding */
+    z-index: 500;
+    transform: none;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .back-to-projects-main-btn svg {
+    width: 20px; /* Smaller icon */
+    height: 14px; /* Smaller icon */
   }
 }
 

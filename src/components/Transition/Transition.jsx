@@ -20,6 +20,30 @@ const Transition = (_WrappedComponent) => {
     // Dynamic variants based on current page and destination
     const getDynamicVariants = () => {
       const isProjects = location.pathname === '/projects';
+      const isHome = location.pathname === '/' || location.pathname === '';
+      
+      // Special transitions for home page
+      if (isHome) {
+        return {
+          initial: {
+            opacity: 0,
+          },
+          animate: {
+            opacity: 1,
+            transition: {
+              duration: 0.7,
+              ease: "easeInOut"
+            }
+          },
+          exit: {
+            opacity: 0,
+            transition: {
+              duration: 0.5,
+              ease: "easeInOut"
+            }
+          }
+        };
+      }
       
       return {
         initial: {
@@ -58,6 +82,28 @@ const Transition = (_WrappedComponent) => {
         if (nav) {
           nav.classList.add('nav-reveal');
           nav.classList.add('visible');
+        }
+      }
+
+      // Special handling for home page transitions
+      if ((location.pathname === '/' || location.pathname === '') && isEntering.current) {
+        // If navigating to home, apply a fade-in to the video element
+        const videoWrapper = document.querySelector('.video-wrapper');
+        if (videoWrapper) {
+          // Initially set opacity to 0
+          gsap.set(videoWrapper, {
+            opacity: 0
+          });
+          
+          // Delay the fade-in slightly to sync with page transition
+          setTimeout(() => {
+            const fadeTimeline = gsap.timeline();
+            fadeTimeline.to(videoWrapper, {
+              opacity: 1,
+              duration: 1.2,
+              ease: "power2.inOut"
+            });
+          }, 300);
         }
       }
 
@@ -127,7 +173,7 @@ const Transition = (_WrappedComponent) => {
 
     return (
       <_Motion.div
-        className="transition-wrapper"
+        className={`transition-wrapper ${location.pathname === '/' ? 'home-transition' : ''}`}
         initial="initial"
         animate="animate"
         exit="exit"

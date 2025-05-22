@@ -9,6 +9,7 @@ import { Environment, SpotLight } from '@react-three/drei';
 import Transition from '../../components/Transition/Transition';
 import { handleOverlay } from '../../utils/overlayManager';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../../components/Footer/Footer';
 
 function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete }) {
   const { scene } = useGLTF('/services/Vzbl hand.glb');
@@ -288,7 +289,6 @@ const Services = () => {
 
   // Handle entrance animation completion
   const handleEntranceComplete = () => {
-    console.log("Entrance animation complete, enabling scrolling");
     setEntranceComplete(true);
   };
 
@@ -335,7 +335,6 @@ const Services = () => {
   // Enable scrolling when entrance animation completes
   useEffect(() => {
     if (entranceComplete && lenisRef.current) {
-      console.log("Starting Lenis scroll");
       lenisRef.current.start();
     }
   }, [entranceComplete]);

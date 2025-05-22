@@ -43,7 +43,6 @@ class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error("Error in About component:", error, errorInfo);
   }
 
   render() {
@@ -121,7 +120,6 @@ const About = () => {
       const results = await Promise.all(promises);
       setImagesLoaded(results);
     } catch (error) {
-      console.error("Error preloading images:", error);
       setImagesLoaded(Array(images.length).fill(true)); // Fallback
     }
   };
@@ -301,7 +299,6 @@ const About = () => {
           }
         }, 300);
       } catch (error) {
-        console.error("Error in text animation:", error);
       }
     }
     
@@ -912,8 +909,6 @@ const About = () => {
     const safari = isSafari();
     
     if (isMac || safari) {
-      console.log("Applying MacBook/Safari optimizations");
-      
       // Add class for CSS targeting
       document.body.classList.add(isMac ? 'is-macbook' : 'is-safari');
       

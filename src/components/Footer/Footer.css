@@ -3,124 +3,39 @@
 
 .footer {
   width: 100%;
-  min-height: 50vh;
+  min-height: 35vh;
   background-color: #1a1a1a;
   color: white;
-  padding: 60px 80px;
+  padding: 40px 60px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
   font-family: "TT Norms", sans-serif;
   opacity: 1 !important;
   z-index: 10;
   position: relative;
 }
 
-.footer-text-bold {
-  font-size: 1.05rem;
-}
-
 .footer-content {
+  width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 40px;
-  margin-bottom: 60px;
-}
-
-.footer-left {
-  max-width: 550px;
-}
-
-.footer-text {
-  line-height: 1.6;
-  margin-bottom: 30px;
-  letter-spacing: 0.5px;
-  font-family: "TT Norms";
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  text-transform: uppercase;
-}
-
-.social-links {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.social-links a {
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  color: white;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  font-size: 16px;
-}
-
-.social-links a:hover {
-  background-color: white;
-  color: #1a1a1a;
-  transform: translateY(-3px);
-}
-
-.footer-right {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.footer-right-content {
-  display: flex;
-  flex-direction: column;
   gap: 30px;
 }
 
-.footer-nav {
+.footer-left {
+  display: flex;
+  align-items: center;
+}
+
+.footer-contact {
   display: flex;
   gap: 40px;
 }
 
-.footer-nav a {
-  color: white;
-  text-decoration: none;
-  font-size: 14px;
-  text-transform: uppercase;
-  transition: opacity 0.3s ease;
-  font-family: "TT Norms";
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-}
-
-.footer-nav a:hover {
-  opacity: 0.7;
-}
-
-/* Contact information styles */
-.footer-contact {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  gap: 20px;
-  position: relative;
-}
-
-.footer-contact h3 {
-  font-size: 32px;
-  font-weight: 500;
-  text-transform: uppercase;
-  font-family: "Helvetica Neue", sans-serif;
-  letter-spacing: 0.5px;
-}
-
 .contact-location {
-  margin-bottom: 15px;
   text-align: center;
 }
 
@@ -129,6 +44,7 @@
   font-weight: 300;
   text-transform: uppercase;
   font-family: "Helvetica Neue", sans-serif;
+  margin-bottom: 8px;
 }
 
 .contact-location p {
@@ -138,228 +54,100 @@
   font-weight: 300;
 }
 
+.footer-right {
+  display: flex;
+  align-items: center;
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+}
+
+.social-links a {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 15px;
+}
+
+.social-links a:hover {
+  background-color: white;
+  color: #1a1a1a;
+  transform: translateY(-3px);
+}
+
 .footer-logo {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
 }
 
 .footer-logo svg {
-  width: 85px;
+  width: 75px;
   height: auto;
   opacity: 0.9;
 }
 
-.footer-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  gap: 700px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.footer-bottom p {
+.copyright {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.7);
-  text-align: right;
+  text-align: center;
   font-family: "TT Norms";
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
   text-transform: uppercase;
-}
-
-@media (max-width: 1024px) {
-  .footer-bottom {
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .social-links {
-    order: 1;
-    margin-bottom: 15px;
-    width: 100%;
-    justify-content: center;
-    gap: 15px;
-  }
-  
-  .footer-bottom p {
-    order: 2;
-    text-align: center;
-    width: 100%;
-  }
 }
 
 @media (max-width: 768px) {
   .footer {
-    padding: 40px 0;
-    text-align: center;
+    padding: 30px 20px;
+    min-height: auto;
   }
 
   .footer-content {
     flex-direction: column;
-    gap: 30px;
-    align-items: center;
-  }
-
-  .footer-left {
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .footer-text {
     text-align: center;
-    max-width: 500px;
+  }
+
+  .footer-contact {
+    flex-direction: column;
+    gap: 20px;
   }
 
   .social-links {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    width: 100%;
-  }
-
-  .social-links a {
-    width: 38px;
-    height: 38px;
-    font-size: 15px;
-  }
-
-  .footer-right {
-    justify-content: center;
-    width: 100%;
-  }
-
-  .footer-nav {
-    flex-direction: row;
-    gap: 20px;
     justify-content: center;
     flex-wrap: wrap;
-    width: 100%;
-  }
-
-  .footer-contact {
-    text-align: center;
-    margin-top: 25px;
-  }
-
-  .footer-logo svg {
-    width: 140px;
-  }
-}
-
-/* Tablet specific styles */
-@media (min-width: 601px) and (max-width: 1024px) {
-  .footer {
-    padding: 50px 40px;
-  }
-
-  .footer-content {
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-  }
-
-  .footer-left {
-    max-width: 600px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    text-align: center;
-  }
-
-  .social-links {
-    justify-content: center;
-    gap: 20px;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
+    gap: 12px;
   }
 
   .social-links a {
-    width: 42px;
-    height: 42px;
-    font-size: 16px;
-  }
-
-  .footer-right {
-    justify-content: center;
-    width: 100%;
-  }
-
-  .footer-right-content {
-    align-items: center;
-    text-align: center;
-  }
-
-  .footer-nav {
-    flex-direction: row;
-    justify-content: center;
-    gap: 35px;
-  }
-
-  .footer-nav a {
-    font-size: 16px;
-  }
-
-  .footer-contact {
-    text-align: center;
-  }
-
-  .contact-location {
-    margin-bottom: 25px;
-  }
-}
-
-/* Small Mobile Screens */
-@media (max-width: 480px) {
-  .footer {
-    padding: 30px 15px;
-  }
-
-  .footer-content {
-    gap: 25px;
-  }
-
-  .social-links {
-    gap: 10px;
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding: 5px 0;
-  }
-
-  .social-links a {
-    width: 35px;
-    height: 35px;
+    width: 32px;
+    height: 32px;
     font-size: 14px;
-    flex-shrink: 0;
-  }
-
-  .footer-nav {
-    gap: 15px;
-  }
-
-  .footer-nav a {
-    font-size: 14px;
-  }
-
-  .footer-contact h3 {
-    font-size: 15px;
-  }
-
-  .contact-location h4 {
-    font-size: 13px;
-  }
-
-  .contact-location p {
-    font-size: 12px;
   }
 
   .footer-logo svg {
-    width: 120px;
+    width: 65px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .footer {
+    padding: 35px 40px;
+  }
+
+  .footer-contact {
+    gap: 30px;
+  }
+
+  .social-links {
+    gap: 12px;
   }
 }

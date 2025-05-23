@@ -745,7 +745,7 @@
 .join-us-container {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 4rem;
 }
 
 .join-us-button {
@@ -772,4 +772,17 @@
 /* Body styling for when form is open */
 body.form-open {
   overflow: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .join-us-container {
+    margin-top: 3rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .join-us-container {
+    margin-top: 2.5rem;
+  }
 }

@@ -97,7 +97,7 @@ const SingleProjectMobile = ({ project }) => {
   if (!project) {
     return (
       <div className="project-loading">
-        <h2>Loading project...</h2>
+        
       </div>
     );
   }
@@ -117,7 +117,7 @@ const SingleProjectMobile = ({ project }) => {
             background: headerBgColor, 
             color: headerTextColor 
           }}>
-            <h1 style={{ fontFamily: "Aboreto, serif", fontSize: "2.2rem", marginBottom: "0.5rem" }}>
+            <h1 style={{ fontFamily: "Sprat, sans-serif", fontSize: "2.2rem", marginBottom: "0.5rem" }}>
               {project.title}
             </h1>
           </div>
@@ -159,13 +159,13 @@ const SingleProjectMobile = ({ project }) => {
           marginTop: "1rem",
           textAlign: "center"
         }}>
-          <h1 style={{ fontFamily: "Aboreto, serif", fontSize: "2.2rem", marginBottom: "0.5rem" }}>
+          <h1 style={{ fontFamily: "Sprat, sans-serif", fontSize: "2.2rem", marginBottom: "0.5rem", fontWeight: "500" }}>
             {project.title}
           </h1>
-          <div style={{ fontSize: "1rem", opacity: 0.7, marginBottom: "0.5rem" }}>
+          <div style={{ fontFamily: "Sprat, sans-serif", fontSize: "1rem", opacity: 0.7, marginBottom: "0.5rem" }}>
            
           </div>
-          <div style={{ fontSize: "1.1rem", fontWeight: 400 }}>
+          <div style={{ fontFamily: "Sprat, sans-serif", fontSize: "1.1rem", fontWeight: 400 }}>
             {project.projectContent?.sections?.[0]?.services || ""}
           </div>
         </div>
@@ -229,7 +229,7 @@ const SingleProjectMobile = ({ project }) => {
                 }}
               >
                 {section.slogan && (
-                  <h2 className="text-slogan" style={{ fontFamily: "Aboreto, serif", fontSize: "1.5rem", marginBottom: "1rem" }}>
+                  <h2 className="text-slogan" style={{ fontFamily: "Sprat, sans-serif", fontSize: "1.5rem", marginBottom: "1rem",fontWeight: "500" }}>
                     {section.slogan}
                   </h2>
                 )}
@@ -264,7 +264,7 @@ const SingleProjectMobile = ({ project }) => {
                   {section.services && (
                     <div>
                       <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>SERVICE</div>
-                      <div style={{ fontSize: '1.2rem', fontFamily: 'Aboreto, sans-serif' }}>{section.services}</div>
+                      <div style={{ fontSize: '1.2rem', fontFamily: 'Sprat, sans-serif', fontWeight: "500" }}>{section.services}</div>
                     </div>
                   )}
                 </div>

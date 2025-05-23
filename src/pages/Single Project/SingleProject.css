@@ -262,6 +262,7 @@ html:has(.single-project-page) {
 .services-info .value {
   font-size: 28px;
   font-family: "Sprat", sans-serif;
+  font-weight: 500;
 }
 
 .value-subtext {
@@ -332,12 +333,14 @@ html {
 
 .mobile-project-text {
   padding: 2rem 1rem;
+  font-family: "Helvetica Neue", sans-serif;
   text-align: center;
 }
 
 .mobile-project-text-section {
   padding: 4rem 1.5rem;
   text-align: center;
+  font-family: "Sprat", sans-serif;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -349,6 +352,7 @@ html {
   line-height: 1.6;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  font-family: "Helvetica Neue", sans-serif;
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
@@ -368,11 +372,13 @@ html {
 
 .text-left-column {
   margin-bottom: 1.5rem;
+  font-family: "Helvetica Neue", sans-serif;
   text-align: center;
 }
 
 .field-name, .services {
   margin-bottom: 1rem;
+  font-family: "Helvetica Neue", sans-serif;
   text-align: center;
 }
 
@@ -1086,7 +1092,7 @@ body.single-project-page-active .panel {
 .value-subtext-mobile {
   font-size: 0.8rem;
   margin-top: 4px;
-  font-family: "Aboreto", sans-serif;
+  font-family: "Sprat", sans-serif;
   opacity: 0.9;
   display: block;
 }

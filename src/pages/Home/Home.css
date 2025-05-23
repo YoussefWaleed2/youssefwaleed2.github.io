@@ -13,10 +13,7 @@ body, html {
   height: 100svh;
   width: 100vw;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
 }
@@ -43,15 +40,15 @@ body, html {
   overflow: hidden;
   display: flex;
   align-items: flex-end;
-  padding: 2em;
+  padding: clamp(1rem, 2vw, 2rem);
 }
 
 .hero-img {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 .hero-header {
@@ -60,11 +57,13 @@ body, html {
   display: flex;
   justify-content: space-between;
   z-index: 50;
+  padding: clamp(1rem, 2vw, 2rem);
 }
 
 .hero-header h1 {
   color: var(--bg);
-  line-height: 1;
+  line-height: 1.1;
+  font-size: clamp(2rem, 5vw, 4rem);
 }
 
 .sticky-titles {
@@ -72,7 +71,7 @@ body, html {
   width: 100vw;
   height: 100svh;
   overflow: hidden;
-  padding: 2em;
+  padding: clamp(1rem, 2vw, 2rem);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -83,16 +82,15 @@ body, html {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  padding: clamp(0.5rem, 1vw, 1rem) 0;
 }
 
 .sticky-titles-nav {
   border-bottom: 1px dashed var(--fg);
-  padding-bottom: 0.5em;
 }
 
 .sticky-titles-footer {
   border-top: 1px dashed var(--fg);
-  padding-top: 0.5em;
 }
 
 .sticky-titles h2 {
@@ -102,13 +100,15 @@ body, html {
   transform: translate(-50%, -50%);
   text-align: center;
   will-change: transform, opacity;
+  font-size: clamp(1.5rem, 4vw, 3.5rem);
+  width: min(90%, 1200px);
 }
 
 .sticky-work-header {
   position: relative;
   width: 100vw;
   height: 100svh;
-  padding: 2em;
+  padding: clamp(1rem, 2vw, 2rem);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -118,20 +118,21 @@ body, html {
 
 .sticky-work-header h1 {
   opacity: 0.125;
-  line-height: 1;
+  line-height: 1.1;
+  font-size: clamp(2rem, 6vw, 5rem);
 }
 
 .home-work {
   width: 100%;
-  padding: 8em 2em;
+  padding: clamp(4rem, 8vw, 8rem) clamp(1rem, 2vw, 2rem);
 }
 
 .home-work-list {
-  width: 40%;
+  width: min(90%, 800px);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 8em;
+  gap: clamp(4rem, 8vw, 8rem);
 }
 
 .home-work-item {
@@ -140,28 +141,118 @@ body, html {
   justify-content: center;
   align-items: center;
   text-align: center;
-  gap: 2em;
+  gap: clamp(1rem, 2vw, 2rem);
 }
 
 .hobbies {
   width: 100vw;
-  padding: 2em;
+  padding: clamp(1rem, 2vw, 2rem);
   padding-bottom: 0;
-  display: flex;
-  gap: 1em;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: clamp(0.5rem, 1vw, 1rem);
 }
 
 .hobby {
-  flex: 1;
+  aspect-ratio: 1;
+  border: 1px dashed var(--fg);
+  border-radius: clamp(0.5rem, 1vw, 1rem);
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  aspect-ratio: 1;
-  border: 1px dashed var(--fg);
-  border-radius: 1em;
+  padding: clamp(1rem, 2vw, 2rem);
 }
 
+.video-wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  z-index: -1;
+  overflow: hidden;
+  background-color: black;
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+}
+
+.video-wrapper video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000;
+}
+
+/* Device-specific optimizations */
+@media (max-width: 1440px) {
+  .home-work-list {
+    width: min(95%, 700px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .home-work-list {
+    width: min(95%, 600px);
+  }
+  
+  .hobbies {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .home-work-list {
+    width: 95%;
+  }
+  
+  .hobbies {
+    grid-template-columns: 1fr;
+  }
+  
+  .hobby {
+    aspect-ratio: 16/9;
+  }
+}
+
+/* Safari/iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .video-wrapper {
+    height: -webkit-fill-available;
+  }
+  
+  .page.home,
+  .hero,
+  .sticky-titles,
+  .sticky-work-header {
+    height: -webkit-fill-available;
+  }
+}
+
+/* High DPI / Retina displays */
+@media screen and (-webkit-min-device-pixel-ratio: 2),
+       screen and (min-resolution: 192dpi) {
+  .page.home {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Prevent text size adjustment on orientation change */
+.page.home {
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* Mobile-specific styles */
 @media (max-width: 1000px) {
   .hero,
   .sticky-titles,
@@ -196,40 +287,8 @@ body, html {
   }
 }
 
-.video-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  height: 100svh;
-  z-index: -1;
-  overflow: hidden;
-  background-color: black;
-  will-change: transform; /* Improve performance */
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  transition: none; /* Prevent any unwanted transitions */
-  opacity: 0;
-  transition: opacity 1.2s ease-in-out;
-}
-
 .video-wrapper.video-error {
   background-color: #000;
-}
-
-.video-wrapper video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: none; /* Remove transition to prevent sizing animation */
-  /* Hardware acceleration */
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  perspective: 1000px;
-  -webkit-perspective: 1000;
 }
 
 .video-placeholder {

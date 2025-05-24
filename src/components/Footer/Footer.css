@@ -32,11 +32,14 @@
 
 .footer-contact {
   display: flex;
-  gap: 40px;
+  gap: 80px;
+  justify-content: center;
 }
 
 .contact-location {
   text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .contact-location h4 {
@@ -117,8 +120,18 @@
   }
 
   .footer-contact {
-    flex-direction: column;
-    gap: 20px;
+    flex-direction: row;
+    gap: 40px;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .contact-location h4 {
+    font-size: 16px;
+  }
+
+  .contact-location p {
+    font-size: 12px;
   }
 
   .social-links {

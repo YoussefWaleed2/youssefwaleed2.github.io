@@ -401,7 +401,7 @@
           justify-content: space-between;
       }
       .menu-overlay h1 {
-        font-size: 7vw;
+        font-size: 5vw;
       }
       .nav-links {
           width: 75%;
@@ -528,7 +528,7 @@
   /* Adding responsive font size for smaller screens */
   @media (min-width: 450px) and (max-width: 901px) {
       .menu-overlay h1 {
-          font-size: 7vw;
+          font-size: 5vw;
       }
       .menu-links{
           gap: 2.5rem;
@@ -536,7 +536,7 @@
   }
   @media (max-width: 450px) {
       .menu-overlay h1 {
-          font-size: 10vw;
+          font-size: 6vw;
       }
   }
   

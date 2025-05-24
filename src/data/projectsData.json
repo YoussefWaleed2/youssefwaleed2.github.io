@@ -432,7 +432,7 @@
               "backgroundColor": "#CDC8BF",
               "slogan": "EMPOWERING PROGRESS, ONE INNOVATION AT A TIME",
               "fieldName": "REAL ESTATE",
-              "services": "LOGO DESIGN",
+              "services": "BRAND IDENTITY",
               "text": "INVESCO DEVELOPMENTS IS A VISIONARY BRAND THAT EMBODIES FORWARD-THINKING DESIGN AND STRATEGIC INNOVATION. OUR MISSION WAS TO CRAFT AN IDENTITY THAT REFLECTS THE COMPANY’S COMMITMENT TO GROWTH, PROGRESS, AND UNSTOPPABLE MOMENTUM. CENTRAL TO THIS BRAND IS A CUSTOM-DESIGNED LOGO THAT FEATURES A SUBTLE YET POWERFUL HIDDEN ARROW, SYMBOLIZING MOVEMENT, ASPIRATION, AND CONSTANT ADVANCEMENT. THIS VISUAL ELEMENT ENSURES THAT EVERY INTERACTION WITH THE BRAND CONVEYS DETERMINATION AND FUTURE-FOCUSED THINKING. THROUGH MODERN TYPOGRAPHY AND A CLEAN, SOPHISTICATED COLOR PALETTE, WE HAVE CREATED A VISUAL LANGUAGE THAT RESONATES WITH CONFIDENCE AND TRUSTWORTHINESS."
             },
             {
@@ -916,7 +916,7 @@
             {
               "type": "text",
               "backgroundColor": "#71a1cc",
-              "slogan": "FROM THE SHORE TO THE BOLD TURNING WAVES INTO STATEMENTS",
+              "slogan": "FROM THE SHORE TO THE BOLD",
               "fieldName": "LIFESTYLE",
               "services": "ADVERTISEMENT",
               "text": [
@@ -981,11 +981,13 @@
             {
               "type": "media",
               "media": "/project/Single-project-Assets/Advertising/Leopelle/04-Leopelle.webp",
+              "mobileMedia": "/project/Single-project-Assets/Advertising/Leopelle/04-Leopelle-Mobile.webp",
               "alt": "Leopelle thumbnail"
             },
             {
               "type": "media",
               "media": "/project/Single-project-Assets/Advertising/Leopelle/05-Leopelle.webp",
+              "mobileMedia": "/project/Single-project-Assets/Advertising/Leopelle/05-Leopelle-Mobile.webp",
               "alt": "Leopelle thumbnail"
             },
             {

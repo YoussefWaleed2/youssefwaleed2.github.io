@@ -60,7 +60,8 @@
             },
             {
               "type": "media",
-              "imageName": "/project/Single-project-Assets/Branding/SHAWERMA EL REEM/02-SER.webp",
+              "media": "/project/Single-project-Assets/Branding/SHAWERMA EL REEM/02-SER.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/SHAWERMA EL REEM/02-SER-Mobile.webp",
               "alt": "Shawerma El Reem branding details"
             },
             {
@@ -91,6 +92,7 @@
             {
               "type": "media",
               "media": "/project/Single-project-Assets/Branding/VENTI/01-VENTI.webp",
+              "mobileMedia":"/project/Single-project-Assets/Branding/VENTI/01-VENTI-mobile.webp",
               "alt": "Venti main branding"
             },
             {
@@ -108,7 +110,8 @@
             },
             {
               "type": "media",
-              "imageName": "/project/Single-project-Assets/Branding/VENTI/03-VENTI.webp",
+              "media": "/project/Single-project-Assets/Branding/VENTI/03-VENTI.webp",
+              "mobileMedia":"/project/Single-project-Assets/Branding/VENTI/03-VENTI-mobile.webp",
               "alt": "Venti color palette"
             },
             {
@@ -495,6 +498,7 @@
             {
               "type": "media",
               "media": "/project/Single-project-Assets/Marketing/Bunker/01-Bunker.webp",
+              "mobileMedia": "/project/Single-project-Assets/Marketing/Bunker/01-Bunker-mobile.webp",
               "alt": "Bunker video"
             },
             {
@@ -572,7 +576,8 @@
             },
             {
               "type": "media",
-              "imageName": "/project/Single-project-Assets/Marketing/Bouchée/02-Bouchée.webp",
+              "media": "/project/Single-project-Assets/Marketing/Bouchée/02-Bouchée.webp",
+              "mobileMedia": "/project/Single-project-Assets/Marketing/Bouchée/02-Bouchée-mobile.webp",
               "alt": "Bouchée branding details"
             },
             {
@@ -675,12 +680,14 @@
             },
             {
               "type": "media",
-              "imageName": "/project/Single-project-Assets/Marketing/CRMBZ/05-CRMBZ.webp",
+              "media": "/project/Single-project-Assets/Marketing/CRMBZ/05-CRMBZ.webp",
+              "mobileMedia": "/project/Single-project-Assets/Marketing/CRMBZ/05-CRMBZ-mobile.webp",
               "alt": "CRMBZ color palette"
             },
             {
               "type": "media",
-              "imageName": "/project/Single-project-Assets/Marketing/CRMBZ/06-CRMBZ.webp",
+              "media": "/project/Single-project-Assets/Marketing/CRMBZ/06-CRMBZ.webp",
+              "mobileMedia": "/project/Single-project-Assets/Marketing/CRMBZ/06-CRMBZ-mobile.webp",
               "alt": "CRMBZ branding details"
             }
           ]
@@ -840,7 +847,8 @@
             },
             {
               "type": "media",
-              "imageName": "/project/Single-project-Assets/Marketing/Pyramids/04-Pyramids.webp",
+              "media": "/project/Single-project-Assets/Marketing/Pyramids/04-Pyramids.webp",
+              "mobileMedia": "/project/Single-project-Assets/Marketing/Pyramids/04-Pyramids-mobile.webp",
               "alt": "Pyramids branding details"
             },
             {
@@ -850,7 +858,8 @@
             },
             {
               "type": "media",
-              "imageName": "/project/Single-project-Assets/Marketing/Pyramids/05-Pyramids.webp",
+              "media": "/project/Single-project-Assets/Marketing/Pyramids/05-Pyramids.webp",
+              "mobileMedia": "/project/Single-project-Assets/Marketing/Pyramids/05-Pyramids-mobile.webp",
               "alt": "Pyramids color palette"
             }
           ]
@@ -884,7 +893,8 @@
             },
             {
               "type": "media",
-              "imageName": "/project/Single-project-Assets/Advertising/Apero with Emit (Porsche Edition)/02-Apero with Emit (Porsche Edition).webp",
+              "media": "/project/Single-project-Assets/Advertising/Apero with Emit (Porsche Edition)/02-Apero with Emit (Porsche Edition).webp",
+              "mobileMedia": "/project/Single-project-Assets/Advertising/Apero with Emit (Porsche Edition)/02-Apero with Emit (Porsche Edition)-mobile.webp",
               "alt": "Apero with Emit thumbnail"
             },
             {
@@ -1009,6 +1019,7 @@
             {
               "type": "media",
               "media": "/project/Single-project-Assets/Advertising/Yazi's World/01-Yazi's World.webp",
+              "mobileMedia": "/project/Single-project-Assets/Advertising/Yazi's World/01-Yazi's World-mobile.webp",
               "alt": "Yazi's World video" 
             },
             {

@@ -695,10 +695,10 @@ const SingleProject = () => {
         
         if (isTrackpad) {
           // For trackpad, use gentler scaling with better precision
-          scaledDelta = this.isMac ? delta * 2 : delta * 1.75;
+          scaledDelta = this.isMac ? delta * 2.8 : delta * 2.4;
         } else {
           // For mouse wheels - stronger scaling
-          scaledDelta = delta * 3.5;
+          scaledDelta = delta * 4.8;
         }
         
         // Calculate how much influence this gesture should have

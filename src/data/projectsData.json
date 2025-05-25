@@ -137,6 +137,7 @@
             {
               "type": "media",
               "media": "/project/Single-project-Assets/Branding/L'AZURDE/01-L'AZURDE.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/L'AZURDE/01-L'AZURDE-mobile.webp",
               "alt": "L'azurde main branding"
             },
             {
@@ -150,11 +151,13 @@
             {
               "type": "media",
               "imageName": "/project/Single-project-Assets/Branding/L'AZURDE/02-L'AZURDE.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/L'AZURDE/02-L'AZURDE-mobile.webp",
               "alt": "L'azurde branding details"
             },
             {
               "type": "media",
               "imageName": "/project/Single-project-Assets/Branding/L'AZURDE/03-L'AZURDE.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/L'AZURDE/03-L'AZURDE-mobile.webp",
               "alt": "L'azurde color palette"
             }
           ]
@@ -208,6 +211,7 @@
             {
               "type": "media",
               "media": "/project/Single-project-Assets/Branding/DIPPY'S/01-DIPPY'S.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/DIPPY'S/01-DIPPY'S-mobile.webp",
               "alt": "Dippy's main branding"
             },
             {
@@ -221,16 +225,19 @@
             {
               "type": "media",
               "imageName": "/project/Single-project-Assets/Branding/DIPPY'S/02-DIPPY'S.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/DIPPY'S/02-DIPPY'S-mobile.webp",
               "alt": "Dippy's branding details"
             },
             {
               "type": "media",
               "imageName": "/project/Single-project-Assets/Branding/DIPPY'S/03-DIPPY'S.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/DIPPY'S/03-DIPPY'S-mobile.webp",
               "alt": "Dippy's color palette"
             },
             {
               "type": "media",
               "imageName": "/project/Single-project-Assets/Branding/DIPPY'S/04-DIPPY'S.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/DIPPY'S/04-DIPPY'S-mobile.webp",
               "alt": "Dippy's typography"
             }
           ]
@@ -246,6 +253,7 @@
             {
               "type": "media",
               "media": "/project/Single-project-Assets/Branding/NOTFOUND/01-NOTFOUND.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/NOTFOUND/01-NOTFOUND-mobile.webp",
               "alt": "NotFound main branding"
             },
             {
@@ -259,16 +267,20 @@
             {
               "type": "media",
               "imageName": "/project/Single-project-Assets/Branding/NOTFOUND/02-NOTFOUND.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/NOTFOUND/02-NOTFOUND-mobile.webp",
               "alt": "NotFound branding details"
+
             },
             {
               "type": "media",
               "imageName": "/project/Single-project-Assets/Branding/NOTFOUND/03-NOTFOUND.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/NOTFOUND/03-NOTFOUND-mobile.webp",
               "alt": "NotFound color palette"
             },
             {
               "type": "media",
               "imageName": "/project/Single-project-Assets/Branding/NOTFOUND/04-NOTFOUND.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/NOTFOUND/04-NOTFOUND-mobile.webp",
               "alt": "NotFound typography"
             }
           ]
@@ -322,6 +334,7 @@
             {
               "type": "media",
               "media": "/project/Single-project-Assets/Branding/MERKUR/01-MERKUR.webp",
+              
               "alt": "Merkur main branding"
             },
             {
@@ -335,21 +348,25 @@
             {
               "type": "media",
               "imageName": "/project/Single-project-Assets/Branding/MERKUR/02-MERKUR.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/MERKUR/02-MERKUR-mobile.webp",
               "alt": "Merkur branding details"
             },
             {
               "type": "media",
               "imageName": "/project/Single-project-Assets/Branding/MERKUR/03-MERKUR.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/MERKUR/03-MERKUR-mobile.webp",
               "alt": "Merkur color palette"
             },
             {
               "type": "media",
               "imageName": "/project/Single-project-Assets/Branding/MERKUR/04-MERKUR.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/MERKUR/04-MERKUR-mobile.webp",
               "alt": "Merkur typography"
             },
             {
               "type": "media",
               "imageName": "/project/Single-project-Assets/Branding/MERKUR/05-MERKUR.webp",
+              "mobileMedia": "/project/Single-project-Assets/Branding/MERKUR/05-MERKUR-mobile.webp",
               "alt": "Merkur typography"
             }
           ]

@@ -292,6 +292,7 @@
   .project-number {
     font-size: 16px;
   }
+
 }
 
 /* Remove conflicting media queries */
@@ -306,6 +307,7 @@
     font-size: 14px;
     line-height: 1.4;
   }
+
 }
 
 .project-container {
@@ -558,4 +560,5 @@
   padding: 40px 0 20px;
   margin: 0;
   width: 100%;
-}
+}  
+

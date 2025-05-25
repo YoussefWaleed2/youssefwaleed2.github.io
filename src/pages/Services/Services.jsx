@@ -494,7 +494,7 @@ const Services = () => {
           <div className="service-number">04.</div>
           <h2 className="service-title">PACKAGING</h2>
           <p className="service-description">
-            we believe packaging is more than just a container—it's a canvas for storytelling. We craft designs that not only protect your product but also elevate your brand's identity. From the tactile feel to the visual appeal, every element is meticulously considered to create an unforgettable unboxing experience. Our approach ensures that your packaging resonates with your audience, making your brand not just seen, but truly VZBL.
+            We believe packaging is more than just a container—it's a canvas for storytelling. We craft designs that not only protect your product but also elevate your brand's identity. From the tactile feel to the visual appeal, every element is meticulously considered to create an unforgettable unboxing experience. Our approach ensures that your packaging resonates with your audience, making your brand not just seen, but truly VZBL.
           </p>
         </section>
       </div>

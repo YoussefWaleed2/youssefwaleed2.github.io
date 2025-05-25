@@ -1435,3 +1435,318 @@ body.single-project-page-active .panel {
     max-width: 90%;
   }
 }
+
+/* Root variables for fluid typography */
+:root {
+  --fluid-min-width: 320;
+  --fluid-max-width: 5120;
+  --fluid-min-size: 16;
+  --fluid-max-size: 24;
+  --fluid-min-scale: 1.2;
+  --fluid-max-scale: 1.333;
+}
+
+/* Comprehensive responsive layout adjustments */
+/* Large desktop screens (2560px and above) */
+@media screen and (min-width: 2560px) {
+  .text-content {
+    padding: 10rem;
+    gap: 4rem;
+    max-width: 2400px;
+    margin: 0 auto;
+  }
+
+  .panel-main-title {
+    max-width: 50%;
+  }
+
+  .bottom-info {
+    max-width: 40%;
+  }
+
+  .video-container-single-project {
+    width: 70% !important;
+  }
+}
+
+/* Standard desktop screens (1920px to 2559px) */
+@media screen and (max-width: 2559px) {
+  .text-content {
+    padding: 8rem;
+    gap: 3rem;
+    max-width: 1800px;
+  }
+
+  .panel-main-title {
+    max-width: 60%;
+  }
+
+  .bottom-info {
+    max-width: 45%;
+  }
+
+  .video-container-single-project {
+    width: 60% !important;
+  }
+}
+
+/* Smaller desktop screens (1440px to 1919px) */
+@media screen and (max-width: 1919px) {
+  .text-content {
+    padding: 6rem;
+    gap: 2.5rem;
+    max-width: 1400px;
+  }
+
+  .panel-main-title {
+    max-width: 65%;
+  }
+
+  .bottom-info {
+    max-width: 50%;
+  }
+
+  .video-container-single-project {
+    width: 55% !important;
+  }
+
+  .panel.second-panel {
+    width: 90vw !important;
+  }
+}
+
+/* Laptops and small desktops (1024px to 1439px) */
+@media screen and (max-width: 1439px) {
+  .text-content {
+    padding: 5rem;
+    gap: 2rem;
+    max-width: 1200px;
+  }
+
+  .panel-main-title {
+    max-width: 70%;
+  }
+
+  .bottom-info {
+    max-width: 60%;
+  }
+
+  .video-container-single-project {
+    width: 65% !important;
+  }
+
+  .panel.second-panel {
+    width: 95vw !important;
+  }
+
+  .text-section-content {
+    padding: 0 15%;
+  }
+}
+
+/* Tablets and smaller devices (768px to 1023px) */
+@media screen and (max-width: 1023px) {
+  .text-content {
+    padding: 4rem 3rem;
+    gap: 1.5rem;
+  }
+
+  .panel-main-title {
+    max-width: 80%;
+  }
+
+  .bottom-info {
+    max-width: 70%;
+  }
+
+  .video-container-single-project {
+    width: 75% !important;
+  }
+
+  .panel.second-panel {
+    width: 100vw !important;
+    border-radius: 0;
+  }
+
+  .text-section-content {
+    padding: 0 10%;
+  }
+
+  .info-row {
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  .field-info, .services-info {
+    width: auto;
+  }
+}
+
+/* Mobile devices (below 768px) */
+@media screen and (max-width: 767px) {
+  .text-content {
+    padding: 3rem 2rem;
+    gap: 1.25rem;
+  }
+
+  .panel-main-title {
+    max-width: 100%;
+  }
+
+  .bottom-info {
+    max-width: 100%;
+  }
+
+  .video-container-single-project {
+    width: 90% !important;
+  }
+
+  .text-section-content {
+    padding: 0 5%;
+  }
+
+  .info-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .field-info, .services-info {
+    width: 100%;
+  }
+
+  .paragraphs {
+    padding-right: 0;
+  }
+}
+
+/* Small mobile devices (below 480px) */
+@media screen and (max-width: 479px) {
+  .text-content {
+    padding: 2rem 1.5rem;
+    gap: 1rem;
+  }
+
+  .video-container-single-project {
+    width: 100% !important;
+  }
+
+  .text-section-content {
+    padding: 0 1rem;
+  }
+
+  .back-to-projects-btn {
+    top: 1rem;
+    left: 1rem;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Handle portrait videos better across screen sizes */
+@media screen and (orientation: portrait) {
+  .video-container-single-project video[style*="portrait"] {
+    max-height: 85vh !important;
+    width: auto !important;
+  }
+}
+
+/* Handle landscape videos better across screen sizes */
+@media screen and (orientation: landscape) {
+  .video-container-single-project video:not([style*="portrait"]) {
+    max-width: 85vw !important;
+    height: auto !important;
+  }
+}
+
+/* Improve image handling across screen sizes */
+.image-container img {
+  max-width: 100%;
+  max-height: 100vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Better panel handling for different screen sizes */
+.panel {
+  min-height: 100vh;
+  height: auto;
+  overflow: visible !important;
+}
+
+/* Improve text section readability on different screens */
+.text-section-content {
+  min-height: 100vh;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure proper spacing between sections */
+.panel + .panel {
+  margin-left: 0;
+}
+
+/* Improve navigation experience on different screen sizes */
+.scroll-indicators {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+@media screen and (max-width: 768px) {
+  .scroll-indicators {
+    bottom: 1rem;
+  }
+  
+  .scroll-indicator {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* Ensure smooth transitions across screen sizes */
+.single-project-page {
+  transition: transform 0.3s ease-out;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Improve back button positioning across screen sizes */
+.back-to-projects-btn {
+  position: fixed;
+  z-index: 1000;
+  mix-blend-mode: difference;
+}
+
+@media screen and (max-height: 600px) {
+  .text-content {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  
+  .panel-main-title {
+    margin-top: 1rem;
+  }
+}
+
+/* Ensure proper text wrapping on narrow screens */
+.panel-paragraph {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Improve spacing for service info on different screens */
+.services-info {
+  margin-top: auto;
+}
+
+@media screen and (max-height: 700px) {
+  .services-info {
+    margin-top: 1rem;
+  }
+}

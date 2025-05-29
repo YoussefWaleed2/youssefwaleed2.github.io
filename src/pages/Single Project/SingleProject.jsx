@@ -32,7 +32,8 @@ const SingleProject = () => {
   const [isReady, setIsReady] = useState(false);
   const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
   const [currentSection, setCurrentSection] = useState(0);
-  
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
   // Refs
   const containerRef = useRef(null);
   const pageRef = useRef(null);
@@ -897,7 +898,7 @@ const SingleProject = () => {
       },
       
       // Handle touch end
-      handleTouchEnd(e) {
+      handleTouchEnd() {
         // Apply momentum based on final velocity
         if (Math.abs(this.velocity) > 0.5) {
           const momentumFactor = 12; // Strength of momentum
@@ -1213,6 +1214,62 @@ const SingleProject = () => {
     
   }, [project, isReady]);
 
+  // Add fullscreen detection effect
+  useEffect(() => {
+    function checkFullscreen() {
+      const isFullscreenNow = Boolean(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement
+      );
+      setIsFullscreen(isFullscreenNow);
+    }
+
+    // Check on mount and when navigating to the project
+    checkFullscreen();
+
+    // Add event listeners
+    document.addEventListener('fullscreenchange', checkFullscreen);
+    document.addEventListener('webkitfullscreenchange', checkFullscreen);
+    document.addEventListener('mozfullscreenchange', checkFullscreen);
+    document.addEventListener('MSFullscreenChange', checkFullscreen);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', checkFullscreen);
+      document.removeEventListener('webkitfullscreenchange', checkFullscreen);
+      document.removeEventListener('mozfullscreenchange', checkFullscreen);
+      document.removeEventListener('MSFullscreenChange', checkFullscreen);
+    };
+  }, []);
+
+  // Function to toggle fullscreen
+  function toggleFullscreen() {
+    const doc = document.documentElement;
+
+    if (!document.fullscreenElement) {
+      if (doc.requestFullscreen) {
+        doc.requestFullscreen();
+      } else if (doc.webkitRequestFullscreen) {
+        doc.webkitRequestFullscreen();
+      } else if (doc.mozRequestFullScreen) {
+        doc.mozRequestFullScreen();
+      } else if (doc.msRequestFullscreen) {
+        doc.msRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
+  }
+
   // Return null if no project found
   if (!project) {
     return null;
@@ -1235,6 +1292,23 @@ const SingleProject = () => {
         <svg width="30" height="20" viewBox="0 0 30 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M10 1L1 10L10 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           <path d="M1 10H29" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
+      {/* Add Fullscreen toggle button */}
+      <button 
+        className="fullscreen-toggle-btn" 
+        onClick={toggleFullscreen}
+        aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {isFullscreen ? (
+            // Exit fullscreen icon
+            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          ) : (
+            // Enter fullscreen icon
+            <path d="M3 3h6v6M21 3h-6v6M3 21h6v-6M21 21h-6v-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          )}
         </svg>
       </button>
       
@@ -1281,12 +1355,41 @@ const SingleProject = () => {
                       />
                     </div>
                   ) : (
-                    <div className="image-container">
+                    <div className="image-container" style={{
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      overflow: 'hidden'
+                    }}>
                       <img 
-                        src={section.media || section.imageName} 
+                        src={
+                          (isFullscreen || 
+                           // MacBook Pro displays (including 1440x900)
+                           window.screen.width * window.devicePixelRatio >= 1440 || 
+                           window.screen.height * window.devicePixelRatio >= 900 ||
+                           // Higher resolution displays
+                           window.screen.width * window.devicePixelRatio >= 3024 || 
+                           window.screen.height * window.devicePixelRatio >= 1964 ||
+                           // 4K displays
+                           window.screen.width * window.devicePixelRatio >= 3840 ||
+                           // iMac displays
+                           window.screen.width * window.devicePixelRatio >= 4096) && 
+                          section.mobileMedia
+                            ? section.mobileMedia
+                            : section.media || section.imageName
+                        }
                         alt={section.alt || `Project section ${index + 1}`} 
                         className="single-project-image"
                         onLoad={handleImageLoad}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain',
+                          maxWidth: '100%',
+                          maxHeight: '100vh'
+                        }}
                       />
                     </div>
                   )}

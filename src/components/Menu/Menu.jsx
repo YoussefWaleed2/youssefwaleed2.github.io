@@ -1,11 +1,13 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./Menu.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
 
 const Menu = () => {
   const navLinksRef = useRef([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     // Check screen size to toggle between desktop and mobile menu
@@ -16,13 +18,37 @@ const Menu = () => {
     handleResize(); // Initial check
     window.addEventListener("resize", handleResize);
 
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    // Check if we're on the home page
+    const isHomePage = location.pathname === '/' || location.pathname === '';
+    
+    // Check if splash screen should be shown (only on home page)
+    const hasSplash = isHomePage && !sessionStorage.getItem('hasSeenSplash');
+    
+    if (!hasSplash) {
+      // If no splash screen or not home page, animate menu immediately
+      setTimeout(() => {
+        setShowMenu(true);
+      }, 100); // Small delay to ensure proper animation
+    } else {
+      // If splash screen is shown (only possible on home page), wait for its completion
+      const handleSplashComplete = () => {
+        setShowMenu(true);
+      };
+      window.addEventListener('splashComplete', handleSplashComplete);
+      return () => {
+        window.removeEventListener('splashComplete', handleSplashComplete);
+      };
+    }
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [location.pathname]); // Add location.pathname as dependency
 
   return (
     <div className="hero-container">
       <div className="overlay"></div>
-      <nav className="navbar">
+      <nav className={`navbar ${showMenu ? 'visible' : ''} ${location.pathname !== '/' ? 'nav-reveal' : ''}`}>
         <div className="logo">
           <Link to="/" className="logo-link">
             <svg

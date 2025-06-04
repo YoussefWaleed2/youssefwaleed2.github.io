@@ -202,29 +202,19 @@ const Home = () => {
 
   // Check if we should show the splash screen
   useEffect(() => {
-    let mounted = true;
+    // Force clear the splash screen on each page mount to handle navigation
+    handleOverlay();
     
     try {
       // Check if splash should be shown
-      if (mounted) {
-        const shouldShow = shouldShowSplash();
-        setShowSplash(shouldShow);
-        
-        // Only handle overlay if we're not showing splash
-        if (!shouldShow) {
-          handleOverlay();
-        }
-      }
+      setShowSplash(shouldShowSplash());
     } catch (error) {
       // Default to not showing splash on error
-      if (mounted) {
-        setShowSplash(false);
-        handleOverlay();
-      }
+      setShowSplash(false);
     }
     
+    // Add a cleanup function to force hide the overlay when unmounting
     return () => {
-      mounted = false;
       handleOverlay();
     };
   }, []);
@@ -234,7 +224,6 @@ const Home = () => {
     try {
       sessionStorage.setItem('hasSeenSplash', 'true');
     } catch (error) {
-      // Handle error silently
     }
     setShowSplash(false);
     handleOverlay();
@@ -357,4 +346,3 @@ const Home = () => {
 };
 
 export default Transition(Home);
-

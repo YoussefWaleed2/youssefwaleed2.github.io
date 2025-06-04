@@ -1,18 +1,10 @@
 import gsap from 'gsap';
 
-// Keep track of whether overlay is currently being handled
-let isHandlingOverlay = false;
-
 /**
  * Utility to handle overlay visibility across the application
  */
 export const handleOverlay = () => {
-  // If already handling overlay, skip
-  if (isHandlingOverlay) return;
-  
   try {
-    isHandlingOverlay = true;
-    
     // Force clear the splash screen
     const overlayElement = document.querySelector('.overlay');
     if (overlayElement) {
@@ -26,7 +18,6 @@ export const handleOverlay = () => {
         onComplete: () => {
           // Only hide the overlay after animation completes
           overlayElement.style.display = 'none';
-          isHandlingOverlay = false;
         }
       });
 
@@ -36,11 +27,8 @@ export const handleOverlay = () => {
         duration: 0.5,
         ease: "power2.inOut",
       });
-    } else {
-      isHandlingOverlay = false;
     }
   } catch (error) {
-    isHandlingOverlay = false;
   }
 };
 

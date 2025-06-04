@@ -22,8 +22,6 @@ function SplashScreen({ onComplete }) {
     // Create a master timeline
     const masterTimeline = gsap.timeline({
       onComplete: () => {
-        // Dispatch custom event for menu animation
-        window.dispatchEvent(new Event('splashComplete'));
         // Call the onComplete callback when animation is done
         if (onComplete) {
           onComplete();

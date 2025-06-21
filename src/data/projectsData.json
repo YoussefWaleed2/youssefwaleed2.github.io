@@ -129,10 +129,11 @@
       },
       {
         "title": "L'azurde",
-        "media": "/project/Project-Assets/Branding/L'AZURDE.webp",
-        "backgroundColor": "#F3EFEB",
-        "mediaType": "image",
-        "projectContent": {
+        "media": "/project/Single-project-Assets/Branding/L'AZURDE/lazurde.webm",
+                  "backgroundColor": "#F3EFEB",
+          "mediaType": "video",
+          "thumbnail": "/project/Project-Assets/Branding/L'AZURDE.webp",
+          "projectContent": {
           "sections": [
             {
               "type": "media",
@@ -203,9 +204,10 @@
       },
       {
         "title": "Dippy's",
-        "media": "/project/Project-Assets/Branding/DIPPY'S.webp",
-        "mediaType": "image",
-        "backgroundColor": "#7e0102",
+                  "media": "/project/Single-project-Assets/Branding/DIPPY'S/dippys.webm",
+          "mediaType": "video",
+          "thumbnail": "/project/Project-Assets/Branding/DIPPY'S.webp",
+          "backgroundColor": "#7e0102",
         "projectContent": {
           "sections": [
             {
@@ -288,9 +290,10 @@
       },
       {
         "title": "Hlep",
-        "media": "/project/Project-Assets/Branding/HLEP.webp",
-        "mediaType": "image",
-        "backgroundColor": "#000",
+                  "media": "/project/Single-project-Assets/Branding/HLEP/hlep logo animation.webm",
+          "mediaType": "video",
+          "thumbnail": "/project/Project-Assets/Branding/HLEP.webp",
+          "backgroundColor": "#000",
         "projectContent": {
           "sections": [
             {
@@ -326,9 +329,10 @@
       },
       {
         "title": "Merkur",
-        "media": "/project/Project-Assets/Branding/MERKUR.webp",
-        "mediaType": "image",
-        "backgroundColor": "#000",
+                  "media": "/project/Single-project-Assets/Branding/MERKUR/merker.webm",
+          "mediaType": "video",
+          "thumbnail": "/project/Project-Assets/Branding/MERKUR.webp",
+          "backgroundColor": "#000",
         "projectContent": {
           "sections": [
             {
@@ -374,9 +378,10 @@
       },
       {
         "title": "Ozirea",
-        "media": "/project/Project-Assets/Branding/OZIREA.webp",
-        "mediaType": "image",
-        "backgroundColor": "#CDC8BF",
+                  "media": "/project/Single-project-Assets/Branding/OZIREA/ozirea.webm",
+          "mediaType": "video",
+          "thumbnail": "/project/Project-Assets/Branding/OZIREA.webp",
+          "backgroundColor": "#CDC8BF",
         "projectContent": {
           "sections": [
             {
@@ -712,10 +717,9 @@
       },
       {
         "title": "Momochi",
-        "media": "/project/Project-Assets/Marketing/Momochi.webm",
-        "mediaType": "video",
+        "media": "/project/Service-img-2.webp",
+        "mediaType": "image",
         "backgroundColor": "#87CEEB",
-        "thumbnail": "/project/Project-Assets/Marketing/Momochi-thumb.webp",
         "projectContent": {
           "sections": [
             {

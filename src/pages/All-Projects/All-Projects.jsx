@@ -269,6 +269,7 @@ const AllProjects = () => {
     const videoElement = videoRefs.current[index];
     if (videoElement) {
       if (isHovering) {
+        videoElement.currentTime = 0; // Reset video to beginning
         videoElement.play().catch(err => {
         });
       } else {

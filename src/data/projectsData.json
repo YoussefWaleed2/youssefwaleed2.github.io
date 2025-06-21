@@ -717,8 +717,9 @@
       },
       {
         "title": "Momochi",
-        "media": "/project/Service-img-2.webp",
-        "mediaType": "image",
+        "media": "/project/Project-Assets/Marketing/Momochi.webm",
+        "thumbnail": "/project/Project-Assets/Marketing/Momochi-thumb.webp",
+        "mediaType": "video",
         "backgroundColor": "#87CEEB",
         "projectContent": {
           "sections": [

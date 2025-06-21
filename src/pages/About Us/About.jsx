@@ -103,7 +103,14 @@ const About = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [windowWidth, setWindowWidth] = useState(0);
   
-  const images = Array.from({ length: 13 }, (_, i) => `/about/${i + 1}.webp`);
+  // Create images array with conditional first image based on screen size
+  const images = Array.from({ length: 13 }, (_, i) => {
+    if (i === 0) {
+      // Use full screen version for screens 1450px and above
+      return windowWidth >= 1450 ? `/about/1 FullScreen.webp` : `/about/${i + 1}.webp`;
+    }
+    return `/about/${i + 1}.webp`;
+  });
 
   // Preload images function to improve performance
   const preloadImages = async () => {
@@ -134,7 +141,7 @@ const About = () => {
     imageRefs.current = Array(images.length).fill().map(() => React.createRef());
     setImagesLoaded(Array(images.length).fill(false));
     preloadImages(); // Start preloading immediately
-  }, [images.length]);
+  }, [images.length, windowWidth]); // Add windowWidth dependency to reload images when screen size changes
 
   useEffect(() => {
     document.title = "About Us | VZBL";

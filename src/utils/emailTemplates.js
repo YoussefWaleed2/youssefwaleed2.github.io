@@ -194,7 +194,7 @@ export const generateContactEmail = (formData) => {
  */
 export const generateJoinUsEmail = (formData) => {
   const { 
-    fullName, email, phone, jobTitle, aboutYou, resume
+    fullName, email, phone, jobTitle, aboutYou, portfolioLink, resume
   } = formData;
 
   // Create the main content
@@ -220,6 +220,12 @@ export const generateJoinUsEmail = (formData) => {
         <td>Job Title</td>
         <td>${jobTitle || 'General Application'}</td>
       </tr>
+      ${portfolioLink ? `
+      <tr class="highlight">
+        <td>Portfolio Link</td>
+        <td><a href="${portfolioLink}" target="_blank">${portfolioLink}</a></td>
+      </tr>
+      ` : ''}
     </table>
     
     ${aboutYou ? `

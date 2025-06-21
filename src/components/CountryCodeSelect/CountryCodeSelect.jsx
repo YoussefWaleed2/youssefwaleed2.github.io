@@ -6,7 +6,7 @@ const CountryCodeSelect = ({ value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCountry, setSelectedCountry] = useState(
-    countryCodes.find(country => country.dialCode === value) || countryCodes[0]
+    countryCodes.find(country => country.dialCode === value) || null
   );
   const dropdownRef = useRef(null);
   const searchInputRef = useRef(null);
@@ -31,7 +31,7 @@ const CountryCodeSelect = ({ value, onChange }) => {
   }, [isOpen]);
 
   useEffect(() => {
-    setSelectedCountry(countryCodes.find(country => country.dialCode === value) || countryCodes[0]);
+    setSelectedCountry(countryCodes.find(country => country.dialCode === value) || null);
   }, [value]);
 
   const handleSelect = (country) => {
@@ -66,12 +66,18 @@ const CountryCodeSelect = ({ value, onChange }) => {
         className="selected-country" 
         onClick={() => setIsOpen(!isOpen)}
       >
-        <img 
-          src={flagUrl(selectedCountry.code)} 
-          alt={selectedCountry.name} 
-          className="country-flag"
-        />
-        <span className="country-code">{selectedCountry.dialCode}</span>
+        {selectedCountry ? (
+          <>
+            <img 
+              src={flagUrl(selectedCountry.code)} 
+              alt={selectedCountry.name} 
+              className="country-flag"
+            />
+            <span className="country-code">{selectedCountry.dialCode}</span>
+          </>
+        ) : (
+          <span className="country-placeholder">Select Country</span>
+        )}
         <span className="dropdown-arrow">▼</span>
       </div>
       
@@ -92,7 +98,7 @@ const CountryCodeSelect = ({ value, onChange }) => {
             {filteredCountries.map((country) => (
               <div 
                 key={country.code} 
-                className={`country-option ${selectedCountry.code === country.code ? 'selected' : ''}`}
+                className={`country-option ${selectedCountry && selectedCountry.code === country.code ? 'selected' : ''}`}
                 onClick={() => handleSelect(country)}
               >
                 <img 

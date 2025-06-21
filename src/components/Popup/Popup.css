@@ -1,21 +1,9 @@
-.popup {
+.popup-content {
   position: fixed;
   top: 20px;
   right: 20px;
   z-index: 1000;
   animation: slideIn 0.3s ease-out;
-}
-
-/* Centered popup styling */
-.popup.centered {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation: fadeIn 0.3s ease-out;
-  right: auto;
-}
-
-.popup-content {
   display: flex;
   align-items: flex-start;
   padding: 40px 44px;
@@ -25,26 +13,39 @@
   max-width: 800px;
 }
 
+/* Centered popup styling */
+.popup-content.centered {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: fadeIn 0.3s ease-out;
+  right: auto;
+}
+
+/* Bottom right popup styling */
+.popup-content.bottom-right {
+  top: auto;
+  bottom: 20px;
+  right: 20px;
+  animation: slideUpFromBottom 0.4s ease-out;
+  padding: 16px 20px;
+  min-width: 300px;
+  max-width: 400px;
+  border-radius: 12px;
+}
+
 .popup-message {
   flex-grow: 1;
 }
 
-.popup.success {
+.popup-content.success {
   background: black;
   color: white;
 }
 
-.popup.success.centered {
-  background: black;
-}
-
-.popup.error {
-  background: #f44336;
+.popup-content.error {
+  background: rgba(255, 0, 0, 0.767);
   color: white;
-}
-
-.popup.error.centered {
-  background: rgba(244, 67, 54, 0.9);
 }
 
 .popup p {
@@ -55,6 +56,12 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 300;
+}
+
+/* Smaller text for bottom-right popups */
+.popup-content.bottom-right p {
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .thank-you-message {
@@ -68,6 +75,13 @@
   font-weight: 300;
 }
 
+/* Smaller thank you message for bottom-right */
+.popup-content.bottom-right .thank-you-message {
+  font-size: 11px !important;
+  margin-top: 8px !important;
+  padding-top: 8px;
+}
+
 .popup-close {
   background: none;
   border: none;
@@ -78,6 +92,12 @@
   opacity: 1;
   transition: opacity 0.2s;
   align-self: flex-start;
+}
+
+/* Smaller close button for bottom-right */
+.popup-content.bottom-right .popup-close {
+  font-size: 18px;
+  padding: 0 0 0 12px;
 }
 
 .popup-close:hover {
@@ -103,5 +123,16 @@
   to {
     opacity: 1;
     transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes slideUpFromBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 } 

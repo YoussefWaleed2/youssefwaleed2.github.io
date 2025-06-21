@@ -108,6 +108,12 @@
   font-size: 14px;
 }
 
+.country-placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  font-style: italic;
+}
+
 @media (max-width: 768px) {
   .country-options {
     width: 100%;

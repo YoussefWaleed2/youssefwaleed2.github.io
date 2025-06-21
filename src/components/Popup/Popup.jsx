@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './Popup.css';
 
-const Popup = ({ message, type, onClose, centered = false }) => {
+const Popup = ({ message, type, onClose, centered = false, bottomRight = false }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
@@ -15,20 +15,17 @@ const Popup = ({ message, type, onClose, centered = false }) => {
     (message.includes('sent successfully') || message.includes('application has been sent'));
   
   return (
-    <div className={`popup ${type} ${centered ? 'centered' : ''}`}>
-      <div className="popup-content">
-        <div className="popup-message">
-          <p>{message}</p>
-          
-          {isFormSuccess && (
-            <p className="thank-you-message">
-              Thank you for reaching out to VZBL.<br />
-              An email will be sent to you as soon as possible.
-            </p>
-          )}
-        </div>
-        <button className="popup-close" onClick={onClose}>×</button>
+    <div className={`popup-content ${type} ${centered ? 'centered' : ''} ${bottomRight ? 'bottom-right' : ''}`}>
+      <div className="popup-message">
+        <p>{message}</p>
+        
+        {isFormSuccess && (
+          <p className="thank-you-message">
+            Thank you for reaching out to vzbl, we will contact you soon
+          </p>
+        )}
       </div>
+      <button className="popup-close" onClick={onClose}>×</button>
     </div>
   );
 };

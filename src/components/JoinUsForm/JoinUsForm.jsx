@@ -16,14 +16,16 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
     fullName: "",
     email: "",
     phone: "",
-    countryCode: "+971",
+    countryCode: "",
     aboutYou: "",
+    portfolioLink: "",
     resume: null,
     jobTitle: selectedJob || ""
   });
   
   const [loading, setLoading] = useState(false);
   const [popup, setPopup] = useState({ show: false, message: "", type: "" });
+  const [fieldErrors, setFieldErrors] = useState({});
 
   // Set initial job title based on selectedJob if provided
   useEffect(() => {
@@ -116,25 +118,31 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
       return;
     }
     
+    // Clear field error when user starts typing
+    if (fieldErrors[name]) {
+      setFieldErrors(prev => ({ ...prev, [name]: "" }));
+    }
+    
     setForm({ ...form, [name]: value });
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check file type
+      // Clear resume field error when file is selected
+      if (fieldErrors.resume) {
+        setFieldErrors(prev => ({ ...prev, resume: "" }));
+      }
+      
+      // Check file type - show as inline error
       const validTypes = ['.pdf', '.doc', '.docx'];
       const fileType = '.' + file.name.split('.').pop().toLowerCase();
       if (!validTypes.includes(fileType)) {
-        setPopup({
-          show: true,
-          message: "Please upload a PDF or Word document",
-          type: "error"
-        });
+        setFieldErrors(prev => ({ ...prev, resume: "Please upload a PDF or Word document" }));
         return;
       }
       
-      // Check file size (max 2MB)
+      // Check file size (max 2MB) - keep as popup error (bottom-right)
       const maxSize = 2 * 1024 * 1024; // 2MB in bytes
       if (file.size > maxSize) {
         setPopup({
@@ -145,13 +153,9 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
         return;
       }
       
-      // Validate file name for security
+      // Validate file name for security - show as inline error
       if (!validateInput(file.name)) {
-        setPopup({
-          show: true,
-          message: "Invalid file name. Please rename your file without special characters.",
-          type: "error"
-        });
+        setFieldErrors(prev => ({ ...prev, resume: "Invalid file name. Please rename your file without special characters." }));
         return;
       }
       
@@ -163,18 +167,44 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
     e.preventDefault();
     setLoading(true);
     setPopup({ show: false, message: "", type: "" });
+    
+    // Clear previous field errors
+    setFieldErrors({});
+    
+    const errors = {};
 
-    // Validate all inputs before submission
-    for (const [value] of Object.entries(form)) {
-      if (typeof value === 'string' && !validateInput(value)) {
-        setPopup({
-          show: true,
-          message: "Invalid input detected. Please check your information.",
-          type: "error"
-        });
-        setLoading(false);
-        return;
+    // Validate all required fields
+    if (!form.fullName.trim()) {
+      errors.fullName = "Full name is required";
+    }
+    if (!form.email.trim()) {
+      errors.email = "Email is required";
+    }
+    if (!form.phone.trim()) {
+      errors.phone = "Phone number is required";
+    }
+    if (!form.countryCode || form.countryCode === "") {
+      errors.countryCode = "Please select a country code";
+    }
+    if (!form.jobTitle.trim()) {
+      errors.jobTitle = "Job title is required";
+    }
+    if (!form.resume) {
+      errors.resume = "Please attach your resume file";
+    }
+
+    // Validate all inputs for security
+    for (const [key, value] of Object.entries(form)) {
+      if (typeof value === 'string' && value && !validateInput(value)) {
+        errors[key] = "Invalid characters detected";
       }
+    }
+
+    // If there are validation errors, show them and stop submission
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setLoading(false);
+      return;
     }
 
     // Convert file to base64
@@ -226,6 +256,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
         phone: `${sanitize(form.countryCode)} ${sanitize(form.phone)}`, // Include country code
         jobTitle: sanitize(form.jobTitle),
         aboutYou: form.aboutYou ? sanitize(form.aboutYou) : '',
+        portfolioLink: form.portfolioLink ? sanitize(form.portfolioLink) : '',
         resume: form.resume ? true : false
       };
       
@@ -261,8 +292,9 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
         fullName: "",
         email: "",
         phone: "",
-        countryCode: "+971", // Reset to default UAE code
+        countryCode: "",
         aboutYou: "",
+        portfolioLink: "",
         resume: null,
         jobTitle: ""
       });
@@ -386,6 +418,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
                 type={popup.type}
                 onClose={() => setPopup({ ...popup, show: false })}
                 centered={popup.type === 'success'}
+                bottomRight={popup.type === 'error'}
               />
             )}
             
@@ -406,8 +439,9 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
                     value={form.fullName}
                     onChange={handleChange}
                     placeholder="FULL NAME"
-                    required
+                    className={fieldErrors.fullName ? 'error' : ''}
                   />
+                  {fieldErrors.fullName && <span className="field-error">{fieldErrors.fullName}</span>}
                 </div>
 
                 <div className="form-group-joinus">
@@ -417,8 +451,9 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
                     value={form.email}
                     onChange={handleChange}
                     placeholder="EMAIL"
-                    required
+                    className={fieldErrors.email ? 'error' : ''}
                   />
+                  {fieldErrors.email && <span className="field-error">{fieldErrors.email}</span>}
                 </div>
 
                 <div className="form-group-joinus">
@@ -432,11 +467,15 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
                       name="phone"
                       value={form.phone}
                       onChange={handleChange}
-                      className="phone-input"
+                      className={`phone-input ${fieldErrors.phone ? 'error' : ''}`}
                       placeholder="PHONE NUMBER"
-                      required
                     />
                   </div>
+                  {(fieldErrors.countryCode || fieldErrors.phone) && (
+                    <span className="field-error">
+                      {fieldErrors.countryCode || fieldErrors.phone}
+                    </span>
+                  )}
                 </div>
 
                 <div className="form-group-joinus">
@@ -446,13 +485,26 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
                     value={form.jobTitle}
                     onChange={handleChange}
                     placeholder="JOB TITLE"
-                    required
+                    className={fieldErrors.jobTitle ? 'error' : ''}
                   />
+                  {fieldErrors.jobTitle && <span className="field-error">{fieldErrors.jobTitle}</span>}
+                </div>
+
+                <div className="form-group-joinus">
+                  <input
+                    type="url"
+                    name="portfolioLink"
+                    value={form.portfolioLink}
+                    onChange={handleChange}
+                    placeholder="PORTFOLIO LINK (OPTIONAL)"
+                    className={fieldErrors.portfolioLink ? 'error' : ''}
+                  />
+                  {fieldErrors.portfolioLink && <span className="field-error">{fieldErrors.portfolioLink}</span>}
                 </div>
 
                 <div className="form-group-joinus">
                   <div 
-                    className="file-input-label"
+                    className={`file-input-label ${fieldErrors.resume ? 'error' : ''}`}
                     onClick={() => fileInputRef.current.click()}
                   >
                     <input
@@ -460,7 +512,6 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
                       ref={fileInputRef}
                       onChange={handleFileChange}
                       accept=".pdf,.doc,.docx"
-                      required
                     />
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -471,6 +522,7 @@ const JoinUsForm = ({ isOpen, onClose, position = {}, selectedJob = "" }) => {
                       {form.resume ? form.resume.name : "ADD ATTACHMENT"}
                     </span>
                   </div>
+                  {fieldErrors.resume && <span className="field-error">{fieldErrors.resume}</span>}
                 </div>
 
                 <button 

@@ -12,7 +12,7 @@ const ContactForm = ({ formType = 'contact' }) => {
     name: "",
     email: "",
     phone: "",
-    countryCode: "+971", // Default country code (UAE)
+    countryCode: "", // Changed to empty string like JoinUsForm
     projectName: "",
     sector: "",
     service: "",
@@ -27,6 +27,7 @@ const ContactForm = ({ formType = 'contact' }) => {
   const [loading, setLoading] = useState(false);
   const [popup, setPopup] = useState({ show: false, message: "", type: "" });
   const [selectedService, setSelectedService] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({}); // Added field errors like JoinUsForm
 
   const sectors = [
     "Hospitality",
@@ -89,6 +90,11 @@ const ContactForm = ({ formType = 'contact' }) => {
       return;
     }
     
+    // Clear field error when user starts typing (added like JoinUsForm)
+    if (fieldErrors[name]) {
+      setFieldErrors(prev => ({ ...prev, [name]: "" }));
+    }
+    
     setForm({ ...form, [name]: value });
   };
 
@@ -124,17 +130,74 @@ const ContactForm = ({ formType = 'contact' }) => {
     setLoading(true);
     setPopup({ show: false, message: "", type: "" });
 
-    // Validate all inputs before submission
-    for (const [value] of Object.entries(form)) {
-      if (typeof value === 'string' && !validateInput(value)) {
-        setPopup({
-          show: true,
-          message: "Invalid input detected. Please check your information.",
-          type: "error"
-        });
-        setLoading(false);
-        return;
+    // Clear previous field errors (added like JoinUsForm)
+    setFieldErrors({});
+    
+    const errors = {};
+
+    // Validate all required fields (added like JoinUsForm)
+    if (!form.name.trim()) {
+      errors.name = "Full name is required";
+    }
+    if (!form.email.trim()) {
+      errors.email = "Email is required";
+    }
+    if (!form.phone.trim()) {
+      errors.phone = "Phone number is required";
+    }
+    if (!form.countryCode || form.countryCode === "") {
+      errors.countryCode = "Please select a country code";
+    }
+    if (!form.projectName.trim()) {
+      errors.projectName = "Project name is required";
+    }
+    if (!form.sector) {
+      errors.sector = "Please select a sector";
+    }
+    if (!form.service) {
+      errors.service = "Please select a service";
+    }
+
+    // Service-specific validations
+    if (selectedService === "Branding") {
+      if (!form.brandName.trim()) {
+        errors.brandName = "Brand name is required";
       }
+      if (!form.brandingType) {
+        errors.brandingType = "Please select branding type";
+      }
+      if (!form.budget) {
+        errors.budget = "Please select budget";
+      }
+    }
+
+    if (selectedService === "Marketing" || selectedService === "Advertisement") {
+      if (!form.socialMediaLink.trim()) {
+        errors.socialMediaLink = "Social media link is required";
+      }
+      if (form.platforms.length === 0) {
+        errors.platforms = "Please select at least one platform";
+      }
+      if (!form.budget) {
+        errors.budget = "Please select budget";
+      }
+      if (selectedService === "Advertisement" && !form.campaignObjective.trim()) {
+        errors.campaignObjective = "Campaign objective is required";
+      }
+    }
+
+    // Validate all inputs for security
+    for (const [key, value] of Object.entries(form)) {
+      if (typeof value === 'string' && value && !validateInput(value)) {
+        errors[key] = "Invalid characters detected";
+      }
+    }
+
+    // If there are validation errors, show them and stop submission (added like JoinUsForm)
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setLoading(false);
+      return;
     }
 
     // Sanitize inputs for email content
@@ -189,7 +252,7 @@ const ContactForm = ({ formType = 'contact' }) => {
         name: "",
         email: "",
         phone: "",
-        countryCode: "+971",
+        countryCode: "",
         projectName: "",
         sector: "",
         service: "",
@@ -237,8 +300,9 @@ const ContactForm = ({ formType = 'contact' }) => {
             value={form.name}
             onChange={handleChange}
             placeholder="FULL NAME" 
-            required
+            className={fieldErrors.name ? 'error' : ''}
           />
+          {fieldErrors.name && <span className="field-error">{fieldErrors.name}</span>}
         </div>
 
         <div className="form-group">
@@ -248,8 +312,9 @@ const ContactForm = ({ formType = 'contact' }) => {
             value={form.email}
             onChange={handleChange}
             placeholder="Email" 
-            required
+            className={fieldErrors.email ? 'error' : ''}
           />
+          {fieldErrors.email && <span className="field-error">{fieldErrors.email}</span>}
         </div>
 
         <div className="form-group phone-input-group">
@@ -263,10 +328,14 @@ const ContactForm = ({ formType = 'contact' }) => {
             value={form.phone}
             onChange={handleChange}
             placeholder="Phone Number" 
-            className="phone-input"
-            required
+            className={`phone-input ${fieldErrors.phone ? 'error' : ''}`}
           />
         </div>
+        {(fieldErrors.countryCode || fieldErrors.phone) && (
+          <span className="field-error">
+            {fieldErrors.countryCode || fieldErrors.phone}
+          </span>
+        )}
 
         <div className="form-group">
           <input 
@@ -275,8 +344,9 @@ const ContactForm = ({ formType = 'contact' }) => {
             value={form.projectName}
             onChange={handleChange}
             placeholder="Project Name" 
-            required
+            className={fieldErrors.projectName ? 'error' : ''}
           />
+          {fieldErrors.projectName && <span className="field-error">{fieldErrors.projectName}</span>}
         </div>
 
         <div className="form-group">
@@ -284,13 +354,14 @@ const ContactForm = ({ formType = 'contact' }) => {
             name="sector" 
             value={form.sector}
             onChange={handleChange}
-            required
+            className={fieldErrors.sector ? 'error' : ''}
           >
             <option value="">SELECT SECTOR</option>
             {sectors.map(sector => (
               <option key={sector} value={sector}>{sector}</option>
             ))}
           </select>
+          {fieldErrors.sector && <span className="field-error">{fieldErrors.sector}</span>}
         </div>
 
         <div className="form-group">
@@ -298,13 +369,14 @@ const ContactForm = ({ formType = 'contact' }) => {
             name="service" 
             value={form.service}
             onChange={handleServiceChange}
-            required
+            className={fieldErrors.service ? 'error' : ''}
           >
             <option value="">SELECT SERVICE</option>
             {services.map(service => (
               <option key={service} value={service}>{service}</option>
             ))}
           </select>
+          {fieldErrors.service && <span className="field-error">{fieldErrors.service}</span>}
         </div>
 
         {selectedService === "Branding" && (
@@ -316,8 +388,9 @@ const ContactForm = ({ formType = 'contact' }) => {
                 value={form.brandName}
                 onChange={handleChange}
                 placeholder="Brand Name" 
-                required
+                className={fieldErrors.brandName ? 'error' : ''}
               />
+              {fieldErrors.brandName && <span className="field-error">{fieldErrors.brandName}</span>}
             </div>
 
             <div className="form-group">
@@ -325,13 +398,14 @@ const ContactForm = ({ formType = 'contact' }) => {
                 name="brandingType" 
                 value={form.brandingType}
                 onChange={handleChange}
-                required
+                className={fieldErrors.brandingType ? 'error' : ''}
               >
                 <option value="">SELECT BRANDING TYPE</option>
                 {brandingTypes.map(type => (
                   <option key={type} value={type}>{type}</option>
                 ))}
               </select>
+              {fieldErrors.brandingType && <span className="field-error">{fieldErrors.brandingType}</span>}
             </div>
 
             <div className="form-group">
@@ -339,13 +413,14 @@ const ContactForm = ({ formType = 'contact' }) => {
                 name="budget" 
                 value={form.budget}
                 onChange={handleChange}
-                required
+                className={fieldErrors.budget ? 'error' : ''}
               >
                 <option value="">SELECT BUDGET</option>
                 {budgetOptions[selectedService].map(budget => (
                   <option key={budget} value={budget}>{budget}</option>
                 ))}
               </select>
+              {fieldErrors.budget && <span className="field-error">{fieldErrors.budget}</span>}
             </div>
           </>
         )}
@@ -359,8 +434,9 @@ const ContactForm = ({ formType = 'contact' }) => {
                 value={form.socialMediaLink}
                 onChange={handleChange}
                 placeholder="Social Media Platform Link" 
-                required
+                className={fieldErrors.socialMediaLink ? 'error' : ''}
               />
+              {fieldErrors.socialMediaLink && <span className="field-error">{fieldErrors.socialMediaLink}</span>}
             </div>
 
             <div className="form-group platforms-group">
@@ -378,6 +454,7 @@ const ContactForm = ({ formType = 'contact' }) => {
                   </label>
                 ))}
               </div>
+              {fieldErrors.platforms && <span className="field-error">{fieldErrors.platforms}</span>}
             </div>
 
             <div className="form-group">
@@ -385,13 +462,14 @@ const ContactForm = ({ formType = 'contact' }) => {
                 name="budget" 
                 value={form.budget}
                 onChange={handleChange}
-                required
+                className={fieldErrors.budget ? 'error' : ''}
               >
                 <option value="">Select Budget</option>
                 {budgetOptions[selectedService].map(budget => (
                   <option key={budget} value={budget}>{budget}</option>
                 ))}
               </select>
+              {fieldErrors.budget && <span className="field-error">{fieldErrors.budget}</span>}
             </div>
 
             {selectedService === "Advertisement" && (
@@ -402,8 +480,9 @@ const ContactForm = ({ formType = 'contact' }) => {
                   value={form.campaignObjective}
                   onChange={handleChange}
                   placeholder="Campaign Objective" 
-                  required
+                  className={fieldErrors.campaignObjective ? 'error' : ''}
                 />
+                {fieldErrors.campaignObjective && <span className="field-error">{fieldErrors.campaignObjective}</span>}
               </div>
             )}
           </>

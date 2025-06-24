@@ -1292,47 +1292,116 @@ const SingleProject = () => {
                   )}
                 </>
               )}
-              {section.type === 'text' && (                <div                   className="text-content"                  data-bg-color={section.backgroundColor || project.backgroundColor || '#090909'}                  style={{                    color: section.textColor || '#FFFFFF'                  }}>
-                  <div className="main-text">
-                    {section.slogan && <h2 className="panel-main-title">{section.slogan}</h2>}
-                    {section.subTitle && <h3 className="panel-sub-title">{section.subTitle}</h3>}
+              {section.type === 'text' && (
+                <div 
+                  className="text-content"
+                  data-bg-color={section.backgroundColor || project.backgroundColor || '#090909'}
+                  style={{
+                    color: section.textColor || '#FFFFFF',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    padding: '8vh 0',
+                    height: '100vh',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}>
+                  <div className="main-text" style={{ 
+                    marginBottom: '2vh',
+                    transform: 'translateY(-2vh)'
+                  }}>
+                    {section.slogan && (
+                      <h2 className="panel-main-title" style={{
+                        fontSize: 'clamp(24px, 3vw, 42px)',
+                        lineHeight: '1.2'
+                      }}>{section.slogan}</h2>
+                    )}
+                    {section.subTitle && (
+                      <h3 className="panel-sub-title" style={{
+                        fontSize: 'clamp(18px, 2vw, 28px)',
+                        lineHeight: '1.3'
+                      }}>{section.subTitle}</h3>
+                    )}
                   </div>
-                  <div className="paragraphs">
+                  <div className="paragraphs" style={{ 
+                    flex: 'none',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1.5vh',
+                    maxHeight: '50vh',
+                    marginBottom: '2vh'
+                  }}>
                     {section.text && (
                       Array.isArray(section.text) ? 
                       section.text.map((paragraph, i) => (
-                        <p key={i} className="panel-paragraph">{paragraph}</p>
+                        <p key={i} className="panel-paragraph" style={{
+                          fontSize: 'clamp(13px, 1vw, 16px)',
+                          lineHeight: '1.4',
+                          margin: 0
+                        }}>{paragraph}</p>
                       )) : 
-                      <p className="panel-paragraph">{section.text}</p>
+                      <p className="panel-paragraph" style={{
+                        fontSize: 'clamp(13px, 1vw, 16px)',
+                        lineHeight: '1.4',
+                        margin: 0
+                      }}>{section.text}</p>
                     )}
                   </div>
-                  <div className="bottom-info">
-                    <div className="info-row">
+                  <div className="bottom-info" style={{
+                    marginTop: '2vh'
+                  }}>
+                    <div className="info-row" style={{
+                      display: 'flex',
+                      gap: '2rem'
+                    }}>
                       {section.fieldName && (
-                        <div className="field-info">
-                          <span className="label">FIELD</span>
-                          <span className="value">{section.fieldName}</span>
+                        <div className="field-info" style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.5rem'
+                        }}>
+                          <span className="label" style={{
+                            fontSize: 'clamp(12px, 0.8vw, 14px)',
+                            opacity: 0.7
+                          }}>FIELD</span>
+                          <span className="value" style={{
+                            fontSize: 'clamp(14px, 1vw, 16px)'
+                          }}>{section.fieldName}</span>
                         </div>
                       )}
                       {section.services && (
-                        <div className="services-info">
-                          <span className="label">SERVICE</span>
-                          <span className="value">{section.services}</span>
+                        <div className="services-info" style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.5rem'
+                        }}>
+                          <span className="label" style={{
+                            fontSize: 'clamp(12px, 0.8vw, 14px)',
+                            opacity: 0.7
+                          }}>SERVICE</span>
+                          <span className="value" style={{
+                            fontSize: 'clamp(14px, 1vw, 16px)'
+                          }}>{section.services}</span>
                         </div>
                       )}
                     </div>
                   </div>
                 </div>
               )}
-                            {section.type === 'text-section' && (                <div                   className="text-section-content"                   data-bg-color={section.backgroundColor || project.backgroundColor || '#000000'}                  style={{                     color: section.textColor || '#FFFFFF',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '100%',
-                  padding: '0 20%',
-                  textAlign: 'center'
-                }}>
+              {section.type === 'text-section' && (
+                <div 
+                  className="text-section-content"
+                  data-bg-color={section.backgroundColor || project.backgroundColor || '#000000'}
+                  style={{
+                    color: section.textColor || '#FFFFFF',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100%',
+                    padding: '0 20%',
+                    textAlign: 'center'
+                  }}>
                   <div className="centered-text">
                     {section.text && (
                       Array.isArray(section.text) ? 

@@ -125,8 +125,22 @@ const AllProjects = () => {
 
   // Set page title
   useEffect(() => {
-    const categoryName = category ? category.replace("-", " ") : "All";
-    document.title = `${categoryName} Projects | VZBL`;
+    let pageTitle;
+    switch (category?.toLowerCase()) {
+      case 'branding':
+        pageTitle = 'Branding';
+        break;
+      case 'marketing':
+        pageTitle = 'Marketing';
+        break;
+      case 'advertising':
+      case 'advertisement':
+        pageTitle = 'Advertisement';
+        break;
+      default:
+        pageTitle = category ? category.replace("-", " ") : "All";
+    }
+    document.title = `${pageTitle} | VZBL`;
   }, [category]);
 
   // Load projects data whenever category or location changes

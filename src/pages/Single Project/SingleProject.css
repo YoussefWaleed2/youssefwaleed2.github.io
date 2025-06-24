@@ -1435,3 +1435,124 @@ body.single-project-page-active .panel {
     max-width: 90%;
   }
 }
+
+/* Fix text overflow on smaller screens - add at the end of the file */
+@media screen and (max-height: 900px) {
+  .panel .text-content,
+  .text-content {
+    padding: 3vh 6rem 4vh 6rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    gap: 1rem !important;
+  }
+  
+  .panel .main-text,
+  .text-content .main-text,
+  .main-text {
+    margin-top: 0 !important;
+    margin-bottom: 1rem !important;
+    flex-shrink: 0;
+    transform: translateY(10vh) !important;
+  }
+  
+  .panel .panel-main-title,
+  .text-content .panel-main-title,
+  .panel-main-title {
+    font-size: clamp(1.8rem, 3vw, 2.5rem) !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .panel .panel-sub-title,
+  .text-content .panel-sub-title,
+  .panel-sub-title {
+    font-size: clamp(1rem, 2vw, 1.5rem) !important;
+    line-height: 1.3 !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .panel .paragraphs,
+  .text-content .paragraphs,
+  .paragraphs {
+    overflow-y: visible !important;
+    overflow: visible !important;
+    padding-right: 0 !important;
+    flex: none !important;
+    max-height: none !important;
+  }
+  
+  .panel .panel-paragraph,
+  .text-content .panel-paragraph,
+  .panel-paragraph {
+    font-size: clamp(0.85rem, 1vw, 1rem) !important;
+    line-height: 1.4 !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  .panel .bottom-info,
+  .text-content .bottom-info,
+  .bottom-info {
+    margin-top: 1rem !important;
+    flex-shrink: 0;
+    transform: translateY(-2vh) !important;
+  }
+}
+
+@media screen and (max-height: 800px) {
+  .panel .text-content,
+  .text-content {
+    padding: 2vh 6rem 3vh 6rem !important;
+  }
+  
+  .panel .main-text,
+  .text-content .main-text,
+  .main-text {
+    transform: translateY(12vh) !important;
+  }
+  
+  .panel .bottom-info,
+  .text-content .bottom-info,
+  .bottom-info {
+    transform: translateY(-3vh) !important;
+  }
+  
+  .panel .panel-paragraph,
+  .text-content .panel-paragraph,
+  .panel-paragraph {
+    font-size: clamp(0.8rem, 1vw, 0.95rem) !important;
+    margin-bottom: 0.8rem !important;
+  }
+}
+
+@media screen and (max-height: 700px) {
+  .panel .text-content,
+  .text-content {
+    padding: 1vh 6rem 2vh 6rem !important;
+  }
+  
+  .panel .main-text,
+  .text-content .main-text,
+  .main-text {
+    transform: translateY(14vh) !important;
+  }
+  
+  .panel .bottom-info,
+  .text-content .bottom-info,
+  .bottom-info {
+    transform: translateY(-4vh) !important;
+  }
+  
+  .panel .panel-main-title,
+  .text-content .panel-main-title,
+  .panel-main-title {
+    font-size: clamp(1.5rem, 3vw, 2rem) !important;
+  }
+  
+  .panel .panel-paragraph,
+  .text-content .panel-paragraph,
+  .panel-paragraph {
+    font-size: clamp(0.75rem, 1vw, 0.9rem) !important;
+    margin-bottom: 0.6rem !important;
+  }
+}

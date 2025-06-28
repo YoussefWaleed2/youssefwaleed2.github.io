@@ -231,80 +231,12 @@ const About = () => {
           });
         }
 
-        // Fixed timing animations
-        setTimeout(() => {
-          // Animate title
-          if (titleSplit.chars) {
-            gsap.to(titleSplit.chars, {
-              y: '0%',
-              opacity: 1,
-              duration: 1,
-              stagger: 0.03,
-              ease: customEase,
-              onComplete: () => {
-                // Ensure characters aren't clipped after animation completes
-                gsap.set(titleSplit.chars, {
-                  overflow: 'visible',
-                  width: 'auto',
-                  clearProps: 'overflow,width'
-                });
-                
-                // Fix for S letter specifically
-                if (titleRef.current) {
-                  titleRef.current.style.overflow = 'visible';
-                  titleRef.current.style.paddingRight = '30px';
-                  titleRef.current.style.width = 'auto';
-                  titleRef.current.style.maxWidth = '90%';
-                }
-              }
-            });
-          }
-          
-          // Animate the asterisk along with the last chars of the title
-          if (asteriskRef.current) {
-            gsap.to(asteriskRef.current, {
-              y: '0%',
-              opacity: 1,
-              duration: 1,
-              ease: customEase
-            });
-          }
-
-          // Animate first image with title
-          if (imageRefs.current[0]?.current) {
-            gsap.to(imageRefs.current[0].current, {
-              scale: 1,
-              opacity: 1,
-              filter: "blur(0px)",
-              duration: 1.5,
-              ease: customEase
-            });
-          }
-
-          // Animate subtitle
-          if (subtitleSplit.chars) {
-            gsap.to(subtitleSplit.chars, {
-              y: '0%',
-              opacity: 1,
-              duration: 0.8,
-              stagger: 0.02,
-              ease: customEase,
-              delay: 0.2
-            });
-          }
-
-          // Animate description
-          if (descriptionSplit.lines) {
-            gsap.to(descriptionSplit.lines, {
-              y: '0%',
-              opacity: 1,
-              duration: 0.8,
-              stagger: 0.1,
-              ease: customEase,
-              delay: 0.5
-            });
-          }
-        }, 300);
+        // Store split instances for later use when image loads
+        window.aboutSplitInstances = {
+          titleSplit,
+          subtitleSplit,
+          descriptionSplit
+        };
       } catch (error) {
       }
     }
@@ -350,6 +282,11 @@ const About = () => {
           });
         }
       });
+      
+      // Clean up split instances
+      if (window.aboutSplitInstances) {
+        delete window.aboutSplitInstances;
+      }
     };
   }, [isReady, isMobileOrTablet]);
 
@@ -801,6 +738,90 @@ const About = () => {
       }
     });
   }, [windowWidth, isMobileOrTablet]);
+
+  // Effect to trigger text animations when first image loads
+  useEffect(() => {
+    if (isMobileOrTablet || !imagesLoaded[0] || !window.aboutSplitInstances) return;
+    
+    const { titleSplit, subtitleSplit, descriptionSplit } = window.aboutSplitInstances;
+    
+    // Register GSAP plugins
+    gsap.registerPlugin(CustomEase);
+    const customEase = CustomEase.create("custom", ".87,0,.13,1");
+    
+    // Start animations when first image is loaded
+    // Animate title
+    if (titleSplit?.chars) {
+      gsap.to(titleSplit.chars, {
+        y: '0%',
+        opacity: 1,
+        duration: 1,
+        stagger: 0.03,
+        ease: customEase,
+        onComplete: () => {
+          // Ensure characters aren't clipped after animation completes
+          gsap.set(titleSplit.chars, {
+            overflow: 'visible',
+            width: 'auto',
+            clearProps: 'overflow,width'
+          });
+          
+          // Fix for S letter specifically
+          if (titleRef.current) {
+            titleRef.current.style.overflow = 'visible';
+            titleRef.current.style.paddingRight = '30px';
+            titleRef.current.style.width = 'auto';
+            titleRef.current.style.maxWidth = '90%';
+          }
+        }
+      });
+    }
+    
+    // Animate the asterisk along with the last chars of the title
+    if (asteriskRef.current) {
+      gsap.to(asteriskRef.current, {
+        y: '0%',
+        opacity: 1,
+        duration: 1,
+        ease: customEase
+      });
+    }
+
+    // Animate first image with title
+    if (imageRefs.current[0]?.current) {
+      gsap.to(imageRefs.current[0].current, {
+        scale: 1,
+        opacity: 1,
+        filter: "blur(0px)",
+        duration: 1.5,
+        ease: customEase
+      });
+    }
+
+    // Animate subtitle
+    if (subtitleSplit?.chars) {
+      gsap.to(subtitleSplit.chars, {
+        y: '0%',
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.02,
+        ease: customEase,
+        delay: 0.2
+      });
+    }
+
+    // Animate description
+    if (descriptionSplit?.lines) {
+      gsap.to(descriptionSplit.lines, {
+        y: '0%',
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: customEase,
+        delay: 0.5
+      });
+    }
+  }, [imagesLoaded[0], isMobileOrTablet]); // Trigger when first image loads
 
   useEffect(() => {
     setIsReady(true);

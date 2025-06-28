@@ -152,15 +152,6 @@ function Model({ modelRef, scrollProgress, isLeftHand = true, onEntranceComplete
       duration: 1.5, // Reduced from 4 to 1.8
       ease: "power1.out"
     }, "<"); // Start at the same time as position animation
-
-    // Add a scale bounce effect
-    tl.from(scene.scale, {
-      x: scaleFactor * 0.8,
-      y: scaleFactor * 0.8,
-      z: scaleFactor * 0.8,
-      duration: 1.5, // Reduced from 3 to 1.5
-      ease: "elastic.out(1, 0.2)"
-    }, "<0.3"); // Start slightly after the main animation
   }, [scene, isLeftHand, scaleFactor, viewport.width, onEntranceComplete]);
 
   // Update rotation and position based on scroll progress

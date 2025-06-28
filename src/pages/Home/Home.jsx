@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import "./Home.css";
 import SplashScreen from "../../components/SplashScreen/SplashScreen";
 import ReactLenis from "lenis/react";
@@ -202,9 +202,6 @@ const Home = () => {
 
   // Check if we should show the splash screen
   useEffect(() => {
-    // Force clear the splash screen on each page mount to handle navigation
-    handleOverlay();
-    
     try {
       // Check if splash should be shown
       setShowSplash(shouldShowSplash());
@@ -220,14 +217,14 @@ const Home = () => {
   }, []);
 
   // Handle splash screen completion
-  const handleSplashComplete = () => {
+  const handleSplashComplete = useCallback(() => {
     try {
       sessionStorage.setItem('hasSeenSplash', 'true');
     } catch (error) {
     }
     setShowSplash(false);
     handleOverlay();
-  };
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;

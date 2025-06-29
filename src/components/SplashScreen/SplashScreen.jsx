@@ -2,80 +2,100 @@ import { useEffect, useRef } from 'react';
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import './SplashScreen.css';
-import '../Menu/Menu.jsx'
-import '../Menu/Menu.css'
 
 gsap.registerPlugin(CustomEase);
-CustomEase.create("hop", "0.9, 0, 0.1, 1");
 
 function SplashScreen({ onComplete }) {
   const logoRef = useRef(null);
   const overlayRef = useRef(null);
   
   useEffect(() => {
+    console.log('SplashScreen: useEffect started');
+    
     // Ensure overlay is visible initially
     if (overlayRef.current) {
       overlayRef.current.style.display = 'flex';
-      overlayRef.current.style.opacity = 1;
+      overlayRef.current.style.opacity = '1';
+      overlayRef.current.style.zIndex = '9999';
+      console.log('SplashScreen: Overlay made visible');
     }
 
-    // Create a master timeline
-    const masterTimeline = gsap.timeline({
+    // Initialize logo with scale 0
+    if (logoRef.current) {
+      gsap.set(logoRef.current, { 
+        scale: 0,
+        opacity: 0
+      });
+      console.log('SplashScreen: Logo initialized');
+    }
+
+    // Create the animation timeline
+    const timeline = gsap.timeline({
       onComplete: () => {
-        // Call the onComplete callback when animation is done
-        if (onComplete) {
-          onComplete();
-        }
+        console.log('SplashScreen: Animation completed');
+        // Small delay before calling onComplete
+        setTimeout(() => {
+          if (onComplete) {
+            console.log('SplashScreen: Calling onComplete');
+            onComplete();
+          }
+        }, 100);
       }
     });
-    
-    // First animate the SVG logo reveal
-    masterTimeline.fromTo(
-      ".mask-rect",
-      { 
-        scaleY: 1,
-        transformOrigin: "top"
-      },
-      { 
-        scaleY: 0,
-        duration: 2.2,
-        ease: "easeInOut",
-        transformOrigin: "top"
-      }
-    );
-    
-    // Then animate the overlay exit
-    masterTimeline.to(".overlay", {
-      yPercent: -100,
-      duration: 1,
-      ease: "power3.inOut",
-      onComplete: () => {
-        // After fade out, slide up
-        gsap.to(".overlay", {
-          yPercent: 0,
-          duration: 0.8,
-          ease: "power3.inOut"
-        });
-      }
-    });
+
+    // Animation sequence
+    timeline
+      // 1. Show logo with scale and opacity animation
+      .to(logoRef.current, {
+        scale: 1,
+        opacity: 1,
+        duration: 0.8,
+        ease: "back.out(1.7)"
+      })
+      // 2. Hold for a moment
+      .to({}, { duration: 1.2 })
+      // 3. Scale down logo slightly
+      .to(logoRef.current, {
+        scale: 0.9,
+        opacity: 0.8,
+        duration: 0.3,
+        ease: "power2.inOut"
+      })
+      // 4. Fade out overlay
+      .to(overlayRef.current, {
+        opacity: 0,
+        duration: 0.8,
+        ease: "power2.inOut"
+      })
+      // 5. Move overlay up
+      .to(overlayRef.current, {
+        y: "-100%",
+        duration: 0.5,
+        ease: "power3.inOut"
+      }, "-=0.4");
+
+    console.log('SplashScreen: Timeline created and started');
 
     // Clean up function
     return () => {
-      masterTimeline.kill();
+      console.log('SplashScreen: Cleaning up timeline');
+      timeline.kill();
     };
   }, [onComplete]);
 
   return (
     <div className="overlay" ref={overlayRef}>
       <div className="loader">
-        <svg className="logo-svg" ref={logoRef} width="92" height="32" viewBox="0 0 92 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <mask id="logoMask">
-              <rect width="92" height="32" fill="white"/>
-              <rect className="mask-rect" width="92" height="32" fill="black"/>
-            </mask>
-          </defs>
-          <g clipPath="url(#clip0_19_256)" mask="url(#logoMask)">
+        <svg 
+          className="logo-svg" 
+          ref={logoRef} 
+          width="92" 
+          height="32" 
+          viewBox="0 0 92 32" 
+          fill="none" 
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g clipPath="url(#clip0_19_256)">
             <path d="M86.1351 23.1726C86.0751 23.4426 86.0001 23.6976 85.9401 23.9676C84.9651 27.6726 82.6101 30.0726 78.5901 30.6726C77.0001 30.9126 74.8701 30.8226 73.2351 30.8676C73.1001 30.8676 72.9801 30.8526 72.7851 30.8376C72.9051 30.6426 72.9801 30.5076 73.0851 30.3726C73.9251 29.1576 74.7801 27.9576 75.5901 26.7276C75.7251 26.5176 75.8301 26.2326 75.8301 25.9926C75.8301 19.4226 75.8301 12.8676 75.8301 6.2976C75.8301 6.0576 75.7251 5.7726 75.5901 5.5626C74.7651 4.3476 73.9101 3.1326 73.0701 1.9176C72.9801 1.7826 72.8901 1.6476 72.7401 1.3926H76.6401C76.6401 1.3926 76.6401 1.3176 76.6401 1.2876H62.8851C63.0651 1.3926 63.2601 1.4076 63.4401 1.4226C64.0551 1.4376 64.6701 1.4226 65.2701 1.4826C66.7101 1.6026 66.3201 2.3526 66.5601 3.7026C66.6651 4.2726 66.6951 4.8576 66.6951 5.4426C66.6951 12.5826 66.6951 19.7376 66.6951 26.8926C66.6951 27.2826 66.6951 27.6576 66.6651 28.0476C66.5151 29.7576 65.6451 30.6576 63.9501 30.8226C63.3651 30.8826 62.7651 30.8526 62.1651 30.8676H62.1051C61.9251 30.8676 61.7451 30.8826 61.5801 30.8976V31.0176C61.7301 31.0176 61.8651 31.0476 62.0001 31.0476C69.4701 31.0476 77.4201 31.0476 84.8751 31.0476C85.1301 31.0476 85.2801 31.0026 85.3551 30.8526C85.3851 30.7926 85.4151 30.7026 85.4301 30.5826C85.6701 28.3926 85.9551 26.2026 86.2101 24.0126C86.2401 23.7276 86.2401 23.4426 86.2551 23.1726C86.2101 23.1726 86.1651 23.1726 86.1201 23.1576M72.5151 30.8526H70.4901V1.4676H72.5151V30.8376V30.8526Z" fill="white"/>
             <path d="M6.425 1.25757H0.875C0.875 1.25757 0.875 1.31757 0.875 1.36257C0.92 1.37757 0.98 1.42257 1.025 1.42257C2.18 1.51257 3.065 2.17257 3.665 3.20757C4.28 4.25757 4.835 5.36757 5.255 6.52257C8.135 14.4276 11.405 22.6476 14.255 30.5676L14.435 31.0776H17.675L15.575 24.7776C13.7 19.5126 9.395 8.90757 6.425 1.25757Z" fill="white"/>
             <path d="M37.9997 1.07744L33.3497 1.01744H32.2997L30.7847 3.37244C27.1997 9.25244 23.5697 14.6374 19.5047 21.1924C17.1647 14.6974 15.4547 10.5874 13.0997 4.09244C12.8747 3.47744 12.7847 2.87744 13.0547 2.24744C13.3097 1.67744 13.7147 1.31744 14.2997 1.21244C14.5247 1.18244 14.7347 1.16744 14.9597 1.16744H15.2147L15.5897 1.00244H7.96973C9.25973 4.15244 10.5647 7.42244 10.7447 7.88744L18.9647 28.3024C19.4747 27.4474 20.0297 26.4874 20.6147 25.5424C25.5497 17.5024 30.8747 9.91244 35.0297 2.98244C35.5547 2.09744 36.2447 1.57244 37.1897 1.42244C37.3397 1.39244 37.4747 1.37744 37.6247 1.34744C37.7447 1.34744 37.8647 1.34744 37.9847 1.34744V1.07744H37.9997Z" fill="white"/>

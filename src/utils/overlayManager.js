@@ -29,6 +29,7 @@ export const handleOverlay = () => {
       });
     }
   } catch (error) {
+    console.error('Error in handleOverlay:', error);
   }
 };
 
@@ -36,9 +37,13 @@ export const handleOverlay = () => {
  * Check if splash screen should be shown
  */
 export const shouldShowSplash = () => {
-  try {
-    return !sessionStorage.getItem('hasSeenSplash');
-  } catch (error) {
-    return false;
-  }
+  // Temporarily force splash to always show for testing
+  return true;
+  
+  // Original logic (commented out for testing):
+  // try {
+  //   return !sessionStorage.getItem('hasSeenSplash');
+  // } catch (error) {
+  //   return false;
+  // }
 };

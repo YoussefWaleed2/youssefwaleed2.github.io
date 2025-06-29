@@ -34,13 +34,11 @@
   width: 200px;
   height: 100px;
   will-change: transform;
-  opacity: 1 !important;
-  visibility: visible !important;
   transform: translateZ(0);
 }
 
 .mask-rect {
-  transform-origin: top center;
+  transform-origin: top;
   will-change: transform;
 }
 
@@ -62,38 +60,4 @@
     width: 150px;
     height: auto;
   }
-}
-
-/* CSS-only fallback animations */
-@keyframes maskRectReveal {
-  0% {
-    transform: scaleY(1);
-    opacity: 1;
-  }
-  70% {
-    transform: scaleY(0);
-    opacity: 0;
-  }
-  100% {
-    transform: scaleY(0);
-    opacity: 0;
-  }
-}
-
-@keyframes overlayExit {
-  0%, 70% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-100%);
-  }
-}
-
-/* Fallback animation classes - activated when GSAP fails */
-.overlay.css-fallback .mask-rect {
-  animation: maskRectReveal 3.2s ease-out forwards;
-}
-
-.overlay.css-fallback {
-  animation: overlayExit 3.2s ease-out forwards;
 }

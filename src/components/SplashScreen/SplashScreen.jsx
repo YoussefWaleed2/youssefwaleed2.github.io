@@ -9,7 +9,6 @@ gsap.registerPlugin(CustomEase);
 let customEase = "power2.inOut";
 try {
   customEase = CustomEase.create("hop", "0.9, 0, 0.1, 1");
-  console.log('CustomEase created successfully');
 } catch {
   console.warn('CustomEase creation failed, using fallback');
 }
@@ -19,50 +18,31 @@ function SplashScreen({ onComplete }) {
   const overlayRef = useRef(null);
   
   useEffect(() => {
-    console.log('SplashScreen useEffect running');
-    
     // Ensure overlay is visible initially
     if (overlayRef.current) {
       overlayRef.current.style.display = 'flex';
       overlayRef.current.style.opacity = 1;
-      console.log('Overlay visibility set');
     }
 
-    // Add a small delay to ensure DOM is ready
+    // Wait a bit longer for SVG to fully render
     const initAnimation = () => {
-      console.log('Initializing splash animation');
-      
-      // Check if mask-rect element exists
-      const maskRect = document.querySelector('.mask-rect');
-      console.log('Mask rect found:', !!maskRect);
-      
-      if (!maskRect) {
-        console.error('Mask rect element not found!');
-        // Try CSS fallback animation
-        console.log('Attempting CSS fallback animation');
-        if (overlayRef.current) {
-          overlayRef.current.classList.add('css-fallback');
-        }
-        // Complete after CSS animation duration
-        if (onComplete) {
-          setTimeout(onComplete, 3200);
-        }
-        return;
+      // Ensure SVG is visible first
+      const svg = document.querySelector('.logo-svg');
+      if (svg) {
+        svg.style.opacity = '1';
+        svg.style.visibility = 'visible';
       }
 
       try {
         // Create a master timeline
         const masterTimeline = gsap.timeline({
           onComplete: () => {
-            console.log('GSAP animation completed');
             // Call the onComplete callback when animation is done
             if (onComplete) {
               onComplete();
             }
           }
         });
-        
-        console.log('Starting GSAP animation with ease:', customEase);
         
         // First animate the SVG logo reveal
         masterTimeline.fromTo(
@@ -85,7 +65,6 @@ function SplashScreen({ onComplete }) {
           duration: 1,
           ease: "power3.inOut",
           onComplete: () => {
-            console.log('Overlay animation completed');
             // After fade out, slide up
             gsap.to(".overlay", {
               yPercent: 0,
@@ -95,27 +74,23 @@ function SplashScreen({ onComplete }) {
           }
         });
 
-        console.log('GSAP timeline created and started');
-        
         // Store timeline for cleanup
         overlayRef.current._timeline = masterTimeline;
         
       } catch (error) {
         console.error('GSAP animation failed:', error);
-        // Try CSS fallback animation
-        console.log('GSAP failed, attempting CSS fallback animation');
+        // CSS fallback animation
         if (overlayRef.current) {
           overlayRef.current.classList.add('css-fallback');
         }
-        // Complete after CSS animation duration
         if (onComplete) {
           setTimeout(onComplete, 3200);
         }
       }
     };
 
-    // Start animation with a small delay
-    const timeoutId = setTimeout(initAnimation, 100);
+    // Start animation with longer delay to ensure SVG is rendered
+    const timeoutId = setTimeout(initAnimation, 200);
 
     // Clean up function
     return () => {
@@ -129,7 +104,16 @@ function SplashScreen({ onComplete }) {
   return (
     <div className="overlay" ref={overlayRef}>
       <div className="loader">
-        <svg className="logo-svg" ref={logoRef} width="92" height="32" viewBox="0 0 92 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg 
+          className="logo-svg" 
+          ref={logoRef} 
+          width="92" 
+          height="32" 
+          viewBox="0 0 92 32" 
+          fill="none" 
+          xmlns="http://www.w3.org/2000/svg"
+          style={{ opacity: 1, visibility: 'visible' }}
+        >
           <defs>
             <mask id="logoMask">
               <rect width="92" height="32" fill="white"/>

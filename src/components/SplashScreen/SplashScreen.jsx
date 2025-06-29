@@ -9,6 +9,7 @@ gsap.registerPlugin(CustomEase);
 let customEase = "power2.inOut";
 try {
   customEase = CustomEase.create("hop", "0.9, 0, 0.1, 1");
+  console.log('CustomEase created successfully');
 } catch {
   console.warn('CustomEase creation failed, using fallback');
 }
@@ -18,55 +19,110 @@ function SplashScreen({ onComplete }) {
   const overlayRef = useRef(null);
   
   useEffect(() => {
+    console.log('SplashScreen useEffect running');
+    
     // Ensure overlay is visible initially
     if (overlayRef.current) {
       overlayRef.current.style.display = 'flex';
       overlayRef.current.style.opacity = 1;
+      console.log('Overlay visibility set');
     }
 
-    // Create a master timeline
-    const masterTimeline = gsap.timeline({
-      onComplete: () => {
-        // Call the onComplete callback when animation is done
+    // Add a small delay to ensure DOM is ready
+    const initAnimation = () => {
+      console.log('Initializing splash animation');
+      
+      // Check if mask-rect element exists
+      const maskRect = document.querySelector('.mask-rect');
+      console.log('Mask rect found:', !!maskRect);
+      
+      if (!maskRect) {
+        console.error('Mask rect element not found!');
+        // Try CSS fallback animation
+        console.log('Attempting CSS fallback animation');
+        if (overlayRef.current) {
+          overlayRef.current.classList.add('css-fallback');
+        }
+        // Complete after CSS animation duration
         if (onComplete) {
-          onComplete();
+          setTimeout(onComplete, 3200);
+        }
+        return;
+      }
+
+      try {
+        // Create a master timeline
+        const masterTimeline = gsap.timeline({
+          onComplete: () => {
+            console.log('GSAP animation completed');
+            // Call the onComplete callback when animation is done
+            if (onComplete) {
+              onComplete();
+            }
+          }
+        });
+        
+        console.log('Starting GSAP animation with ease:', customEase);
+        
+        // First animate the SVG logo reveal
+        masterTimeline.fromTo(
+          ".mask-rect",
+          { 
+            scaleY: 1,
+            transformOrigin: "top"
+          },
+          { 
+            scaleY: 0,
+            duration: 2.2,
+            ease: customEase,
+            transformOrigin: "top"
+          }
+        );
+        
+        // Then animate the overlay exit
+        masterTimeline.to(".overlay", {
+          yPercent: -100,
+          duration: 1,
+          ease: "power3.inOut",
+          onComplete: () => {
+            console.log('Overlay animation completed');
+            // After fade out, slide up
+            gsap.to(".overlay", {
+              yPercent: 0,
+              duration: 0.8,
+              ease: "power3.inOut"
+            });
+          }
+        });
+
+        console.log('GSAP timeline created and started');
+        
+        // Store timeline for cleanup
+        overlayRef.current._timeline = masterTimeline;
+        
+      } catch (error) {
+        console.error('GSAP animation failed:', error);
+        // Try CSS fallback animation
+        console.log('GSAP failed, attempting CSS fallback animation');
+        if (overlayRef.current) {
+          overlayRef.current.classList.add('css-fallback');
+        }
+        // Complete after CSS animation duration
+        if (onComplete) {
+          setTimeout(onComplete, 3200);
         }
       }
-    });
-    
-    // First animate the SVG logo reveal
-    masterTimeline.fromTo(
-      ".mask-rect",
-      { 
-        scaleY: 1,
-        transformOrigin: "top"
-      },
-      { 
-        scaleY: 0,
-        duration: 2.2,
-        ease: customEase,
-        transformOrigin: "top"
-      }
-    );
-    
-    // Then animate the overlay exit
-    masterTimeline.to(".overlay", {
-      yPercent: -100,
-      duration: 1,
-      ease: "power3.inOut",
-      onComplete: () => {
-        // After fade out, slide up
-        gsap.to(".overlay", {
-          yPercent: 0,
-          duration: 0.8,
-          ease: "power3.inOut"
-        });
-      }
-    });
+    };
+
+    // Start animation with a small delay
+    const timeoutId = setTimeout(initAnimation, 100);
 
     // Clean up function
     return () => {
-      masterTimeline.kill();
+      clearTimeout(timeoutId);
+      if (overlayRef.current && overlayRef.current._timeline) {
+        overlayRef.current._timeline.kill();
+      }
     };
   }, [onComplete]);
 

@@ -38,7 +38,7 @@
 }
 
 .mask-rect {
-  transform-origin: top;
+  transform-origin: top center;
   will-change: transform;
 }
 
@@ -60,4 +60,35 @@
     width: 150px;
     height: auto;
   }
+}
+
+/* CSS-only fallback animations */
+@keyframes maskRectReveal {
+  0% {
+    transform: scaleY(1);
+  }
+  70% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes overlayExit {
+  0%, 70% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+/* Fallback animation classes - activated when GSAP fails */
+.overlay.css-fallback .mask-rect {
+  animation: maskRectReveal 3.2s ease-out forwards;
+}
+
+.overlay.css-fallback {
+  animation: overlayExit 3.2s ease-out forwards;
 }

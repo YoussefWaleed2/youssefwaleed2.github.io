@@ -2,11 +2,16 @@ import { useEffect, useRef } from 'react';
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import './SplashScreen.css';
-import '../Menu/Menu.jsx'
-import '../Menu/Menu.css'
 
 gsap.registerPlugin(CustomEase);
-CustomEase.create("hop", "0.9, 0, 0.1, 1");
+
+// Create custom ease with fallback for production
+let customEase = "power2.inOut";
+try {
+  customEase = CustomEase.create("hop", "0.9, 0, 0.1, 1");
+} catch {
+  console.warn('CustomEase creation failed, using fallback');
+}
 
 function SplashScreen({ onComplete }) {
   const logoRef = useRef(null);
@@ -39,7 +44,7 @@ function SplashScreen({ onComplete }) {
       { 
         scaleY: 0,
         duration: 2.2,
-        ease: "easeInOut",
+        ease: customEase,
         transformOrigin: "top"
       }
     );

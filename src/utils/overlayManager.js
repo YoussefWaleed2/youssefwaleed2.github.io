@@ -37,13 +37,14 @@ export const handleOverlay = () => {
  * Check if splash screen should be shown
  */
 export const shouldShowSplash = () => {
-  // Temporarily force splash to always show for testing
-  return true;
-  
-  // Original logic (commented out for testing):
-  // try {
-  //   return !sessionStorage.getItem('hasSeenSplash');
-  // } catch (error) {
-  //   return false;
-  // }
+  try {
+    // Clear the sessionStorage for debugging
+    sessionStorage.removeItem('hasSeenSplash');
+    
+    // Always return true for debugging
+    return true;
+  } catch {
+    // If sessionStorage is not available, default to true
+    return true;
+  }
 };

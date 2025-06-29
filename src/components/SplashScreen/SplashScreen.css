@@ -34,6 +34,8 @@
   width: 200px;
   height: 100px;
   will-change: transform;
+  opacity: 1 !important;
+  visibility: visible !important;
   transform: translateZ(0);
 }
 

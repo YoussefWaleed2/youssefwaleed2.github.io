@@ -347,7 +347,20 @@ const AllProjects = () => {
 
   // Handle back to Projects page navigation
   const handleBackToProjectsMain = () => {
-    // Navigate to main Projects page
+    // Check if we came from services page by looking at browser history
+    if (window.history.length > 1) {
+      // Check if the document referrer contains 'services' or if we have a state indicating services
+      const referrer = document.referrer;
+      const fromServices = referrer.includes('/services') || location.state?.from === '/services';
+      
+      if (fromServices) {
+        // Navigate back to services page
+        navigate('/services');
+        return;
+      }
+    }
+    
+    // Default: Navigate to main Projects page
     navigate('/projects');
   };
 

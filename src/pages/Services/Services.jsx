@@ -454,7 +454,7 @@ const Services = () => {
             Every brand has a story to tell, but sometimes, that story needs a fresh perspective.
             Our rebranding process goes beyond just a new logo or color scheme; it's about uncovering the brand's essence and redefining how it connects with its audience.
           </p>
-          <button className="service-button" onClick={() => navigate('/all-projects/branding')}>
+          <button className="service-button" onClick={() => navigate('/all-projects/branding', { state: { from: '/services' } })}>
             View projects
           </button>
         </section>
@@ -465,7 +465,7 @@ const Services = () => {
           <p className="service-description">
             We take your brand beyond the feed. Through standout campaigns and creative storytelling, we transform social media into a stage where your brand doesn't just show up, it stands out. From engaging posts to viral content and authentic connections, we ensure your brand stays front of mind. 
           </p>
-          <button className="service-button" onClick={() => navigate('/all-projects/marketing')}>
+          <button className="service-button" onClick={() => navigate('/all-projects/marketing', { state: { from: '/services' } })}>
             View projects
           </button>
         </section>
@@ -476,7 +476,7 @@ const Services = () => {
           <p className="service-description">
             At the heart of what we do, there is a simple truth… visuals are everything. We take abstract ideas and turn them into striking, tangible content that grabs attention and leaves a lasting impression. Whether it's a commercial, a social media campaign, or any other medium, we bring your vision to life through bold, high-impact visuals. Every frame is produced with creativity and purpose to ensure your message not only reaches your audience but resonates deeply. 
           </p>
-          <button className="service-button" onClick={() => navigate('/all-projects/advertising')}>
+          <button className="service-button" onClick={() => navigate('/all-projects/advertising', { state: { from: '/services' } })}>
             View projects
           </button>
         </section>

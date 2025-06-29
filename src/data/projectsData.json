@@ -2,8 +2,9 @@
     "BRANDING": [
       {
         "title": "Épos",
-        "media": "/project/Project-Assets/Branding/EPOS.webp",
-        "mediaType": "image",
+        "media": "/project/Project-Assets/Branding/Epos.webm",
+        "mediaType": "video",
+        "thumbnail": "/project/Project-Assets/Branding/EPOS.webp",
         "backgroundColor": "#000000",
         "projectContent": {
           "sections": [
@@ -166,9 +167,10 @@
       },
       {
         "title": "Telofill",
-        "media": "/project/Project-Assets/Branding/TELOFILL.webp",
+        "media": "/project/Project-Assets/Branding/Telofil.webm",
         "backgroundColor": "#ceaecb",
-        "mediaType": "image",
+        "mediaType": "video",
+        "thumbnail": "/project/Project-Assets/Branding/TELOFIL.webp",
         "projectContent": {
           "sections": [
             {
@@ -1036,7 +1038,7 @@
         "media": "/project/Project-Assets/Advertising/Yazi's World.webm",
         "mediaType": "video",
         "backgroundColor": "#000000",
-        "thumbnail": "/project/Single-project-Assets/Advertising/Yazi's World/01-Yazi's World.webp",
+        "thumbnail": "/project/Project-Assets/Advertising/Yazi's World-thumb.webp",
         "projectContent": {
           "sections": [
             {

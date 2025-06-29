@@ -29,7 +29,7 @@ export const handleOverlay = () => {
       });
     }
   } catch (error) {
-    console.error('Error in handleOverlay:', error);
+    console.error("Error handling overlay:", error);
   }
 };
 
@@ -38,13 +38,9 @@ export const handleOverlay = () => {
  */
 export const shouldShowSplash = () => {
   try {
-    // Clear the sessionStorage for debugging
-    sessionStorage.removeItem('hasSeenSplash');
-    
-    // Always return true for debugging
-    return true;
-  } catch {
-    // If sessionStorage is not available, default to true
-    return true;
+    return !sessionStorage.getItem('hasSeenSplash');
+  } catch (error) {
+    console.error("Error checking splash status:", error);
+    return false;
   }
 };

@@ -202,13 +202,11 @@ const Home = () => {
 
   // Check if we should show the splash screen
   useEffect(() => {
-    try {
-      // Check if splash should be shown
-      setShowSplash(shouldShowSplash());
-    } catch (error) {
-      // Default to not showing splash on error
-      setShowSplash(false);
-    }
+    // Force clear the splash screen on each page mount to handle navigation
+    handleOverlay();
+    
+    // Check if splash should be shown
+    setShowSplash(shouldShowSplash());
     
     // Add a cleanup function to force hide the overlay when unmounting
     return () => {
@@ -217,14 +215,16 @@ const Home = () => {
   }, []);
 
   // Handle splash screen completion
-  const handleSplashComplete = useCallback(() => {
+  const handleSplashComplete = () => {
     try {
       sessionStorage.setItem('hasSeenSplash', 'true');
     } catch (error) {
+      console.error("Error setting sessionStorage:", error);
     }
     setShowSplash(false);
     handleOverlay();
-  }, []);
+  };
+
 
   useEffect(() => {
     const video = videoRef.current;

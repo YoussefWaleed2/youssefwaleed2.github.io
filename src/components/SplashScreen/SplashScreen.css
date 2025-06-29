@@ -37,10 +37,7 @@
   transform: translateZ(0);
 }
 
-.mask-rect {
-  transform-origin: top;
-  will-change: transform;
-}
+/* Removed mask-rect styles since we're no longer using SVG masks */
 
 @media (max-width: 900px) {
   .overlay {

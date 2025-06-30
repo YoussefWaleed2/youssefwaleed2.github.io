@@ -670,8 +670,8 @@ const SingleProject = () => {
       options: {
         baseFriction: 0.89,  // Base deceleration rate (lower = faster stop)
         minMomentumValue: 0.1, // When to stop momentum scrolling
-        maxVelocity: 80, // Maximum velocity cap to prevent extreme scrolling
-        smoothing: 0.65, // How much to smooth changes in velocity (higher = smoother but less responsive)
+        maxVelocity: 120, // Increased maximum velocity cap for faster scrolling
+        smoothing: 0.55, // Reduced smoothing for more responsive trackpad input
         bounceStrength: 0.15, // How strong the bounce effect is at boundaries
         bounceThreshold: 300, // The distance from edge where bounce starts to be applied
       },
@@ -694,8 +694,8 @@ const SingleProject = () => {
         let scaledDelta;
         
         if (isTrackpad) {
-          // For trackpad, use gentler scaling with better precision
-          scaledDelta = this.isMac ? delta * 2.8 : delta * 2.4;
+          // For trackpad, increased scaling for faster scrolling
+          scaledDelta = this.isMac ? delta * 4.2 : delta * 3.8;
         } else {
           // For mouse wheels - stronger scaling
           scaledDelta = delta * 4.8;
@@ -788,15 +788,15 @@ const SingleProject = () => {
           }
         }
         
-        // Apply easing based on distance - smoother for larger distances
+        // Apply easing based on distance - increased for faster scrolling
         let easeFactor;
         
         if (absDistance > window.innerWidth * 0.6) {
-          easeFactor = 0.1; // Large distance - moderate speed
+          easeFactor = 0.14; // Large distance - increased speed
         } else if (absDistance > window.innerWidth * 0.3) {
-          easeFactor = 0.09; // Medium distance
+          easeFactor = 0.12; // Medium distance - increased speed
         } else {
-          easeFactor = 0.08; // Small distance - more precise
+          easeFactor = 0.10; // Small distance - increased precision
         }
         
         // Calculate momentum and friction
@@ -900,7 +900,7 @@ const SingleProject = () => {
       handleTouchEnd(e) {
         // Apply momentum based on final velocity
         if (Math.abs(this.velocity) > 0.5) {
-          const momentumFactor = 12; // Strength of momentum
+          const momentumFactor = 16; // Increased strength of momentum for faster scrolling
           
           // Calculate target based on velocity and cap it
           const maxScrollX = (project.projectContent.sections.length - 1) * window.innerWidth;

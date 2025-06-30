@@ -85,8 +85,9 @@
       },
       {
         "title": "Venti",
-        "media": "/project/Project-Assets/Branding/VENTI.webp",
-        "mediaType": "image",
+        "media": "/project/Project-Assets/Branding/VENTI.webm",
+        "thumbnail": "/project/Project-Assets/Branding/VENTI.webp",
+        "mediaType": "video",
         "backgroundColor": "#CDC8BF",
         "projectContent": {
           "sections": [

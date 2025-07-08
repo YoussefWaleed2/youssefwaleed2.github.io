@@ -36,6 +36,30 @@
       animation: slideDown 1s cubic-bezier(.76,0,.2,1) forwards;
       animation-delay: 2.5s;
   }
+
+  /* For menu waiting state (splash screen loading) */
+  .navbar.menu-waiting {
+      animation: none;
+      transform: translateY(-100%);
+  }
+
+  /* For menu ready state */
+  .navbar.menu-ready {
+      animation: slideDown 1s cubic-bezier(.76,0,.2,1) forwards;
+      animation-delay: 0s;
+  }
+
+  /* Mobile nav */
+  nav.menu-waiting {
+      opacity: 0;
+      pointer-events: none;
+  }
+
+  nav.menu-ready {
+      opacity: 1;
+      pointer-events: all;
+      transition: opacity 0.3s ease;
+  }
   
   /* Ensure navbar is visible for Services page */
   .navbar.nav-reveal {

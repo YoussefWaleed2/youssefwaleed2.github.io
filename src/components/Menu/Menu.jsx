@@ -2,10 +2,14 @@ import React, { useRef, useEffect, useState } from "react";
 import "./Menu.css";
 import { Link } from "react-router-dom";
 import MobileMenu from "./MobileMenu";
+import { shouldShowSplash } from "../../utils/overlayManager";
+import { useLocation } from "react-router-dom";
 
 const Menu = () => {
   const navLinksRef = useRef([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [menuReady, setMenuReady] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     // Check screen size to toggle between desktop and mobile menu
@@ -19,10 +23,48 @@ const Menu = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    // Only apply splash screen waiting logic on Home page
+    if (location.pathname === '/' || location.pathname === '') {
+      // Check if splash screen should be shown
+      const shouldShowSplashScreen = shouldShowSplash();
+      
+      if (!shouldShowSplashScreen) {
+        // If splash screen won't be shown, allow menu animation immediately
+        setMenuReady(true);
+      } else {
+        // If splash screen will be shown, wait for it to complete
+        setMenuReady(false);
+        
+        // Listen for the splash screen completion event
+        const checkSplashCompletion = () => {
+          try {
+            const hasSeenSplash = sessionStorage.getItem('hasSeenSplash');
+            if (hasSeenSplash === 'true') {
+              setMenuReady(true);
+            } else {
+              // Check again after a short delay
+              setTimeout(checkSplashCompletion, 100);
+            }
+          } catch (error) {
+            // If sessionStorage is not available, show menu after a delay
+            setTimeout(() => setMenuReady(true), 3000);
+          }
+        };
+        
+        // Start checking for splash completion
+        setTimeout(checkSplashCompletion, 100);
+      }
+    } else {
+      // For all other pages, allow menu animation immediately
+      setMenuReady(true);
+    }
+  }, [location.pathname]);
+
   return (
     <div className="hero-container">
       <div className="overlay"></div>
-      <nav className="navbar">
+      <nav className={`navbar ${menuReady ? 'menu-ready' : 'menu-waiting'}`}>
         <div className="logo">
           <Link to="/" className="logo-link">
             <svg

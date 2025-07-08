@@ -75,17 +75,7 @@
   }
 }
 
-.project-item:hover {
-  .project-video-container img,
-  .project-video-container video {
-    transform: scale(1.05);
-  }
-  
-  .play-button {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
+/* Removed old hover animation - now handled by JavaScript for smoother control */
 
 .project-video-container {
   width: 350px;
@@ -140,7 +130,8 @@
   transition: opacity 0.3s ease;
 }
 
-.project-video-container:hover .video-thumbnail {
+/* Only apply to video projects that actually have video-thumbnail elements */
+.project-video-container:hover .video-container .video-thumbnail {
   opacity: 0;
 }
 

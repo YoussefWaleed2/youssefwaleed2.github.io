@@ -1,15 +1,17 @@
 "use client";
 import "./Menu.css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import gsap from "gsap";
 import CustomEase from "gsap/dist/CustomEase";
 import { Link } from "react-router-dom";
+import { shouldShowSplash } from "../../utils/overlayManager";
 
 const MobileMenu = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
+  const [menuReady, setMenuReady] = useState(false);
   
   // Check if we're on a single project page
   const isSingleProjectPage = pathname.includes('/projects/') || pathname.includes('/project/');
@@ -390,6 +392,44 @@ const MobileMenu = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Only apply splash screen waiting logic on Home page
+    if (location.pathname === '/' || location.pathname === '') {
+      // Check if splash screen should be shown
+      const shouldShowSplashScreen = shouldShowSplash();
+      
+      if (!shouldShowSplashScreen) {
+        // If splash screen won't be shown, allow menu animation immediately
+        setMenuReady(true);
+      } else {
+        // If splash screen will be shown, wait for it to complete
+        setMenuReady(false);
+        
+        // Listen for the splash screen completion event
+        const checkSplashCompletion = () => {
+          try {
+            const hasSeenSplash = sessionStorage.getItem('hasSeenSplash');
+            if (hasSeenSplash === 'true') {
+              setMenuReady(true);
+            } else {
+              // Check again after a short delay
+              setTimeout(checkSplashCompletion, 100);
+            }
+          } catch (error) {
+            // If sessionStorage is not available, show menu after a delay
+            setTimeout(() => setMenuReady(true), 3000);
+          }
+        };
+        
+        // Start checking for splash completion
+        setTimeout(checkSplashCompletion, 100);
+      }
+    } else {
+      // For all other pages, allow menu animation immediately
+      setMenuReady(true);
+    }
+  }, [location.pathname]);
+
   const handleNavigation = (e, path) => {
     e.preventDefault();
 
@@ -412,7 +452,7 @@ const MobileMenu = () => {
 
   return (
     <>
-      <nav ref={navRef}>
+      <nav ref={navRef} className={menuReady ? 'menu-ready' : 'menu-waiting'}>
         <div className="menu-toggle-open" ref={menuOpenBtnRef} onClick={handleOpenMenu}>
           <svg className="open-btn" width="24" height="24" viewBox="0 0 24 24" fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg">
           <path d="M3 7H21" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round"/>

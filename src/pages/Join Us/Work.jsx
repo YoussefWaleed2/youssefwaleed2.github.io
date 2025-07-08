@@ -11,6 +11,9 @@ const Work = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState("");
   const videoRef = useRef(null);
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const buttonRef = useRef(null);
 
   // Set page title
   useEffect(() => {
@@ -23,14 +26,44 @@ const Work = () => {
   }, []);
 
   useEffect(() => {
-    // Animate the video background - same as Contact page
+    // Create entrance animation timeline
+    const tl = gsap.timeline();
+
+    // Animate the video background
     if (videoRef.current) {
-      gsap.to(videoRef.current, {
+      tl.to(videoRef.current, {
         filter: "blur(100px)",
         duration: 1,
         ease: "power2.inOut"
-      });
+      }, 0);
     }
+
+    // Set initial states for animated elements
+    gsap.set([titleRef.current, subtitleRef.current, buttonRef.current], {
+      opacity: 0,
+      y: 50
+    });
+
+    // Animate elements in sequence
+    tl.to(titleRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      ease: "power3.out"
+    }, 0.3)
+    .to(subtitleRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      ease: "power3.out"
+    }, 0.5)
+    .to(buttonRef.current, {
+      opacity: 1,
+      y: 0,
+      duration: 1,
+      ease: "power3.out"
+    }, 0.7);
+
   }, []);
 
   useEffect(() => {
@@ -64,8 +97,8 @@ const Work = () => {
             />
           </div>
           <header className="work-header">
-            <h1 className="join-title">JOIN</h1>
-            <div className="join-subtitle">
+            <h1 ref={titleRef} className="join-title">JOIN</h1>
+            <div ref={subtitleRef} className="join-subtitle">
               <span className="the">The</span>
               <span className="bold-creatives">BOLD CREATIVES</span>
             </div>
@@ -73,6 +106,7 @@ const Work = () => {
 
           <div className="join-us-container">
             <button 
+              ref={buttonRef}
               className="join-us-button"
               onClick={() => {
                 setSelectedJob("");

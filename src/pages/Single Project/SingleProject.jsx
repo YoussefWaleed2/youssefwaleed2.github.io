@@ -32,6 +32,9 @@ const SingleProject = () => {
   const [isReady, setIsReady] = useState(false);
   const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
   const [currentSection, setCurrentSection] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [loadedMediaCount, setLoadedMediaCount] = useState(0);
+  const [totalMediaCount, setTotalMediaCount] = useState(0);
   
   // Refs
   const containerRef = useRef(null);
@@ -46,6 +49,30 @@ const SingleProject = () => {
   const touchStartX = useRef(0);
   
   // Debug log to check routing
+
+  // Track media loading progress
+  const handleMediaLoad = () => {
+    setLoadedMediaCount(prev => {
+      const newCount = prev + 1;
+      // Check if all media is loaded
+      if (newCount >= totalMediaCount && totalMediaCount > 0) {
+        setImagesLoaded(true);
+      }
+      return newCount;
+    });
+  };
+
+  // Count total media items when project loads
+  useEffect(() => {
+    if (project && project.projectContent && project.projectContent.sections) {
+      const mediaCount = project.projectContent.sections.filter(section => 
+        section.type === 'media' || section.type === 'Video'
+      ).length;
+      setTotalMediaCount(mediaCount);
+      setLoadedMediaCount(0);
+      setImagesLoaded(mediaCount === 0); // If no media, consider loaded
+    }
+  }, [project]);
 
   // Helper functions for media handling
   // Handle video loaded metadata
@@ -102,6 +129,9 @@ const SingleProject = () => {
     setTimeout(() => {
       if (panel) panel.style.display = 'flex';
     }, 50);
+
+    // Call media load handler
+    handleMediaLoad();
   };
   
   // Handle image load
@@ -127,6 +157,9 @@ const SingleProject = () => {
         container.style.height = '100%';
       }
     }
+
+    // Call media load handler
+    handleMediaLoad();
   };
 
   // Mobile detection function
@@ -1213,6 +1246,64 @@ const SingleProject = () => {
     
   }, [project, isReady]);
 
+  // Effect for entrance animation that complements the zoom from All-Projects
+  useEffect(() => {
+    if (project && isReady && imagesLoaded && !isMobileOrTablet) {
+      // Create entrance animation timeline
+      const entranceTl = gsap.timeline();
+      
+      // Set initial state - start zoomed in to continue the zoom effect
+      gsap.set(".single-project-container", {
+        scale: 8,
+        opacity: 0
+      });
+      
+      gsap.set(".panel", {
+        opacity: 0
+      });
+      
+      // Animate entrance
+      entranceTl
+        .to(".single-project-container", {
+          scale: 1,
+          opacity: 1,
+          duration: 0.8,
+          ease: "power2.out"
+        })
+        .to(".panel", {
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power2.out"
+        }, "-=0.4");
+        
+    } else if (project && isReady && imagesLoaded && isMobileOrTablet) {
+      // Simpler entrance for mobile
+      gsap.fromTo(".single-project-mobile-container", 
+        {
+          scale: 1.2,
+          opacity: 0
+        },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.out"
+        }
+      );
+    } else if (project && isReady && !imagesLoaded) {
+      // Media not loaded yet, set initial hidden state
+      gsap.set(".single-project-container", {
+        scale: 8,
+        opacity: 0
+      });
+      
+      gsap.set(".panel", {
+        opacity: 0
+      });
+    }
+  }, [project, isReady, isMobileOrTablet, imagesLoaded]);
+
   // Return null if no project found
   if (!project) {
     return null;
@@ -1278,6 +1369,7 @@ const SingleProject = () => {
                           objectFit: 'contain'
                         }}
                         onLoadedMetadata={handleVideoLoaded}
+                        onError={handleMediaLoad}
                       />
                     </div>
                   ) : (
@@ -1287,6 +1379,7 @@ const SingleProject = () => {
                         alt={section.alt || `Project section ${index + 1}`} 
                         className="single-project-image"
                         onLoad={handleImageLoad}
+                        onError={handleMediaLoad}
                       />
                     </div>
                   )}

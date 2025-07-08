@@ -2,12 +2,15 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import "./All-Projects.css";
 import Footer from "../../components/Footer/Footer";
-import Transition from "../../components/Transition/Transition";
 import ReactLenis from "lenis/react";
 import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { handleOverlay } from "../../utils/overlayManager";
 import projectsData from "../../data/projectsData.json";
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
 
 // Force mobile scrolling to work
 if (typeof window !== 'undefined') {
@@ -58,10 +61,13 @@ const AllProjects = () => {
   const [projects, setProjects] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [loadedMediaCount, setLoadedMediaCount] = useState(0);
   const containerRef = useRef(null);
   const videoRef = useRef(null);
   const titleRef = useRef(null);
   const videoRefs = useRef({});
+  const projectRefs = useRef([]);
 
   // Debug log to check routing
   
@@ -143,6 +149,107 @@ const AllProjects = () => {
     document.title = `${pageTitle} | VZBL`;
   }, [category]);
 
+  // Track media loading progress
+  const handleMediaLoad = () => {
+    setLoadedMediaCount(prev => {
+      const newCount = prev + 1;
+      // Check if all media is loaded
+      if (newCount >= projects.length) {
+        setImagesLoaded(true);
+      }
+      return newCount;
+    });
+  };
+
+  // Reset loading state when projects change
+  useEffect(() => {
+    setImagesLoaded(false);
+    setLoadedMediaCount(0);
+  }, [projects]);
+
+  // Animation function for project rows
+  const animateProjectRows = () => {
+    if (isMobile) return;
+
+    // Clear any existing ScrollTriggers
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+
+    // Get columns per row based on screen size
+    const getColumnsPerRow = () => {
+      const width = window.innerWidth;
+      if (width <= 768) return 2;
+      if (width <= 1024) return 2;
+      if (width <= 1439) return 3;
+      return 3;
+    };
+
+    const columnsPerRow = getColumnsPerRow();
+    const rows = [];
+    
+    // Group projects into rows
+    for (let i = 0; i < projects.length; i += columnsPerRow) {
+      rows.push(projects.slice(i, i + columnsPerRow));
+    }
+
+    // Projects are already hidden from the main useEffect - no need to set again
+
+    // Animate each row with ScrollTrigger
+    rows.forEach((row, rowIndex) => {
+      const rowStart = rowIndex * columnsPerRow;
+      const rowItems = [];
+      
+      for (let j = 0; j < row.length; j++) {
+        const item = document.querySelector(`.project-item[data-index="${rowStart + j}"]`);
+        if (item) rowItems.push(item);
+      }
+
+      if (rowItems.length > 0) {
+        // Create timeline for this row
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: rowItems[0],
+            start: "top 85%",
+            end: "bottom 15%",
+            toggleActions: "play none none reverse",
+            fastScrollEnd: true,
+            preventOverlaps: true,
+          }
+        });
+
+        // Animate the row items with stagger - bottom to top reveal
+        tl.to(rowItems, {
+          clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power2.out",
+        });
+      }
+    });
+
+    // Initial row animation (first visible rows) - bottom to top
+    setTimeout(() => {
+      const firstRowItems = [];
+      for (let i = 0; i < Math.min(columnsPerRow, projects.length); i++) {
+        const item = document.querySelector(`.project-item[data-index="${i}"]`);
+        if (item) firstRowItems.push(item);
+      }
+      
+      if (firstRowItems.length > 0) {
+        gsap.to(firstRowItems, {
+          clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          delay: 0.6, // After container animation
+          ease: "power2.out",
+        });
+      }
+    }, 100);
+  };
+
   // Load projects data whenever category or location changes
   useEffect(() => {
     // Function to get projects based on category
@@ -187,88 +294,114 @@ const AllProjects = () => {
     // Always fetch fresh data for the current category
     const projectsByCategory = getProjectsByCategory();
     setProjects(projectsByCategory);
-    
+  }, [category, location.pathname]);
+
+  // Separate effect for animations that waits for images to load
+  useEffect(() => {
+    if (!projects.length) return;
+
     // Different animations based on device type
     if (isMobile) {
-      // No animations on mobile
+      // No animations on mobile, just show content
       gsap.set(".all-projects-container", { opacity: 1 });
       gsap.set(".category-title .char", { opacity: 1, y: 0 });
       gsap.set("footer", { opacity: 1 });
+      setImagesLoaded(true); // Mobile doesn't need to wait
     } else {
-      // Start animations for desktop
-      const customEase = CustomEase.create("custom", ".87,0,.13,1");
-  
-      // Set initial states
-      gsap.set([".all-projects-container", "footer"], {
-        opacity: 0
-      });
-  
-      gsap.set(".all-projects-container", {
-        clipPath: "polygon(0% 0%, 0% 0%, 0% 0%, 0% 0%)",
-        scale: 0,
-        rotation: 25,
-      });
-  
-      // Animate the video background
-      if (videoRef.current) {
-        gsap.to(videoRef.current, {
-          filter: "blur(150px)",
-          duration: 1,
-          ease: "power2.inOut"
+      // For desktop, wait for images to load before starting animations
+      if (imagesLoaded) {
+        // Start animations for desktop after images are loaded
+        const customEase = CustomEase.create("custom", ".87,0,.13,1");
+    
+        // Set initial states - IMMEDIATELY hide projects
+        gsap.set([".all-projects-container", "footer"], {
+          opacity: 0
+        });
+        
+        // Hide all projects immediately
+        gsap.set(".project-item", {
+          clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+          opacity: 0,
+          y: 20,
+        });
+        
+        // Set initial styles for project info to enhance hover effects
+        gsap.set(".project-info", {
+          opacity: 0.8,
+          y: 0
+        });
+    
+        // Animate the video background
+        if (videoRef.current) {
+          gsap.to(videoRef.current, {
+            filter: "blur(150px)",
+            duration: 1,
+            ease: "power2.inOut"
+          });
+        }
+    
+        // Simple fade in animation - no more flip effects
+        const tl = gsap.timeline();
+    
+        // Simple container reveal
+        tl.to(".all-projects-container", {
+          opacity: 1,
+          duration: 0.5,
+          ease: customEase,
+          onStart: () => {
+            // Animate title characters
+            gsap.to(".category-title .char", {
+              y: 0,
+              opacity: 1,
+              duration: 1.2,
+              stagger: 0.03,
+              delay: 0.2,
+              ease: customEase,
+            });
+          },
+          onComplete: () => {
+            gsap.to("footer", {
+              opacity: 1,
+              duration: 0.5,
+              ease: "power2.out"
+            });
+            // Initialize project animations after container is ready
+            setTimeout(animateProjectRows, 100);
+          }
+        });
+      } else {
+        // Images not loaded yet, set initial hidden state
+        gsap.set([".all-projects-container", "footer"], {
+          opacity: 0
+        });
+        
+        gsap.set(".project-item", {
+          clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
+          opacity: 0,
+          y: 20,
         });
       }
-  
-      // Create entrance animation sequence
-      const tl = gsap.timeline();
-  
-      // First clip-path animation
-      tl.to(".all-projects-container", {
-        clipPath: "polygon(0% 45%, 25% 45%, 25% 55%, 0% 55%)",
-        duration: 0,
-        ease: customEase,
-      })
-      // Second clip-path animation
-      .to(".all-projects-container", {
-        clipPath: "polygon(0% 45%, 100% 45%, 100% 55%, 0% 55%)",
-        duration: 0,
-        ease: customEase
-      })
-      // Final reveal animation
-      .to(".all-projects-container", {
-        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-        scale: 1,
-        rotation: 0,
-        opacity: 1,
-        duration: 1.5,
-        ease: customEase,
-        onStart: () => {
-          // Animate title characters
-          gsap.to(".category-title .char", {
-            y: 0,
-            opacity: 1,
-            duration: 1.8,
-            stagger: 0.05,
-            delay: 0.5,
-            ease: customEase,
-          });
-        },onComplete: () =>{
-          gsap.to("footer", {
-            opacity: 1,
-            duration: 0.5,
-            ease: "power2.out"
-          })
-        }
-      })
-      // Animate project items
-      .from(".project-grid .project-item", {
-        y: 50,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 0.8,
-        ease: "power3.out"
-      }, "-=0.5")
     }
-  }, [category, location.pathname, isMobile]);
+  }, [projects, isMobile, imagesLoaded]);
+
+  // Update project animations when window resizes
+  useEffect(() => {
+    if (!isMobile && projects.length > 0) {
+      const handleResize = () => {
+        ScrollTrigger.refresh();
+      };
+      
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, [isMobile, projects]);
+
+  // Cleanup ScrollTriggers on unmount
+  useEffect(() => {
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
 
   // Split title into characters for animation
   const renderTitle = (title) => {
@@ -281,12 +414,87 @@ const AllProjects = () => {
 
   const handleVideoHover = (index, isHovering) => {
     const videoElement = videoRefs.current[index];
+    const projectItem = document.querySelector(`.project-item[data-index="${index}"]`);
+    const videoContainer = projectItem?.querySelector('.project-video-container');
+    const projectInfo = projectItem?.querySelector('.project-info');
+    const videoThumbnail = projectItem?.querySelector('.video-thumbnail');
+    
     if (videoElement) {
       if (isHovering) {
         videoElement.currentTime = 0; // Reset video to beginning
         videoElement.play().catch(err => {
         });
+        
+        // Add hover animations
+        if (videoContainer) {
+          gsap.to(videoContainer, {
+            scale: 1.02,
+            duration: 0.6,
+            ease: "power2.out"
+          });
+          
+          // Add subtle glow effect
+          gsap.to(videoContainer, {
+            boxShadow: "0 0 30px rgba(255, 255, 255, 0.1)",
+            duration: 0.6,
+            ease: "power2.out"
+          });
+        }
+        
+        // Animate project info
+        if (projectInfo) {
+          gsap.to(projectInfo, {
+            y: -5,
+            duration: 0.6,
+            ease: "power2.out"
+          });
+          
+          // Brighten the text
+          gsap.to(projectInfo, {
+            opacity: 1,
+            duration: 0.4,
+            ease: "power2.out"
+          });
+        }
+        
+        // Fade out thumbnail when video plays
+        if (videoThumbnail) {
+          gsap.to(videoThumbnail, {
+            opacity: 0,
+            duration: 0.4,
+            ease: "power2.out"
+          });
+        }
+        
       } else {
+        // Reset animations on mouse leave
+        if (videoContainer) {
+          gsap.to(videoContainer, {
+            scale: 1,
+            boxShadow: "0 0 0px rgba(255, 255, 255, 0)",
+            duration: 0.4,
+            ease: "power2.out"
+          });
+        }
+        
+        if (projectInfo) {
+          gsap.to(projectInfo, {
+            y: 0,
+            opacity: 0.9,
+            duration: 0.4,
+            ease: "power2.out"
+          });
+        }
+        
+        // Show thumbnail again
+        if (videoThumbnail) {
+          gsap.to(videoThumbnail, {
+            opacity: 1,
+            duration: 0.4,
+            ease: "power2.out"
+          });
+        }
+        
         // Optional: pause when not hovering
         // videoElement.pause();
       }
@@ -302,6 +510,88 @@ const AllProjects = () => {
     navigate(`/all-projects/${categoryPath}/${projectName}`);
   };
 
+  // Handle hover for image projects (non-video)
+  const handleImageHover = (index, isHovering) => {
+    const projectItem = document.querySelector(`.project-item[data-index="${index}"]`);
+    const imageContainer = projectItem?.querySelector('.project-video-container');
+    const projectInfo = projectItem?.querySelector('.project-info');
+    const projectImage = projectItem?.querySelector('img.project-media'); // Only target img elements, not video elements
+    
+    // Make sure we only target image projects by checking if there's no video element
+    const hasVideo = projectItem?.querySelector('video');
+    if (hasVideo) return; // Exit early if this is actually a video project
+    
+    if (isHovering) {
+      // Add hover animations for image projects only
+      if (imageContainer) {
+        gsap.to(imageContainer, {
+          scale: 1.02,
+          duration: 0.5,
+          ease: "power2.out"
+        });
+        
+        // Add subtle shadow
+        gsap.to(imageContainer, {
+          boxShadow: "0 10px 25px rgba(0, 0, 0, 0.15)",
+          duration: 0.5,
+          ease: "power2.out"
+        });
+      }
+      
+      // Animate project info
+      if (projectInfo) {
+        gsap.to(projectInfo, {
+          y: -3,
+          duration: 0.5,
+          ease: "power2.out"
+        });
+        
+        gsap.to(projectInfo, {
+          opacity: 1,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      }
+      
+      // Add slight brightness to image only
+      if (projectImage && projectImage.tagName === 'IMG') {
+        gsap.to(projectImage, {
+          filter: "brightness(1.1)",
+          duration: 0.5,
+          ease: "power2.out"
+        });
+      }
+      
+    } else {
+      // Reset animations on mouse leave
+      if (imageContainer) {
+        gsap.to(imageContainer, {
+          scale: 1,
+          boxShadow: "0 0 0px rgba(0, 0, 0, 0)",
+          duration: 0.4,
+          ease: "power2.out"
+        });
+      }
+      
+      if (projectInfo) {
+        gsap.to(projectInfo, {
+          y: 0,
+          opacity: 0.9,
+          duration: 0.4,
+          ease: "power2.out"
+        });
+      }
+      
+      if (projectImage && projectImage.tagName === 'IMG') {
+        gsap.to(projectImage, {
+          filter: "brightness(1)",
+          duration: 0.4,
+          ease: "power2.out"
+        });
+      }
+    }
+  };
+
   const renderMedia = (project, index) => {
     if (project.mediaType === 'video') {
       return (
@@ -311,6 +601,8 @@ const AllProjects = () => {
               className="video-thumbnail"
               src={project.thumbnail} 
               alt={`${project.title} thumbnail`}
+              onLoad={handleMediaLoad}
+              onError={handleMediaLoad}
             />
           )}
           <video
@@ -321,6 +613,7 @@ const AllProjects = () => {
             playsInline
             preload="metadata"
             poster={project.thumbnail}
+            onLoadedData={handleMediaLoad}
             onError={(e) => {
               console.error('Video loading error:', {
                 error: e.target.error,
@@ -328,6 +621,7 @@ const AllProjects = () => {
                 networkState: e.target.networkState,
                 readyState: e.target.readyState
               });
+              handleMediaLoad();
             }}
           >
             <source src={project.media} type="video/webm" />
@@ -340,7 +634,9 @@ const AllProjects = () => {
       <img 
         className="project-media"
         src={project.media} 
-        alt={project.title} 
+        alt={project.title}
+        onLoad={handleMediaLoad}
+        onError={handleMediaLoad}
       />
     );
   };
@@ -420,15 +716,14 @@ const AllProjects = () => {
                 <div 
                   className="project-item"
                   key={index}
-                  style={{
-                    '--delay': `${index * 0.1}s`
-                  }}
+                  data-index={index}
+                  ref={el => projectRefs.current[index] = el}
                   onClick={() => handleProjectClick(project)}
                 >
                   <div 
                     className="project-video-container"
-                    onMouseEnter={() => handleVideoHover(index, true)}
-                    onMouseLeave={() => handleVideoHover(index, false)}
+                    onMouseEnter={() => project.mediaType === 'video' ? handleVideoHover(index, true) : handleImageHover(index, true)}
+                    onMouseLeave={() => project.mediaType === 'video' ? handleVideoHover(index, false) : handleImageHover(index, false)}
                   >
                     {renderMedia(project, index)}
                   </div>
@@ -450,5 +745,4 @@ const AllProjects = () => {
   );
 };
 
-const AllProjectsPage = Transition(AllProjects);
-export default AllProjectsPage; 
+export default AllProjects;

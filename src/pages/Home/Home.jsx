@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Home.css";
 import SplashScreen from "../../components/SplashScreen/SplashScreen";
 import ReactLenis from "lenis/react";
@@ -231,7 +231,7 @@ const Home = () => {
     if (!video) return;
 
     // Add error handler for video
-    const handleVideoError = (e) => {
+    const handleVideoError = () => {
       setVideoError(true);
       // Trigger fade-in for fallback image
       setTimeout(() => setFadeIn(true), 100);
@@ -247,7 +247,7 @@ const Home = () => {
         videoWrapperRef.current.style.height = '100%';
       }
       
-      video.play().catch(error => {
+      video.play().catch(() => {
         setVideoError(true);
         // Trigger fade-in for fallback image if video fails to play
         setTimeout(() => setFadeIn(true), 100);
@@ -289,8 +289,8 @@ const Home = () => {
   }, [videoLoaded, isMobile]);
 
   // Make sure paths are absolute
-  const mobileVideoPath = "/home/Home Mobile vid.webm";
-  const desktopVideoPath = "/home/vid.webm";
+  const mobileVideoPath = "/home/Website .webm";
+  const desktopVideoPath = "/home/Website .webm";
   const posterPath = "/home/poster.jpg";
 
   return (

@@ -14,7 +14,7 @@ const Footer = () => {
             
             <div className="contact-location">
               <h4>CAIRO</h4>
-              <p>(+2) 0111 98 111 93</p>
+              <p>(+20) 111 98 111 93</p>
             </div>
           </div>
         </div>

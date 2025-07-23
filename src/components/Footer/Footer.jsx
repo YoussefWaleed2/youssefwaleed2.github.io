@@ -9,12 +9,12 @@ const Footer = () => {
           <div className="footer-contact">
             <div className="contact-location">
               <h4>DUBAI</h4>
-              <p>(+971) 55 28 8 789 5</p>
+              <p>(+971)55 28 8 789 5</p>
             </div>
             
             <div className="contact-location">
               <h4>CAIRO</h4>
-              <p>(+20) 111 98 111 93</p>
+              <p>(+20)111 98 111 93</p>
             </div>
           </div>
         </div>

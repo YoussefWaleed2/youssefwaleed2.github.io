@@ -289,7 +289,7 @@ const Home = () => {
   }, [videoLoaded, isMobile]);
 
   // Make sure paths are absolute
-  const mobileVideoPath = "/home/Mobile Version.webm";
+  const mobileVideoPath = "/home/Desktop Version.webm";
   const desktopVideoPath = "/home/Desktop Version.webm";
   const posterPath = "/home/poster.jpg";
 

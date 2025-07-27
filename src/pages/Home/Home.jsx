@@ -405,8 +405,8 @@ const Home = () => {
   }, [videoLoaded, isMobile]);
 
   // Make sure paths are absolute
-  const mobileVideoPath = "/home/new.webm";
-  const desktopVideoPath = "/home/new.webm";
+  const mobileVideoPath = "/home/new.mp4";
+  const desktopVideoPath = "/home/new.mp4";
   const firstFramePath = "/home/first-frame.jpg";
 
   return (
@@ -437,7 +437,7 @@ const Home = () => {
                 objectFit: 'cover'
               }}
             >
-              <source src={isMobile ? mobileVideoPath : desktopVideoPath} type="video/webm" />
+              <source src={isMobile ? mobileVideoPath : desktopVideoPath} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           ) : (

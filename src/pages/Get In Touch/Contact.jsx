@@ -45,7 +45,7 @@ const Contact = () => {
             muted
             loop
             playsInline
-              src="/home/new.webm"
+              src="/home/new.mp4"
           />
         </div>
         <div className="contact-wrapper">

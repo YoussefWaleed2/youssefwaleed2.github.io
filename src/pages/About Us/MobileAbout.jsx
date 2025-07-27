@@ -404,47 +404,8 @@ const MobileAbout = () => {
             </div>
           </div>
           
-          {/* Team Member 3: Nourhan Nagy */}
-          <div 
-            className="section-title wide centered"
-            ref={el => titleRefs.current[9] = el}
-          >
-            <h2 className="heading-text">MEET</h2>
-            <h2 className="heading-text script">The</h2>
-            <h2 className="heading-text">COO</h2>
-          </div>
-          <div className="team-member-container">
-            <div className="team-image-box member-image">
-              <img 
-                src="/about/17.webp" 
-                alt="Nourhan Nagy" 
-                onError={handleImageError}
-                ref={el => imageRefs.current[5] = el}
-              />
-            </div>
-            <div 
-              className="section-title member-title"
-              ref={el => titleRefs.current[6] = el}
-            >
-              <h2 className="heading-text">Nourhan Nagy</h2>
-            </div>
-            <div className="content-block member-text">
-              <p 
-                className="body-text animate-text" 
-                ref={el => textRefs.current[8] = el}
-              >
-                AT THE HEART OF VZBL'S OPERATIONS, NOURHAN IS THE FORCE THAT 
-                KEEPS EVERYTHING MOVING. WITH A SHARP STRATEGIC MIND AND A 
-                NATURAL INSTINCT FOR ORGANIZATION, SHE TURNS BIG IDEAS INTO 
-                SEAMLESS EXECUTION AS SHE ENSURES EVERY PROJECT DOESN'T JUST 
-                RUN SMOOTHLY BUT WITH PURPOSE, ALIGNING EVERY DETAIL WITH 
-                VZBL'S VISION FROM THE FIRST SPARK OF AN IDEA TO THE FINAL 
-                EXECUTION. HER ABILITY TO NAVIGATE HIGH-PRESSURE SITUATIONS 
-                WITH CONFIDENCE AND EFFICIENCY MAKES HER AN ESSENTIAL DRIVER 
-                OF VZBL'S SUCCESS.
-              </p>
-            </div>
-          </div>
+       
+         
         </section>
         
         {/* Use the existing Footer component */}

@@ -93,7 +93,7 @@ const Work = () => {
               muted
               loop
               playsInline
-              src="/home/Desktop Version.webm"
+              src="/home/new.webm"
             />
           </div>
           <header className="work-header">

@@ -104,7 +104,7 @@ const About = () => {
   const [windowWidth, setWindowWidth] = useState(0);
   
   // Create images array with conditional first image based on screen size
-  const images = Array.from({ length: 13 }, (_, i) => {
+  const images = Array.from({ length: 11 }, (_, i) => {
     if (i === 0) {
       // Use full screen version for screens 1450px and above
       return windowWidth >= 1450 ? `/about/1 FullScreen.webp` : `/about/${i + 1}.webp`;

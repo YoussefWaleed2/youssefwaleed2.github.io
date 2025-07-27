@@ -206,7 +206,30 @@ const Home = () => {
     handleOverlay();
     
     // Check if splash should be shown
-    setShowSplash(shouldShowSplash());
+    const shouldShow = shouldShowSplash();
+    setShowSplash(shouldShow);
+    
+    // Start video loading immediately if no splash, or with a delay if splash is showing
+    if (!shouldShow) {
+      // No splash, start video immediately
+      const video = videoRef.current;
+      if (video) {
+        video.load();
+      }
+    } else {
+      // Splash is showing, start video loading after 1 second (early in splash animation)
+      const videoLoadTimer = setTimeout(() => {
+        const video = videoRef.current;
+        if (video) {
+          video.load();
+        }
+      }, 500); // Start loading 1 second into splash animation for large webm file
+      
+      return () => {
+        clearTimeout(videoLoadTimer);
+        handleOverlay();
+      };
+    }
     
     // Add a cleanup function to force hide the overlay when unmounting
     return () => {
@@ -223,8 +246,16 @@ const Home = () => {
     }
     setShowSplash(false);
     handleOverlay();
+    
+    // Video should already be loading by now, just ensure it plays
+    const video = videoRef.current;
+    if (video) {
+      video.play().catch(() => {
+        setVideoError(true);
+        setTimeout(() => setFadeIn(true), 100);
+      });
+    }
   };
-
 
   useEffect(() => {
     const video = videoRef.current;
@@ -247,19 +278,19 @@ const Home = () => {
         videoWrapperRef.current.style.height = '100%';
       }
       
-      video.play().catch(() => {
-        setVideoError(true);
-        // Trigger fade-in for fallback image if video fails to play
-        setTimeout(() => setFadeIn(true), 100);
-      });
+      // Only auto-play if splash screen is not showing
+      if (!showSplash) {
+        video.play().catch(() => {
+          setVideoError(true);
+          setTimeout(() => setFadeIn(true), 100);
+        });
+      }
 
-      // Trigger fade-in effect after video starts playing
-      // Note: The actual fade-in is now handled by the Transition component
-      // This is a backup in case that doesn't work
+      // Trigger fade-in effect after video is ready
       setTimeout(() => setFadeIn(true), 100);
     };
     
-    // Preload the video
+    // Add event listeners
     video.addEventListener('error', handleVideoError);
     video.addEventListener('canplay', handleCanPlay);
     
@@ -269,28 +300,25 @@ const Home = () => {
       videoWrapperRef.current.style.height = '100%';
     }
     
-    // Load the video
-    video.load();
-    
-    // Safety timeout for video loading - if not loaded after 4 seconds, show fallback
+    // Extended safety timeout for video loading - give more time for webm files
     const loadTimeout = setTimeout(() => {
-      if (!videoLoaded) {
+      if (!videoLoaded && !showSplash) {
+        console.log('Video load timeout triggered');
         setVideoError(true);
-        // Trigger fade-in for fallback image after timeout
         setTimeout(() => setFadeIn(true), 100);
       }
-    }, 4000);
+    }, 8000); // Increased timeout to 8 seconds for webm files
     
     return () => {
       video.removeEventListener('error', handleVideoError);
       video.removeEventListener('canplay', handleCanPlay);
       clearTimeout(loadTimeout);
     };
-  }, [videoLoaded, isMobile]);
+  }, [videoLoaded, isMobile, showSplash]);
 
   // Make sure paths are absolute
-  const mobileVideoPath = "/home/Website_compressed.mp4";
-  const desktopVideoPath = "/home/Website_compressed.mp4";
+  const mobileVideoPath = "/home/new.webm";
+  const desktopVideoPath = "/home/new.webm";
   const posterPath = "/home/poster.jpg";
 
   return (
@@ -303,7 +331,7 @@ const Home = () => {
           style={{ 
             width: '100%', 
             height: '100%',
-            opacity: 0,
+            opacity: (videoLoaded || videoError) ? 1 : 0,
             transition: 'opacity 1.2s ease-in-out'
           }}
         >

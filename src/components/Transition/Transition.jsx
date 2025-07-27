@@ -87,24 +87,8 @@ const Transition = (_WrappedComponent) => {
 
       // Special handling for home page transitions
       if ((location.pathname === '/' || location.pathname === '') && isEntering.current) {
-        // If navigating to home, apply a fade-in to the video element
-        const videoWrapper = document.querySelector('.video-wrapper');
-        if (videoWrapper) {
-          // Initially set opacity to 0
-          gsap.set(videoWrapper, {
-            opacity: 0
-          });
-          
-          // Delay the fade-in slightly to sync with page transition
-          setTimeout(() => {
-            const fadeTimeline = gsap.timeline();
-            fadeTimeline.to(videoWrapper, {
-              opacity: 1,
-              duration: 1.2,
-              ease: "power2.inOut"
-            });
-          }, 300);
-        }
+        // Let the Home component handle its own video transitions
+        // This avoids conflicts between splash screen completion and navigation
       }
 
       if (location.pathname === '/projects' && isEntering.current) {

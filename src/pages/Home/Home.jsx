@@ -12,7 +12,59 @@ const Home = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const [fadeIn, setFadeIn] = useState(false);
+  const [fadeIn, setFadeIn] = useState(false); // Start false for proper transition
+
+  // Unified transition function for consistent animation
+  const triggerVideoTransition = () => {
+    const videoWrapper = videoWrapperRef.current;
+    if (!videoWrapper) {
+      return;
+    }
+    
+    // Ensure the element starts without fade-in class
+    videoWrapper.classList.remove('fade-in');
+    
+    // Force a reflow by reading a style property
+    const _ = videoWrapper.offsetHeight;
+    
+    // Add the fade-in class to trigger CSS transition
+    videoWrapper.classList.add('fade-in');
+    
+    // Also update React state to keep it in sync
+    setFadeIn(true);
+  };
+
+  // Handle page transitions (navigation/reload scenarios)
+  useEffect(() => {
+    // If no splash screen will show, trigger transition after video loads
+    if (!shouldShowSplash()) {
+      const video = videoRef.current;
+      if (video) {
+        const handleTransition = () => {
+          if (video.readyState >= 3) {
+            // Video is ready, trigger transition
+            triggerVideoTransition();
+          } else {
+            // Wait for video to be ready
+            const handleCanPlay = () => {
+              triggerVideoTransition();
+              video.removeEventListener('canplay', handleCanPlay);
+            };
+            video.addEventListener('canplay', handleCanPlay);
+            
+            // Fallback timeout
+            setTimeout(() => {
+              video.removeEventListener('canplay', handleCanPlay);
+              triggerVideoTransition();
+            }, 2000);
+          }
+        };
+        
+        // Small delay to ensure proper setup
+        setTimeout(handleTransition, 100);
+      }
+    }
+  }, []); // Run once on mount
 
   // Check if device is mobile and disable scrolling
   useEffect(() => {
@@ -211,10 +263,26 @@ const Home = () => {
     
     // Start video loading immediately if no splash, or with a delay if splash is showing
     if (!shouldShow) {
-      // No splash, start video immediately
+      // No splash, start video immediately and play it
       const video = videoRef.current;
       if (video) {
         video.load();
+        // Since there's no splash screen, start playing once video can play
+        const handleNoSplashPlay = () => {
+          video.currentTime = 0;
+          video.play().catch(() => {
+            setVideoError(true);
+            setTimeout(() => setFadeIn(true), 100);
+          });
+          video.removeEventListener('canplay', handleNoSplashPlay);
+        };
+        video.addEventListener('canplay', handleNoSplashPlay);
+        
+        // Store cleanup function
+        return () => {
+          handleOverlay();
+          video.removeEventListener('canplay', handleNoSplashPlay);
+        };
       }
     } else {
       // Splash is showing, start video loading after 1 second (early in splash animation)
@@ -244,17 +312,45 @@ const Home = () => {
     } catch (error) {
       console.error("Error setting sessionStorage:", error);
     }
+    
+    // First ensure fadeIn is false before showing video wrapper
+    setFadeIn(false);
     setShowSplash(false);
     handleOverlay();
     
-    // Video should already be loading by now, just ensure it plays
+    // Ensure video starts from beginning and plays only after splash is done
     const video = videoRef.current;
+    
     if (video) {
+      video.currentTime = 0;
       video.play().catch(() => {
         setVideoError(true);
         setTimeout(() => setFadeIn(true), 100);
       });
     }
+
+    // Force the video wrapper to start with opacity 0, then fade in
+    setTimeout(() => {
+      const videoWrapper = videoWrapperRef.current;
+      if (videoWrapper) {
+        // Force opacity to 0 with !important to override any CSS
+        videoWrapper.style.setProperty('opacity', '0', 'important');
+        
+        // Force reflow
+        const _ = videoWrapper.offsetHeight;
+        
+        // Wait one more frame, then remove the override and trigger CSS transition
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            // Remove the forced opacity and let CSS transition take over
+            videoWrapper.style.removeProperty('opacity');
+            
+            // Trigger the fade-in
+            triggerVideoTransition();
+          });
+        });
+      }
+    }, 100);
   };
 
   useEffect(() => {
@@ -278,15 +374,8 @@ const Home = () => {
         videoWrapperRef.current.style.height = '100%';
       }
       
-      // Only auto-play if splash screen is not showing
-      if (!showSplash) {
-        video.play().catch(() => {
-          setVideoError(true);
-          setTimeout(() => setFadeIn(true), 100);
-        });
-      }
-
-      // Trigger fade-in effect after video is ready
+      // DO NOT auto-play here - let handleSplashComplete control playback
+      // Video is ready, trigger fade-in effect
       setTimeout(() => setFadeIn(true), 100);
     };
     
@@ -302,24 +391,23 @@ const Home = () => {
     
     // Extended safety timeout for video loading - give more time for webm files
     const loadTimeout = setTimeout(() => {
-      if (!videoLoaded && !showSplash) {
-        console.log('Video load timeout triggered');
+      if (!videoLoaded) {
         setVideoError(true);
         setTimeout(() => setFadeIn(true), 100);
       }
-    }, 8000); // Increased timeout to 8 seconds for webm files
+    }, 8000);
     
     return () => {
       video.removeEventListener('error', handleVideoError);
       video.removeEventListener('canplay', handleCanPlay);
       clearTimeout(loadTimeout);
     };
-  }, [videoLoaded, isMobile, showSplash]);
+  }, [videoLoaded, isMobile]);
 
   // Make sure paths are absolute
   const mobileVideoPath = "/home/new.webm";
   const desktopVideoPath = "/home/new.webm";
-  const posterPath = "/home/poster.jpg";
+  const firstFramePath = "/home/first-frame.jpg";
 
   return (
     <ReactLenis root>
@@ -331,16 +419,14 @@ const Home = () => {
           style={{ 
             width: '100%', 
             height: '100%',
-            opacity: (videoLoaded || videoError) ? 1 : 0,
-            transition: 'opacity 1.2s ease-in-out'
+            display: showSplash ? 'none' : 'block' // Completely hidden during splash
           }}
         >
           {!videoError ? (
             <video 
               ref={videoRef}
               className="home-video"
-              poster={posterPath}
-              autoPlay 
+              poster={firstFramePath}
               muted
               loop 
               playsInline
@@ -357,7 +443,7 @@ const Home = () => {
           ) : (
             <div className="video-fallback">
               <img 
-                src={posterPath} 
+                src={firstFramePath} 
                 alt="VZBL Background" 
                 className="fallback-image"
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}

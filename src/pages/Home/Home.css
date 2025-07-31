@@ -458,3 +458,21 @@ html.no-scroll {
   opacity: 1 !important;
 }
 
+/* Mobile-specific fade-in improvements */
+@media (max-width: 768px) {
+  .video-wrapper {
+    /* Force hardware acceleration on mobile */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    /* Ensure transitions work on mobile Safari */
+    -webkit-transition: opacity 1.2s ease-in-out;
+    transition: opacity 1.2s ease-in-out;
+  }
+  
+  .video-wrapper.fade-in {
+    opacity: 1 !important;
+    /* Additional mobile Safari support */
+    -webkit-opacity: 1 !important;
+  }
+}
+

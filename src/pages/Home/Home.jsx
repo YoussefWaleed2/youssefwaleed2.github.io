@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import "./Home.css";
 import SplashScreen from "../../components/SplashScreen/SplashScreen";
 import ReactLenis from "lenis/react";
@@ -15,24 +15,35 @@ const Home = () => {
   const [fadeIn, setFadeIn] = useState(false); // Start false for proper transition
 
   // Unified transition function for consistent animation
-  const triggerVideoTransition = () => {
+  const triggerVideoTransition = useCallback(() => {
     const videoWrapper = videoWrapperRef.current;
     if (!videoWrapper) {
       return;
     }
     
-    // Ensure the element starts without fade-in class
-    videoWrapper.classList.remove('fade-in');
-    
-    // Force a reflow by reading a style property
-    const _ = videoWrapper.offsetHeight;
-    
-    // Add the fade-in class to trigger CSS transition
-    videoWrapper.classList.add('fade-in');
-    
-    // Also update React state to keep it in sync
-    setFadeIn(true);
-  };
+    // For mobile devices, use a more reliable approach
+    if (isMobile) {
+      // Remove any existing classes first
+      videoWrapper.classList.remove('fade-in');
+      
+      // Force a reflow
+      const _ = videoWrapper.offsetHeight;
+      
+      // Use requestAnimationFrame for better mobile performance
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          videoWrapper.classList.add('fade-in');
+          setFadeIn(true);
+        });
+      });
+    } else {
+      // Desktop version (original logic)
+      videoWrapper.classList.remove('fade-in');
+      const _ = videoWrapper.offsetHeight;
+      videoWrapper.classList.add('fade-in');
+      setFadeIn(true);
+    }
+  }, [isMobile, setFadeIn]);
 
   // Handle page transitions (navigation/reload scenarios)
   useEffect(() => {
@@ -52,11 +63,29 @@ const Home = () => {
             };
             video.addEventListener('canplay', handleCanPlay);
             
-            // Fallback timeout
-            setTimeout(() => {
-              video.removeEventListener('canplay', handleCanPlay);
-              triggerVideoTransition();
-            }, 2000);
+            // Mobile-specific fallbacks
+            if (isMobile) {
+              // Also listen for loadeddata event (more reliable on mobile)
+              const handleLoadedData = () => {
+                triggerVideoTransition();
+                video.removeEventListener('loadeddata', handleLoadedData);
+                video.removeEventListener('canplay', handleCanPlay);
+              };
+              video.addEventListener('loadeddata', handleLoadedData);
+              
+              // Longer timeout for mobile
+              setTimeout(() => {
+                video.removeEventListener('canplay', handleCanPlay);
+                video.removeEventListener('loadeddata', handleLoadedData);
+                triggerVideoTransition();
+              }, 4000);
+            } else {
+              // Fallback timeout for desktop
+              setTimeout(() => {
+                video.removeEventListener('canplay', handleCanPlay);
+                triggerVideoTransition();
+              }, 2000);
+            }
           }
         };
         
@@ -64,7 +93,7 @@ const Home = () => {
         setTimeout(handleTransition, 100);
       }
     }
-  }, []); // Run once on mount
+  }, [isMobile, triggerVideoTransition]); // Include all dependencies
 
   // Check if device is mobile and disable scrolling
   useEffect(() => {
@@ -330,6 +359,7 @@ const Home = () => {
     }
 
     // Force the video wrapper to start with opacity 0, then fade in
+    const delay = isMobile ? 200 : 100; // Longer delay for mobile
     setTimeout(() => {
       const videoWrapper = videoWrapperRef.current;
       if (videoWrapper) {
@@ -339,18 +369,48 @@ const Home = () => {
         // Force reflow
         const _ = videoWrapper.offsetHeight;
         
-        // Wait one more frame, then remove the override and trigger CSS transition
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            // Remove the forced opacity and let CSS transition take over
-            videoWrapper.style.removeProperty('opacity');
+        // Wait for video to be ready on mobile before triggering transition
+        if (isMobile) {
+          const video = videoRef.current;
+          if (video && video.readyState < 3) {
+            // Video not ready on mobile, wait for it
+            const handleMobileReady = () => {
+              videoWrapper.style.removeProperty('opacity');
+              triggerVideoTransition();
+              video.removeEventListener('canplay', handleMobileReady);
+              video.removeEventListener('loadeddata', handleMobileReady);
+            };
             
-            // Trigger the fade-in
-            triggerVideoTransition();
+            video.addEventListener('canplay', handleMobileReady);
+            video.addEventListener('loadeddata', handleMobileReady);
+            
+            // Fallback for mobile
+            setTimeout(() => {
+              video.removeEventListener('canplay', handleMobileReady);
+              video.removeEventListener('loadeddata', handleMobileReady);
+              videoWrapper.style.removeProperty('opacity');
+              triggerVideoTransition();
+            }, 2000);
+          } else {
+            // Mobile video ready or no video
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                videoWrapper.style.removeProperty('opacity');
+                triggerVideoTransition();
+              });
+            });
+          }
+        } else {
+          // Desktop version (original logic)
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              videoWrapper.style.removeProperty('opacity');
+              triggerVideoTransition();
+            });
           });
-        });
+        }
       }
-    }, 100);
+    }, delay);
   };
 
   useEffect(() => {

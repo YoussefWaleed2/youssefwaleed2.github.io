@@ -419,7 +419,13 @@ const Home = () => {
     if (!video) return;
 
     // Add error handler for video
-    const handleVideoError = () => {
+    const handleVideoError = (e) => {
+      console.error('Video loading error:', {
+        error: e.target.error,
+        src: videoPath,
+        networkState: e.target.networkState,
+        readyState: e.target.readyState
+      });
       setVideoError(true);
       // Trigger fade-in for fallback image
       setTimeout(() => setFadeIn(true), 100);
@@ -427,6 +433,7 @@ const Home = () => {
     
     // Handle successful loading
     const handleCanPlay = () => {
+      console.log('Video loaded successfully:', videoPath);
       setVideoLoaded(true);
       
       // Set full screen size for video once loaded
@@ -450,13 +457,14 @@ const Home = () => {
       videoWrapperRef.current.style.height = '100%';
     }
     
-    // Extended safety timeout for video loading - give more time for webm files
+    // Extended safety timeout for video loading - give more time for large files (237MB)
     const loadTimeout = setTimeout(() => {
       if (!videoLoaded) {
+        console.warn('Video failed to load within timeout period (237MB file)');
         setVideoError(true);
         setTimeout(() => setFadeIn(true), 100);
       }
-    }, 8000);
+    }, 20000); // Increased to 20 seconds for 237MB video
     
     return () => {
       video.removeEventListener('error', handleVideoError);

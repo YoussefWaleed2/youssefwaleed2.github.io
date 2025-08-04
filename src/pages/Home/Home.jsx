@@ -4,7 +4,6 @@ import SplashScreen from "../../components/SplashScreen/SplashScreen";
 import ReactLenis from "lenis/react";
 import Transition from "../../components/Transition/Transition";
 import { handleOverlay, shouldShowSplash } from "./../../utils/overlayManager";
-import { createOptimizedVideoProps, optimizeImageUrl } from "../../utils/mediaOptimization";
 
 const Home = () => {
   const videoRef = useRef(null);
@@ -419,13 +418,7 @@ const Home = () => {
     if (!video) return;
 
     // Add error handler for video
-    const handleVideoError = (e) => {
-      console.error('Video loading error:', {
-        error: e.target.error,
-        src: videoPath,
-        networkState: e.target.networkState,
-        readyState: e.target.readyState
-      });
+    const handleVideoError = () => {
       setVideoError(true);
       // Trigger fade-in for fallback image
       setTimeout(() => setFadeIn(true), 100);
@@ -433,7 +426,6 @@ const Home = () => {
     
     // Handle successful loading
     const handleCanPlay = () => {
-      console.log('Video loaded successfully:', videoPath);
       setVideoLoaded(true);
       
       // Set full screen size for video once loaded
@@ -457,14 +449,13 @@ const Home = () => {
       videoWrapperRef.current.style.height = '100%';
     }
     
-    // Extended safety timeout for video loading - give more time for large files (237MB)
+    // Extended safety timeout for video loading - give more time for webm files
     const loadTimeout = setTimeout(() => {
       if (!videoLoaded) {
-        console.warn('Video failed to load within timeout period (237MB file)');
         setVideoError(true);
         setTimeout(() => setFadeIn(true), 100);
       }
-    }, 20000); // Increased to 20 seconds for 237MB video
+    }, 8000);
     
     return () => {
       video.removeEventListener('error', handleVideoError);
@@ -473,20 +464,10 @@ const Home = () => {
     };
   }, [videoLoaded, isMobile]);
 
-  // Optimized media paths - ready for Cloudflare when domain is connected
-  const videoPath = "/home/new.mp4";
-  const firstFramePath = "/home/first-frame.jpg";
-  
-  // Create optimized video properties
-  const videoProps = createOptimizedVideoProps(videoPath, {
-    poster: firstFramePath,
-    muted: true,
-    loop: true,
-    preload: "auto"
-  });
-  
-  // Optimized poster image
-  const optimizedPoster = optimizeImageUrl(firstFramePath);
+  // Make sure paths are absolute
+  const mobileVideoPath = "/home/new.mp4";
+  const desktopVideoPath = "/home/new.mp4";
+  const firstFramePath = "/about/1.webp";
 
   return (
     <ReactLenis root>
@@ -505,32 +486,27 @@ const Home = () => {
             <video 
               ref={videoRef}
               className="home-video"
-              {...videoProps}
+              poster={firstFramePath}
+              muted
+              loop 
+              playsInline
+              preload="auto"
               style={{ 
                 width: '100%', 
                 height: '100%', 
-                objectFit: 'cover',
-                ...videoProps.style
+                objectFit: 'cover'
               }}
             >
-              <source src={videoProps.src} type="video/mp4" />
+              <source src={isMobile ? mobileVideoPath : desktopVideoPath} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           ) : (
             <div className="video-fallback">
               <img 
-                src={optimizedPoster} 
+                src={firstFramePath} 
                 alt="VZBL Background" 
                 className="fallback-image"
-                loading="lazy"
-                decoding="async"
-                style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'cover',
-                  transform: 'translateZ(0)',
-                  backfaceVisibility: 'hidden'
-                }}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             </div>
           )}

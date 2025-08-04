@@ -20,7 +20,7 @@
       ]
     },
     {
-      "source": "/(.*\\.(mp4|webm|mov))$",
+      "source": "/(.*)\\.(mp4|webm|mov)$",
       "headers": [
         {
           "key": "Cache-Control",
@@ -33,7 +33,7 @@
       ]
     },
     {
-      "source": "/(.*\\.(webp|jpg|jpeg|png|gif|svg))$",
+      "source": "/(.*)\\.(webp|jpg|jpeg|png|gif|svg)$",
       "headers": [
         {
           "key": "Cache-Control",

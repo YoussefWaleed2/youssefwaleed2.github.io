@@ -4,6 +4,7 @@ import SplashScreen from "../../components/SplashScreen/SplashScreen";
 import ReactLenis from "lenis/react";
 import Transition from "../../components/Transition/Transition";
 import { handleOverlay, shouldShowSplash } from "./../../utils/overlayManager";
+import { createOptimizedVideoProps, optimizeImageUrl } from "../../utils/mediaOptimization";
 
 const Home = () => {
   const videoRef = useRef(null);
@@ -464,10 +465,20 @@ const Home = () => {
     };
   }, [videoLoaded, isMobile]);
 
-  // Make sure paths are absolute
-  const mobileVideoPath = "/home/new.mp4";
-  const desktopVideoPath = "/home/new.mp4";
+  // Optimized media paths - ready for Cloudflare when domain is connected
+  const videoPath = "/home/new.mp4";
   const firstFramePath = "/home/first-frame.jpg";
+  
+  // Create optimized video properties
+  const videoProps = createOptimizedVideoProps(videoPath, {
+    poster: firstFramePath,
+    muted: true,
+    loop: true,
+    preload: "auto"
+  });
+  
+  // Optimized poster image
+  const optimizedPoster = optimizeImageUrl(firstFramePath);
 
   return (
     <ReactLenis root>
@@ -486,27 +497,32 @@ const Home = () => {
             <video 
               ref={videoRef}
               className="home-video"
-              poster={firstFramePath}
-              muted
-              loop 
-              playsInline
-              preload="auto"
+              {...videoProps}
               style={{ 
                 width: '100%', 
                 height: '100%', 
-                objectFit: 'cover'
+                objectFit: 'cover',
+                ...videoProps.style
               }}
             >
-              <source src={isMobile ? mobileVideoPath : desktopVideoPath} type="video/mp4" />
+              <source src={videoProps.src} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           ) : (
             <div className="video-fallback">
               <img 
-                src={firstFramePath} 
+                src={optimizedPoster} 
                 alt="VZBL Background" 
                 className="fallback-image"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                loading="lazy"
+                decoding="async"
+                style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'cover',
+                  transform: 'translateZ(0)',
+                  backfaceVisibility: 'hidden'
+                }}
               />
             </div>
           )}
@@ -516,4 +532,5 @@ const Home = () => {
   );
 };
 
-export default Transition(Home);
+const HomeWithTransition = Transition(Home);
+export default HomeWithTransition;

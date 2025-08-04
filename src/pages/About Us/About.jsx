@@ -7,6 +7,7 @@ import './About.css';
 import MobileAbout from './MobileAbout'; // Import the mobile component
 import { handleOverlay } from "./../../utils/overlayManager";
 import { togglePersonBackground } from '../../utils/personDetection';
+import { createOptimizedImageProps, preloadImage } from '../../utils/mediaOptimization';
 
 // Detect Safari browser for specific optimizations
 const isSafari = () => {

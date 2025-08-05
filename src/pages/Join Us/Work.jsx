@@ -6,6 +6,7 @@ import Footer from "../../components/Footer/Footer";
 import gsap from "gsap";
 import ReactLenis from "lenis/react";
 import { handleOverlay } from "../../utils/overlayManager";
+import { CDN_CONFIG } from "../../config/cdn";
 
 const Work = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -93,7 +94,7 @@ const Work = () => {
               muted
               loop
               playsInline
-              src="/home/new.mp4"
+              src={CDN_CONFIG.getHomeVideoUrl('desktop')}
             />
           </div>
           <header className="work-header">

@@ -8,6 +8,7 @@ import { CustomEase } from "gsap/CustomEase";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { handleOverlay } from "../../utils/overlayManager";
 import projectsData from "../../data/projectsData.json";
+import { CDN_CONFIG } from "../../config/cdn";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -624,7 +625,7 @@ const AllProjects = () => {
               handleMediaLoad();
             }}
           >
-            <source src={project.media} type="video/webm" />
+            <source src={CDN_CONFIG.getVideoFromPath(project.media)} type="video/webm" />
             Your browser does not support the video tag.
           </video>
         </div>

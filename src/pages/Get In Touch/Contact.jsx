@@ -9,6 +9,7 @@ import ReactLenis from "lenis/react";
 
 import Transition from "../../components/Transition/Transition";
 import { handleOverlay } from "../../utils/overlayManager";
+import { CDN_CONFIG } from "../../config/cdn";
 
 const Contact = () => {
   const videoRef = useRef(null);
@@ -45,7 +46,7 @@ const Contact = () => {
             muted
             loop
             playsInline
-              src="/home/new.mp4"
+              src={CDN_CONFIG.getHomeVideoUrl('desktop')}
           />
         </div>
         <div className="contact-wrapper">

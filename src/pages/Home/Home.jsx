@@ -1,10 +1,110 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { gsap } from "gsap";
 import "./Home.css";
 import SplashScreen from "../../components/SplashScreen/SplashScreen";
 import ReactLenis from "lenis/react";
 import Transition from "../../components/Transition/Transition";
 import { handleOverlay, shouldShowSplash } from "./../../utils/overlayManager";
 import { CDN_CONFIG } from "../../config/cdn";
+
+// Animated Projects Button Component
+const AnimatedProjectsButton = ({ shouldAnimate }) => {
+  const navigate = useNavigate();
+  const buttonRef = useRef(null);
+  const backgroundRef = useRef(null);
+  const arrowRef = useRef(null);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    if (shouldAnimate && buttonRef.current) {
+      // Initial state - hidden
+      gsap.set(buttonRef.current, { opacity: 0, scale: 0.8, visibility: "hidden", pointerEvents: "none" });
+      gsap.set(backgroundRef.current, { scale: 0.8, opacity: 0 });
+      gsap.set(arrowRef.current, { opacity: 0, x: -10 });
+      gsap.set(textRef.current, { opacity: 0, y: 20 });
+
+      // Animate in sequence
+      const tl = gsap.timeline({ delay: 0.1 });
+
+      tl.to(buttonRef.current, {
+        opacity: 1,
+        scale: 1,
+        visibility: "visible",
+        pointerEvents: "all",
+        duration: 0.8,
+        ease: "back.out(1.7)"
+      })
+      .to(backgroundRef.current, {
+        scale: 1,
+        opacity: 1,
+        duration: 0.6,
+        ease: "power2.out"
+      }, "-=0.4")
+      .to(arrowRef.current, {
+        opacity: 1,
+        x: 0,
+        duration: 0.5,
+        ease: "power2.out"
+      }, "-=0.3")
+      .to(textRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: "power2.out"
+      }, "-=0.2");
+    }
+  }, [shouldAnimate]);
+
+  const handleClick = () => {
+    // Navigate to projects page
+    navigate('/projects');
+  };
+
+  const handleMouseEnter = () => {
+    if (arrowRef.current) {
+      gsap.to(arrowRef.current, {
+        x: 5,
+        duration: 0.1,
+        ease: "power2.out"
+      });
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (arrowRef.current) {
+      gsap.to(arrowRef.current, {
+        x: 0,
+        duration: 0.1,
+        ease: "power2.out"
+      });
+    }
+  };
+
+  return (
+    <div 
+      ref={buttonRef}
+      className="animated-projects-button"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
+    >
+      <div ref={backgroundRef} className="button-background">
+        <div className="noise-overlay"></div>
+        <svg ref={arrowRef} className="arrow-icon" viewBox="0 0 24 24" fill="none">
+          <path 
+            d="M5 12H19M19 12L12 5M19 12L12 19" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+      <span ref={textRef} className="button-text">View all projects</span>
+    </div>
+  );
+};
 
 const Home = () => {
   const videoRef = useRef(null);
@@ -14,6 +114,7 @@ const Home = () => {
   const [videoError, setVideoError] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [fadeIn, setFadeIn] = useState(false); // Start false for proper transition
+  const [shouldAnimateButton, setShouldAnimateButton] = useState(false);
 
   // Unified transition function for consistent animation
   const triggerVideoTransition = useCallback(() => {
@@ -35,6 +136,8 @@ const Home = () => {
         requestAnimationFrame(() => {
           videoWrapper.classList.add('fade-in');
           setFadeIn(true);
+          // Trigger button animation after video fades in
+          setTimeout(() => setShouldAnimateButton(true), 1000);
         });
       });
     } else {
@@ -43,6 +146,8 @@ const Home = () => {
       const _ = videoWrapper.offsetHeight;
       videoWrapper.classList.add('fade-in');
       setFadeIn(true);
+      // Trigger button animation after video fades in
+      setTimeout(() => setShouldAnimateButton(true), 1000);
     }
   }, [isMobile, setFadeIn]);
 
@@ -512,6 +617,7 @@ const Home = () => {
             </div>
           )}
         </div>
+        <AnimatedProjectsButton shouldAnimate={shouldAnimateButton} />
       </div>
     </ReactLenis>
   );

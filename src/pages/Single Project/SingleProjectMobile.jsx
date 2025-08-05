@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./SingleProject.css";
 import Footer from "../../components/Footer/Footer";
+import { CDN_CONFIG } from "../../config/cdn";
 
 // Helper function to determine text color based on background brightness
 const getTextColor = (bgColor) => {
@@ -191,7 +192,7 @@ const SingleProjectMobile = ({ project }) => {
                     overflow: "hidden"
                   }}>
                     <video 
-                      src={section.media}
+                      src={CDN_CONFIG.getVideoFromPath(section.media)}
                       alt={section.alt || `Project section ${index + 1}`}
                       className="mobile-project-video"
                       autoPlay

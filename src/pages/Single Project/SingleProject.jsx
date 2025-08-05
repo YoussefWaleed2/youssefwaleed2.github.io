@@ -7,6 +7,7 @@ import { handleOverlay } from "../../utils/overlayManager";
 import projectsData from "../../data/projectsData.json";
 import './SingleProject.css';
 import SingleProjectMobile from "./SingleProjectMobile";
+import { CDN_CONFIG } from "../../config/cdn";
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -1352,7 +1353,7 @@ const SingleProject = () => {
                   {section.type === "Video" || (section.media && (section.media.endsWith('.mp4') || section.media.endsWith('.webm'))) ? (
                     <div className="video-container-single-project">
                       <video 
-                        src={section.media}
+                        src={CDN_CONFIG.getVideoFromPath(section.media)}
                         alt={section.alt || `Project section ${index + 1}`}
                         className="single-project-video"
                         autoPlay

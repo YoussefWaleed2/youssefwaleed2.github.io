@@ -4,6 +4,7 @@ import SplashScreen from "../../components/SplashScreen/SplashScreen";
 import ReactLenis from "lenis/react";
 import Transition from "../../components/Transition/Transition";
 import { handleOverlay, shouldShowSplash } from "./../../utils/overlayManager";
+import { CDN_CONFIG } from "../../config/cdn";
 
 const Home = () => {
   const videoRef = useRef(null);
@@ -464,10 +465,10 @@ const Home = () => {
     };
   }, [videoLoaded, isMobile]);
 
-  // Make sure paths are absolute
-  const mobileVideoPath = "/home/new.mp4";
-  const desktopVideoPath = "/home/new.mp4";
-  const firstFramePath = "/about/1.webp";
+  // CDN video URLs - globally distributed and fast
+  const mobileVideoPath = CDN_CONFIG.getHomeVideoUrl('mobile');
+  const desktopVideoPath = CDN_CONFIG.getHomeVideoUrl('desktop');
+  const firstFramePath = "";
 
   return (
     <ReactLenis root>

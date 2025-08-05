@@ -1,0 +1,10 @@
+[33mf1ff475[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mjoe-dev[m[33m)[m Update tatus --short
+[33m631d528[m Add project and marketing asset images
+[33m87fecd3[m Add video files to gitignore
+[33m3080e8e[m Delete new.mp4
+[33m3fa4c00[m Implement video CDN via GitHub releases
+[33m20e437a[m[33m ([m[1;31morigin/joe-dev[m[33m)[m Remove Cloudflare and media optimization utilities
+[33mfb59afe[m Update Home.jsx
+[33m8604c95[m Update vercel.json
+[33m05ba35f[m we the best music
+[33md357320[m Enable Git LFS for video files

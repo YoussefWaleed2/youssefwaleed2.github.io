@@ -297,15 +297,21 @@ const Services = () => {
     
     lenisRef.current = lenis;
     
-    // Initially stop scrolling until entrance animation completes
-    lenis.stop();
+    // On mobile, start scrolling immediately since there are no hand models
+    if (isMobile) {
+      lenis.start();
+    } else {
+      // On desktop, stop scrolling until entrance animation completes
+      lenis.stop();
+    }
     
     // Scroll handler
     function raf(time) {
       lenis.raf(time);
       
-      // Only calculate scroll progress if entrance animation is complete
-      if (entranceComplete) {
+      // On mobile, always calculate scroll progress since there are no hand models
+      // On desktop, only calculate if entrance animation is complete
+      if (isMobile || entranceComplete) {
         // Calculate scroll progress (0 to 1)
         const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
         const currentScroll = window.scrollY;
@@ -321,14 +327,14 @@ const Services = () => {
     return () => {
       lenis.destroy();
     };
-  }, [entranceComplete]);
+  }, [entranceComplete, isMobile]);
 
-  // Enable scrolling when entrance animation completes
+  // Enable scrolling when entrance animation completes (desktop only)
   useEffect(() => {
-    if (entranceComplete && lenisRef.current) {
+    if (entranceComplete && lenisRef.current && !isMobile) {
       lenisRef.current.start();
     }
-  }, [entranceComplete]);
+  }, [entranceComplete, isMobile]);
 
   // Make sure the navbar is always visible, regardless of canvas loading
   useEffect(() => {
@@ -424,8 +430,8 @@ const Services = () => {
             anglePower={3}
           />
           
-          {/* Left hand */}
-          {canvasLoaded && !isLoading && (
+          {/* Left hand - hidden on mobile */}
+          {canvasLoaded && !isLoading && !isMobile && (
             <Model 
               modelRef={leftHandRef} 
               scrollProgress={scrollProgress} 
@@ -434,8 +440,8 @@ const Services = () => {
             />
           )}
           
-          {/* Right hand */}
-          {canvasLoaded && !isLoading && (
+          {/* Right hand - hidden on mobile */}
+          {canvasLoaded && !isLoading && !isMobile && (
             <Model 
               modelRef={rightHandRef} 
               scrollProgress={scrollProgress} 

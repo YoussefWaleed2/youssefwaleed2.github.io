@@ -11,6 +11,30 @@
   width: 100%;
   height: 100%;
   z-index: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+}
+
+.video-background.fade-in {
+  opacity: 1 !important;
+}
+
+/* Mobile-specific fade-in improvements */
+@media (max-width: 768px) {
+  .video-background {
+    /* Force hardware acceleration on mobile */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    /* Ensure transitions work on mobile Safari */
+    -webkit-transition: opacity 1.2s ease-in-out;
+    transition: opacity 1.2s ease-in-out;
+  }
+  
+  .video-background.fade-in {
+    opacity: 1 !important;
+    /* Additional mobile Safari support */
+    -webkit-opacity: 1 !important;
+  }
 }
 
 .background-video {

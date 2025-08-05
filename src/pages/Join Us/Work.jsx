@@ -12,9 +12,13 @@ const Work = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState("");
   const videoRef = useRef(null);
+  const videoWrapperRef = useRef(null);
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
   const buttonRef = useRef(null);
+  const [videoError, setVideoError] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [fadeIn, setFadeIn] = useState(false);
 
   // Set page title
   useEffect(() => {
@@ -30,9 +34,9 @@ const Work = () => {
     // Create entrance animation timeline
     const tl = gsap.timeline();
 
-    // Animate the video background
-    if (videoRef.current) {
-      tl.to(videoRef.current, {
+    // Animate the video background (blur effect)
+    if (videoWrapperRef.current) {
+      tl.to(videoWrapperRef.current, {
         filter: "blur(100px)",
         duration: 1,
         ease: "power2.inOut"
@@ -81,21 +85,71 @@ const Work = () => {
     };
   }, [isFormOpen]);
 
+  // Video loading effect (like Home page)
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Add error handler for video
+    const handleVideoError = () => {
+      setVideoError(true);
+      // Trigger fade-in for fallback
+      setTimeout(() => setFadeIn(true), 100);
+    };
+    
+    // Handle successful loading
+    const handleCanPlay = () => {
+      setVideoLoaded(true);
+      // Video is ready, trigger fade-in effect
+      setTimeout(() => setFadeIn(true), 100);
+    };
+    
+    // Add event listeners
+    video.addEventListener('error', handleVideoError);
+    video.addEventListener('canplay', handleCanPlay);
+    
+    // Safety timeout for video loading
+    const loadTimeout = setTimeout(() => {
+      if (!videoLoaded) {
+        setVideoError(true);
+        setTimeout(() => setFadeIn(true), 100);
+      }
+    }, 5000);
+    
+    return () => {
+      video.removeEventListener('error', handleVideoError);
+      video.removeEventListener('canplay', handleCanPlay);
+      clearTimeout(loadTimeout);
+    };
+  }, [videoLoaded]);
+
   return (
     <ReactLenis root>
       <div className="page work">
         
         <div className="work-content">
-          <div className="video-background">
-            <video
-              ref={videoRef}
-              className="background-video"
-              autoPlay
-              muted
-              loop
-              playsInline
-              src={CDN_CONFIG.getHomeVideoUrl('desktop')}
-            />
+          <div 
+            ref={videoWrapperRef}
+            className={`video-background ${videoError ? 'video-error' : ''} ${fadeIn ? 'fade-in' : ''}`}
+          >
+            {!videoError ? (
+              <video
+                ref={videoRef}
+                className="background-video"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                src={CDN_CONFIG.getHomeVideoUrl('desktop')}
+              />
+            ) : (
+              <div className="video-fallback" style={{ 
+                width: '100%', 
+                height: '100%', 
+                backgroundColor: '#000' 
+              }} />
+            )}
           </div>
           <header className="work-header">
             <h1 ref={titleRef} className="join-title">JOIN</h1>
